@@ -1,5 +1,7 @@
 # Part 0 — Baseline Audit and Futures-Only Scope Cleanup
 
+**Review date:** 19 November 2026. **Repository:** https://github.com/WHIZZ444YT/WHIZZ444-YT-OS. Recheck live source and official references before implementation; this document is not runtime or deployment evidence.
+
 **Goal:** Convert the active product scope from a general Finance Intelligence workspace to a Futures & ICT Futures Intelligence product without destroying useful existing work.
 
 > **Current-source review (19 November 2026):** The inspected `main` source already contains futures-only primary navigation in `scripts/build_site.py` and validation assertions for the 15-family universe and preserved legacy datasets in `scripts/validate.py`; the repository README also describes the Futures Command Center and its compatibility routes. Treat this Part as a regression and gap-audit contract when those changes are already present. Verify the actual target branch, generated output and checks before acting; do not repeat removals or claim checks passed from documentation alone. This note records source-level evidence, not a fresh build or deployment result.
@@ -11,7 +13,7 @@ A new visitor sees only futures trading/research and ICT futures education in pr
 ## 2. Keep
 
 - ICT Futures terminal and all 15 existing futures family pages.
-- 76 existing ICT concept IDs and nine tutorials (verify actual count/routes before claiming).
+- 82 lesson pages, preserving 76 original ICT concept IDs, and nine guided tutorials (verify actual count/routes before claiming).
 - Entry models and ICT source catalogue.
 - Futures contracts, futures risk tools, sessions and calendar.
 - GDELT/futures news adapter and official macro event/data adapters.
@@ -22,6 +24,8 @@ A new visitor sees only futures trading/research and ICT futures education in pr
 - GitHub Actions, build pipeline, tests, security headers, deployment configs.
 
 ## 3. Remove from active product (not necessarily delete from Git)
+
+This is the desired disposition if an item is still active on the target branch. The current source review indicates the primary product already presents a futures-only navigation; verify routes, generated output and dependencies before changing anything, and do not repeat a completed removal.
 
 - General Global Research cockpit as the active home page.
 - Stock/equity screeners, issuer profile/research pages and equity-specific nav.
@@ -90,6 +94,9 @@ For every candidate:
 - Treat Futures Risk Manager sizing as conditional on user-supplied, independently verified tick specifications and cost assumptions; it does not replace the contract registry, prop-firm source review or hosted risk calculator.
 - A plugin capability may be adopted by the website only through an explicit server-side integration with authentication, licensing, failure states and tests. A plugin-only action never satisfies a route or page acceptance criterion.
 
+### Current-source reconciliation (19 November 2026)
+
+The current repository README and inspected builder/validator describe a futures-only 13-area navigation, a 15-family futures catalogue, 82 Academy lesson pages while preserving 76 original concept IDs, 10 learning tracks and nine guided tutorials. Treat that as source-level evidence only: Part 0 must still inspect the target branch, generated routes, sitemap/search output, legacy redirects, tests and deployment separately. Update the old route map as a dated historical baseline rather than repeating its pre-cleanup conclusion as current status. Keep an item only if the current branch proves it is active; remove or redirect from the active product only after checking imports, links and user data.
 ## 8. Acceptance criteria
 
 - [ ] Homepage is a futures command center, not Global Research.
