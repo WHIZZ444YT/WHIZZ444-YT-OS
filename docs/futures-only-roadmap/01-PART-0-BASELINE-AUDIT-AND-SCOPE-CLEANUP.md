@@ -2,6 +2,8 @@
 
 **Goal:** Convert the active product scope from a general Finance Intelligence workspace to a Futures & ICT Futures Intelligence product without destroying useful existing work.
 
+> **Current-source review (19 November 2026):** The inspected `main` source already contains futures-only primary navigation in `scripts/build_site.py` and validation assertions for the 15-family universe and preserved legacy datasets in `scripts/validate.py`; the repository README also describes the Futures Command Center and its compatibility routes. Treat this Part as a regression and gap-audit contract when those changes are already present. Verify the actual target branch, generated output and checks before acting; do not repeat removals or claim checks passed from documentation alone. This note records source-level evidence, not a fresh build or deployment result.
+
 ## 1. Outcome
 
 A new visitor sees only futures trading/research and ICT futures education in primary navigation, search, generated pages, sitemap, homepage cards, resources and metadata. The old unrelated research is preserved in an archive unless a separate deletion approval is supplied.
@@ -41,6 +43,7 @@ Inspect at minimum:
 - `cloudflare/src/index.js`, `cloudflare/src/economic-providers.js`, `cloudflare/wrangler.toml`.
 - `supabase/migrations/`, `supabase/setup.sql`, `tests/`.
 - `.github/workflows/`, service worker, manifest, sitemap and robots generation.
+- `integrations/` and any relevant product/server adapter before proposing website integration of an authoring-environment plugin; local Codex tools are not website routes or browser-callable services.
 
 Run repository tree/path inventory and search all references for route names, nav labels, prediction market APIs, equities, spot FX, unrelated symbols, data asset IDs and service worker cache entries. Distinguish actual production code from archived files, docs and build output.
 
@@ -78,6 +81,15 @@ For every candidate:
 5. Confirm the removal does not break Auth, journal, Academy, backtests or risk tools.
 6. Preserve a reversible commit.
 
+### Plugin-specific scope checks
+
+- Re-discover current plugin versions and schemas; treat the Codex tools described in the charter as local analysis capabilities, not as services already connected to the site.
+- Keep Binance USDⓈ-M perpetual data out of the listed-futures allowlist. Do not label FRED observations or an unverified Twelve Data series as CME/ICE contract data.
+- Keep local CSV analysis read-only and local unless the user explicitly chooses a separate upload/sync flow with provenance and privacy controls.
+- Keep the ICT Liquidity Lab and ICT Backtest Lab wick-through/close-back outputs labelled mechanical proxies; do not treat them as verified ICT signals or as the website Strategy Lab's results.
+- Treat Futures Risk Manager sizing as conditional on user-supplied, independently verified tick specifications and cost assumptions; it does not replace the contract registry, prop-firm source review or hosted risk calculator.
+- A plugin capability may be adopted by the website only through an explicit server-side integration with authentication, licensing, failure states and tests. A plugin-only action never satisfies a route or page acceptance criterion.
+
 ## 8. Acceptance criteria
 
 - [ ] Homepage is a futures command center, not Global Research.
@@ -91,15 +103,16 @@ For every candidate:
 - [ ] Build, tests, validator and link audit pass.
 - [ ] Every removed route is either intentionally 404/410 or safely redirected; no accidental blank route.
 - [ ] README and architecture reflect actual implementation.
+- [ ] Any Codex plugin use is clearly classified as local-only or as a separately implemented, verified website integration; no plugin-only data is presented as connected product data.
 
 ## 9. Part-specific execution prompt
 
-> Execute Part 0 only. Inspect the current repository tree and dependencies. Produce an exhaustive keep/remove/archive map with exact source files and route references before modifying anything. Then implement futures-only scope cleanup in the source builders and navigation, not by deleting arbitrary files. Preserve ICT Futures, 15 contract families, lessons, tutorials, futures datasets, Supabase user data, data adapters and tests. Archive generic research where needed. Update tests, sitemap, search index, service worker and documentation. Run all project quality commands and report each excluded route plus each preserved route. Do not start Part 1 UI redesign beyond the minimum new futures-only homepage shell required for the scope boundary.
+> Audit Part 0 only. Inspect the current repository tree and dependencies and produce an evidence-backed keep/remove/archive map with exact source files and route references before modifying anything. First compare the live source and generated routes with the acceptance criteria. If the futures-only cleanup is already complete, report verified evidence and fix only concrete regressions; do not repeat deletions or reimplement the completed scope. Preserve ICT Futures, 15 contract families, lessons, tutorials, futures datasets, Supabase user data, data adapters and tests. Archive generic research where needed. Update tests, sitemap, search index, service worker and documentation. Run all project quality commands and report each excluded route plus each preserved route. Do not start Part 1 UI redesign beyond the minimum new futures-only homepage shell required for the scope boundary.
 
 
 ## Standalone handoff context — use this file by itself
 
-**Repository:** https://github.com/whizz444yt-ux/Finance-Intelligence-OS  
+**Repository:** https://github.com/WHIZZ444YT/WHIZZ444-YT-OS  
 **Product:** Futures Intelligence OS — futures-only markets, ICT futures education, futures news/data, positioning, backtesting, risk and trader workspace.  
 **Architecture to inspect and preserve:** static HTML/JavaScript/JSON; Python build at `scripts/build_site.py`; Cloudflare Worker at `cloudflare/src/index.js` with KV; Supabase Postgres/Auth/RLS; Vercel static output `dist/`; GitHub Actions and tests. This is a baseline, not proof each service/credential is currently healthy.
 
