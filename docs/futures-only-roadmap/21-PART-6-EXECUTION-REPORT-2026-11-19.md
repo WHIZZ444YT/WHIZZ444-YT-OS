@@ -1,5 +1,7 @@
 # Part 6 — Volume, Open Interest and COT Execution Report
 
+> Historical checkpoint. Later on 19 November the two migrations were applied, the bounded COT Worker route was deployed, and the live site's no-search snapshot was verified. See [the current production implementation and site audit](26-PRODUCTION-IMPLEMENTATION-AND-SITE-AUDIT-2026-11-19.md) for present status and remaining acceptance work.
+
 **Review date:** 19 November 2026
 **Branch:** `codex/charter-alignment-2026-11-19`
 **Status:** Partial. Local COT family/variant handling, source attribution, category normalization, weekly history, export and optional Supabase persistence are implemented. Live source smoke checks, production migration/write verification, verified futures-root crosswalks and licensed exchange volume/OI remain outstanding.
@@ -56,7 +58,7 @@ Sources: [CFTC COT reports](https://www.cftc.gov/MarketReports/CommitmentsofTrad
 - `tests/test_cot_contracts.mjs`
 - `tests/test_worker_news_routes.mjs`
 - `tests/test_build.py`
-- `supabase/migrations/20261119173000_add_cot_report_observations.sql`
+- `supabase/migrations/20261119125044_add_cot_report_observations.sql`
 - `resources.json`
 - `ict-futures/data/source-directory.json`
 - `README.md`

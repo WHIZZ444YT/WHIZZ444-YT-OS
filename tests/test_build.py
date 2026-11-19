@@ -102,6 +102,9 @@ class BuildTests(unittest.TestCase):
         page=(ROOT/'assets/cot-page.js').read_text(encoding="utf-8")
         builder=(ROOT/'scripts/build_site.py').read_text(encoding="utf-8")
         self.assertIn('contract_market_code',page)
+        self.assertIn('syncSearchControls',page)
+        self.assertIn('Refresh CFTC data',builder)
+        self.assertIn('type="button" disabled>Search CFTC market',builder)
         self.assertIn('Export filtered CSV',builder)
         self.assertIn('Futures and Options Combined',builder)
         self.assertIn('cot-chart',builder)
@@ -156,7 +159,12 @@ class BuildTests(unittest.TestCase):
         self.assertIn('upper(contract_market_name)',js)
         self.assertIn('marketKey',js)
         self.assertIn('cftc_contract_market_code =',js)
-        self.assertIn('u.searchParams.set("$limit",market||contractMarketCode?"5000":"1000")',js)
+        self.assertIn('cotSourceColumns(report).join(",")',js)
+        self.assertIn('u.searchParams.set("$limit","156")',js)
+        self.assertIn('query_scope:q||contractMarketCode?"filtered-market-history":"latest-provider-observations"',js)
+        page=(ROOT/'assets/cot-page.js').read_text(encoding="utf-8")
+        self.assertIn('if(term.length<3)',page)
+        self.assertIn('params.set("q",term)',page)
     def test_built_futures_desk_assets_match_source(self):
         for name in ['futures-intelligence.js','futures-intelligence.css','news-page.js','risk-calculator.js']:
             self.assertEqual((ROOT/'dist/assets'/name).read_bytes(),(ROOT/'assets'/name).read_bytes())
@@ -510,7 +518,7 @@ class BuildTests(unittest.TestCase):
         self.assertIn('Account & sync',build)
     def test_p5_private_notes_alert_events_and_legacy_trade_import_migrations(self):
         notes=(ROOT/'supabase/migrations/20261108161355_add_cloud_workspace_notes_and_alert_events.sql').read_text(encoding="utf-8")
-        legacy=(ROOT/'supabase/migrations/20261108161450_add_idempotent_legacy_trade_import.sql').read_text(encoding="utf-8")
+        legacy=(ROOT/'supabase/migrations/20261108162550_add_idempotent_legacy_trade_import.sql').read_text(encoding="utf-8")
         self.assertIn('create table if not exists public.research_notes',notes)
         self.assertIn('create table if not exists public.alert_events',notes)
         self.assertIn('enable row level security',notes)

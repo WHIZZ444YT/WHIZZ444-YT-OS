@@ -40,6 +40,21 @@ const POSITION_FIELDS = Object.freeze({
   ]
 });
 
+export function cotSourceColumns(report) {
+  const fields = POSITION_FIELDS[report];
+  if (!fields) throw new TypeError(`Unsupported COT report family: ${report}`);
+  return [...new Set([
+    "report_date_as_yyyy_mm_dd",
+    "cftc_contract_market_code",
+    "cftc_market_code",
+    "cftc_commodity_code",
+    "contract_market_name",
+    "market_and_exchange_names",
+    "open_interest_all",
+    ...fields.flatMap(category => [category.long, category.short, category.spread].filter(Boolean))
+  ])];
+}
+
 export function validateCotQuery(params) {
   const allowed = new Set(["report", "variant", "q", "contract_market_code"]);
   for (const key of params.keys()) {

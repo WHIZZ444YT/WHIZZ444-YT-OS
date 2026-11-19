@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-11-08",
-  "count": 52,
+  "generatedAt": "2026-11-19",
+  "count": 50,
   "sources": [
     {
       "category": "Exchanges & contract data",
@@ -64,13 +64,6 @@
       "name": "CFTC — Bank Participation Reports",
       "url": "https://www.cftc.gov/MarketReports/BankParticipationReports/index.htm",
       "description": "Monthly aggregate positions of banks; not named bank employee positions.",
-      "type": "official"
-    },
-    {
-      "category": "Positioning & disclosures",
-      "name": "SEC EDGAR — Company Filings Search",
-      "url": "https://www.sec.gov/edgar/search/",
-      "description": "Search public filings including Form 4 insider ownership-change reports for listed companies.",
       "type": "official"
     },
     {
@@ -263,41 +256,6 @@
       "type": "social"
     },
     {
-      "category": "Public Research Channels",
-      "name": "Stocktwits — public market sentiment",
-      "url": "https://stocktwits.com/",
-      "description": "Public social sentiment; futures symbol coverage varies.",
-      "type": "social"
-    },
-    {
-      "category": "Prediction Markets",
-      "name": "Polymarket — Public event markets",
-      "url": "https://polymarket.com/",
-      "description": "Public prediction-market events and market pages. Quote prices reflect traded markets, spreads and liquidity; not guaranteed probabilities.",
-      "type": "platform"
-    },
-    {
-      "category": "Prediction Markets",
-      "name": "Polymarket — Gamma API documentation",
-      "url": "https://gamma-api.polymarket.com/docs",
-      "description": "Public event and market discovery API documentation; browser access can be affected by CORS and service limits.",
-      "type": "api"
-    },
-    {
-      "category": "Prediction Markets",
-      "name": "Kalshi — Event markets",
-      "url": "https://kalshi.com/",
-      "description": "Public event-contract marketplace; contract rules, access and jurisdictional eligibility apply.",
-      "type": "platform"
-    },
-    {
-      "category": "Prediction Markets",
-      "name": "Kalshi — API documentation",
-      "url": "https://docs.kalshi.com/",
-      "description": "Official public market-data and trading API documentation; this site uses discovery as read-only context.",
-      "type": "api"
-    },
-    {
       "category": "ICT Learning",
       "name": "Inner Circle Trader — Official YouTube channel",
       "url": "https://www.youtube.com/@InnerCircleTrader",
@@ -320,23 +278,51 @@
     },
     {
       "category": "Positioning & disclosures",
+      "name": "CFTC — Legacy Futures Only dataset",
+      "url": "https://publicreporting.cftc.gov/Commitments-of-Traders/Legacy-Futures-Only/6dca-aqww",
+      "description": "Official Legacy COT futures-only report with commercial, non-commercial and non-reportable categories.",
+      "type": "official"
+    },
+    {
+      "category": "Positioning & disclosures",
+      "name": "CFTC — Legacy Futures and Options Combined dataset",
+      "url": "https://publicreporting.cftc.gov/Commitments-of-Traders/Legacy-Combined/jun7-fc8e",
+      "description": "Official Legacy COT combined report; keep distinct from futures-only positions.",
+      "type": "official"
+    },
+    {
+      "category": "Positioning & disclosures",
+      "name": "CFTC — Disaggregated Futures Only dataset",
+      "url": "https://publicreporting.cftc.gov/Commitments-of-Traders/Disaggregated-Futures-Only/72hh-3qpy",
+      "description": "Official Disaggregated futures-only report with producer/merchant, swap dealer, managed money and other-reportable categories.",
+      "type": "official"
+    },
+    {
+      "category": "Positioning & disclosures",
+      "name": "CFTC — Disaggregated Futures and Options Combined dataset",
+      "url": "https://publicreporting.cftc.gov/Commitments-of-Traders/Disaggregated-Combined/kh3c-gbw2",
+      "description": "Official Disaggregated combined report; keep distinct from futures-only positions.",
+      "type": "official"
+    },
+    {
+      "category": "Positioning & disclosures",
+      "name": "CFTC — TFF Futures Only dataset",
+      "url": "https://publicreporting.cftc.gov/Commitments-of-Traders/TFF-Futures-Only/gpe5-46if",
+      "description": "Official Traders in Financial Futures futures-only report with dealer, asset-manager, leveraged-funds, other-reportable and non-reportable categories.",
+      "type": "official"
+    },
+    {
+      "category": "Positioning & disclosures",
+      "name": "CFTC — TFF Futures and Options Combined dataset",
+      "url": "https://publicreporting.cftc.gov/Commitments-of-Traders/TFF-Combined/yw9f-hn96",
+      "description": "Official Traders in Financial Futures combined report; keep distinct from futures-only positions.",
+      "type": "official"
+    },
+    {
+      "category": "Positioning & disclosures",
       "name": "CFTC — Historical COT reports",
       "url": "https://www.cftc.gov/MarketReports/CommitmentsofTraders/HistoricalViewable/index.htm",
       "description": "Historical report archives for public futures positioning research.",
-      "type": "official"
-    },
-    {
-      "category": "Positioning & disclosures",
-      "name": "SEC — Developer resources and APIs",
-      "url": "https://www.sec.gov/about/developer-resources",
-      "description": "Official SEC data/API guidance. Submissions/XBRL endpoints should be called server-side with compliant user-agent and rate limits.",
-      "type": "official"
-    },
-    {
-      "category": "Positioning & disclosures",
-      "name": "SEC — EDGAR API reference",
-      "url": "https://www.sec.gov/search-filings/edgar-application-programming-interfaces",
-      "description": "Public company filing submissions and XBRL data; not futures positions or non-public information.",
       "type": "official"
     },
     {

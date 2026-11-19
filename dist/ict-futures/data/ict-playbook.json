@@ -181,7 +181,21 @@
       "start": "20:00",
       "end": "00:00",
       "purpose": "Mark overnight range extremes / accumulation reference.",
-      "ist": "06:30–10:30 (US standard time); DST-aware conversion required."
+      "scheduleClass": "ict-reference-window",
+      "timezone": "America/New_York",
+      "status": "reference-only",
+      "evidence": "ICT playbook convention",
+      "window_id": "asia",
+      "display_name": "Asian Range",
+      "market_scope": "Not specified at this window level in the source; consult the qualitative contract heat map and verify instrument fit.",
+      "instrument_families": [],
+      "start_local": "20:00",
+      "end_local": "00:00",
+      "source_id": "ict-futures-playbook-2026-11-05",
+      "evidence_label": "ICT PRACTITIONER CONVENTION",
+      "active_from": null,
+      "active_to": null,
+      "notes": "Mark overnight range extremes / accumulation reference."
     },
     {
       "id": "midnight",
@@ -189,7 +203,21 @@
       "start": "00:00",
       "end": "00:01",
       "purpose": "Daily reference price; not a trade window.",
-      "ist": "ET converted using the current NY offset."
+      "scheduleClass": "ict-reference-window",
+      "timezone": "America/New_York",
+      "status": "reference-only",
+      "evidence": "ICT playbook convention",
+      "window_id": "midnight",
+      "display_name": "Midnight Open",
+      "market_scope": "Not specified at this window level in the source; consult the qualitative contract heat map and verify instrument fit.",
+      "instrument_families": [],
+      "start_local": "00:00",
+      "end_local": "00:01",
+      "source_id": "ict-futures-playbook-2026-11-05",
+      "evidence_label": "ICT PRACTITIONER CONVENTION",
+      "active_from": null,
+      "active_to": null,
+      "notes": "Daily reference price; not a trade window."
     },
     {
       "id": "london",
@@ -197,7 +225,21 @@
       "start": "02:00",
       "end": "05:00",
       "purpose": "London session sweep, Judas and currency/metals setups.",
-      "ist": "DST-aware conversion required."
+      "scheduleClass": "ict-reference-window",
+      "timezone": "America/New_York",
+      "status": "reference-only",
+      "evidence": "ICT playbook convention",
+      "window_id": "london",
+      "display_name": "London Killzone",
+      "market_scope": "Not specified at this window level in the source; consult the qualitative contract heat map and verify instrument fit.",
+      "instrument_families": [],
+      "start_local": "02:00",
+      "end_local": "05:00",
+      "source_id": "ict-futures-playbook-2026-11-05",
+      "evidence_label": "ICT PRACTITIONER CONVENTION",
+      "active_from": null,
+      "active_to": null,
+      "notes": "London session sweep, Judas and currency/metals setups."
     },
     {
       "id": "londonsb",
@@ -205,7 +247,21 @@
       "start": "03:00",
       "end": "04:00",
       "purpose": "One-hour FVG model window.",
-      "ist": "DST-aware conversion required."
+      "scheduleClass": "ict-reference-window",
+      "timezone": "America/New_York",
+      "status": "reference-only",
+      "evidence": "ICT playbook convention",
+      "window_id": "londonsb",
+      "display_name": "London Silver Bullet",
+      "market_scope": "Not specified at this window level in the source; consult the qualitative contract heat map and verify instrument fit.",
+      "instrument_families": [],
+      "start_local": "03:00",
+      "end_local": "04:00",
+      "source_id": "ict-futures-playbook-2026-11-05",
+      "evidence_label": "ICT PRACTITIONER CONVENTION",
+      "active_from": null,
+      "active_to": null,
+      "notes": "One-hour FVG model window."
     },
     {
       "id": "forexny",
@@ -213,7 +269,21 @@
       "start": "07:00",
       "end": "10:00",
       "purpose": "Currency-futures active window.",
-      "ist": "DST-aware conversion required."
+      "scheduleClass": "ict-reference-window",
+      "timezone": "America/New_York",
+      "status": "reference-only",
+      "evidence": "ICT playbook convention",
+      "window_id": "forexny",
+      "display_name": "Forex NY Killzone",
+      "market_scope": "Not specified at this window level in the source; consult the qualitative contract heat map and verify instrument fit.",
+      "instrument_families": [],
+      "start_local": "07:00",
+      "end_local": "10:00",
+      "source_id": "ict-futures-playbook-2026-11-05",
+      "evidence_label": "ICT PRACTITIONER CONVENTION",
+      "active_from": null,
+      "active_to": null,
+      "notes": "Currency-futures active window."
     },
     {
       "id": "nyam",
@@ -221,7 +291,21 @@
       "start": "08:30",
       "end": "11:00",
       "purpose": "Primary index and metals preparation/execution window.",
-      "ist": "DST-aware conversion required."
+      "scheduleClass": "ict-reference-window",
+      "timezone": "America/New_York",
+      "status": "reference-only",
+      "evidence": "ICT playbook convention",
+      "window_id": "nyam",
+      "display_name": "NY AM Index / Metals",
+      "market_scope": "Not specified at this window level in the source; consult the qualitative contract heat map and verify instrument fit.",
+      "instrument_families": [],
+      "start_local": "08:30",
+      "end_local": "11:00",
+      "source_id": "ict-futures-playbook-2026-11-05",
+      "evidence_label": "ICT PRACTITIONER CONVENTION",
+      "active_from": null,
+      "active_to": null,
+      "notes": "Primary index and metals preparation/execution window."
     },
     {
       "id": "cashopen",
@@ -229,7 +313,21 @@
       "start": "09:30",
       "end": "09:31",
       "purpose": "US equity cash-market reference open.",
-      "ist": "DST-aware conversion required."
+      "scheduleClass": "market-reference-window",
+      "timezone": "America/New_York",
+      "status": "reference-only",
+      "evidence": "US cash-market reference; not a futures exchange schedule",
+      "window_id": "cashopen",
+      "display_name": "US Cash Open",
+      "market_scope": "Not specified at this window level in the source; consult the qualitative contract heat map and verify instrument fit.",
+      "instrument_families": [],
+      "start_local": "09:30",
+      "end_local": "09:31",
+      "source_id": "ict-futures-playbook-2026-11-05",
+      "evidence_label": "ICT PRACTITIONER CONVENTION",
+      "active_from": null,
+      "active_to": null,
+      "notes": "US equity cash-market reference open."
     },
     {
       "id": "amsb",
@@ -237,7 +335,21 @@
       "start": "10:00",
       "end": "11:00",
       "purpose": "One-hour index FVG model window.",
-      "ist": "DST-aware conversion required."
+      "scheduleClass": "ict-reference-window",
+      "timezone": "America/New_York",
+      "status": "reference-only",
+      "evidence": "ICT playbook convention",
+      "window_id": "amsb",
+      "display_name": "AM Silver Bullet",
+      "market_scope": "Not specified at this window level in the source; consult the qualitative contract heat map and verify instrument fit.",
+      "instrument_families": [],
+      "start_local": "10:00",
+      "end_local": "11:00",
+      "source_id": "ict-futures-playbook-2026-11-05",
+      "evidence_label": "ICT PRACTITIONER CONVENTION",
+      "active_from": null,
+      "active_to": null,
+      "notes": "One-hour index FVG model window."
     },
     {
       "id": "londonclose",
@@ -245,7 +357,21 @@
       "start": "10:00",
       "end": "12:00",
       "purpose": "Potential retracement window; instrument dependent.",
-      "ist": "DST-aware conversion required."
+      "scheduleClass": "ict-reference-window",
+      "timezone": "America/New_York",
+      "status": "reference-only",
+      "evidence": "ICT playbook convention",
+      "window_id": "londonclose",
+      "display_name": "London Close",
+      "market_scope": "Not specified at this window level in the source; consult the qualitative contract heat map and verify instrument fit.",
+      "instrument_families": [],
+      "start_local": "10:00",
+      "end_local": "12:00",
+      "source_id": "ict-futures-playbook-2026-11-05",
+      "evidence_label": "ICT PRACTITIONER CONVENTION",
+      "active_from": null,
+      "active_to": null,
+      "notes": "Potential retracement window; instrument dependent."
     },
     {
       "id": "lunch",
@@ -253,7 +379,21 @@
       "start": "12:00",
       "end": "13:30",
       "purpose": "The PDF marks this as an avoid window across the playbook.",
-      "ist": "DST-aware conversion required."
+      "scheduleClass": "ict-reference-window",
+      "timezone": "America/New_York",
+      "status": "reference-only",
+      "evidence": "ICT playbook convention",
+      "window_id": "lunch",
+      "display_name": "NY Lunch — Caution",
+      "market_scope": "Not specified at this window level in the source; consult the qualitative contract heat map and verify instrument fit.",
+      "instrument_families": [],
+      "start_local": "12:00",
+      "end_local": "13:30",
+      "source_id": "ict-futures-playbook-2026-11-05",
+      "evidence_label": "ICT PRACTITIONER CONVENTION",
+      "active_from": null,
+      "active_to": null,
+      "notes": "The PDF marks this as an avoid window across the playbook."
     },
     {
       "id": "nypm",
@@ -261,7 +401,21 @@
       "start": "13:30",
       "end": "16:00",
       "purpose": "Afternoon index-futures window.",
-      "ist": "DST-aware conversion required."
+      "scheduleClass": "ict-reference-window",
+      "timezone": "America/New_York",
+      "status": "reference-only",
+      "evidence": "ICT playbook convention",
+      "window_id": "nypm",
+      "display_name": "NY PM Index",
+      "market_scope": "Not specified at this window level in the source; consult the qualitative contract heat map and verify instrument fit.",
+      "instrument_families": [],
+      "start_local": "13:30",
+      "end_local": "16:00",
+      "source_id": "ict-futures-playbook-2026-11-05",
+      "evidence_label": "ICT PRACTITIONER CONVENTION",
+      "active_from": null,
+      "active_to": null,
+      "notes": "Afternoon index-futures window."
     },
     {
       "id": "pmsb",
@@ -269,7 +423,21 @@
       "start": "14:00",
       "end": "15:00",
       "purpose": "One-hour FVG model window; FOMC often overlaps this period.",
-      "ist": "DST-aware conversion required."
+      "scheduleClass": "ict-reference-window",
+      "timezone": "America/New_York",
+      "status": "reference-only",
+      "evidence": "ICT playbook convention",
+      "window_id": "pmsb",
+      "display_name": "PM Silver Bullet",
+      "market_scope": "Not specified at this window level in the source; consult the qualitative contract heat map and verify instrument fit.",
+      "instrument_families": [],
+      "start_local": "14:00",
+      "end_local": "15:00",
+      "source_id": "ict-futures-playbook-2026-11-05",
+      "evidence_label": "ICT PRACTITIONER CONVENTION",
+      "active_from": null,
+      "active_to": null,
+      "notes": "One-hour FVG model window; FOMC often overlaps this period."
     },
     {
       "id": "cmebreak",
@@ -277,7 +445,22 @@
       "start": "17:00",
       "end": "18:00",
       "purpose": "PDF reference for most CME Globex futures; confirm product and holiday schedules.",
-      "ist": "DST-aware conversion required."
+      "scheduleClass": "exchange-break-reference",
+      "timezone": "America/New_York",
+      "status": "unverified",
+      "evidence": "Imported PDF reference only",
+      "verificationNote": "Not an exchange schedule. Confirm the product-specific Globex break and holiday hours with CME before use.",
+      "window_id": "cmebreak",
+      "display_name": "CME Maintenance Break",
+      "market_scope": "Not specified at this window level in the source; consult the qualitative contract heat map and verify instrument fit.",
+      "instrument_families": [],
+      "start_local": "17:00",
+      "end_local": "18:00",
+      "source_id": "ict-futures-playbook-2026-11-05",
+      "evidence_label": "UNVERIFIED SOURCE CONVENTION",
+      "active_from": null,
+      "active_to": null,
+      "notes": "Not an exchange schedule. Confirm the product-specific Globex break and holiday hours with CME before use."
     }
   ],
   "events": [
@@ -299,7 +482,17 @@
         "SI",
         "BTC"
       ],
-      "source": "https://www.bls.gov/schedule/2026/11_sched_list.htm"
+      "source": "https://www.bls.gov/schedule/2026/11_sched_list.htm",
+      "publisher": "Bureau of Labor Statistics",
+      "scheduledLocalDate": "2026-11-10",
+      "scheduledLocalTime": "08:30",
+      "timezone": "America/New_York",
+      "scheduledAtUtc": null,
+      "actualAtUtc": null,
+      "retrievedAtUtc": null,
+      "revisionAtUtc": null,
+      "status": "unverified",
+      "dataClass": "publisher-link-reference"
     },
     {
       "date": "2026-11-12",
@@ -309,7 +502,17 @@
         "CL",
         "6C"
       ],
-      "source": "https://www.eia.gov/petroleum/supply/weekly/schedule.php"
+      "source": "https://www.eia.gov/petroleum/supply/weekly/schedule.php",
+      "publisher": "U.S. Energy Information Administration",
+      "scheduledLocalDate": "2026-11-12",
+      "scheduledLocalTime": "12:00",
+      "timezone": "America/New_York",
+      "scheduledAtUtc": null,
+      "actualAtUtc": null,
+      "retrievedAtUtc": null,
+      "revisionAtUtc": null,
+      "status": "unverified",
+      "dataClass": "publisher-link-reference"
     },
     {
       "date": "2026-11-13",
@@ -329,7 +532,17 @@
         "SI",
         "BTC"
       ],
-      "source": "https://www.bls.gov/schedule/2026/11_sched_list.htm"
+      "source": "https://www.bls.gov/schedule/2026/11_sched_list.htm",
+      "publisher": "Bureau of Labor Statistics",
+      "scheduledLocalDate": "2026-11-13",
+      "scheduledLocalTime": "08:30",
+      "timezone": "America/New_York",
+      "scheduledAtUtc": null,
+      "actualAtUtc": null,
+      "retrievedAtUtc": null,
+      "revisionAtUtc": null,
+      "status": "unverified",
+      "dataClass": "publisher-link-reference"
     },
     {
       "date": "2026-11-18",
@@ -349,7 +562,17 @@
         "SI",
         "BTC"
       ],
-      "source": "https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm"
+      "source": "https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm",
+      "publisher": "Federal Reserve",
+      "scheduledLocalDate": "2026-11-18",
+      "scheduledLocalTime": null,
+      "timezone": "America/New_York",
+      "scheduledAtUtc": null,
+      "actualAtUtc": null,
+      "retrievedAtUtc": null,
+      "revisionAtUtc": null,
+      "status": "unverified",
+      "dataClass": "publisher-link-reference"
     },
     {
       "date": "2026-11-25",
@@ -369,7 +592,17 @@
         "SI",
         "BTC"
       ],
-      "source": "https://www.bea.gov/news/schedule/"
+      "source": "https://www.bea.gov/news/schedule/",
+      "publisher": "Bureau of Economic Analysis",
+      "scheduledLocalDate": "2026-11-25",
+      "scheduledLocalTime": "08:30",
+      "timezone": "America/New_York",
+      "scheduledAtUtc": null,
+      "actualAtUtc": null,
+      "retrievedAtUtc": null,
+      "revisionAtUtc": null,
+      "status": "unverified",
+      "dataClass": "publisher-link-reference"
     },
     {
       "date": "2026-12-07",
@@ -378,7 +611,17 @@
       "markets": [
         "6A"
       ],
-      "source": "https://www.rba.gov.au/schedules-events/board-meeting-schedules.html"
+      "source": "https://www.rba.gov.au/schedules-events/board-meeting-schedules.html",
+      "publisher": "Reserve Bank of Australia",
+      "scheduledLocalDate": "2026-12-07",
+      "scheduledLocalTime": null,
+      "timezone": null,
+      "scheduledAtUtc": null,
+      "actualAtUtc": null,
+      "retrievedAtUtc": null,
+      "revisionAtUtc": null,
+      "status": "unverified",
+      "dataClass": "publisher-link-reference"
     },
     {
       "date": "2026-12-08",
@@ -398,7 +641,17 @@
         "SI",
         "BTC"
       ],
-      "source": "https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm"
+      "source": "https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm",
+      "publisher": "Federal Reserve",
+      "scheduledLocalDate": "2026-12-08",
+      "scheduledLocalTime": null,
+      "timezone": null,
+      "scheduledAtUtc": null,
+      "actualAtUtc": null,
+      "retrievedAtUtc": null,
+      "revisionAtUtc": null,
+      "status": "unverified",
+      "dataClass": "publisher-link-reference"
     },
     {
       "date": "2026-12-09",
@@ -412,7 +665,17 @@
         "DX",
         "ZN"
       ],
-      "source": "https://www.bankofcanada.ca/core-functions/monetary-policy/key-interest-rate/"
+      "source": "https://www.bankofcanada.ca/core-functions/monetary-policy/key-interest-rate/",
+      "publisher": "Bank of Canada",
+      "scheduledLocalDate": "2026-12-09",
+      "scheduledLocalTime": "09:45",
+      "timezone": "America/New_York",
+      "scheduledAtUtc": null,
+      "actualAtUtc": null,
+      "retrievedAtUtc": null,
+      "revisionAtUtc": null,
+      "status": "unverified",
+      "dataClass": "publisher-link-reference"
     },
     {
       "date": "2026-12-09",
@@ -432,7 +695,17 @@
         "SI",
         "BTC"
       ],
-      "source": "https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm"
+      "source": "https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm",
+      "publisher": "Federal Reserve",
+      "scheduledLocalDate": "2026-12-09",
+      "scheduledLocalTime": null,
+      "timezone": null,
+      "scheduledAtUtc": null,
+      "actualAtUtc": null,
+      "retrievedAtUtc": null,
+      "revisionAtUtc": null,
+      "status": "unverified",
+      "dataClass": "publisher-link-reference"
     },
     {
       "date": "2026-12-16",
@@ -442,7 +715,17 @@
         "6E",
         "DX"
       ],
-      "source": "https://www.ecb.europa.eu/press/calendars/mgcgc/html/index.en.html"
+      "source": "https://www.ecb.europa.eu/press/calendars/mgcgc/html/index.en.html",
+      "publisher": "European Central Bank",
+      "scheduledLocalDate": "2026-12-16",
+      "scheduledLocalTime": null,
+      "timezone": null,
+      "scheduledAtUtc": null,
+      "actualAtUtc": null,
+      "retrievedAtUtc": null,
+      "revisionAtUtc": null,
+      "status": "unverified",
+      "dataClass": "publisher-link-reference"
     },
     {
       "date": "2026-12-17",
@@ -454,7 +737,17 @@
         "DX",
         "6J"
       ],
-      "source": "https://www.bankofengland.co.uk/monetary-policy/upcoming-mpc-dates"
+      "source": "https://www.bankofengland.co.uk/monetary-policy/upcoming-mpc-dates",
+      "publisher": "Bank of England",
+      "scheduledLocalDate": "2026-12-17",
+      "scheduledLocalTime": null,
+      "timezone": null,
+      "scheduledAtUtc": null,
+      "actualAtUtc": null,
+      "retrievedAtUtc": null,
+      "revisionAtUtc": null,
+      "status": "unverified",
+      "dataClass": "publisher-link-reference"
     },
     {
       "date": "2026-12-18",
@@ -467,7 +760,27 @@
         "RTY",
         "6J"
       ],
-      "source": "https://www.cmegroup.com/tools-information/calendars/expiration-calendar.html"
+      "source": "https://www.cmegroup.com/tools-information/calendars/expiration-calendar.html",
+      "publisher": "CME Group",
+      "scheduledLocalDate": "2026-12-18",
+      "scheduledLocalTime": null,
+      "timezone": null,
+      "scheduledAtUtc": null,
+      "actualAtUtc": null,
+      "retrievedAtUtc": null,
+      "revisionAtUtc": null,
+      "status": "unverified",
+      "dataClass": "publisher-link-reference"
     }
-  ]
+  ],
+  "calendarSnapshot": {
+    "snapshotId": "imported-reference-2026-11-08",
+    "status": "unverified",
+    "dataClass": "publisher-link-reference",
+    "asOfDate": "2026-11-08",
+    "retrievedAtUtc": null,
+    "revisionCheckedAtUtc": null,
+    "actualReleaseRecordedAtUtc": null,
+    "notes": "Dates and source labels were preserved from an imported reference snapshot. No successful publisher retrieval, exact schedule verification, revision check or actual release time is recorded. Do not treat these rows as a current or upcoming schedule."
+  }
 }

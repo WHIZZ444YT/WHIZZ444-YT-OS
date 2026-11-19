@@ -48,7 +48,7 @@ ok('Part 6 COT normalization preserves source category mappings and missing valu
 ok('Part 6 COT separates position, publication and retrieval timestamps','positionDate: reportDate' in cot_contracts and 'publishedAt: null' in cot_contracts and 'retrievedAt' in cot_contracts and 'publicationTimestampStatus' in cot_contracts)
 ok('Part 6 COT search supports bounded names or exact source market codes','validateCotQuery' in cot_contracts and 'contract_market_code' in worker and 'upper(contract_market_name)' in worker and 'cftc_contract_market_code =' in worker)
 ok('Part 6 COT page adds variant selection, category history chart and CSV export',all(x in cot_page for x in ['cotVariant','cotChart','netPercentOfOpenInterest','URL.createObjectURL']) and 'Export filtered CSV' in cot_builder and 'cot-chart' in cot_builder)
-cot_migration=(ROOT/'supabase/migrations/20261119173000_add_cot_report_observations.sql').read_text(encoding="utf-8")
+cot_migration=(ROOT/'supabase/migrations/20261119125044_add_cot_report_observations.sql').read_text(encoding="utf-8")
 ok('Part 6 COT persistence migration is idempotent, versioned, indexed and read-only to browser roles',all(x in cot_migration for x in ['create table if not exists','report_variant','published_at timestamptz','source_fields jsonb','unique (report_family, report_variant, contract_market_code, report_date, trader_category)','create index if not exists','enable row level security','revoke insert, update, delete']))
 ok('Dashboard preserves missing numeric values','v===null||v===undefined' in dashboard and 'Object.values(state.providers)' in dashboard)
 ok('Risk calculator supports standard/micro profiles and explicitly conditional tick references','market.microSpec' in risk and 'contractMode' in risk and 'CONDITIONAL ESTIMATE · SPEC UNVERIFIED' in risk)
@@ -173,7 +173,7 @@ ok('P4 database migration enforces owner RLS and user-linked trade rows',
 
 p5_ui=(ROOT/'assets/account.js').read_text(encoding="utf-8")
 p5_notes=ROOT/'supabase/migrations/20261108161355_add_cloud_workspace_notes_and_alert_events.sql'
-p5_legacy=ROOT/'supabase/migrations/20261108161450_add_idempotent_legacy_trade_import.sql'
+p5_legacy=ROOT/'supabase/migrations/20261108162550_add_idempotent_legacy_trade_import.sql'
 ok('P5 account supports refresh-token persistence, private CRUD, analytics and legacy imports',
    'grant_type=refresh_token' in p5_ui and all(x in p5_ui for x in ['/rest/v1/journal_trades','/rest/v1/watchlists','/rest/v1/watchlist_items','/rest/v1/research_notes','/rest/v1/alert_rules','/rest/v1/alert_events','/rest/v1/user_preferences']) and 'ictfos.journal.v1' in p5_ui and 'fios.v2.journal' in p5_ui and 'fios.v2.watchlist' in p5_ui)
 ok('P5 browser code does not expose privileged Supabase credentials',
@@ -187,7 +187,7 @@ ok('P5 alert and backtest composite foreign keys have covering indexes',
    p5_fk_indexes.exists() and 'on public.alert_events(alert_id, user_id)' in p5_fk_indexes.read_text(encoding="utf-8") and
    'on public.strategy_backtest_trades(backtest_id, user_id)' in p5_fk_indexes.read_text(encoding="utf-8"))
 
-p9_migration=ROOT/'supabase/migrations/20261119190000_complete_private_workspace_records.sql'
+p9_migration=ROOT/'supabase/migrations/20261119125110_complete_private_workspace_records.sql'
 p9_function=ROOT/'supabase/functions/delete-account/index.ts'
 p9_academy=(ROOT/'assets/academy-learning.js').read_text(encoding="utf-8")
 ok('P9 journal and research schema adds explicit futures contract, expiry and review fields',

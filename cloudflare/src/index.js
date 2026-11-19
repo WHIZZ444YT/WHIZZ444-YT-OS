@@ -1,7 +1,7 @@
 import { ECONOMIC_PROVIDER_CONFIG, fetchEconomicProvider } from "./economic-providers.js";
 import { filterNewsArticles, marketDataStatus, NEWS_SOURCE_REGISTRY, newsResponseEnvelope, validateNewsQuery, classifyNewsTopics, keywordRelevanceScore } from "./news-contracts.mjs";
 import { nextProviderCircuitState, providerCircuitIsOpen } from "./provider-http.mjs";
-import { COT_DATASETS, asFiniteNumber, cotResponseEnvelope, normalizeCotRows, validateCotQuery } from "./cot-contracts.mjs";
+import { COT_DATASETS, asFiniteNumber, cotResponseEnvelope, cotSourceColumns, normalizeCotRows, validateCotQuery } from "./cot-contracts.mjs";
 
 const NEWS_KEY = "snapshot:gdelt:news:v1";
 const NEWS_REFRESH_LOCK_KEY = "lock:gdelt:manual-refresh:v1";
@@ -144,14 +144,19 @@ export default {
    if(!validation.ok)return json({schema_version:1,data_type:"cftc_cot_positions",status:"invalid-query",error:{code:validation.code,message:validation.message}},400,cors);
    const {report,variant,q,contractMarketCode}=validation.query;
    const marketKey=(contractMarketCode||q).toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"")||"all";
-   const cacheKey="cot:"+report+":"+variant+":v3:"+marketKey;
+    const cacheKey="cot:"+report+":"+variant+":v5:"+marketKey;
    let snapshot=env.SNAPSHOTS?await env.SNAPSHOTS.get(cacheKey,"json"):null;
    if(!snapshot||!snapshot.retrievedAt||Date.now()-Date.parse(snapshot.retrievedAt)>6*60*60*1000){
-    try{snapshot=await fetchCot(report,variant,q,contractMarketCode,env);if(env.SNAPSHOTS)await env.SNAPSHOTS.put(cacheKey,JSON.stringify(snapshot),{expirationTtl:60*60*8});}
+     try{
+      snapshot=await fetchCot(report,variant,q,contractMarketCode,env);
+      const {rows:_sourceRows,...compactSnapshot}=snapshot;
+      snapshot={...compactSnapshot,normalizedRows:(snapshot.normalizedRows||[]).map(({sourceNativeFields,...row})=>row)};
+      if(env.SNAPSHOTS)await env.SNAPSHOTS.put(cacheKey,JSON.stringify(snapshot),{expirationTtl:60*60*8});
+     }
     catch(error){if(!snapshot)return json({schema_version:1,data_type:"cftc_cot_positions",status:"unavailable",report_family:report,report_variant:variant,rows:[],normalizedRows:[],source_url:validation.dataset.sourceUrl,error:"CFTC PRE request failed"},502,cors);snapshot.status="stale";snapshot.lastError="CFTC PRE refresh failed; showing last successful cache";}
    }
    const payload=cotResponseEnvelope(snapshot,snapshot.normalizedRows||normalizeCotRows(snapshot.rows||[],{report,variant,retrievedAt:snapshot.retrievedAt,sourceUrl:snapshot.sourceUrl}));
-   return json({...snapshot,...payload,rows:snapshot.rows,normalizedRows:payload.rows,filtered:Boolean(q||contractMarketCode),query:q||null,contract_market_code:contractMarketCode||null,last_error:snapshot.lastError||null},200,{...cors,"Cache-Control":"public, max-age=900, s-maxage=1800"});
+    return json({...snapshot,...payload,normalizedRows:payload.rows,filtered:Boolean(q||contractMarketCode),query:q||null,contract_market_code:contractMarketCode||null,query_scope:q||contractMarketCode?"filtered-market-history":"latest-provider-observations",last_error:snapshot.lastError||null},200,{...cors,"Cache-Control":"public, max-age=900, s-maxage=1800"});
   }
   if(url.pathname==="/api/v1/macro"){
    const cacheKey="macro:bls:v1";
@@ -477,7 +482,8 @@ async function fetchCot(report,variant="futures-only",market="",contractMarketCo
  const dataset=COT_DATASETS[report]?.[variant==="combined"?"combined":"futures_only"];
  if(!dataset)throw new Error("Unsupported CFTC report family or variant");
  const u=new URL("https://publicreporting.cftc.gov/resource/"+dataset.id+".json");
- u.searchParams.set("$limit",market||contractMarketCode?"5000":"1000");
+ u.searchParams.set("$select",cotSourceColumns(report).join(","));
+ u.searchParams.set("$limit","156");
  u.searchParams.set("$order","report_date_as_yyyy_mm_dd DESC");
  if(contractMarketCode){
   u.searchParams.set("$where","cftc_contract_market_code = '"+contractMarketCode+"'");

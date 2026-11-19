@@ -1,12 +1,12 @@
 {
-  "name": "Finance Intelligence OS — Global Research Cockpit",
-  "short_name": "Finance OS",
-  "description": "Open-source global finance research dashboard for markets, news discovery, cross-asset catalysts, watchlists and research notes.",
+  "name": "Futures Intelligence OS — Futures Research & ICT Education",
+  "short_name": "Futures OS",
+  "description": "Futures-only research workspace for listed futures markets, ICT Futures education, macro, CFTC positioning, reproducible testing and private trader tools.",
   "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",
-  "background_color": "#f3f6fa",
-  "theme_color": "#102a43",
+  "background_color": "#0a1420",
+  "theme_color": "#0a1420",
   "icons": [
     {
       "src": "./icon.svg",

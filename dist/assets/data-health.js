@@ -8,13 +8,12 @@
   {id:"bls",name:"US Bureau of Labor Statistics",path:"/api/v1/macro",detail:"Historical inflation and labour observations; not a real-time market feed."},
   {id:"cftc",name:"CFTC COT · TFF",path:"/api/v1/cot?report=tff&q=NASDAQ",detail:"Weekly financial-futures positioning and reported open interest."},
   {id:"nyfed",name:"Federal Reserve Bank of New York",path:"/api/v1/macro/funding",detail:"Published overnight reference rates; daily/business-day cadence."},
-  {id:"polymarket",name:"Polymarket public events",path:"/api/v1/prediction/polymarket",detail:"Read-only prediction-market outcomes, volume and liquidity metadata."},
-  {id:"kalshi",name:"Kalshi public market data",path:"/api/v1/prediction/kalshi",detail:"Read-only event-market prices and venue volume metadata."},
   {id:"bea",name:"BEA National Accounts",path:"/api/v1/economic/bea",detail:"Quarterly national-accounts data; requires BEA_API_KEY."},
   {id:"eia",name:"EIA Weekly Petroleum",path:"/api/v1/economic/eia",detail:"Weekly crude-oil inventory history; requires EIA_API_KEY."},
   {id:"fred",name:"FRED Economic Series",path:"/api/v1/economic/fred",detail:"Historical rate and macro series; requires FRED_API_KEY."},
   {id:"treasury",name:"US Treasury Fiscal Data",path:"/api/v1/economic/us_treasury",detail:"Monthly average interest rates on marketable securities."},
-  {id:"ecb",name:"ECB USD/EUR Reference Series",path:"/api/v1/economic/ecb",detail:"Daily ECB reference rate; not a live FX quote."}
+  {id:"ecb",name:"ECB USD/EUR Reference Series",path:"/api/v1/economic/ecb",detail:"Daily ECB reference rate; not a live FX quote."},
+  {id:"market-data",name:"Licensed Futures Market Data",path:"/api/v1/market-data/status",detail:"CME/ICE exchange prices, quotes and bars; remains unavailable until a licensed provider and public display entitlement are configured."}
  ];
  const stateLabel=s=>({fresh:"Fresh",partial:"Partial",stale:"Stale snapshot",unavailable:"Unavailable","not-yet-fetched":"Not fetched","not-configured":"Not configured","available-on-demand":"Available on request","official-source-link":"Official source link","needs-worker-secret":"Worker secret needed","needs-public-space-key":"Public key needed"}[String(s||"").toLowerCase()]||String(s||"Unknown").replaceAll("-"," "));
  const tone=s=>["fresh","partial"].includes(String(s||"").toLowerCase())?"good":["stale","not-yet-fetched","available-on-demand","not-configured","official-source-link","needs-worker-secret","needs-public-space-key"].includes(String(s||"").toLowerCase())?"warn":"bad";
@@ -48,13 +47,11 @@
     }
     const d=result.value.data;
     const status=String(d.status||"unknown").toLowerCase();
-    const checked=d.lastCheckedAt||d.retrievedAt||d.generatedAt||"timestamp not supplied";
-    const asOf=d.dataAsOf||null;
+    const checked=d.lastCheckedAt||d.retrievedAt||d.retrieved_at||d.generatedAt||"timestamp not supplied";
+    const asOf=d.dataAsOf||d.data_as_of||null;
     let note=d.lastError||d.error||"";
     if(e.id==="news"&&d.successfulQueries!==undefined)note=(d.successfulQueries+"/"+d.queryCount+" discovery queries succeeded. "+(d.refresh?.status&&d.refresh.status!=="not-requested"?"Manual refresh: "+d.refresh.status+". ":""))+note;
     if(e.id==="cftc")note=(d.rows?.length||0)+" matching CFTC report rows returned. Weekly reporting; not intraday.";
-    if(e.id==="polymarket")note=(d.items?.length||0)+" event records returned. Event-market venue metrics are not futures volume.";
-    if(e.id==="kalshi")note=(d.items?.length||0)+" open event-market records returned. Venue volume is not futures volume.";
     cards.push({name:e.name,group:"UPSTREAM SNAPSHOT",status,detail:e.detail,path:e.path,checked,asOf,note});
    }
    for(const p of providers){

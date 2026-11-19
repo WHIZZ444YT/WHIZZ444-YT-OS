@@ -1,8 +1,10 @@
+import { calculateFuturesPosition, formatMicros } from "./futures-risk-engine.mjs";
+
 (async()=>{
  const sel=document.getElementById('contract'),out=document.getElementById('riskResult');
  if(!sel||!out)return;
- const number=(id)=>{const el=document.getElementById(id);if(!el||el.value.trim()==='')return null;const n=Number(el.value);return Number.isFinite(n)?n:null;};
- const fmt=v=>new Intl.NumberFormat('en-US',{style:'currency',currency:'USD',maximumFractionDigits:2}).format(v);
+ const $=id=>document.getElementById(id);
+ const escapeHtml=value=>String(value??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
  let contracts=[];
  try{
   const response=await fetch('/ict-futures/data/market-universe.json',{headers:{Accept:'application/json'}});
@@ -19,50 +21,58 @@
  const standard=document.createElement('option');standard.value='standard';standard.textContent='Standard';
  const micro=document.createElement('option');micro.value='micro';micro.textContent='Micro';
  mode.append(standard,micro);modeLabel.appendChild(mode);
- if(contractLabel?.parentNode)contractLabel.insertAdjacentElement('afterend',modeLabel);
- else sel.insertAdjacentElement('afterend',modeLabel);
+ if(contractLabel?.parentNode)contractLabel.insertAdjacentElement('afterend',modeLabel);else sel.insertAdjacentElement('afterend',modeLabel);
  const selected=()=>contracts.find(x=>x.id===sel.value);
  function syncMode(){
   const market=selected(),hasMicro=Boolean(market?.microSpec&&Number(market.microSpec.tickValue)>0&&Number(market.microSpec.tickSize)>0);
-  micro.disabled=!hasMicro;
-  if(!hasMicro)mode.value='standard';
-  modeLabel.hidden=!hasMicro;
+  micro.disabled=!hasMicro;if(!hasMicro)mode.value='standard';modeLabel.hidden=!hasMicro;
  }
+ function renderError(message){out.innerHTML='<p class="risk-error"><b>Check the inputs:</b> '+escapeHtml(message)+'</p>';}
  function calculate(){
   const market=selected();if(!market){out.textContent='Select a futures contract.';return;}
   const spec=mode.value==='micro'?market.microSpec:market;
-  const tickValue=Number(spec?.tickValue),tickSize=Number(spec?.tickSize);
-  const balance=number('balance'),riskPercent=number('riskPct'),stopTicks=number('stopTicks'),targetTicks=number('targetTicks');
-  const commission=number('commission'),slippage=number('slippage');
-  const invalid=balance===null||balance<=0||riskPercent===null||riskPercent<=0||riskPercent>100||
-   stopTicks===null||stopTicks<=0||targetTicks===null||targetTicks<=0||
-   commission===null||commission<0||slippage===null||slippage<0||
-   !Number.isFinite(tickValue)||tickValue<=0||!Number.isFinite(tickSize)||tickSize<=0;
-  if(invalid){out.textContent='Enter a positive balance, risk between 0 and 100%, positive stop/target ticks, non-negative costs, and a valid contract tick specification.';return;}
-  const riskBudget=balance*riskPercent/100;
-  const stopCost=stopTicks*tickValue;
-  const slippageCost=slippage*tickValue;
-  const perContractRisk=stopCost+slippageCost+commission;
-  if(!Number.isFinite(perContractRisk)||perContractRisk<=0){out.textContent='The estimated per-contract stop risk is invalid. Check the inputs.';return;}
-  const quantity=Math.floor(riskBudget/perContractRisk);
-  const estimatedStopRisk=perContractRisk*quantity;
-  const grossTarget=targetTicks*tickValue*quantity;
-  const netTarget=((targetTicks-slippage)*tickValue-commission)*quantity;
-  const netR=(((targetTicks-slippage)*tickValue)-commission)/perContractRisk;
-  const warning=quantity===0
-   ?'<p><b>Risk limit:</b> One contract exceeds the stated risk budget. Reduce the stop distance or use a supported micro contract; do not increase the risk limit just to force a trade.</p>'
-   :'<p>Quantity is rounded down to stay within the stated risk budget.</p>';
-  const specState=market.specStatus||market.verificationStatus||'unverified';
-  out.innerHTML='<div class="result-grid">'+
-   '<div><span class="muted">Contracts</span><b>'+quantity+'</b></div>'+
-   '<div><span class="muted">Risk budget</span><b>'+fmt(riskBudget)+'</b></div>'+
-   '<div><span class="muted">Estimated stop risk</span><b>'+fmt(estimatedStopRisk)+'</b></div>'+
-   '<div><span class="muted">Gross target before costs</span><b>'+fmt(grossTarget)+'</b></div>'+
-   '<div><span class="muted">Estimated net target</span><b>'+fmt(netTarget)+'</b></div>'+
-   '<div><span class="muted">Net reward / risk</span><b>'+netR.toFixed(2)+'R</b></div>'+
-   '<div><span class="muted">Risk utilisation</span><b>'+(riskBudget?((estimatedStopRisk/riskBudget)*100).toFixed(1)+'%':'—')+'</b></div>'+
-   '<div><span class="muted">Tick size / value</span><b>'+tickSize+' / '+fmt(tickValue)+'</b></div></div>'+
-   '<p class="fine-print">Selected '+(mode.value==='micro'?'micro':'standard')+' profile · '+String(specState)+' · USD estimate.</p>'+warning;
+  const exactContract=$('exactContract').value.trim(),expiry=$('expiryDate').value;
+  if(!exactContract||!/^\d{4}-\d{2}-\d{2}$/.test(expiry)){renderError('Enter the exact listed contract code and source-supplied expiry date.');return;}
+  const costSource=$('costSource').value.trim(),costAsOf=$('costAsOf').value;
+  if(!costSource||!/^\d{4}-\d{2}-\d{2}$/.test(costAsOf)){renderError('Enter the source and date for commission, spread and slippage assumptions.');return;}
+  const tickValue=String(spec?.tickValue??''),tickSize=String(spec?.tickSize??'');
+  const state=String(spec?.specStatus||market.specStatus||'unverified').toLowerCase();
+  const verified=state==='verified'&&Boolean(spec?.specVerifiedAt||market.specVerifiedAt)&&Boolean(spec?.specEffectiveFrom||market.specEffectiveFrom);
+  try{
+   const result=calculateFuturesPosition({
+    balance:$('balance').value,riskPercent:$('riskPct').value,tickValue,
+    stopTicks:$('stopTicks').value,targetTicks:$('targetTicks').value,
+    commissionPerContract:$('commission').value,spreadTicks:$('spreadTicks').value,
+    slippageTicks:$('slippageTicks').value,maxContracts:$('maxContracts').value,
+    dailyLossRemaining:$('dailyLossRemaining').value,drawdownRemaining:$('drawdownRemaining').value
+   });
+   const sourceUrl=String(market.specsUrl||'');
+   const sourceLink=/^https:\/\/(www\.)?(cmegroup\.com|ice\.com)\//i.test(sourceUrl)
+    ?' · <a href="'+escapeHtml(sourceUrl)+'" target="_blank" rel="noopener noreferrer">official exchange source</a>':'';
+   const expiryText=new Date(expiry+'T00:00:00Z').toISOString().slice(0,10);
+   const resultStatus=verified?'CONDITIONAL · SPEC RECORD MARKED VERIFIED':'CONDITIONAL ESTIMATE · SPEC UNVERIFIED';
+   const remainingBy=result.quantity===result.maxContracts?'Maximum contract cap':(result.constrainedByDailyLoss?'Daily loss allowance':(result.constrainedByDrawdown?'Maximum drawdown remaining':'Per-trade risk percentage'));
+   const warning=result.quantity===0
+    ?'<p><b>Zero contracts:</b> One contract exceeds the effective risk allowance or the selected allowance is exhausted. Reduce the stop distance or select a verified supported micro contract; do not raise limits solely to force a position.</p>'
+    :'<p>Quantity is rounded down to whole contracts and capped at the entered maximum. It uses '+escapeHtml(remainingBy)+' as the binding budget limit.</p>';
+   out.innerHTML='<div class="result-grid">'+
+    '<div><span class="muted">Contracts</span><b>'+result.quantity+'</b></div>'+
+    '<div><span class="muted">Requested per-trade budget</span><b>'+formatMicros(result.riskBudgetMicros)+'</b></div>'+
+    '<div><span class="muted">Effective remaining allowance</span><b>'+formatMicros(result.effectiveBudgetMicros)+'</b></div>'+
+    '<div><span class="muted">Gross stop risk / contract</span><b>'+formatMicros(result.grossStopRiskPerContractMicros)+'</b></div>'+
+    '<div><span class="muted">Round-turn commission &amp; fees / contract</span><b>'+formatMicros(result.commissionPerContractMicros)+'</b></div>'+
+    '<div><span class="muted">Estimated spread cost / contract</span><b>'+formatMicros(result.spreadCostPerContractMicros)+'</b></div>'+
+    '<div><span class="muted">Estimated slippage cost / contract</span><b>'+formatMicros(result.slippageCostPerContractMicros)+'</b></div>'+
+    '<div><span class="muted">All-in stop risk / contract</span><b>'+formatMicros(result.allInRiskPerContractMicros)+'</b></div>'+
+    '<div><span class="muted">Total modeled stop risk</span><b>'+formatMicros(result.totalRiskMicros)+'</b></div>'+
+    '<div><span class="muted">Effective allowance used</span><b>'+(result.riskUtilizationPct===null?'—':result.riskUtilizationPct.toFixed(2)+'%')+'</b></div>'+
+    '<div><span class="muted">Gross target before costs</span><b>'+formatMicros(result.grossTargetMicros)+'</b></div>'+
+    '<div><span class="muted">Estimated net target</span><b>'+formatMicros(result.estimatedNetTargetMicros)+'</b></div>'+
+    '<div><span class="muted">Net reward / risk</span><b>'+result.netRewardRisk.toFixed(2)+'R</b></div>'+
+    '<div><span class="muted">Tick size / tick value</span><b>'+escapeHtml(tickSize)+' / '+formatMicros(tickValue)+'</b></div></div>'+
+    '<p class="fine-print"><b>'+resultStatus+'</b> · '+escapeHtml(exactContract)+' · expiry '+escapeHtml(expiryText)+' · '+escapeHtml(mode.value==='micro'?'micro':'standard')+' profile · reference set '+escapeHtml(spec?.specVersionId||market.specVersionId||'version-not-recorded')+' · checked '+escapeHtml(spec?.specVerifiedAt||market.specVerifiedAt||'not recorded')+' · effective '+escapeHtml(spec?.specEffectiveFrom||market.specEffectiveFrom||'not recorded')+sourceLink+'. Cost source: '+escapeHtml(costSource)+' · as of '+escapeHtml(costAsOf)+'. The expiry and contract code are user-entered and are not reconciled against an exchange calendar.</p>'+warning+
+    '<p class="fine-print">USD arithmetic uses integer micro-dollar amounts and whole ticks. FX conversion, margin, liquidation, correlated exposure, session limits and event risk are not included.</p>';
+  }catch(error){renderError(error.message);}
  }
  sel.addEventListener('change',()=>{syncMode();calculate();});
  mode.addEventListener('change',calculate);

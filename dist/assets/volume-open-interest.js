@@ -22,20 +22,20 @@
   {id:"si",name:"Silver",report:"disaggregated",query:"SILVER",exchange:"COMEX"},
   {id:"btc",name:"CME Bitcoin",report:"tff",query:"BITCOIN",exchange:"CME"}
  ];
- let observations=[],selectedContract=contracts[0],selectedName="",history=[];
+ let observations=[],selectedContract=contracts[0],selectedName="",selectedCode="",history=[];
  function message(text,kind="neutral"){$("voiState").textContent=text;$("voiState").className="data-message "+kind;}
  function api(path){if(!API)throw new Error("Finance OS API gateway is not configured.");return fetch(API+path,{headers:{Accept:"application/json"},signal:AbortSignal.timeout(18000),cache:"no-store"}).then(async r=>{if(!r.ok)throw new Error("CFTC gateway returned HTTP "+r.status);return r.json();});}
  function marketSelect(){const s=$("voiMarket");s.innerHTML=contracts.map(c=>'<option value="'+c.id+'">'+esc(c.name)+' · '+c.exchange+'</option>').join("");}
  function contractRows(){
-  const key=$("voiInstrument"), names=[...new Set(observations.map(r=>r.marketName).filter(Boolean))];
-  key.innerHTML=names.map(n=>'<option value="'+esc(n)+'">'+esc(n)+'</option>').join("");
-  selectedName=names[0]||"";
-  $("voiMarketName").textContent=selectedName||"No matching CFTC market label";
+  const key=$("voiInstrument"), markets=[...new Map(observations.map(row=>[row.contractMarketCode||row.marketName,row]).filter(([id])=>id)).values()];
+  key.innerHTML=markets.map(row=>{const id=row.contractMarketCode||row.marketName,label=[row.marketName,row.contractMarketCode?"CFTC "+row.contractMarketCode:"source code unavailable",row.exchangeMarketName].filter(Boolean).join(" · ");return '<option value="'+esc(id)+'">'+esc(label)+'</option>';}).join("");
+  const first=markets[0];selectedName=first?.marketName||"";selectedCode=first?.contractMarketCode||"";
+  $("voiMarketName").textContent=selectedName+(selectedCode?" · CFTC "+selectedCode:"")||"No matching CFTC market label";
  }
  function toRows(){
   const name=selectedName;
   const seen=new Set();
-  return observations.filter(r=>r.marketName===name).map(r=>({date:r.reportDate,oi:number(r.openInterest)})).filter(r=>r.date&&r.oi!==null).filter(r=>{if(seen.has(r.date))return false;seen.add(r.date);return true;}).sort((a,b)=>a.date.localeCompare(b.date));
+  return observations.filter(r=>selectedCode?r.contractMarketCode===selectedCode:r.marketName===name).map(r=>({date:r.reportDate,oi:number(r.openInterest)})).filter(r=>r.date&&r.oi!==null).filter(r=>{if(seen.has(r.date))return false;seen.add(r.date);return true;}).sort((a,b)=>a.date.localeCompare(b.date));
  }
  function renderChart(){
   history=toRows().slice(-26);
@@ -59,14 +59,15 @@
  }
  async function load(){
   selectedContract=contracts.find(x=>x.id===$("voiMarket").value)||contracts[0];
-  $("voiReport").textContent=selectedContract.report==="tff"?"CFTC TFF · Futures Only":"CFTC Disaggregated · Futures Only";
-  $("voiSource").href=selectedContract.report==="tff"?"https://publicreporting.cftc.gov/Commitments-of-Traders/TFF-Futures-Only/gpe5-46if":"https://publicreporting.cftc.gov/w/72hh-3qpy/default";
+  const variant=$("voiVariant").value;
+  $("voiReport").textContent=(selectedContract.report==="tff"?"CFTC TFF":"CFTC Disaggregated")+" · "+(variant==="combined"?"Futures and Options Combined":"Futures Only");
   $("voiMarketName").textContent="Loading CFTC market rows…";
   $("voiChart").innerHTML='<div class="loading-state">Loading weekly open-interest history…</div>';
   message("Requesting the latest public CFTC report for "+selectedContract.name+"…");
   try{
-   const d=await api("/api/v1/volume-open-interest?report="+selectedContract.report+"&q="+encodeURIComponent(selectedContract.query));
+   const d=await api("/api/v1/volume-open-interest?report="+selectedContract.report+"&variant="+variant+"&q="+encodeURIComponent(selectedContract.query));
    observations=Array.isArray(d.observations)?d.observations:[];
+   $("voiSource").href=d.source_url||"https://www.cftc.gov/MarketReports/CommitmentsofTraders/index.htm";
    contractRows();
    $("voiInstrument").disabled=!observations.length;
    $("voiStatus").textContent=(d.status||"unknown").toUpperCase();
@@ -85,7 +86,8 @@
  }
  marketSelect();
  $("voiMarket").addEventListener("change",load);
- $("voiInstrument").addEventListener("change",()=>{selectedName=$("voiInstrument").value;$("voiMarketName").textContent=selectedName;renderChart();});
+ $("voiVariant").addEventListener("change",load);
+ $("voiInstrument").addEventListener("change",()=>{const selected=$("voiInstrument").selectedOptions[0];selectedCode=/^[A-Za-z0-9]{3,12}$/.test(selected?.value||"")?selected.value:"";selectedName=selected?.textContent||"";$("voiMarketName").textContent=selectedName;renderChart();});
  $("voiRefresh").addEventListener("click",load);
  load();
 })();

@@ -15,17 +15,17 @@
 - [ ] Verify Speed Insights after real visitor traffic is collected.
 
 ## Cloudflare
-- [ ] Confirm Worker source version, KV namespace and 30-minute Cron are deployed.
+- [x] Confirm Worker 2.0.0, KV namespace and 30-minute Cron are deployed; query-string redaction is enabled (19 November 2026).
 - [ ] Configure server-side secrets in Cloudflare only; never commit them.
-- [ ] Test /health, /api/v1/providers, news, macro and COT endpoints.
-- [ ] Verify ingestion logs, provider freshness and Supabase upserts after one real run.
+- [x] Smoke-test the existing production site's no-search COT snapshot after the bounded Worker update; the TFF futures-only UI showed a fresh response with position date 10 November 2026 (19 November 2026).
+- [ ] Test /health, /api/v1/providers, news, macro and filtered COT variants individually; verify ingestion logs, provider freshness and Supabase upserts after a real configured run.
 
 ## Supabase
-- [ ] Confirm all repository migrations are applied to the active project.
-- [ ] Confirm RLS and security advisors remain clean.
+- [x] Confirm all repository migrations are applied to the active project; local migration filenames match remote history.
+- [x] Confirm RLS and security/health advisors are clean (19 November 2026). Two-user runtime isolation remains a separate test below.
 - [ ] Test a real user signup, confirmation, login, logout and cross-device session refresh.
 - [ ] Test owner-scoped journal, watchlist, notes, alert and lesson-progress reads/writes.
-- [ ] Apply and verify `20261119190000_complete_private_workspace_records` before serving the updated account UI.
+- [x] Apply and verify `20261119125110_complete_private_workspace_records` and `20261119125044_add_cot_report_observations` on the active production project (19 November 2026).
 - [ ] Deploy the `delete-account` function with exact `APP_ORIGIN` and server-only Supabase Auth secrets; verify reauthentication, attachment cleanup and account deletion with disposable test users.
 - [ ] Keep `accountDeletionEnabled: false` until the deployed deletion workflow passes disposable-user verification; enable the public UI flag only as part of that verified release.
 - [ ] Run two-user RLS checks for select/insert/update/delete across every private entity and test a forged foreign record ID.

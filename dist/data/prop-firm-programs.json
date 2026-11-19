@@ -1,0 +1,93 @@
+{
+  "schemaVersion": 1,
+  "registryId": "futures-prop-program-rules",
+  "reviewedAt": "2026-11-19",
+  "verificationPolicy": "Numerical program rules are public only when the exact firm, program, account size, platform, stage, applicable terms and official source are recorded and currently verified.",
+  "normalizedRuleContract": {
+    "threshold_type": [
+      "daily_loss",
+      "max_loss",
+      "trailing_loss",
+      "consistency",
+      "position_limit"
+    ],
+    "calculation_basis": [
+      "realized_balance",
+      "end_of_day_balance",
+      "intraday_equity",
+      "end_of_day_equity",
+      "high_water_mark",
+      "provider_defined"
+    ],
+    "ratchet_mode": [
+      "static",
+      "intraday_trailing",
+      "end_of_day_trailing",
+      "balance_based",
+      "equity_based",
+      "provider_defined"
+    ],
+    "required_rule_fields": [
+      "threshold_type",
+      "calculation_basis",
+      "amount",
+      "currency",
+      "reset_timezone",
+      "reset_rule",
+      "starting_threshold",
+      "trailing_amount",
+      "ratchet_mode",
+      "lock_condition",
+      "effective_from",
+      "effective_to",
+      "source_id",
+      "source_summary",
+      "checked_at",
+      "verification_status"
+    ]
+  },
+  "requiredRecordFields": [
+    "firm_legal_name",
+    "official_domain",
+    "program_name",
+    "account_size",
+    "currency",
+    "stage",
+    "platform",
+    "rules_version",
+    "effective_from",
+    "checked_at",
+    "official_source_urls",
+    "daily_loss_rule",
+    "maximum_loss_rule",
+    "drawdown_basis",
+    "reset_timezone",
+    "contract_limit_and_scaling",
+    "consistency_and_minimum_days",
+    "holding_and_news_rules",
+    "prohibited_markets_and_methods",
+    "fees_and_currency",
+    "payout_terms",
+    "eligibility_terms",
+    "verification_status"
+  ],
+  "records": [],
+  "unverifiedMentions": [
+    {
+      "id": "blue-shift-25k-unverified",
+      "label": "Blue Shift 25K",
+      "status": "UNVERIFIED",
+      "firmLegalName": null,
+      "officialDomain": null,
+      "programName": null,
+      "accountSize": null,
+      "currency": null,
+      "officialRulebookUrl": null,
+      "rulesVersion": null,
+      "effectiveFrom": null,
+      "sourceCheckedAt": "2026-11-19",
+      "reason": "The supplied name does not identify an exact firm and current official product rulebook. No fees, drawdown limits, contract limits, eligibility or payout terms are published from this mention.",
+      "sourceReviewNote": "A targeted public web search did not resolve an exact official futures program for this label. This is not an exhaustive identity determination."
+    }
+  ]
+}

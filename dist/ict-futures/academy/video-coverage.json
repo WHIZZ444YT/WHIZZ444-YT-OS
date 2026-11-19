@@ -1,0 +1,766 @@
+{
+  "schemaVersion": 1,
+  "status": "PARTIAL",
+  "eligibleCount": 82,
+  "coveredCount": 0,
+  "coveragePercent": 0.0,
+  "coveredIds": [],
+  "missingCount": 82,
+  "missingIds": [
+    "market-structure",
+    "swing-high-low",
+    "bos",
+    "mss",
+    "choch",
+    "displacement",
+    "liquidity",
+    "bsl",
+    "ssl",
+    "eqh",
+    "eql",
+    "pdh-pdl",
+    "pwh-pwl",
+    "session-high-low",
+    "liquidity-sweep",
+    "liquidity-run",
+    "irl-erl",
+    "opposing-liquidity",
+    "fvg",
+    "htf-fvg",
+    "ce",
+    "ifvg",
+    "bpr",
+    "volume-imbalance",
+    "fpfvg",
+    "liquidity-void",
+    "order-block",
+    "mean-threshold",
+    "breaker-block",
+    "mitigation-block",
+    "rejection-block",
+    "unicorn",
+    "pd-arrays",
+    "premium-discount",
+    "equilibrium",
+    "dealing-range",
+    "ote",
+    "fib-extensions",
+    "time-anchors",
+    "midnight-open",
+    "ndog",
+    "nwog",
+    "weekly-open",
+    "killzones",
+    "asian-range",
+    "silver-bullet",
+    "amd-po3",
+    "judas-swing",
+    "ipda",
+    "smt",
+    "weekly-profiles",
+    "smt-index",
+    "smt-fx-metals",
+    "cbdr",
+    "flout",
+    "sd-projections",
+    "ict-macros",
+    "midnight-open-vs-day-open",
+    "cisd",
+    "mmxm",
+    "turtle-soup",
+    "propulsion-block",
+    "breakaway-gap",
+    "opening-range-gap",
+    "event-horizon",
+    "reclaimed-order-block",
+    "suspension-block",
+    "vacuum-block",
+    "ny-lunch-reversal",
+    "market-maker-buy-model",
+    "market-maker-sell-model",
+    "ict-2022-model",
+    "liquidity-sweep-mss-model",
+    "fvg-continuation-model",
+    "ifvg-reversal-model",
+    "fvg-ote-confluence-model",
+    "listed-futures-market-basics",
+    "contract-specs-and-tick-math",
+    "futures-expiry-first-notice-and-roll",
+    "continuous-contract-mapping",
+    "futures-margin-and-position-risk",
+    "futures-volume-open-interest"
+  ],
+  "entryModelCoverage": {
+    "eligibleCount": 8,
+    "coveredCount": 0,
+    "coveredIds": [],
+    "missingIds": [
+      "unicorn",
+      "market-maker-buy-model",
+      "market-maker-sell-model",
+      "ict-2022-model",
+      "liquidity-sweep-mss-model",
+      "fvg-continuation-model",
+      "ifvg-reversal-model",
+      "fvg-ote-confluence-model"
+    ]
+  },
+  "lessons": [
+    {
+      "id": "market-structure",
+      "title": "Market Structure",
+      "isEntryModel": false,
+      "status": "VIDEO NEEDED",
+      "verifiedVideoCount": 0,
+      "unverifiedCandidateCount": 3
+    },
+    {
+      "id": "swing-high-low",
+      "title": "Swing High & Swing Low",
+      "isEntryModel": false,
+      "status": "VIDEO NEEDED",
+      "verifiedVideoCount": 0,
+      "unverifiedCandidateCount": 0
+    },
+    {
+      "id": "bos",
+      "title": "Break of Structure (BOS)",
+      "isEntryModel": false,
+      "status": "VIDEO NEEDED",
+      "verifiedVideoCount": 0,
+      "unverifiedCandidateCount": 0
+    },
+    {
+      "id": "mss",
+      "title": "Market Structure Shift (MSS)",
+      "isEntryModel": false,
+      "status": "VIDEO NEEDED",
+      "verifiedVideoCount": 0,
+      "unverifiedCandidateCount": 4
+    },
+    {
+      "id": "choch",
+      "title": "CHoCH terminology comparison",
+      "isEntryModel": false,
+      "status": "VIDEO NEEDED",
+      "verifiedVideoCount": 0,
+      "unverifiedCandidateCount": 0
+    },
+    {
+      "id": "displacement",
+      "title": "Displacement",
+      "isEntryModel": false,
+      "status": "VIDEO NEEDED",
+      "verifiedVideoCount": 0,
+      "unverifiedCandidateCount": 3
+    },
+    {
+      "id": "liquidity",
+      "title": "Liquidity",
+      "isEntryModel": false,
+      "status": "VIDEO NEEDED",
+      "verifiedVideoCount": 0,
+      "unverifiedCandidateCount": 1
+    },
+    {
+      "id": "bsl",
+      "title": "Buy-Side Liquidity (BSL)",
+      "isEntryModel": false,
+      "status": "VIDEO NEEDED",
+      "verifiedVideoCount": 0,
+      "unverifiedCandidateCount": 0
+    },
+    {
+      "id": "ssl",
+      "title": "Sell-Side Liquidity (SSL)",
+      "isEntryModel": false,
+      "status": "VIDEO NEEDED",
+      "verifiedVideoCount": 0,
+      "unverifiedCandidateCount": 0
+    },
+    {
+      "id": "eqh",
+      "title": "Equal Highs (EQH)",
+      "isEntryModel": false,
+      "status": "VIDEO NEEDED",
+      "verifiedVideoCount": 0,
+      "unverifiedCandidateCount": 0
+    },
+    {
+      "id": "eql",
+      "title": "Equal Lows (EQL)",
+      "isEntryModel": false,
+      "status": "VIDEO NEEDED",
+      "verifiedVideoCount": 0,
+      "unverifiedCandidateCount": 0
+    },
+    {
+      "id": "pdh-pdl",
+      "title": "Prior Day High / Low (PDH / PDL)",
+      "isEntryModel": false,
+      "status": "VIDEO NEEDED",
+      "verifiedVideoCount": 0,
+      "unverifiedCandidateCount": 0
+    },
+    {
+      "id": "pwh-pwl",
+      "title": "Prior Week High / Low (PWH / PWL)",
+      "isEntryModel": false,
+      "status": "VIDEO NEEDED",
+      "verifiedVideoCount": 0,
+      "unverifiedCandidateCount": 0
+    },
+    {
+      "id": "session-high-low",
+      "title": "Session High / Low",
+      "isEntryModel": false,
+      "status": "VIDEO NEEDED",
+      "verifiedVideoCount": 0,
+      "unverifiedCandidateCount": 0
+    },
+    {
+      "id": "liquidity-sweep",
+      "title": "Liquidity Sweep / Raid",
+      "isEntryModel": false,
+      "status": "VIDEO NEEDED",
+      "verifiedVideoCount": 0,
+      "unverifiedCandidateCount": 0
+    },
+    {
+      "id": "liquidity-run",
+      "title": "Liquidity Run / Breakout Acceptance",
+      "isEntryModel": false,
+      "status": "VIDEO NEEDED",
+      "verifiedVideoCount": 0,
+      "unverifiedCandidateCount": 0
+    },
+    {
+      "id": "irl-erl",
+      "title": "Internal & External Range Liquidity (IRL / ERL)",
+      "isEntryModel": false,
+      "status": "VIDEO NEEDED",
+      "verifiedVideoCount": 0,
+      "unverifiedCandidateCount": 1
+    },
+    {
+      "id": "opposing-liquidity",
+      "title": "Opposing Liquidity / Draw on Liquidity",
+      "isEntryModel": false,
+      "status": "VIDEO NEEDED",
+      "verifiedVideoCount": 0,
+      "unverifiedCandidateCount": 0
+    },
+    {
+      "id": "fvg",
+      "title": "Fair Value Gap (FVG)",
+      "isEntryModel": false,
+      "status": "VIDEO NEEDED",
+      "verifiedVideoCount": 0,
+      "unverifiedCandidateCount": 1
+    },
+    {
+      "id": "htf-fvg",
+      "title": "Higher-Timeframe FVG",
+      "isEntryModel": false,
+      "status": "VIDEO NEEDED",
+      "verifiedVideoCount": 0,
+      "unverifiedCandidateCount": 0
+    },
+    {
+      "id": "ce",
+      "title": "Consequent Encroachment (CE)",
+      "isEntryModel": false,
+      "status": "VIDEO NEEDED",
+      "verifiedVideoCount": 0,
+      "unverifiedCandidateCount": 1
+    },
+    {
+      "id": "ifvg",
+      "title": "Inversion Fair Value Gap (IFVG)",
+      "isEntryModel": false,
+      "status": "VIDEO NEEDED",
+      "verifiedVideoCount": 0,
+      "unverifiedCandidateCount": 0
+    },
+    {
+      "id": "bpr",
+      "title": "Balanced Price Range (BPR)",
+      "isEntryModel": false,
+      "status": "VIDEO NEEDED",
+      "verifiedVideoCount": 0,
+      "unverifiedCandidateCount": 0
+    },
+    {
+      "id": "volume-imbalance",
+      "title": "Volume Imbalance",
+      "isEntryModel": false,
+      "status": "VIDEO NEEDED",
+      "verifiedVideoCount": 0,
+      "unverifiedCandidateCount": 0
+    },
+    {
+      "id": "fpfvg",
+      "title": "First Presented FVG (FPFVG)",
+      "isEntryModel": false,
+      "status": "VIDEO NEEDED",
+      "verifiedVideoCount": 0,
+      "unverifiedCandidateCount": 0
+    },
+    {
+      "id": "liquidity-void",
+      "title": "Liquidity Void",
+      "isEntryModel": false,
+      "status": "VIDEO NEEDED",
+      "verifiedVideoCount": 0,
+      "unverifiedCandidateCount": 0
+    },
+    {
+      "id": "order-block",
+      "title": "Order Block (OB)",
+      "isEntryModel": false,
+      "status": "VIDEO NEEDED",
+      "verifiedVideoCount": 0,
+      "unverifiedCandidateCount": 1
+    },
+    {
+      "id": "mean-threshold",
+      "title": "Mean Threshold (MT)",
+      "isEntryModel": false,
+      "status": "VIDEO NEEDED",
+      "verifiedVideoCount": 0,
+      "unverifiedCandidateCount": 0
+    },
+    {
+      "id": "breaker-block",
+      "title": "Breaker Block",
+      "isEntryModel": false,
+      "status": "VIDEO NEEDED",
+      "verifiedVideoCount": 0,
+      "unverifiedCandidateCount": 0
+    },
+    {
+      "id": "mitigation-block",
+      "title": "Mitigation Block",
+      "isEntryModel": false,
+      "status": "VIDEO NEEDED",
+      "verifiedVideoCount": 0,
+      "unverifiedCandidateCount": 0
+    },
+    {
+      "id": "rejection-block",
+      "title": "Rejection Block",
+      "isEntryModel": false,
+      "status": "VIDEO NEEDED",
+      "verifiedVideoCount": 0,
+      "unverifiedCandidateCount": 0
+    },
+    {
+      "id": "unicorn",
+      "title": "Unicorn Model",
+      "isEntryModel": true,
+      "status": "VIDEO NEEDED",
+      "verifiedVideoCount": 0,
+      "unverifiedCandidateCount": 0
+    },
+    {
+      "id": "pd-arrays",
+      "title": "PD Arrays",
+      "isEntryModel": false,
+      "status": "VIDEO NEEDED",
+      "verifiedVideoCount": 0,
+      "unverifiedCandidateCount": 0
+    },
+    {
+      "id": "premium-discount",
+      "title": "Premium & Discount",
+      "isEntryModel": false,
+      "status": "VIDEO NEEDED",
+      "verifiedVideoCount": 0,
+      "unverifiedCandidateCount": 0
+    },
+    {
+      "id": "equilibrium",
+      "title": "Equilibrium (EQ)",
+      "isEntryModel": false,
+      "status": "VIDEO NEEDED",
+      "verifiedVideoCount": 0,
+      "unverifiedCandidateCount": 0
+    },
+    {
+      "id": "dealing-range",
+      "title": "Dealing Range",
+      "isEntryModel": false,
+      "status": "VIDEO NEEDED",
+      "verifiedVideoCount": 0,
+      "unverifiedCandidateCount": 0
+    },
+    {
+      "id": "ote",
+      "title": "Optimal Trade Entry (OTE)",
+      "isEntryModel": false,
+      "status": "VIDEO NEEDED",
+      "verifiedVideoCount": 0,
+      "unverifiedCandidateCount": 0
+    },
+    {
+      "id": "fib-extensions",
+      "title": "Fibonacci / Range Extensions",
+      "isEntryModel": false,
+      "status": "VIDEO NEEDED",
+      "verifiedVideoCount": 0,
+      "unverifiedCandidateCount": 0
+    },
+    {
+      "id": "time-anchors",
+      "title": "Time Anchors",
+      "isEntryModel": false,
+      "status": "VIDEO NEEDED",
+      "verifiedVideoCount": 0,
+      "unverifiedCandidateCount": 0
+    },
+    {
+      "id": "midnight-open",
+      "title": "Midnight / True Day Open",
+      "isEntryModel": false,
+      "status": "VIDEO NEEDED",
+      "verifiedVideoCount": 0,
+      "unverifiedCandidateCount": 0
+    },
+    {
+      "id": "ndog",
+      "title": "New Day Opening Gap (NDOG)",
+      "isEntryModel": false,
+      "status": "VIDEO NEEDED",
+      "verifiedVideoCount": 0,
+      "unverifiedCandidateCount": 0
+    },
+    {
+      "id": "nwog",
+      "title": "New Week Opening Gap (NWOG)",
+      "isEntryModel": false,
+      "status": "VIDEO NEEDED",
+      "verifiedVideoCount": 0,
+      "unverifiedCandidateCount": 0
+    },
+    {
+      "id": "weekly-open",
+      "title": "Weekly Open",
+      "isEntryModel": false,
+      "status": "VIDEO NEEDED",
+      "verifiedVideoCount": 0,
+      "unverifiedCandidateCount": 0
+    },
+    {
+      "id": "killzones",
+      "title": "ICT Killzones",
+      "isEntryModel": false,
+      "status": "VIDEO NEEDED",
+      "verifiedVideoCount": 0,
+      "unverifiedCandidateCount": 0
+    },
+    {
+      "id": "asian-range",
+      "title": "Asian Range",
+      "isEntryModel": false,
+      "status": "VIDEO NEEDED",
+      "verifiedVideoCount": 0,
+      "unverifiedCandidateCount": 0
+    },
+    {
+      "id": "silver-bullet",
+      "title": "Silver Bullet",
+      "isEntryModel": false,
+      "status": "VIDEO NEEDED",
+      "verifiedVideoCount": 0,
+      "unverifiedCandidateCount": 0
+    },
+    {
+      "id": "amd-po3",
+      "title": "AMD / Power of Three",
+      "isEntryModel": false,
+      "status": "VIDEO NEEDED",
+      "verifiedVideoCount": 0,
+      "unverifiedCandidateCount": 0
+    },
+    {
+      "id": "judas-swing",
+      "title": "Judas Swing",
+      "isEntryModel": false,
+      "status": "VIDEO NEEDED",
+      "verifiedVideoCount": 0,
+      "unverifiedCandidateCount": 0
+    },
+    {
+      "id": "ipda",
+      "title": "IPDA 20/40/60 Lookback",
+      "isEntryModel": false,
+      "status": "VIDEO NEEDED",
+      "verifiedVideoCount": 0,
+      "unverifiedCandidateCount": 0
+    },
+    {
+      "id": "smt",
+      "title": "SMT Divergence",
+      "isEntryModel": false,
+      "status": "VIDEO NEEDED",
+      "verifiedVideoCount": 0,
+      "unverifiedCandidateCount": 0
+    },
+    {
+      "id": "weekly-profiles",
+      "title": "ICT Weekly Profiles",
+      "isEntryModel": false,
+      "status": "VIDEO NEEDED",
+      "verifiedVideoCount": 0,
+      "unverifiedCandidateCount": 0
+    },
+    {
+      "id": "smt-index",
+      "title": "Index SMT: NQ / ES / YM / RTY",
+      "isEntryModel": false,
+      "status": "VIDEO NEEDED",
+      "verifiedVideoCount": 0,
+      "unverifiedCandidateCount": 0
+    },
+    {
+      "id": "smt-fx-metals",
+      "title": "FX & Metals SMT Pairs",
+      "isEntryModel": false,
+      "status": "VIDEO NEEDED",
+      "verifiedVideoCount": 0,
+      "unverifiedCandidateCount": 0
+    },
+    {
+      "id": "cbdr",
+      "title": "Central Bank Dealers Range (CBDR)",
+      "isEntryModel": false,
+      "status": "VIDEO NEEDED",
+      "verifiedVideoCount": 0,
+      "unverifiedCandidateCount": 0
+    },
+    {
+      "id": "flout",
+      "title": "Flout Range",
+      "isEntryModel": false,
+      "status": "VIDEO NEEDED",
+      "verifiedVideoCount": 0,
+      "unverifiedCandidateCount": 0
+    },
+    {
+      "id": "sd-projections",
+      "title": "Standard-Deviation Projections",
+      "isEntryModel": false,
+      "status": "VIDEO NEEDED",
+      "verifiedVideoCount": 0,
+      "unverifiedCandidateCount": 0
+    },
+    {
+      "id": "ict-macros",
+      "title": "ICT Macros — Research Note",
+      "isEntryModel": false,
+      "status": "VIDEO NEEDED",
+      "verifiedVideoCount": 0,
+      "unverifiedCandidateCount": 0
+    },
+    {
+      "id": "midnight-open-vs-day-open",
+      "title": "Midnight Open vs Exchange Trading-Day Open",
+      "isEntryModel": false,
+      "status": "VIDEO NEEDED",
+      "verifiedVideoCount": 0,
+      "unverifiedCandidateCount": 0
+    },
+    {
+      "id": "cisd",
+      "title": "Change in State of Delivery (CISD)",
+      "isEntryModel": false,
+      "status": "VIDEO NEEDED",
+      "verifiedVideoCount": 0,
+      "unverifiedCandidateCount": 0
+    },
+    {
+      "id": "mmxm",
+      "title": "Market Maker Model (MMXM)",
+      "isEntryModel": false,
+      "status": "VIDEO NEEDED",
+      "verifiedVideoCount": 0,
+      "unverifiedCandidateCount": 0
+    },
+    {
+      "id": "turtle-soup",
+      "title": "Turtle Soup (false-breakout setup)",
+      "isEntryModel": false,
+      "status": "VIDEO NEEDED",
+      "verifiedVideoCount": 0,
+      "unverifiedCandidateCount": 0
+    },
+    {
+      "id": "propulsion-block",
+      "title": "Propulsion Block",
+      "isEntryModel": false,
+      "status": "VIDEO NEEDED",
+      "verifiedVideoCount": 0,
+      "unverifiedCandidateCount": 0
+    },
+    {
+      "id": "breakaway-gap",
+      "title": "Breakaway Gap",
+      "isEntryModel": false,
+      "status": "VIDEO NEEDED",
+      "verifiedVideoCount": 0,
+      "unverifiedCandidateCount": 0
+    },
+    {
+      "id": "opening-range-gap",
+      "title": "Opening Range Gap (ORG)",
+      "isEntryModel": false,
+      "status": "VIDEO NEEDED",
+      "verifiedVideoCount": 0,
+      "unverifiedCandidateCount": 0
+    },
+    {
+      "id": "event-horizon",
+      "title": "Event Horizon (EH)",
+      "isEntryModel": false,
+      "status": "VIDEO NEEDED",
+      "verifiedVideoCount": 0,
+      "unverifiedCandidateCount": 0
+    },
+    {
+      "id": "reclaimed-order-block",
+      "title": "Reclaimed Order Block",
+      "isEntryModel": false,
+      "status": "VIDEO NEEDED",
+      "verifiedVideoCount": 0,
+      "unverifiedCandidateCount": 0
+    },
+    {
+      "id": "suspension-block",
+      "title": "Suspension Block",
+      "isEntryModel": false,
+      "status": "VIDEO NEEDED",
+      "verifiedVideoCount": 0,
+      "unverifiedCandidateCount": 0
+    },
+    {
+      "id": "vacuum-block",
+      "title": "Vacuum Block",
+      "isEntryModel": false,
+      "status": "VIDEO NEEDED",
+      "verifiedVideoCount": 0,
+      "unverifiedCandidateCount": 0
+    },
+    {
+      "id": "ny-lunch-reversal",
+      "title": "New York Lunch Algorithmic Reversal (community label)",
+      "isEntryModel": false,
+      "status": "VIDEO NEEDED",
+      "verifiedVideoCount": 0,
+      "unverifiedCandidateCount": 0
+    },
+    {
+      "id": "market-maker-buy-model",
+      "title": "Market Maker Buy Model (MMBM)",
+      "isEntryModel": true,
+      "status": "VIDEO NEEDED",
+      "verifiedVideoCount": 0,
+      "unverifiedCandidateCount": 0
+    },
+    {
+      "id": "market-maker-sell-model",
+      "title": "Market Maker Sell Model (MMSM)",
+      "isEntryModel": true,
+      "status": "VIDEO NEEDED",
+      "verifiedVideoCount": 0,
+      "unverifiedCandidateCount": 0
+    },
+    {
+      "id": "ict-2022-model",
+      "title": "ICT 2022 Model",
+      "isEntryModel": true,
+      "status": "VIDEO NEEDED",
+      "verifiedVideoCount": 0,
+      "unverifiedCandidateCount": 1
+    },
+    {
+      "id": "liquidity-sweep-mss-model",
+      "title": "Liquidity Sweep + MSS Model",
+      "isEntryModel": true,
+      "status": "VIDEO NEEDED",
+      "verifiedVideoCount": 0,
+      "unverifiedCandidateCount": 1
+    },
+    {
+      "id": "fvg-continuation-model",
+      "title": "FVG Continuation Model",
+      "isEntryModel": true,
+      "status": "VIDEO NEEDED",
+      "verifiedVideoCount": 0,
+      "unverifiedCandidateCount": 1
+    },
+    {
+      "id": "ifvg-reversal-model",
+      "title": "Inversion FVG (IFVG) Reversal Model",
+      "isEntryModel": true,
+      "status": "VIDEO NEEDED",
+      "verifiedVideoCount": 0,
+      "unverifiedCandidateCount": 0
+    },
+    {
+      "id": "fvg-ote-confluence-model",
+      "title": "FVG + OTE Confluence Model",
+      "isEntryModel": true,
+      "status": "VIDEO NEEDED",
+      "verifiedVideoCount": 0,
+      "unverifiedCandidateCount": 0
+    },
+    {
+      "id": "listed-futures-market-basics",
+      "title": "Listed Futures Market Basics",
+      "isEntryModel": false,
+      "status": "VIDEO NEEDED",
+      "verifiedVideoCount": 0,
+      "unverifiedCandidateCount": 0
+    },
+    {
+      "id": "contract-specs-and-tick-math",
+      "title": "Contract Specs & Tick Math",
+      "isEntryModel": false,
+      "status": "VIDEO NEEDED",
+      "verifiedVideoCount": 0,
+      "unverifiedCandidateCount": 0
+    },
+    {
+      "id": "futures-expiry-first-notice-and-roll",
+      "title": "Futures Expiry, First Notice & Roll",
+      "isEntryModel": false,
+      "status": "VIDEO NEEDED",
+      "verifiedVideoCount": 0,
+      "unverifiedCandidateCount": 0
+    },
+    {
+      "id": "continuous-contract-mapping",
+      "title": "Continuous Contract Mapping",
+      "isEntryModel": false,
+      "status": "VIDEO NEEDED",
+      "verifiedVideoCount": 0,
+      "unverifiedCandidateCount": 0
+    },
+    {
+      "id": "futures-margin-and-position-risk",
+      "title": "Futures Margin & Position Risk",
+      "isEntryModel": false,
+      "status": "VIDEO NEEDED",
+      "verifiedVideoCount": 0,
+      "unverifiedCandidateCount": 0
+    },
+    {
+      "id": "futures-volume-open-interest",
+      "title": "Futures Volume, Open Interest & COT",
+      "isEntryModel": false,
+      "status": "VIDEO NEEDED",
+      "verifiedVideoCount": 0,
+      "unverifiedCandidateCount": 0
+    }
+  ]
+}
