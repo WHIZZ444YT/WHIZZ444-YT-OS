@@ -1,6 +1,8 @@
 # Part 2 — Complete ICT Academy and Futures Learning Knowledge Base
 
-**Goal:** Turn the ICT material in the 39-page Futures Playbook and existing 76 lesson IDs / nine tutorials into a source-traceable learning library specifically for listed futures.
+**Review date:** 19 November 2026. **Repository:** https://github.com/WHIZZ444YT/WHIZZ444-YT-OS. Recheck live source and official references before implementation; this document is not runtime or deployment evidence.
+
+**Goal:** Maintain and complete a source-traceable futures-only curriculum across the current 82 lesson pages (preserving 76 original concept IDs), 10 learning tracks and nine guided tutorials. The 39-page Futures Playbook is an input to trace and verify, not the only authority.
 
 ## 1. Learning architecture
 
@@ -84,7 +86,7 @@ Every dedicated concept page must include, in this order:
 14. No-trade conditions and common failure modes.
 15. Conflicting definitions and wick-versus-close variants.
 16. Related concepts and next lesson.
-17. Verified original ICT video (only exact verified upload), supplemental video/article sources separately labelled, each with title, publisher, URL, verification date and link status.
+17. One exact, directly relevant, verified YouTube tutorial for this canonical concept ID. Store official ICT teaching separately from independent/supplemental material. Record the creator/channel identity, exact title, direct video ID/URL, language, concept IDs, source class, optional start/end seconds, verification date and link/embed status.
 18. Practice task using chart replay or a supplied hypothetical dataset.
 19. Self-review checklist and 3–5 knowledge-check questions with answer rationale.
 20. Source notes, author/editor, content version and last reviewed date.
@@ -128,7 +130,7 @@ Suggested lesson object:
   "invalidation": [],
   "failure_modes": [],
   "source_refs": [],
-  "video_resources": [],
+  "video_resources": [{"video_id": "exact-youtube-video-id", "channel_id": "verified-channel-id", "title": "exact verified title", "url": "https://www.youtube.com/watch?v=...", "language": "en", "source_class": "official_ict|independent_supplement", "concept_ids": ["stable-id"], "start_seconds": null, "end_seconds": null, "verified_at": "YYYY-MM-DD", "link_status": "verified|embed_disabled|unavailable"}],
   "practice": {},
   "quiz": [],
   "content_version": 1,
@@ -136,15 +138,15 @@ Suggested lesson object:
 }
 ```
 
-Use JSON Schema validation (or equivalent repository-native validation) to reject missing IDs, malformed URLs, unknown evidence labels, empty source references for sourced claims and broken prerequisite IDs. Avoid breaking the existing 76 stable concept IDs, lesson progress references or routes.
+Use JSON Schema validation (or equivalent repository-native validation) to reject missing IDs, malformed URLs, unknown evidence labels, empty source references for sourced claims and broken prerequisite IDs. Preserve the 76 original stable concept IDs and all existing lesson progress references/routes while representing the current 82 lesson pages and 10 tracks. Verify the actual branch data before stating counts.
 
 ## 6. Source and video registry
 
-Create or extend a normalized resource registry with:
-- resource ID, title, publisher/creator, URL, resource type, concept tags, contract tags, language, original/supplemental classification, exact-upload verification status, verified timestamp, checked-by and link health.
-- Prefer ICT's own verified uploads for original teaching, CME/ICE for market mechanics, CFTC for positioning, BLS/BEA/EIA/FRED/Fed/ECB for official releases, and secondary educators only for explanatory supplements.
-- Do not embed content or download/rehost videos without rights. Use outbound links and permitted embeds only.
-- Add YouTube search/topic discovery URLs only when no exact video has been verified; label them honestly.
+Create or extend one normalized, versioned registry. Required video fields: resource ID, exact title, verified channel ID/name, video ID, direct URL, resource type, canonical concept/model IDs, contract tags where relevant, language, `OFFICIAL_ICT` versus `INDEPENDENT_SUPPLEMENT`, verification status/date/reviewer, optional start/end seconds, last link check, embed permission/status and fallback-link status. A channel home, playlist, search-results page or generic topic query is not a concept's tutorial.
+
+**Coverage gate:** every active Academy lesson page ID (the current target is 82 pages, including 76 original concept IDs) and every Entry Model ID needs at least one exact video that teaches that specific item. A video reused across IDs must include a timestamped segment for each item and be reviewed as directly relevant. Track covered/eligible IDs; require 100% coverage before calling the Academy complete or Part 2 accepted. Any missing, unavailable, ambiguous or unverified mapping remains `VIDEO NEEDED` / `PARTIAL`; do not silently substitute a generic channel link. Official ICT is the original-source preference. TTrades and other independent educators may be used as clearly labelled supplements. The official [ICT site](https://theinnercircletrader.com/) identifies Michael J. Huddleston and links its YouTube study channel ([ICT YouTube](https://www.youtube.com/innercircletrader)); [TTrades' education center](https://ttrades.com/trading-education-center/) is a separate educator/source. Example of a specific supplemental video record to verify at use time: [TTrades — “Market Structure Shift - ICT Concepts”](https://www.youtube.com/watch?v=_94CPMjWi9E). This is a sample, not coverage of all lessons.
+
+Do not imply ICT/TTrades affiliation or endorsement. Further educators are allow-listed only after uploader identity, exact content relevance, futures applicability, language, quality and rights are checked. Do not rank by view count/popularity. Do not download, cache, transcribe, or re-host audiovisual content; link out or embed only through the permitted YouTube player. Provide a direct-link fallback when embedding is unavailable. A curated static registry needs no YouTube API; if dynamic lookup is added, use the official [YouTube Data API](https://developers.google.com/youtube/data/getting-started?hl=en), monitor current quota/terms and do not scrape.
 
 ## 7. Visual learning and replay
 
@@ -165,12 +167,12 @@ Do not duplicate all Academy pages in two separate source systems. Establish one
 
 ## 9. Acceptance criteria
 
-- [ ] All 76 existing concept IDs survive or have a documented migration map.
+- [ ] All 76 original concept IDs and all current 82 lesson pages survive or have a documented, non-breaking migration map; counts match the actual branch.
 - [ ] Every PDF concept and glossary term maps to a lesson, glossary entry or explicit out-of-scope reason.
 - [ ] Every lesson uses the full page specification and carries provenance.
 - [ ] All existing tutorials remain reachable.
-- [ ] Original ICT video links are only labelled verified after exact uploader/video review.
-- [ ] Supplemental and topic-discovery links are visibly distinguished.
+- [ ] Every active Academy lesson page ID (including all original concept IDs) and every Entry Model ID has one exact, directly relevant, verified video; coverage report is 100% before Part 2 is complete.
+- [ ] Official ICT, TTrades/other independent supplements and any topic-discovery fallback are visibly distinguished; missing videos block completion.
 - [ ] Hypothetical examples cannot be mistaken for market history.
 - [ ] No model profitability or ranking claim is made without a linked test.
 - [ ] Search, prerequisites, related lessons, quiz and completion progress work.
@@ -179,11 +181,11 @@ Do not duplicate all Academy pages in two separate source systems. Establish one
 
 ## 10. Part-specific execution prompt
 
-> Execute Part 2 only. Audit all current Academy data, the 76 stable IDs, nine tutorials, generated routes, progress sync and the 39-page playbook. Build a complete traceability inventory before editing. Enrich the canonical lesson source with the full lesson schema and all playbook concept families; preserve IDs and user progress. Verify exact original ICT video URLs, label secondary material separately, and attach primary sources where available. Preserve SOURCED / CONVENTION / NO DATA distinctions and never invent best-model performance. Implement build/schema tests, route tests, source checks and accessibility. Stop after Academy content and navigation are complete; do not implement the Strategy Lab or contract-engine logic in this Part.
+> Review/execute Part 2 only. Audit the current 82 lesson pages (76 original stable IDs), all Entry Model IDs, 10 learning tracks, nine guided tutorials, generated routes, progress sync and the 39-page playbook. Inventory video coverage by stable ID before editing. Map each concept and model to one exact verified YouTube video; prioritize the official ICT channel, and label TTrades/other educators as independent supplements. Require a verified specific video link for 100% of eligible IDs before calling the Academy complete; otherwise report exact uncovered IDs and keep the Part partial. Preserve user progress, add stable source/video schemas and accessibility, preserve SOURCED / CONVENTION / NO DATA distinctions, and never invent best-model performance. Run repo-native checks applicable to changes. Stop after Academy scope; do not implement Strategy Lab or contract-engine logic.
 
 ## Standalone handoff context — use this file by itself
 
-**Repository:** https://github.com/whizz444yt-ux/Finance-Intelligence-OS  
+**Repository:** https://github.com/WHIZZ444YT/WHIZZ444-YT-OS  
 **Product:** Futures Intelligence OS — futures-only markets, ICT futures education, futures news/data, positioning, backtesting, risk and trader workspace.  
 **Architecture to inspect and preserve:** static HTML/JavaScript/JSON; Python build at `scripts/build_site.py`; Cloudflare Worker at `cloudflare/src/index.js` with KV; Supabase Postgres/Auth/RLS; Vercel static output `dist/`; GitHub Actions and tests. This is a baseline, not proof each service/credential is currently healthy.
 
