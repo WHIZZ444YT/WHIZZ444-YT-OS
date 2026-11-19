@@ -1,9 +1,11 @@
 # Finance Intelligence OS — Build & Integration Report
 
-**Build date:** 10 November 2026  
-**Release:** Finance Intelligence OS v1.1.0 deployed on main / Cloudflare Worker deployment version 16  
+**Build date:** 10 November 2026<br>
+**Release:** Finance Intelligence OS v1.1.0 deployed on main / Cloudflare Worker deployment version 16<br>
 **Build output:** `dist/`  
 **Deployment status:** Vercel production deployment for latest main commit is Ready; public production routes verified HTTP 200; Preview SSO protection retained. Cloudflare Worker v16 is deployed at 100% traffic.
+
+> **Historical report:** This report describes the 10 November 2026 Finance Intelligence OS release before the futures-only scope transition. Its route, repository, deployment and provider statements are not current evidence. Use the [19 November Part 0 execution report](futures-only-roadmap/15-PART-0-EXECUTION-REPORT-2026-11-19.md) and recheck provider status before making release claims.
 
 ## What was merged
 

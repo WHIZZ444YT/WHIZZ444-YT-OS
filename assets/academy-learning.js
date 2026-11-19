@@ -18,6 +18,8 @@
   if(copy)copy.textContent=doneCount+" of "+total+" practice checks complete";
  }
  function session(){try{return JSON.parse(localStorage.getItem(SESSION_KEY)||sessionStorage.getItem(SESSION_KEY)||"null");}catch{try{return JSON.parse(sessionStorage.getItem(SESSION_KEY)||"null");}catch{return null;}}}
+ function saveSession(value){try{if(!value){localStorage.removeItem(SESSION_KEY);sessionStorage.removeItem(SESSION_KEY);return;}const next={...value};if(!next.expires_at&&Number(next.expires_in))next.expires_at=Math.floor(Date.now()/1000)+Number(next.expires_in);localStorage.setItem(SESSION_KEY,JSON.stringify(next));sessionStorage.setItem(SESSION_KEY,JSON.stringify(next));}catch{}}
+ async function refreshedSession(s){if(!s?.refresh_token||!apiBase||!publishable)return s;if(!s.expires_at||Number(s.expires_at)>Date.now()/1000+90)return s;const r=await fetch(apiBase+"/auth/v1/token?grant_type=refresh_token",{method:"POST",headers:{apikey:publishable,"Content-Type":"application/json"},body:JSON.stringify({refresh_token:s.refresh_token})});if(!r.ok){saveSession(null);return null;}const next=await r.json();saveSession(next);return next;}
  function headers(s,extra={}){return {apikey:publishable,Authorization:"Bearer "+s.access_token,...extra};}
  async function userId(s){
   if(s?.user?.id)return s.user.id;
@@ -92,15 +94,17 @@
   const map=progressMap();map[slug]=record;write(PROGRESS_KEY,map);syncLegacyIndex(slug,record);
   window.dispatchEvent(new CustomEvent("academy:progress-updated",{detail:{slug,record}}));
  }
+ function setSyncState(slug,updatedAt,state){const map=progressMap(),current=map[slug];if(!current||current.updatedAt!==updatedAt)return;map[slug]={...current,syncStatus:state};write(PROGRESS_KEY,map);}
  async function syncRecord(slug,record,statusEl){
-  const s=session();
-  if(!apiBase||!publishable||!s?.access_token){if(statusEl)statusEl.textContent="Saved on this device · sign in to sync across devices.";return;}
-  try{const uid=await userId(s);if(!uid){if(statusEl)statusEl.textContent="Saved locally · sign in again to sync.";return;}await syncWrite(slug,record,s,uid);if(statusEl)statusEl.textContent="Synced to your signed-in Supabase account.";}
-  catch(e){if(statusEl)statusEl.textContent="Saved locally · cloud sync unavailable ("+e.message+").";}
+  let s=session();
+  if(!apiBase||!publishable||!s?.access_token){setSyncState(slug,record.updatedAt,"pending");if(statusEl)statusEl.textContent="Saved on this device · sign in or reconnect to sync.";return;}
+  try{s=await refreshedSession(s);const uid=await userId(s);if(!uid){setSyncState(slug,record.updatedAt,"pending");if(statusEl)statusEl.textContent="Saved locally · sign in again to sync.";return;}await syncWrite(slug,record,s,uid);setSyncState(slug,record.updatedAt,"synced");if(statusEl)statusEl.textContent="Synced to your signed-in Supabase account.";}
+  catch(e){setSyncState(slug,record.updatedAt,"pending");if(statusEl)statusEl.textContent="Saved locally · cloud sync pending ("+e.message+").";}
  }
  async function mergeRemote(root,slug,checks,quizData){
-  const s=session();if(!apiBase||!publishable||!s?.access_token)return false;
+  let s=session();if(!apiBase||!publishable||!s?.access_token)return false;
   try{
+   s=await refreshedSession(s);if(!s?.access_token)return false;
    const uid=await userId(s);if(!uid)return false;
    const q="?select=lesson_slug,status,score,completed_at,updated_at,progress_data,lesson_version&lesson_slug=eq."+encodeURIComponent(slug)+"&limit=1";
    const r=await fetch(apiBase+"/rest/v1/lesson_progress"+q,{headers:headers(s)});if(!r.ok)return false;
@@ -207,7 +211,9 @@
   });
  }
  function init(){document.querySelectorAll("main[data-academy-lesson]").forEach(initRoot);}
+ async function retryPendingProgress(){if(!apiBase||!publishable)return;let s=session();if(!s?.access_token)return;try{s=await refreshedSession(s);if(!s?.access_token)return;const uid=await userId(s),map=progressMap();if(!uid)return;for(const [slug,record] of Object.entries(map)){if(record?.syncStatus!=="pending")continue;try{await syncWrite(slug,record,s,uid);setSyncState(slug,record.updatedAt,"synced");document.querySelectorAll("main[data-academy-lesson]").forEach(root=>{if(root.dataset.academyLesson===slug){const el=$(root,"[data-progress-sync]");if(el)el.textContent="Synced to your signed-in Supabase account.";}});}catch{break;}}}catch{}}
  if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",init);else init();
+ window.addEventListener("online",retryPendingProgress);window.addEventListener("focus",retryPendingProgress);setTimeout(retryPendingProgress,0);
  window.addEventListener("academy:progress-updated",()=>{
   const badge=document.querySelector("[data-academy-global-progress]");
   if(badge){const done=legacyDone();badge.textContent=done.length+" / 82 lessons completed";}

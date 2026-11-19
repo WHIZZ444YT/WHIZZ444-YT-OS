@@ -1,3 +1,5 @@
+import { fetchJsonWithRetry } from "./provider-http.mjs";
+
 const USER_AGENT = "FinanceIntelligenceOS/2.0 public economic research";
 
 function canonicalSource(value) { const u = new URL(value); u.searchParams.delete("api_key"); u.searchParams.delete("UserID"); return u.origin + u.pathname; }
@@ -42,18 +44,7 @@ function record(provider, datasetId, seriesId, seriesName, frequency, date, valu
 }
 
 async function getJson(url, provider, timeout = 18000) {
-  const response = await fetch(url, {
-    headers: { Accept: "application/json", "User-Agent": USER_AGENT },
-    signal: AbortSignal.timeout(timeout)
-  });
-  const text = await response.text();
-  let body;
-  try { body = JSON.parse(text); } catch { throw new Error(provider + " returned non-JSON HTTP " + response.status); }
-  if (!response.ok) {
-    const message = body?.error?.message || body?.error || body?.message || ("HTTP " + response.status);
-    throw new Error(provider + " request failed: " + String(message).slice(0, 240));
-  }
-  return body;
+  return fetchJsonWithRetry(url, provider, { timeoutMs: timeout, retries: 1, maxDelayMs: 1800, userAgent: USER_AGENT });
 }
 
 function notConfigured(provider, credential, sourceUrl, notes) {

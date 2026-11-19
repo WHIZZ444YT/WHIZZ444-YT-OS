@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-11-08",
-  "count": 44,
+  "generatedAt": "2026-11-19",
+  "count": 50,
   "sources": [
     {
       "category": "Exchanges & contract data",
@@ -274,6 +274,48 @@
       "name": "CFTC — Public Reporting Environment",
       "url": "https://publicreporting.cftc.gov/",
       "description": "Public CFTC datasets and downloadable reports; verify dataset definitions, contract mapping and reporting lag.",
+      "type": "official"
+    },
+    {
+      "category": "Positioning & disclosures",
+      "name": "CFTC — Legacy Futures Only dataset",
+      "url": "https://publicreporting.cftc.gov/Commitments-of-Traders/Legacy-Futures-Only/6dca-aqww",
+      "description": "Official Legacy COT futures-only report with commercial, non-commercial and non-reportable categories.",
+      "type": "official"
+    },
+    {
+      "category": "Positioning & disclosures",
+      "name": "CFTC — Legacy Futures and Options Combined dataset",
+      "url": "https://publicreporting.cftc.gov/Commitments-of-Traders/Legacy-Combined/jun7-fc8e",
+      "description": "Official Legacy COT combined report; keep distinct from futures-only positions.",
+      "type": "official"
+    },
+    {
+      "category": "Positioning & disclosures",
+      "name": "CFTC — Disaggregated Futures Only dataset",
+      "url": "https://publicreporting.cftc.gov/Commitments-of-Traders/Disaggregated-Futures-Only/72hh-3qpy",
+      "description": "Official Disaggregated futures-only report with producer/merchant, swap dealer, managed money and other-reportable categories.",
+      "type": "official"
+    },
+    {
+      "category": "Positioning & disclosures",
+      "name": "CFTC — Disaggregated Futures and Options Combined dataset",
+      "url": "https://publicreporting.cftc.gov/Commitments-of-Traders/Disaggregated-Combined/kh3c-gbw2",
+      "description": "Official Disaggregated combined report; keep distinct from futures-only positions.",
+      "type": "official"
+    },
+    {
+      "category": "Positioning & disclosures",
+      "name": "CFTC — TFF Futures Only dataset",
+      "url": "https://publicreporting.cftc.gov/Commitments-of-Traders/TFF-Futures-Only/gpe5-46if",
+      "description": "Official Traders in Financial Futures futures-only report with dealer, asset-manager, leveraged-funds, other-reportable and non-reportable categories.",
+      "type": "official"
+    },
+    {
+      "category": "Positioning & disclosures",
+      "name": "CFTC — TFF Futures and Options Combined dataset",
+      "url": "https://publicreporting.cftc.gov/Commitments-of-Traders/TFF-Combined/yw9f-hn96",
+      "description": "Official Traders in Financial Futures combined report; keep distinct from futures-only positions.",
       "type": "official"
     },
     {

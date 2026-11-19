@@ -10,9 +10,9 @@
       "exchange": "CME",
       "chart": "CME_MINI:NQ1!",
       "unit": "E-mini: $20 per index point; MNQ: $2 per point",
-      "tickSize": 0.25,
-      "tickValue": 5,
-      "pointValue": 20,
+      "tickSize": "0.25",
+      "tickValue": "5",
+      "pointValue": "20",
       "micro": "MNQ · $0.50 tick · $2/point",
       "sessions": [
         "NY AM 08:30–11:00",
@@ -73,11 +73,19 @@
       "microSpec": {
         "symbol": "MNQ",
         "unit": "$2 per index point",
-        "tickSize": 0.25,
-        "tickValue": 0.5,
-        "pointValue": 2
+        "tickSize": "0.25",
+        "tickValue": "0.5",
+        "pointValue": "2",
+        "specStatus": "unverified",
+        "specVersionId": "imported-reference-2026-11-08",
+        "specVerifiedAt": null
       },
-      "contractRoot": "CME_MINI:NQ1!"
+      "contractRoot": "CME_MINI:NQ1!",
+      "specStatus": "unverified",
+      "specVersionId": "imported-reference-2026-11-08",
+      "specVerifiedAt": null,
+      "specEffectiveFrom": null,
+      "specEffectiveTo": null
     },
     {
       "id": "es",
@@ -86,9 +94,9 @@
       "exchange": "CME",
       "chart": "CME_MINI:ES1!",
       "unit": "E-mini: $50 per index point; MES: $5 per point",
-      "tickSize": 0.25,
-      "tickValue": 12.5,
-      "pointValue": 50,
+      "tickSize": "0.25",
+      "tickValue": "12.5",
+      "pointValue": "50",
       "micro": "MES · $1.25 tick · $5/point",
       "sessions": [
         "NY AM 08:30–11:00",
@@ -144,11 +152,19 @@
       "microSpec": {
         "symbol": "MES",
         "unit": "$5 per index point",
-        "tickSize": 0.25,
-        "tickValue": 1.25,
-        "pointValue": 5
+        "tickSize": "0.25",
+        "tickValue": "1.25",
+        "pointValue": "5",
+        "specStatus": "unverified",
+        "specVersionId": "imported-reference-2026-11-08",
+        "specVerifiedAt": null
       },
-      "contractRoot": "CME_MINI:ES1!"
+      "contractRoot": "CME_MINI:ES1!",
+      "specStatus": "unverified",
+      "specVersionId": "imported-reference-2026-11-08",
+      "specVerifiedAt": null,
+      "specEffectiveFrom": null,
+      "specEffectiveTo": null
     },
     {
       "id": "gc",
@@ -157,9 +173,9 @@
       "exchange": "COMEX",
       "chart": "COMEX:GC1!",
       "unit": "GC: 100 troy oz; 1.00 price point = $100; MGC: 10 oz, $10/point",
-      "tickSize": 0.1,
-      "tickValue": 10,
-      "pointValue": 100,
+      "tickSize": "0.1",
+      "tickValue": "10",
+      "pointValue": "100",
       "micro": "MGC · 10 oz · $1/tick · $10/point",
       "sessions": [
         "London 02:00–05:00",
@@ -216,11 +232,19 @@
       "microSpec": {
         "symbol": "MGC",
         "unit": "10 troy oz",
-        "tickSize": 0.1,
-        "tickValue": 1,
-        "pointValue": 10
+        "tickSize": "0.1",
+        "tickValue": "1",
+        "pointValue": "10",
+        "specStatus": "unverified",
+        "specVersionId": "imported-reference-2026-11-08",
+        "specVerifiedAt": null
       },
-      "contractRoot": "COMEX:GC1!"
+      "contractRoot": "COMEX:GC1!",
+      "specStatus": "unverified",
+      "specVersionId": "imported-reference-2026-11-08",
+      "specVerifiedAt": null,
+      "specEffectiveFrom": null,
+      "specEffectiveTo": null
     },
     {
       "id": "6e",
@@ -229,8 +253,8 @@
       "exchange": "CME",
       "chart": "CME:6E1!",
       "unit": "6E: €125,000; tick 0.00005 = $6.25; pip 0.0001 = $12.50",
-      "tickSize": 5e-05,
-      "tickValue": 6.25,
+      "tickSize": "0.00005",
+      "tickValue": "6.25",
       "pointValue": null,
       "micro": "M6E · €12,500 · $1.25/tick",
       "sessions": [
@@ -285,11 +309,19 @@
       "microSpec": {
         "symbol": "M6E",
         "unit": "€12,500",
-        "tickSize": 5e-05,
-        "tickValue": 1.25,
-        "pointValue": null
+        "tickSize": "0.00005",
+        "tickValue": "1.25",
+        "pointValue": null,
+        "specStatus": "unverified",
+        "specVersionId": "imported-reference-2026-11-08",
+        "specVerifiedAt": null
       },
-      "contractRoot": "CME:6E1!"
+      "contractRoot": "CME:6E1!",
+      "specStatus": "unverified",
+      "specVersionId": "imported-reference-2026-11-08",
+      "specVerifiedAt": null,
+      "specEffectiveFrom": null,
+      "specEffectiveTo": null
     },
     {
       "id": "6b",
@@ -298,8 +330,8 @@
       "exchange": "CME",
       "chart": "CME:6B1!",
       "unit": "6B: £62,500; tick 0.0001 = $6.25",
-      "tickSize": 0.0001,
-      "tickValue": 6.25,
+      "tickSize": "0.0001",
+      "tickValue": "6.25",
       "pointValue": null,
       "micro": "M6B · £6,250 · $0.625/tick",
       "sessions": [
@@ -352,11 +384,19 @@
       "microSpec": {
         "symbol": "M6B",
         "unit": "£6,250",
-        "tickSize": 0.0001,
-        "tickValue": 0.625,
-        "pointValue": null
+        "tickSize": "0.0001",
+        "tickValue": "0.625",
+        "pointValue": null,
+        "specStatus": "unverified",
+        "specVersionId": "imported-reference-2026-11-08",
+        "specVerifiedAt": null
       },
-      "contractRoot": "CME:6B1!"
+      "contractRoot": "CME:6B1!",
+      "specStatus": "unverified",
+      "specVersionId": "imported-reference-2026-11-08",
+      "specVerifiedAt": null,
+      "specEffectiveFrom": null,
+      "specEffectiveTo": null
     },
     {
       "id": "ym",
@@ -365,9 +405,9 @@
       "exchange": "CBOT",
       "chart": "CBOT_MINI:YM1!",
       "unit": "YM: $5 per index point; MYM: $0.50/point",
-      "tickSize": 1,
-      "tickValue": 5,
-      "pointValue": 5,
+      "tickSize": "1",
+      "tickValue": "5",
+      "pointValue": "5",
       "micro": "MYM · $0.50/point",
       "sessions": [
         "NY AM 08:30–11:00",
@@ -416,11 +456,19 @@
       "microSpec": {
         "symbol": "MYM",
         "unit": "$0.50 per index point",
-        "tickSize": 1,
-        "tickValue": 0.5,
-        "pointValue": 0.5
+        "tickSize": "1",
+        "tickValue": "0.5",
+        "pointValue": "0.5",
+        "specStatus": "unverified",
+        "specVersionId": "imported-reference-2026-11-08",
+        "specVerifiedAt": null
       },
-      "contractRoot": "CBOT_MINI:YM1!"
+      "contractRoot": "CBOT_MINI:YM1!",
+      "specStatus": "unverified",
+      "specVersionId": "imported-reference-2026-11-08",
+      "specVerifiedAt": null,
+      "specEffectiveFrom": null,
+      "specEffectiveTo": null
     },
     {
       "id": "rty",
@@ -429,9 +477,9 @@
       "exchange": "CME",
       "chart": "CME_MINI:RTY1!",
       "unit": "RTY: $50 × index; tick 0.10 = $5; M2K tick value $0.50",
-      "tickSize": 0.1,
-      "tickValue": 5,
-      "pointValue": 50,
+      "tickSize": "0.1",
+      "tickValue": "5",
+      "pointValue": "50",
       "micro": "M2K · $0.50/tick · $5/point",
       "sessions": [
         "NY AM 08:30–11:00",
@@ -478,11 +526,19 @@
       "microSpec": {
         "symbol": "M2K",
         "unit": "$5 per index point",
-        "tickSize": 0.1,
-        "tickValue": 0.5,
-        "pointValue": 5
+        "tickSize": "0.1",
+        "tickValue": "0.5",
+        "pointValue": "5",
+        "specStatus": "unverified",
+        "specVersionId": "imported-reference-2026-11-08",
+        "specVerifiedAt": null
       },
-      "contractRoot": "CME_MINI:RTY1!"
+      "contractRoot": "CME_MINI:RTY1!",
+      "specStatus": "unverified",
+      "specVersionId": "imported-reference-2026-11-08",
+      "specVerifiedAt": null,
+      "specEffectiveFrom": null,
+      "specEffectiveTo": null
     },
     {
       "id": "dx",
@@ -491,9 +547,9 @@
       "exchange": "ICE US",
       "chart": "ICEUS:DX1!",
       "unit": "$1,000 × index; tick 0.005 = $5",
-      "tickSize": 0.005,
-      "tickValue": 5,
-      "pointValue": 1000,
+      "tickSize": "0.005",
+      "tickValue": "5",
+      "pointValue": "1000",
       "micro": "No micro specified in the playbook",
       "sessions": [
         "Daily / 4H bias",
@@ -541,7 +597,12 @@
       "profile": "Use Daily/4H PDH/PDL and dealing range. A DX sweep/reversal can inform the inverse currency bias, but confirm on the traded contract.",
       "riskNote": "Do not translate every DX tick mechanically into an FX or Gold signal. DX is listed on ICE, not CME.",
       "microSpec": null,
-      "contractRoot": "ICEUS:DX1!"
+      "contractRoot": "ICEUS:DX1!",
+      "specStatus": "unverified",
+      "specVersionId": "imported-reference-2026-11-08",
+      "specVerifiedAt": null,
+      "specEffectiveFrom": null,
+      "specEffectiveTo": null
     },
     {
       "id": "zn",
@@ -550,9 +611,9 @@
       "exchange": "CBOT",
       "chart": "CBOT:ZN1!",
       "unit": "$100,000 face; 1/64 tick = $15.625; 1 point = $1,000",
-      "tickSize": 0.015625,
-      "tickValue": 15.625,
-      "pointValue": 1000,
+      "tickSize": "0.015625",
+      "tickValue": "15.625",
+      "pointValue": "1000",
       "micro": "No micro specified in the playbook",
       "sessions": [
         "Daily / 4H macro context",
@@ -598,7 +659,12 @@
       "profile": "Use ZN Daily/4H direction, Fed expectations and auction context as background. The playbook positions ZN as a bias tool rather than a default entry instrument.",
       "riskNote": "Bond price and yield move inversely, but cross-asset reactions depend on the cause of the yield move.",
       "microSpec": null,
-      "contractRoot": "CBOT:ZN1!"
+      "contractRoot": "CBOT:ZN1!",
+      "specStatus": "unverified",
+      "specVersionId": "imported-reference-2026-11-08",
+      "specVerifiedAt": null,
+      "specEffectiveFrom": null,
+      "specEffectiveTo": null
     },
     {
       "id": "cl",
@@ -607,9 +673,9 @@
       "exchange": "NYMEX",
       "chart": "NYMEX:CL1!",
       "unit": "CL: 1,000 barrels; tick 0.01 = $10; MCL: $1/tick",
-      "tickSize": 0.01,
-      "tickValue": 10,
-      "pointValue": 1000,
+      "tickSize": "0.01",
+      "tickValue": "10",
+      "pointValue": "1000",
       "micro": "MCL · 100 barrels · $1/tick · $100/point",
       "sessions": [
         "NY AM 08:00–11:00",
@@ -659,11 +725,19 @@
       "microSpec": {
         "symbol": "MCL",
         "unit": "100 barrels",
-        "tickSize": 0.01,
-        "tickValue": 1,
-        "pointValue": 100
+        "tickSize": "0.01",
+        "tickValue": "1",
+        "pointValue": "100",
+        "specStatus": "unverified",
+        "specVersionId": "imported-reference-2026-11-08",
+        "specVerifiedAt": null
       },
-      "contractRoot": "NYMEX:CL1!"
+      "contractRoot": "NYMEX:CL1!",
+      "specStatus": "unverified",
+      "specVersionId": "imported-reference-2026-11-08",
+      "specVerifiedAt": null,
+      "specEffectiveFrom": null,
+      "specEffectiveTo": null
     },
     {
       "id": "6j",
@@ -672,8 +746,8 @@
       "exchange": "CME",
       "chart": "CME:6J1!",
       "unit": "¥12,500,000; tick 0.0000005 = $6.25",
-      "tickSize": 5e-07,
-      "tickValue": 6.25,
+      "tickSize": "0.0000005",
+      "tickValue": "6.25",
       "pointValue": null,
       "micro": "Micro availability/specification must be checked with CME",
       "sessions": [
@@ -721,11 +795,19 @@
       "microSpec": {
         "symbol": "MJY",
         "unit": "¥1,250,000",
-        "tickSize": 5e-07,
-        "tickValue": 0.625,
-        "pointValue": null
+        "tickSize": "0.0000005",
+        "tickValue": "0.625",
+        "pointValue": null,
+        "specStatus": "unverified",
+        "specVersionId": "imported-reference-2026-11-08",
+        "specVerifiedAt": null
       },
-      "contractRoot": "CME:6J1!"
+      "contractRoot": "CME:6J1!",
+      "specStatus": "unverified",
+      "specVersionId": "imported-reference-2026-11-08",
+      "specVerifiedAt": null,
+      "specEffectiveFrom": null,
+      "specEffectiveTo": null
     },
     {
       "id": "6a",
@@ -734,8 +816,8 @@
       "exchange": "CME",
       "chart": "CME:6A1!",
       "unit": "A$100,000; tick 0.00005 = $5",
-      "tickSize": 5e-05,
-      "tickValue": 5,
+      "tickSize": "0.00005",
+      "tickValue": "5",
       "pointValue": null,
       "micro": "Micro listing/specification must be checked with CME",
       "sessions": [
@@ -782,11 +864,19 @@
       "microSpec": {
         "symbol": "M6A",
         "unit": "A$10,000",
-        "tickSize": 5e-05,
-        "tickValue": 0.5,
-        "pointValue": null
+        "tickSize": "0.00005",
+        "tickValue": "0.5",
+        "pointValue": null,
+        "specStatus": "unverified",
+        "specVersionId": "imported-reference-2026-11-08",
+        "specVerifiedAt": null
       },
-      "contractRoot": "CME:6A1!"
+      "contractRoot": "CME:6A1!",
+      "specStatus": "unverified",
+      "specVersionId": "imported-reference-2026-11-08",
+      "specVerifiedAt": null,
+      "specEffectiveFrom": null,
+      "specEffectiveTo": null
     },
     {
       "id": "6c",
@@ -795,8 +885,8 @@
       "exchange": "CME",
       "chart": "CME:6C1!",
       "unit": "C$100,000; tick 0.00005 = $5",
-      "tickSize": 5e-05,
-      "tickValue": 5,
+      "tickSize": "0.00005",
+      "tickValue": "5",
       "pointValue": null,
       "micro": "Micro symbol/specification should be verified with CME",
       "sessions": [
@@ -842,11 +932,19 @@
       "microSpec": {
         "symbol": "MCD",
         "unit": "C$10,000",
-        "tickSize": 5e-05,
-        "tickValue": 0.5,
-        "pointValue": null
+        "tickSize": "0.00005",
+        "tickValue": "0.5",
+        "pointValue": null,
+        "specStatus": "unverified",
+        "specVersionId": "imported-reference-2026-11-08",
+        "specVerifiedAt": null
       },
-      "contractRoot": "CME:6C1!"
+      "contractRoot": "CME:6C1!",
+      "specStatus": "unverified",
+      "specVersionId": "imported-reference-2026-11-08",
+      "specVerifiedAt": null,
+      "specEffectiveFrom": null,
+      "specEffectiveTo": null
     },
     {
       "id": "si",
@@ -855,9 +953,9 @@
       "exchange": "COMEX",
       "chart": "COMEX:SI1!",
       "unit": "SI: 5,000 oz; tick 0.005 = $25; SIL: 1,000 oz, $5/tick",
-      "tickSize": 0.005,
-      "tickValue": 25,
-      "pointValue": 5000,
+      "tickSize": "0.005",
+      "tickValue": "25",
+      "pointValue": "5000",
       "micro": "SIL · 1,000 oz · $5/tick",
       "sessions": [
         "London 02:00–05:00",
@@ -906,11 +1004,19 @@
       "microSpec": {
         "symbol": "SIL",
         "unit": "1,000 troy oz",
-        "tickSize": 0.005,
-        "tickValue": 5,
-        "pointValue": 1000
+        "tickSize": "0.005",
+        "tickValue": "5",
+        "pointValue": "1000",
+        "specStatus": "unverified",
+        "specVersionId": "imported-reference-2026-11-08",
+        "specVerifiedAt": null
       },
-      "contractRoot": "COMEX:SI1!"
+      "contractRoot": "COMEX:SI1!",
+      "specStatus": "unverified",
+      "specVersionId": "imported-reference-2026-11-08",
+      "specVerifiedAt": null,
+      "specEffectiveFrom": null,
+      "specEffectiveTo": null
     },
     {
       "id": "btc",
@@ -919,9 +1025,9 @@
       "exchange": "CME",
       "chart": "CME:BTC1!",
       "unit": "BTC: 5 BTC; tick $5 per BTC = $25; MBT: 0.1 BTC, tick $0.50",
-      "tickSize": 5,
-      "tickValue": 25,
-      "pointValue": 5,
+      "tickSize": "5",
+      "tickValue": "25",
+      "pointValue": "5",
       "micro": "MBT · 0.1 BTC · $0.50/tick",
       "sessions": [
         "NY AM 08:30–11:00",
@@ -969,11 +1075,19 @@
       "microSpec": {
         "symbol": "MBT",
         "unit": "0.1 BTC",
-        "tickSize": 5,
-        "tickValue": 0.5,
-        "pointValue": 0.1
+        "tickSize": "5",
+        "tickValue": "0.5",
+        "pointValue": "0.1",
+        "specStatus": "unverified",
+        "specVersionId": "imported-reference-2026-11-08",
+        "specVerifiedAt": null
       },
-      "contractRoot": "CME:BTC1!"
+      "contractRoot": "CME:BTC1!",
+      "specStatus": "unverified",
+      "specVersionId": "imported-reference-2026-11-08",
+      "specVerifiedAt": null,
+      "specEffectiveFrom": null,
+      "specEffectiveTo": null
     }
   ]
 }

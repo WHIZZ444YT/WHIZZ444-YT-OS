@@ -10,9 +10,15 @@ import {
 const config = overrides => ({
   strategyName: "P4 deterministic fixture",
   modelId: "custom",
-  marketSymbol: "TEST",
+  marketSymbol: "ESH6",
   timeframe: "5m",
   timezone: "UTC",
+  dataSource: "Synthetic unit fixture",
+  datasetId: "strategy-lab-fixture-v1",
+  downloadDate: "2026-01-02",
+  volumeUnits: "contracts",
+  costSource: "Synthetic fixture assumptions",
+  costAsOf: "2026-01-02",
   seriesType: "single-expiry",
   rollNote: "",
   signalSourceNotes: "Signals known at candle close; synthetic fixture.",
@@ -41,19 +47,19 @@ function makeBar(index, values = {}) {
   };
 }
 function sampleCsv({signals = {3:"LONG",21:"SHORT",27:"LONG"}, count = 30} = {}) {
-  const rows=["timestamp,open,high,low,close,signal,stop_ticks,contract,volume"];
+  const rows=["timestamp,open,high,low,close,signal,contract,expiry,stop_ticks,volume"];
   for(let i=0;i<count;i+=1){
     const epoch=Date.parse("2026-01-01T00:00:00.000Z")+i*300000;
     rows.push([
       new Date(epoch).toISOString(), "100.00","100.50","99.50","100.00",
-      signals[i]||"FLAT", "", "ESH6", "100"
+      signals[i]||"FLAT", "ESH6", "2026-03-20", "", "100"
     ].join(","));
   }
   return rows.join("\n");
 }
 
 test("engine has a stable explicit version", () => {
-  assert.equal(ENGINE_VERSION, "p4.1.0");
+  assert.equal(ENGINE_VERSION, "p7.0.0");
 });
 
 test("CSV parser validates OHLC, timezone, sort order and one contract", () => {
@@ -63,6 +69,7 @@ test("CSV parser validates OHLC, timezone, sort order and one contract", () => {
   assert.equal(parsed.quality.longSignals,2);
   assert.equal(parsed.quality.shortSignals,1);
   assert.equal(parsed.quality.contract,"ESH6");
+  assert.equal(parsed.quality.expiry,"2026-03-20");
   assert.throws(()=>parseSignalCsv(sampleCsv().replace("2026-01-01T00:00:00.000Z","2026-01-01T00:00:00")),/explicit UTC offset/);
   const outOfOrder=sampleCsv().replace(
     "2026-01-01T00:05:00.000Z,100.00",
@@ -72,8 +79,10 @@ test("CSV parser validates OHLC, timezone, sort order and one contract", () => {
   const badOhlc=sampleCsv().replace("100.00,100.50,99.50,100.00","100.00,98.00,99.50,100.00");
   assert.throws(()=>parseSignalCsv(badOhlc),/OHLC range is inconsistent/);
   const mixed=sampleCsv().replaceAll("ESH6","ESM6");
-  const mixedTwo=mixed.replace("2026-01-01T00:05:00.000Z,100.00,100.50,99.50,100.00,FLAT,,ESM6","2026-01-01T00:05:00.000Z,100.00,100.50,99.50,100.00,FLAT,,ESH6");
+  const mixedTwo=mixed.replace("2026-01-01T00:05:00.000Z,100.00,100.50,99.50,100.00,FLAT,ESM6","2026-01-01T00:05:00.000Z,100.00,100.50,99.50,100.00,FLAT,ESH6");
   assert.throws(()=>parseSignalCsv(mixedTwo),/multiple contract codes/);
+  assert.throws(()=>parseSignalCsv(sampleCsv().replace("ESH6,2026-03-20","ESH6,2026-06-19")),/multiple expiry dates/);
+  assert.throws(()=>parseSignalCsv(sampleCsv().replace("ESH6,2026-03-20","ESH6,2026-13-40")),/exact YYYY-MM-DD/);
 });
 
 test("CSV parser rejects missing/duplicate columns and bad signals", () => {
@@ -86,7 +95,8 @@ test("CSV parser rejects missing/duplicate columns and bad signals", () => {
 test("configuration rejects invalid timezone, split and continuous roll metadata", () => {
   assert.throws(()=>validateConfig(config({timezone:"Not/A_Timezone"})),/valid IANA timezone/);
   assert.throws(()=>validateConfig(config({trainPercent:80,validationPercent:11})),/at least 10%/);
-  assert.throws(()=>validateConfig(config({seriesType:"back-adjusted-continuous",rollNote:""})),/adjustment and roll source/);
+  assert.throws(()=>validateConfig(config({seriesType:"back-adjusted-continuous"})),/not supported/);
+  assert.throws(()=>validateConfig(config({modelId:"unlisted-detector"})),/does not generate an ICT signal/);
 });
 
 test("next-bar entry and target fills use costs and return net expectancy", () => {
@@ -167,6 +177,26 @@ test("risk metrics distinguish gross P&L from net profit factor", () => {
   assert.ok(result.metrics.maxDrawdownUsd>=0);
   assert.ok(result.equityCurve.every(x=>Number.isFinite(x.equity)));
   assert.equal(result.metrics.profitFactorBasis.startsWith("Net winning trades"),true);
+  assert.ok(Array.isArray(result.metrics.winRate95PctInterval));
+});
+
+test("metrics include payoff ratio and longest consecutive win/loss runs", () => {
+  const bars=[
+    makeBar(0,{signal:1}),
+    makeBar(1,{high:101,low:97,close:99}),
+    makeBar(2,{signal:-1}),
+    makeBar(3,{high:104,low:99,close:103}),
+    makeBar(4,{signal:1}),
+    makeBar(5,{high:106,low:99,close:105}),
+    makeBar(6,{signal:1}),
+    makeBar(7,{high:106,low:99,close:105})
+  ];
+  const result=runBacktest(bars,config({slippageTicks:0,commissionPerSide:0,maxBarsInTrade:10}),"metrics");
+  assert.equal(result.metrics.trades,4);
+  assert.equal(result.metrics.maxConsecutiveLosses,2);
+  assert.equal(result.metrics.maxConsecutiveWins,2);
+  assert.equal(result.metrics.tradesPer1000Bars,500);
+  assert.ok(result.metrics.averageWinLossRatio>0);
 });
 
 test("chronological experiment split has independent train, validation and OOS", async () => {
@@ -183,10 +213,38 @@ test("chronological experiment split has independent train, validation and OOS",
   assert.match(run.manifest.runFingerprint,/^[a-f0-9]{64}$/);
   const again=await runExperiment(csv,config(),"fixture.csv");
   assert.equal(run.manifest.runFingerprint,again.manifest.runFingerprint);
+  assert.equal(run.manifest.schemaVersion,2);
+  assert.equal(run.manifest.dataset.exactExpiryDate,"2026-03-20");
+  assert.equal(run.manifest.dataset.dataSource,"Synthetic unit fixture");
   assert.ok(run.warnings.some(w=>w.includes("fewer than 30 closed trades")));
 });
 
+test("experiment records timestamp discontinuities without treating them as empty bars", async () => {
+  const lines=sampleCsv().split("\n");
+  for(let i=1;i<lines.length;i+=1){
+    const cells=lines[i].split(",");
+    const epoch=Date.parse(cells[0])+(i>=5?300000:0);
+    cells[0]=new Date(epoch).toISOString();
+    lines[i]=cells.join(",");
+  }
+  const run=await runExperiment(lines.join("\n"),config());
+  assert.equal(run.quality.observedGapCount,1);
+  assert.equal(run.quality.observedGaps.length,1);
+  assert.ok(run.warnings.some(w=>w.includes("timestamp gap")));
+});
+
 test("CSV inputs with mixed unadjusted expiries are refused rather than stitched", () => {
-  const csv=sampleCsv().replace("FLAT,,ESH6,100","FLAT,,ESM6,100");
+  const csv=sampleCsv().replace("FLAT,ESH6,2026-03-20","FLAT,ESM6,2026-03-20");
   assert.throws(()=>parseSignalCsv(csv),/multiple contract codes/);
+});
+
+test("CSV rejects future-derived or unreviewed columns", () => {
+  const csv=sampleCsv().replace("volume\n","volume,future_signal\n").replace(/,100$/gm,",100,LONG");
+  assert.throws(()=>parseSignalCsv(csv),/unsupported columns.*future_signal/i);
+});
+
+test("experiment enforces exact contract, verified tick alignment and volume units", async () => {
+  await assert.rejects(()=>runExperiment(sampleCsv(),config({marketSymbol:"ES"})),/must match the exact contract code/);
+  await assert.rejects(()=>runExperiment(sampleCsv().replace("100.00,100.50","100.10,100.50"),config()),/do not align to the supplied tick size/);
+  await assert.rejects(()=>runExperiment(sampleCsv(),config({volumeUnits:""})),/Enter their source units/);
 });
