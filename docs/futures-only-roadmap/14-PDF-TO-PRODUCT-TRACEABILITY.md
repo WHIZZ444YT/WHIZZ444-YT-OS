@@ -1,5 +1,7 @@
 # ICT Futures Playbook PDF — Product Traceability Matrix
 
+**Review date:** 19 November 2026. **Repository:** https://github.com/WHIZZ444YT/WHIZZ444-YT-OS. Recheck live source and official references before implementation; this document is not runtime or deployment evidence.
+
 **Source:** `ICT_Futures_Playbook_Complete_Edition(2).pdf`, 39 pages.  
 **Purpose:** Track that PDF content has a destination in the Futures Intelligence OS and identify where claims need further evidence.
 
@@ -54,6 +56,9 @@
 - YouTube/Reddit/Discord coverage in the PDF is explicitly incomplete.
 - ICT macros are omitted in the PDF because exact lists vary among sources; do not claim a canonical complete list without stronger evidence.
 
+## YouTube tutorial traceability gate
+
+In addition to the concept's product route, every active canonical lesson ID and every Entry Model ID must map to a specific, directly relevant YouTube video. Record `youtube_video_id`, verified channel ID/name, exact title, direct URL, source class (`OFFICIAL_ICT` or `INDEPENDENT_SUPPLEMENT`), language, concept/model IDs, optional start/end seconds, checked date, link status and embed status. Channel pages, search pages and generic playlists are discovery aids, not completion evidence. Require a 100% coverage report; list any uncovered IDs and keep Part 2 marked partial. The official [ICT channel](https://www.youtube.com/innercircletrader) is the original-source reference. [TTrades](https://ttrades.com/trading-education-center/) is an independent supplemental source; verify every exact upload before mapping. Do not download or rehost videos.
 ## Content migration audit fields
 
 For each PDF item store:
