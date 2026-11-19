@@ -1,5 +1,7 @@
 # Part 6 — Volume, Open Interest and COT Intelligence
 
+**Review date:** 19 November 2026. **Repository:** https://github.com/WHIZZ444YT/WHIZZ444-YT-OS. Recheck live source and official references before implementation; this document is not runtime or deployment evidence.
+
 **Goal:** Deliver a contract-aware futures participation and positioning dashboard that never confuses intraday exchange volume, exchange open interest and weekly CFTC reports.
 
 ## 1. Data definitions shown to users
@@ -126,6 +128,9 @@ Inspect/update:
 
 Do not call the module "live OI" unless the exact configured provider delivers that frequency and licence.
 
+### Timing, source and instrument distinctions
+
+CFTC COT is a weekly positioning snapshot: preserve report type, positions-as-of date, publication date, futures-only/combined classification and revision/source link. It is not same-day exchange volume or intraday OI. Keep exchange-reported daily volume/OI distinct from CFTC report data and from live trades/quotes. CME's website-information package can expose certain prior-trading-date settlement/volume/OI only under its current licensed package and display timing; verify entitlement and effective terms. Crypto perpetual OI supplied through the authoring plugin is outside the listed-futures scope and must not populate a futures contract.
 ## 9. Acceptance criteria
 
 - [ ] TFF, Disaggregated and Futures Only / Combined variants are distinguished correctly.
@@ -146,7 +151,7 @@ Do not call the module "live OI" unless the exact configured provider delivers t
 
 ## Standalone handoff context — use this file by itself
 
-**Repository:** https://github.com/whizz444yt-ux/Finance-Intelligence-OS  
+**Repository:** https://github.com/WHIZZ444YT/WHIZZ444-YT-OS  
 **Product:** Futures Intelligence OS — futures-only markets, ICT futures education, futures news/data, positioning, backtesting, risk and trader workspace.  
 **Architecture to inspect and preserve:** static HTML/JavaScript/JSON; Python build at `scripts/build_site.py`; Cloudflare Worker at `cloudflare/src/index.js` with KV; Supabase Postgres/Auth/RLS; Vercel static output `dist/`; GitHub Actions and tests. This is a baseline, not proof each service/credential is currently healthy.
 
