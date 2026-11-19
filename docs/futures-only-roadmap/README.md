@@ -1,11 +1,8 @@
 # Futures-Only Implementation Roadmap
 
-**Repository:** `whizz444yt-ux/Finance-Intelligence-OS`  
-**Branch for this documentation set:** `docs/futures-only-implementation-roadmap`  
-**Product target:** Futures Intelligence OS — Futures markets, ICT education, futures news, market data, research, backtesting, risk and trader workspace.  
-**Source playbook:** `ICT_Futures_Playbook_Complete_Edition(2).pdf` (39 pages; reviewed 10 November 2026).
-
-> This folder is the implementation contract for the product transformation. It is documentation only. It does not itself change application code, credentials, provider subscriptions, user data, production routes or deployments.
+**Repository:** [WHIZZ444YT/WHIZZ444-YT-OS](https://github.com/WHIZZ444YT/WHIZZ444-YT-OS)  
+**Review date:** 19 November 2026  
+**Scope:** This folder contains the implementation contract for a futures-only market-intelligence and ICT education product. It changes documentation only; it does not configure a provider, grant a license, change application code, or prove a production deployment.
 
 ## Read this first
 
@@ -24,39 +21,70 @@
 13. [Provider register, data contracts and licensing](12-DATA-PROVIDER-REGISTER-AND-LICENSING.md)
 14. [ChatGPT / Claude / GitHub execution protocol](13-CHATGPT-EXECUTION-PROMPTS-AND-HANDOFF.md)
 15. [PDF-to-product traceability map](14-PDF-TO-PRODUCT-TRACEABILITY.md)
+16. [Historical Part 0 route map](PART-0-BASELINE-AUDIT-AND-ROUTE-MAP.md)
 
 ## Product boundary
 
-The production product is futures-only. It covers exchange-traded futures and futures-specific research, including CME/CBOT/COMEX/NYMEX/ICE instruments, equity-index futures, metals, energy, currency futures, Treasury futures, and CME Bitcoin futures. A related cash/spot indicator may be shown only as clearly labelled context, never as the instrument being analysed or backtested.
+The active product is for exchange-traded futures and futures-specific learning/research: CME/CBOT/COMEX/NYMEX/ICE instruments, equity-index, metals, energy, currency and Treasury futures, plus CME Bitcoin futures. Spot/cash series may appear as clearly labelled context only. Generic equities, spot crypto, FX/CFDs, prediction markets and unrelated personal-finance areas are outside the active product. Preserve useful historical source material until its dependencies and user-data impact are reviewed.
 
-Do not delete useful source history. Generic equity research, stock screeners, general spot-crypto dashboards, prediction markets and unrelated directories must be removed from the active product navigation, generated routes, search index and sitemap. Preserve the prior material under `legacy/` or another documented archive until a separate verified deletion decision exists. CME currency futures (6E, 6B, 6J, 6A, 6C) and CME Bitcoin futures (BTC/MBT) remain in scope.
+Use **ICT** (Inner Circle Trader) consistently for the curriculum terminology. The roadmap preserves and expands the existing product; it does not treat any framework or entry model as a proven edge.
 
-## Existing baseline from the inspected repository
+## Current repository snapshot — source evidence only
 
-The `main` branch already has a static HTML/JSON application, Python site builder, Cloudflare Worker API gateway, KV cache, Supabase Auth/Postgres, GitHub Actions quality checks, a 15-family ICT Futures section, 76 lesson IDs, nine guided tutorials, entry-model catalogue, a deterministic OHLC signal backtester and private workspace foundations. The build is currently driven by `scripts/build_site.py`; tests and audits are in `tests/` and `scripts/`. The dedicated `ict-futures/` site should be preserved and reconciled with the new primary navigation rather than rebuilt blindly.
+The main branch source reviewed on 19 November 2026 describes:
+- A static HTML/CSS/JavaScript and JSON product built through the Python site builder.
+- A futures-only primary navigation with 13 areas: Overview; Futures Markets; ICT Academy; Entry Models; Sessions & Calendar; Futures News; Volume & Open Interest; COT & Positioning; Contract Specs & Expiry; Strategy Lab; Risk & Prop Firms; Journal & Watchlists; Data Health & Sources.
+- 15 futures contract families.
+- 82 Academy lesson pages while preserving 76 original concept IDs, 10 learning tracks and nine guided tutorials.
+- A deterministic OHLC signal backtester and private-workspace foundations.
 
-Current documented gaps include: generic Global Research content remains; prediction-market routes remain; imported contract specifications are marked unverified; licensed exchange real-time prices/DOM are not part of the free baseline; several provider credentials and Supabase server-side ingestion secrets need configuration; automatic ICT detectors and preloaded verified history are not established merely because the backtester exists.
+These are README/builder/validator observations, not proof that CI passed, each route works in a browser, content is complete, Supabase RLS is correct, the deployed site matches main, or any provider is configured/licensed. Inspect the exact branch and run the relevant checks before implementation. The historical route map records an earlier audit and must not be used as a current status report.
 
-## Part order and dependency
+### Verified gaps and release dependencies to close
 
-`Part 0 → Part 1 → Part 2 → Part 3 → Part 4 → Part 5 → Part 6 → Part 7 → Part 8 → Part 9 → Production QA`.
+- Imported contract fields remain unverified until checked against current official exchange sources; tick specs must not be inferred from the risk plugin.
+- Licensed CME/ICE real-time trades, quotes, order book and public redistribution are not part of the free baseline. CME's June 2026 F&O Website Information update has requirements effective 1 January 2027; any public website path needs current entitlement, approval and terms.
+- A consolidated calendar and release-time/revision workflow must be demonstrated against official schedules and provider responses.
+- CFTC COT is weekly; it is not intraday volume/OI.
+- The site's deterministic Strategy Lab is not evidence that every named ICT detector or verified historical dataset exists.
+- The local Codex plugins are authoring tools, not website APIs. Their outputs need explicit integration, provenance, licensing, privacy controls and tests before appearing as hosted data.
+- Every active ICT concept and every Entry Model needs its own exact, verified YouTube tutorial link. Part 2 is incomplete until a coverage report proves 100%; official ICT is the original-source preference, while TTrades/other creators must be clearly labelled independent supplements.
+- Data Health must reflect observed source status and data-as-of times, never source-code presence or website uptime.
 
-Data Health, security, tests, accessibility, documentation and source attribution are cross-cutting requirements and must be maintained from Part 0 onward.
+## Build sequence
+
+Work one Part at a time, in order, using the current default branch as the source of truth:
+
+| Step | Part | Result to prove before advancing |
+|---|---|---|
+| 0 | Baseline audit and scope cleanup | Current route/data inventory, dependencies, legacy disposition and route-map reconciliation |
+| 1 | Premium UI and information architecture | Responsive/accessibility audit of existing 13-area shell; close only demonstrated UX gaps |
+| 2 | ICT Academy | Preserve 76 original IDs and current 82 pages; verify curriculum/route schema and exact tutorial coverage for every concept/model |
+| 3 | Contract intelligence | Versioned official contract registry, expiry/roll mapping and unresolved-field state |
+| 4 | Sessions and calendar | DST/holiday/session engine and revision-aware official event schedule |
+| 5 | News and data gateway | Server-side provider adapters, source freshness, licensing and safe failure behavior |
+| 6 | Volume, open interest and COT | Weekly CFTC and exchange-statistic semantics, provenance and clear separation |
+| 7 | Strategy Lab and backtesting | Causal, reproducible rules/data, realistic costs and out-of-sample controls |
+| 8 | Risk and prop-firm intelligence | Verified contract inputs and current dated firm rules; conditional outputs where missing |
+| 9 | Journal and private workspace | Tenant-isolated auth/RLS, explicit privacy/export/delete behavior |
+| QA | Production QA/security/release | All applicable automated and manual evidence, provider/license review and rollback readiness |
+
+QA, data provenance, security, accessibility, source attribution, mobile UX and documentation run throughout rather than being postponed to the last step.
 
 ## Definition of done
 
-A part is not complete because code was generated. It is complete only when its stated scope is implemented, existing features are preserved or intentionally migrated, automated checks pass, key routes and failure states are manually smoke-tested, data provenance is visible, security controls are reviewed, the build output matches source, and the completion report lists evidence plus any remaining blockers.
+A Part is complete only when its source-level scope is implemented, existing routes/data/users are preserved or intentionally migrated, repository checks pass, affected routes and failure states are manually checked, data provenance/licensing are visible, security is reviewed and the report links to evidence. Documentation saying a feature exists does not prove runtime behavior or deployment.
 
-## Important evidence policy
+## Shared evidence rules
 
-- Never invent market prices, volumes, open interest, contract specifications, margin, exchange schedules, prop-firm rules, API capabilities, pricing, win rates or backtest results.
-- Separate `SOURCED`, `CONVENTION`, `NO DATA`, `UNVERIFIED` and `USER CONFIGURATION REQUIRED`.
-- Keep source time, event time, retrieval time and data-as-of time separate.
-- Distinguish exchange real-time, exchange-delayed, provider-delayed, historical, indicative, weekly, daily and cached snapshots.
-- Do not present GDELT as a licensed Reuters/Bloomberg wire or CFTC weekly OI as intraday exchange OI.
-- Do not treat an ICT idea as a guaranteed edge. Publish comparative performance only after reproducible, cost-aware, out-of-sample testing.
+- Never invent quotes, volume/OI, specs, margin, schedules, expiry, prop rules, API capability, price, license permission, model performance or current plugin state.
+- Keep SOURCED, CONVENTION, NO DATA, UNVERIFIED, NOT CONFIGURED, STALE and UNAVAILABLE meanings distinct.
+- Store event time, publication/release time, retrieval time, data-as-of, timezone, frequency and delay separately.
+- Public/open API access does not automatically authorize public market-data redistribution or AI/ML/LLM use.
+- Do not scrape exchange sites. Follow provider terms, exchange entitlements and relevant publication policies.
+- Don't call local Codex tools integrated with the website. Keep user files/local journal data private unless an explicit consented flow exists.
+- Link each Academy concept/Entry Model to an exact video; channel/search links are discovery aids only. Do not download/cache/re-host video content.
 
-## Files and change policy
+## Change and handoff policy
 
-The current source of truth is `main`. Work in a feature branch, inspect the current source before editing, update source data/builders rather than generated `dist/` output, and avoid unrelated rewrites. Database migrations are additive and reviewed; never reset the live Supabase project or overwrite existing user data. Secrets stay in Cloudflare/Vercel/Supabase secret stores, never in Git, HTML, JSON, client bundles, screenshots or URLs.
-
+Use a focused branch/PR. Inspect current source and current provider documentation before changing a Part; update canonical source/build inputs rather than generated output. Keep secrets server-side and database migrations additive. Do not reset production data. Report changed files, observed checks, unverified assumptions, license/configuration blockers and remaining acceptance items.

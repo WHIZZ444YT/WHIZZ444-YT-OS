@@ -1,5 +1,7 @@
 # Part 7 — Strategy Lab and Reproducible ICT Futures Backtesting
 
+**Review date:** 19 November 2026. **Repository:** https://github.com/WHIZZ444YT/WHIZZ444-YT-OS. Recheck live source and official references before implementation; this document is not runtime or deployment evidence.
+
 **Goal:** Evolve the existing deterministic OHLC + user-signal backtester into an auditable futures-specific test environment with documented ICT detector rules, realistic costs and untouched out-of-sample evaluation.
 
 ## 1. Existing implementation baseline
@@ -194,6 +196,9 @@ Inspect/update:
 
 Do not create duplicate run/trade tables if existing tables satisfy the model; migrate additively. Verify RLS ownership and dataset size limits.
 
+### Authoring plugin and market-data boundary
+
+The local ICT Backtest Lab's prior-N-bar wick-through/close-back rule is a narrow CSV proxy; it is not the website Strategy Lab, a full ICT detector, or evidence of an ICT model's performance. Keep local input files and outputs isolated unless the user explicitly consents to a separately designed import/export, with clear provenance and privacy controls. The Futures Market Data Hub does not provide an entitlement to listed CME/ICE real-time data. CME terms can restrict feeding licensed market data into AI/ML/LLM systems; never use such data in this backtesting or research path unless the applicable agreement explicitly permits the specific non-display/model use. Persist exact dataset, mapping, roll policy, timestamps, costs, rule version, split methodology and reproducible artifacts.
 ## 11. Acceptance criteria
 
 - [ ] Every automated model has a written machine-testable specification and version.
@@ -214,7 +219,7 @@ Do not create duplicate run/trade tables if existing tables satisfy the model; m
 
 ## Standalone handoff context — use this file by itself
 
-**Repository:** https://github.com/whizz444yt-ux/Finance-Intelligence-OS  
+**Repository:** https://github.com/WHIZZ444YT/WHIZZ444-YT-OS  
 **Product:** Futures Intelligence OS — futures-only markets, ICT futures education, futures news/data, positioning, backtesting, risk and trader workspace.  
 **Architecture to inspect and preserve:** static HTML/JavaScript/JSON; Python build at `scripts/build_site.py`; Cloudflare Worker at `cloudflare/src/index.js` with KV; Supabase Postgres/Auth/RLS; Vercel static output `dist/`; GitHub Actions and tests. This is a baseline, not proof each service/credential is currently healthy.
 

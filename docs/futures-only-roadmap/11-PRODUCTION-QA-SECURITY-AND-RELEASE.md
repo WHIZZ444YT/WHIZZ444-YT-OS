@@ -1,5 +1,7 @@
 # Production QA, Security and Release Runbook
 
+**Review date:** 19 November 2026. **Repository:** https://github.com/WHIZZ444YT/WHIZZ444-YT-OS. Recheck live source and official references before implementation; this document is not runtime or deployment evidence.
+
 **Purpose:** A release is production-ready only when source, generated build, GitHub CI, Vercel, Cloudflare, Supabase and data-provider behavior have all been verified for the exact commit.
 
 ## 1. Environments
@@ -111,7 +113,7 @@ Vercel:
 - All required routes return content, not default homepage or 404.
 - SITE_URL/canonical/robots/sitemap use real current production origin.
 - Verify cache headers and stale asset/service-worker invalidation.
-- Confirm commercial usage plan is compliant before monetized/public commercial launch; Hobby is personal/non-commercial only under Vercel terms.
+- Confirm the selected hosting plan and current terms permit the intended public, commercial and team use before launch; do not infer eligibility from a plan label.
 
 Cloudflare:
 - Worker deployed version and code correspond to intended commit.
@@ -167,6 +169,11 @@ Each release report contains:
 - Desktop/tablet/mobile screenshots.
 - Known gaps and rollback reference.
 
+### Release checks for external education and market data
+
+Add an Academy release report showing coverage by every active concept ID and Entry Model ID, with exact YouTube video ID, verified uploader, direct-link result, permitted embed status and last checked date. Missing or unavailable videos leave the Academy incomplete; test direct-link fallback, keyboard access and no autoplay. Review YouTube's [API policies](https://developers.google.com/youtube/terms/api-services-terms-of-service) and [player requirements](https://developers.google.com/youtube/terms/required-minimum-functionality); do not download, cache or rehost video content or obscure player controls.
+
+Before 1 January 2027, recheck the applicable CME public-site terms and approvals for every CME display route; do not release under the assumption that current public pages grant a feed licence. Verify ICE approvals separately. For every source, prove provider-specific freshness from observed response timestamps; don't use a universal minute-level SLO for weekly COT, daily series or cached files. Treat local plugin health separately from website health.
 ## 10. Acceptance criteria
 
 - [ ] All required automated checks green on exact commit.

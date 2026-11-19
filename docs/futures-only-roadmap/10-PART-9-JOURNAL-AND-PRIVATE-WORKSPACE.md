@@ -1,5 +1,7 @@
 # Part 9 — Journal, Watchlists, Alerts and Private Workspace
 
+**Review date:** 19 November 2026. **Repository:** https://github.com/WHIZZ444YT/WHIZZ444-YT-OS. Recheck live source and official references before implementation; this document is not runtime or deployment evidence.
+
 **Goal:** Deliver a reliable private workspace for futures traders, backed by existing Supabase Auth/RLS and without requiring broker credentials or unauthorized data.
 
 ## 1. Existing baseline to preserve
@@ -135,6 +137,9 @@ Inspect/update:
 
 Do not make a migration simply because a new feature name exists; reuse suitable tables or document why a new table is necessary.
 
+### Local journal plugin and private-data boundary
+
+The Trading Journal plugin can list, log and summarize locally stored completed-trade records. It is a separate local tool, not the hosted Supabase journal, and does not prove synchronization, backup, RLS, import/export or access control in this product. Do not silently move plugin journal records, local CSVs or notes into the website. Any future import/sync must be an explicit user action with preview, field mapping, consent, duplicate handling, deletion/export behavior, tenant isolation, audit trail and failure recovery. Website journal state must be tested as a separate authenticated user flow.
 ## 7. Acceptance criteria
 
 - [ ] Real new-user signup, confirmation, sign-in, sign-out and refresh works.
@@ -156,7 +161,7 @@ Do not make a migration simply because a new feature name exists; reuse suitable
 
 ## Standalone handoff context — use this file by itself
 
-**Repository:** https://github.com/whizz444yt-ux/Finance-Intelligence-OS  
+**Repository:** https://github.com/WHIZZ444YT/WHIZZ444-YT-OS  
 **Product:** Futures Intelligence OS — futures-only markets, ICT futures education, futures news/data, positioning, backtesting, risk and trader workspace.  
 **Architecture to inspect and preserve:** static HTML/JavaScript/JSON; Python build at `scripts/build_site.py`; Cloudflare Worker at `cloudflare/src/index.js` with KV; Supabase Postgres/Auth/RLS; Vercel static output `dist/`; GitHub Actions and tests. This is a baseline, not proof each service/credential is currently healthy.
 

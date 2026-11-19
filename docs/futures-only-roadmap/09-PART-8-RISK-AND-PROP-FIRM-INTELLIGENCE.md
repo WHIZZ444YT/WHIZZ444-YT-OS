@@ -1,5 +1,7 @@
 # Part 8 — Futures Risk and Prop-Firm Intelligence
 
+**Review date:** 19 November 2026. **Repository:** https://github.com/WHIZZ444YT/WHIZZ444-YT-OS. Recheck live source and official references before implementation; this document is not runtime or deployment evidence.
+
 **Goal:** Provide mathematically correct futures position sizing and a source-verified rules database for futures evaluation/funded programs.
 
 ## 1. Scope and boundaries
@@ -143,6 +145,9 @@ Inspect/update:
 
 Separate public firm-rule records from private user balances/accounts. Do not request broker/prop-firm passwords or store login credentials. If user connects an official broker API in a future phase, use least-privilege read-only OAuth/tokens and explicit opt-in.
 
+### Calculator input verification and plugin separation
+
+The local Futures Risk Manager calculates directional R:R and position size from user-supplied tick size/value and costs. It does not verify a contract, convert currencies, retrieve margin or resolve prop-firm rules. Website calculators must take specifications from the canonical versioned contract registry and display the verification source/effective date; if unresolved, block a falsely precise output or label it conditional. Keep `LOCAL IN CODEX` actions separate from web tools, and never claim orders are placed.
 ## 9. Acceptance criteria
 
 - [ ] Tick and point units are never confused.
@@ -164,7 +169,7 @@ Separate public firm-rule records from private user balances/accounts. Do not re
 
 ## Standalone handoff context — use this file by itself
 
-**Repository:** https://github.com/whizz444yt-ux/Finance-Intelligence-OS  
+**Repository:** https://github.com/WHIZZ444YT/WHIZZ444-YT-OS  
 **Product:** Futures Intelligence OS — futures-only markets, ICT futures education, futures news/data, positioning, backtesting, risk and trader workspace.  
 **Architecture to inspect and preserve:** static HTML/JavaScript/JSON; Python build at `scripts/build_site.py`; Cloudflare Worker at `cloudflare/src/index.js` with KV; Supabase Postgres/Auth/RLS; Vercel static output `dist/`; GitHub Actions and tests. This is a baseline, not proof each service/credential is currently healthy.
 

@@ -1,5 +1,7 @@
 # Part 5 — Futures News and Data Gateway
 
+**Review date:** 19 November 2026. **Repository:** https://github.com/WHIZZ444YT/WHIZZ444-YT-OS. Recheck live source and official references before implementation; this document is not runtime or deployment evidence.
+
 **Goal:** Build one secure, source-aware Cloudflare gateway for futures news, official macro releases and licensed futures market data. Keep news discovery, economic observations and exchange prices as distinct data products.
 
 ## 1. Target architecture
@@ -146,6 +148,11 @@ Every provider card reports:
 
 Use provider-specific statuses: `fresh`, `partial`, `stale`, `unavailable`, `not-configured`, `rate-limited`, `license-required`, `not-supported`. Do not call the entire dashboard green because one source responds.
 
+### Source freshness, licensing and authoring plugins
+
+An accessible API or official page does not by itself authorize public redistribution. Keep provider provenance, timestamp, frequency/delay, caching window, stale threshold, terms URL and data-state in the gateway contract. The CME [F&O Website Information terms/update](https://www.cmegroup.com/market-data/files/market-data-license-agreement-updates-june-2026.pdf) take effect 1 January 2027 for the described public-site information packages; data frequency and allowed display are restricted and AI/ML/LLM use is not allowed under those terms unless an agreement explicitly permits it. Its [F&O API for website distributors](https://dataservices.cmegroup.com/pages/fo-api-websites) is a potential approval/licensing route, not an already configured feed. ICE public web display likewise requires ICE approval. No scraping or browser-key exposure.
+
+The Codex Futures Market Data Hub (Twelve Data/FRED/local CSV inspection) is an authoring tool, not the deployed Worker upstream; the local CSV remains local. Binance USDⓈ-M perpetuals are not listed futures in this product. Do not promote a plugin response to site `LIVE` without a server-side integration, licence, entitlement, freshness monitoring and tests.
 ## 10. Acceptance criteria
 
 - [ ] Every provider has been called and independently verified in the active environment.
@@ -165,7 +172,7 @@ Use provider-specific statuses: `fresh`, `partial`, `stale`, `unavailable`, `not
 
 ## Standalone handoff context — use this file by itself
 
-**Repository:** https://github.com/whizz444yt-ux/Finance-Intelligence-OS  
+**Repository:** https://github.com/WHIZZ444YT/WHIZZ444-YT-OS  
 **Product:** Futures Intelligence OS — futures-only markets, ICT futures education, futures news/data, positioning, backtesting, risk and trader workspace.  
 **Architecture to inspect and preserve:** static HTML/JavaScript/JSON; Python build at `scripts/build_site.py`; Cloudflare Worker at `cloudflare/src/index.js` with KV; Supabase Postgres/Auth/RLS; Vercel static output `dist/`; GitHub Actions and tests. This is a baseline, not proof each service/credential is currently healthy.
 
