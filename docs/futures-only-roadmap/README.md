@@ -29,6 +29,7 @@
 14. [ChatGPT / Claude / GitHub execution protocol](13-CHATGPT-EXECUTION-PROMPTS-AND-HANDOFF.md)
 15. [PDF-to-product traceability map](14-PDF-TO-PRODUCT-TRACEABILITY.md)
 16. [Historical Part 0 route map](PART-0-BASELINE-AUDIT-AND-ROUTE-MAP.md)
+17. [Current production implementation and site audit — 19 November 2026](26-PRODUCTION-IMPLEMENTATION-AND-SITE-AUDIT-2026-11-19.md)
 
 ## Product boundary
 
@@ -47,7 +48,33 @@ The main branch source reviewed on 19 November 2026 describes:
 
 These are README/builder/validator observations, not proof that CI passed, each route works in a browser, content is complete, Supabase RLS is correct, the deployed site matches main, or any provider is configured/licensed. Inspect the exact branch and run the relevant checks before implementation. The historical route map records an earlier audit and must not be used as a current status report.
 
-## Current local execution status — 19 November 2026
+## Current implementation status — verified 19 November 2026
+
+The dated production implementation and site audit is the current status source; the older Part 0–9 reports below it capture earlier checkpoints from the same day. On this implementation branch:
+
+- Both additive Supabase migrations are applied to the active project and verified against remote migration history, table columns, RLS, and security/health advisors. Local filenames now match production migration versions `20261119125044` and `20261119125110`.
+- Cloudflare Worker `2.0.0` is deployed with the configured KV binding and 30-minute Cron; query-string redaction is enabled. Runtime verification reports database, CMS and ingestion-token secrets are not configured. The first live COT probe exceeded Cloudflare's CPU limit; the bounded route was deployed at 13:26:40 UTC and the existing live site's no-search COT request then displayed a fresh TFF futures-only snapshot, position date 10 November 2026, with 780 normalized category rows. Other Worker endpoints and Supabase persistence still need their separate smoke tests.
+- The public front-end remains on the last merged `main` source until this branch passes checks, is reviewed and is merged. The current local build regenerates `dist/` from the canonical source.
+- Part 0 baseline and parts 1–9 have implementation source, but parts 2–9 and production QA remain **partial** under the charter's evidence rules. Existing implementation does not prove external source completeness, current exchange values or licensed data access.
+- Dedicated test accounts are unavailable for signup/session, two-user RLS, attachment, and deletion tests. Account deletion remains disabled; its Edge Function must not be enabled until configured and verified with disposable accounts.
+
+### Requirements still open across the roadmap
+
+- Part 2 exact verified tutorial mappings remain 0/82 Academy lessons and 0/8 Entry Models; channel/search links do not satisfy mapping requirements.
+- Part 3 has 15 contract families whose current contract/tick/expiry/first-notice/roll specifications still need official exchange verification.
+- Part 4 has IANA/DST session conversion, but official product-hours, holiday, release-calendar and revision feeds are not integrated.
+- Part 5 requires provider credentials and rights review for richer collection; Worker provider states are visible, but secrets, Supabase ingestion and licensed futures feeds are not configured.
+- Part 6 COT data is weekly aggregate positioning. Daily/intraday exchange volume/OI, reviewed root-to-CFTC market crosswalks, percentile history, and production persistence writes still need evidence and eligible credentials.
+- Part 7's OHLC backtester has no automatic detector for the ten candidate ICT models; sealed out-of-sample evidence and full execution-cost/roll realism remain open.
+- Part 8 has zero verified prop-firm program records and no verified tick specifications, so sizing remains conditional.
+- Part 9 still requires real auth, two-user isolation, attachment/export and deletion workflow tests; deletion stays disabled.
+- QA still needs responsive/keyboard and browser error-state review, licensed-data review, current route smoke, and release sign-off. No release tag should be created before the checklist passes.
+
+See the [current implementation and site audit](26-PRODUCTION-IMPLEMENTATION-AND-SITE-AUDIT-2026-11-19.md) for changed files, deployment evidence and the exact next verification steps. The dated Part 0–9 reports above are point-in-time records and are superseded where they conflict with this current report.
+
+## Earlier local execution status — before production follow-through
+
+> The following snapshot predates the production migrations and Worker deployment described in the current audit. Use it as chronology only; it is not the current deployment state.
 
 - Part 0 regression audit is recorded in [its execution report](15-PART-0-EXECUTION-REPORT-2026-11-19.md).
 - Part 1 source and build fixes are recorded, but a post-change browser screenshot is still pending because the generated local preview could not be reached.

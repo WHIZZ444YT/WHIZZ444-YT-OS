@@ -1,0 +1,4088 @@
+{
+  "version": 2,
+  "generatedAt": "2026-11-11",
+  "count": 82,
+  "lessons": [
+    {
+      "id": "market-structure",
+      "title": "Market Structure",
+      "category": "Market Structure",
+      "level": "Beginner",
+      "definition": "Framework for reading swing highs, swing lows and directional sequences. The playbook uses higher-timeframe structure for context before lower-timeframe execution.",
+      "aliases": [
+        "Market Structure",
+        "Structure"
+      ],
+      "acronym": "",
+      "trackId": "market-structure-dealing-ranges",
+      "purpose": [
+        "directional-bias",
+        "confirmation"
+      ],
+      "instrumentFamilies": [
+        "nq",
+        "es",
+        "ym",
+        "rty",
+        "gc",
+        "si",
+        "cl",
+        "6e",
+        "6b",
+        "6j",
+        "6a",
+        "6c",
+        "dx",
+        "zn",
+        "btc"
+      ],
+      "timeframes": [
+        "Monthly",
+        "Weekly",
+        "Daily",
+        "4H",
+        "1H",
+        "15m"
+      ],
+      "sessions": [
+        "Asia",
+        "London",
+        "New York AM",
+        "New York PM"
+      ],
+      "biasDirections": [
+        "bullish",
+        "bearish"
+      ],
+      "sourceEvidenceLabel": "SOURCED",
+      "performanceEvidenceLabel": null,
+      "url": "/ict-futures/academy/market-structure.html"
+    },
+    {
+      "id": "swing-high-low",
+      "title": "Swing High & Swing Low",
+      "category": "Market Structure",
+      "level": "Beginner",
+      "definition": "Local turning points used to map structure. The exact pivot lookback is a rule that must be fixed.",
+      "aliases": [
+        "Swing High & Swing Low",
+        "Swing points",
+        "Pivot highs",
+        "Pivot lows"
+      ],
+      "acronym": "",
+      "trackId": "market-structure-dealing-ranges",
+      "purpose": [
+        "directional-bias",
+        "confirmation"
+      ],
+      "instrumentFamilies": [
+        "nq",
+        "es",
+        "ym",
+        "rty",
+        "gc",
+        "si",
+        "cl",
+        "6e",
+        "6b",
+        "6j",
+        "6a",
+        "6c",
+        "dx",
+        "zn",
+        "btc"
+      ],
+      "timeframes": [
+        "Monthly",
+        "Weekly",
+        "Daily",
+        "4H",
+        "1H",
+        "15m"
+      ],
+      "sessions": [
+        "Asia",
+        "London",
+        "New York AM",
+        "New York PM"
+      ],
+      "biasDirections": [
+        "bullish",
+        "bearish"
+      ],
+      "sourceEvidenceLabel": "SOURCED",
+      "performanceEvidenceLabel": null,
+      "url": "/ict-futures/academy/swing-high-low.html"
+    },
+    {
+      "id": "bos",
+      "title": "Break of Structure (BOS)",
+      "category": "Market Structure",
+      "level": "Beginner",
+      "definition": "A break of a prior structural swing in the direction of the existing trend. It is a continuation clue, not an automatic entry.",
+      "aliases": [
+        "Break of Structure (BOS)",
+        "Break of Structure",
+        "BOS"
+      ],
+      "acronym": "BOS",
+      "trackId": "market-structure-dealing-ranges",
+      "purpose": [
+        "directional-bias",
+        "confirmation"
+      ],
+      "instrumentFamilies": [
+        "nq",
+        "es",
+        "ym",
+        "rty",
+        "gc",
+        "si",
+        "cl",
+        "6e",
+        "6b",
+        "6j",
+        "6a",
+        "6c",
+        "dx",
+        "zn",
+        "btc"
+      ],
+      "timeframes": [
+        "Monthly",
+        "Weekly",
+        "Daily",
+        "4H",
+        "1H",
+        "15m"
+      ],
+      "sessions": [
+        "Asia",
+        "London",
+        "New York AM",
+        "New York PM"
+      ],
+      "biasDirections": [
+        "bullish",
+        "bearish"
+      ],
+      "sourceEvidenceLabel": "SOURCED",
+      "performanceEvidenceLabel": null,
+      "url": "/ict-futures/academy/bos.html"
+    },
+    {
+      "id": "mss",
+      "title": "Market Structure Shift (MSS)",
+      "category": "Market Structure",
+      "level": "Intermediate",
+      "definition": "A break through a relevant swing opposite to prior short-term structure, ideally with displacement. In the playbook, MSS confirms after a liquidity raid.",
+      "aliases": [
+        "Market Structure Shift (MSS)",
+        "Market Structure Shift",
+        "MSS"
+      ],
+      "acronym": "MSS",
+      "trackId": "market-structure-dealing-ranges",
+      "purpose": [
+        "directional-bias",
+        "confirmation"
+      ],
+      "instrumentFamilies": [
+        "nq",
+        "es",
+        "ym",
+        "rty",
+        "gc",
+        "si",
+        "cl",
+        "6e",
+        "6b",
+        "6j",
+        "6a",
+        "6c",
+        "dx",
+        "zn",
+        "btc"
+      ],
+      "timeframes": [
+        "Monthly",
+        "Weekly",
+        "Daily",
+        "4H",
+        "1H",
+        "15m"
+      ],
+      "sessions": [
+        "Asia",
+        "London",
+        "New York AM",
+        "New York PM"
+      ],
+      "biasDirections": [
+        "bullish",
+        "bearish"
+      ],
+      "sourceEvidenceLabel": "SOURCED",
+      "performanceEvidenceLabel": null,
+      "url": "/ict-futures/academy/mss.html"
+    },
+    {
+      "id": "choch",
+      "title": "CHoCH terminology comparison",
+      "category": "Market Structure",
+      "level": "Intermediate",
+      "definition": "Change of Character is used by parts of the wider price-action/SMC community. The supplied playbook prefers MSS for its reversal framework.",
+      "aliases": [
+        "CHoCH terminology comparison",
+        "Change of Character",
+        "CHoCH"
+      ],
+      "acronym": "",
+      "trackId": "market-structure-dealing-ranges",
+      "purpose": [
+        "directional-bias",
+        "confirmation"
+      ],
+      "instrumentFamilies": [
+        "nq",
+        "es",
+        "ym",
+        "rty",
+        "gc",
+        "si",
+        "cl",
+        "6e",
+        "6b",
+        "6j",
+        "6a",
+        "6c",
+        "dx",
+        "zn",
+        "btc"
+      ],
+      "timeframes": [
+        "Monthly",
+        "Weekly",
+        "Daily",
+        "4H",
+        "1H",
+        "15m"
+      ],
+      "sessions": [
+        "Asia",
+        "London",
+        "New York AM",
+        "New York PM"
+      ],
+      "biasDirections": [
+        "bullish",
+        "bearish"
+      ],
+      "sourceEvidenceLabel": "CONVENTION",
+      "performanceEvidenceLabel": null,
+      "url": "/ict-futures/academy/choch.html"
+    },
+    {
+      "id": "displacement",
+      "title": "Displacement",
+      "category": "Market Structure",
+      "level": "Intermediate",
+      "definition": "A fast directional move with relatively large candle bodies that breaks a meaningful swing and may leave imbalances. The PDF says the threshold is discretionary.",
+      "aliases": [
+        "Displacement"
+      ],
+      "acronym": "",
+      "trackId": "market-structure-dealing-ranges",
+      "purpose": [
+        "directional-bias",
+        "confirmation"
+      ],
+      "instrumentFamilies": [
+        "nq",
+        "es",
+        "ym",
+        "rty",
+        "gc",
+        "si",
+        "cl",
+        "6e",
+        "6b",
+        "6j",
+        "6a",
+        "6c",
+        "dx",
+        "zn",
+        "btc"
+      ],
+      "timeframes": [
+        "Monthly",
+        "Weekly",
+        "Daily",
+        "4H",
+        "1H",
+        "15m"
+      ],
+      "sessions": [
+        "Asia",
+        "London",
+        "New York AM",
+        "New York PM"
+      ],
+      "biasDirections": [
+        "bullish",
+        "bearish"
+      ],
+      "sourceEvidenceLabel": "SOURCED",
+      "performanceEvidenceLabel": null,
+      "url": "/ict-futures/academy/displacement.html"
+    },
+    {
+      "id": "liquidity",
+      "title": "Liquidity",
+      "category": "Liquidity",
+      "level": "Beginner",
+      "definition": "In ICT terminology, liquidity refers to orders or stops thought to cluster around obvious highs, lows and reference levels. The playbook uses pools to frame draw on liquidity.",
+      "aliases": [
+        "Liquidity"
+      ],
+      "acronym": "",
+      "trackId": "liquidity-draw-on-liquidity",
+      "purpose": [
+        "target",
+        "location"
+      ],
+      "instrumentFamilies": [
+        "nq",
+        "es",
+        "ym",
+        "rty",
+        "gc",
+        "si",
+        "cl",
+        "6e",
+        "6b",
+        "6j",
+        "6a",
+        "6c",
+        "dx",
+        "zn",
+        "btc"
+      ],
+      "timeframes": [
+        "Daily",
+        "4H",
+        "1H",
+        "15m",
+        "5m"
+      ],
+      "sessions": [
+        "Asia",
+        "London",
+        "New York AM",
+        "New York PM"
+      ],
+      "biasDirections": [
+        "bullish",
+        "bearish"
+      ],
+      "sourceEvidenceLabel": "SOURCED",
+      "performanceEvidenceLabel": null,
+      "url": "/ict-futures/academy/liquidity.html"
+    },
+    {
+      "id": "bsl",
+      "title": "Buy-Side Liquidity (BSL)",
+      "category": "Liquidity",
+      "level": "Beginner",
+      "definition": "A label for potential buy stops and breakout orders above visible highs. The playbook places BSL above equal highs and prior/session highs.",
+      "aliases": [
+        "Buy-Side Liquidity (BSL)",
+        "Buy-side liquidity",
+        "BSL"
+      ],
+      "acronym": "BSL",
+      "trackId": "liquidity-draw-on-liquidity",
+      "purpose": [
+        "target",
+        "location"
+      ],
+      "instrumentFamilies": [
+        "nq",
+        "es",
+        "ym",
+        "rty",
+        "gc",
+        "si",
+        "cl",
+        "6e",
+        "6b",
+        "6j",
+        "6a",
+        "6c",
+        "dx",
+        "zn",
+        "btc"
+      ],
+      "timeframes": [
+        "Daily",
+        "4H",
+        "1H",
+        "15m",
+        "5m"
+      ],
+      "sessions": [
+        "Asia",
+        "London",
+        "New York AM",
+        "New York PM"
+      ],
+      "biasDirections": [
+        "bullish",
+        "bearish"
+      ],
+      "sourceEvidenceLabel": "SOURCED",
+      "performanceEvidenceLabel": null,
+      "url": "/ict-futures/academy/bsl.html"
+    },
+    {
+      "id": "ssl",
+      "title": "Sell-Side Liquidity (SSL)",
+      "category": "Liquidity",
+      "level": "Beginner",
+      "definition": "A label for potential sell stops and breakout orders below visible lows; counterpart to BSL.",
+      "aliases": [
+        "Sell-Side Liquidity (SSL)",
+        "Sell-side liquidity",
+        "SSL"
+      ],
+      "acronym": "SSL",
+      "trackId": "liquidity-draw-on-liquidity",
+      "purpose": [
+        "target",
+        "location"
+      ],
+      "instrumentFamilies": [
+        "nq",
+        "es",
+        "ym",
+        "rty",
+        "gc",
+        "si",
+        "cl",
+        "6e",
+        "6b",
+        "6j",
+        "6a",
+        "6c",
+        "dx",
+        "zn",
+        "btc"
+      ],
+      "timeframes": [
+        "Daily",
+        "4H",
+        "1H",
+        "15m",
+        "5m"
+      ],
+      "sessions": [
+        "Asia",
+        "London",
+        "New York AM",
+        "New York PM"
+      ],
+      "biasDirections": [
+        "bullish",
+        "bearish"
+      ],
+      "sourceEvidenceLabel": "SOURCED",
+      "performanceEvidenceLabel": null,
+      "url": "/ict-futures/academy/ssl.html"
+    },
+    {
+      "id": "eqh",
+      "title": "Equal Highs (EQH)",
+      "category": "Liquidity",
+      "level": "Beginner",
+      "definition": "Two or more swing highs at approximately similar prices. The area above them is considered potential BSL.",
+      "aliases": [
+        "Equal Highs (EQH)",
+        "Equal highs",
+        "EQH"
+      ],
+      "acronym": "EQH",
+      "trackId": "liquidity-draw-on-liquidity",
+      "purpose": [
+        "target",
+        "location"
+      ],
+      "instrumentFamilies": [
+        "nq",
+        "es",
+        "ym",
+        "rty",
+        "gc",
+        "si",
+        "cl",
+        "6e",
+        "6b",
+        "6j",
+        "6a",
+        "6c",
+        "dx",
+        "zn",
+        "btc"
+      ],
+      "timeframes": [
+        "Daily",
+        "4H",
+        "1H",
+        "15m",
+        "5m"
+      ],
+      "sessions": [
+        "Asia",
+        "London",
+        "New York AM",
+        "New York PM"
+      ],
+      "biasDirections": [
+        "bullish",
+        "bearish"
+      ],
+      "sourceEvidenceLabel": "SOURCED",
+      "performanceEvidenceLabel": null,
+      "url": "/ict-futures/academy/eqh.html"
+    },
+    {
+      "id": "eql",
+      "title": "Equal Lows (EQL)",
+      "category": "Liquidity",
+      "level": "Beginner",
+      "definition": "Two or more swing lows at approximately similar prices. The area below them is considered potential SSL.",
+      "aliases": [
+        "Equal Lows (EQL)",
+        "Equal lows",
+        "EQL"
+      ],
+      "acronym": "EQL",
+      "trackId": "liquidity-draw-on-liquidity",
+      "purpose": [
+        "target",
+        "location"
+      ],
+      "instrumentFamilies": [
+        "nq",
+        "es",
+        "ym",
+        "rty",
+        "gc",
+        "si",
+        "cl",
+        "6e",
+        "6b",
+        "6j",
+        "6a",
+        "6c",
+        "dx",
+        "zn",
+        "btc"
+      ],
+      "timeframes": [
+        "Daily",
+        "4H",
+        "1H",
+        "15m",
+        "5m"
+      ],
+      "sessions": [
+        "Asia",
+        "London",
+        "New York AM",
+        "New York PM"
+      ],
+      "biasDirections": [
+        "bullish",
+        "bearish"
+      ],
+      "sourceEvidenceLabel": "SOURCED",
+      "performanceEvidenceLabel": null,
+      "url": "/ict-futures/academy/eql.html"
+    },
+    {
+      "id": "pdh-pdl",
+      "title": "Prior Day High / Low (PDH / PDL)",
+      "category": "Liquidity",
+      "level": "Beginner",
+      "definition": "Previous trading day high and low. The playbook treats these as important intraday liquidity references and frequent objectives.",
+      "aliases": [
+        "Prior Day High / Low (PDH / PDL)",
+        "PDH",
+        "PDL"
+      ],
+      "acronym": "PDH",
+      "trackId": "liquidity-draw-on-liquidity",
+      "purpose": [
+        "target",
+        "location"
+      ],
+      "instrumentFamilies": [
+        "nq",
+        "es",
+        "ym",
+        "rty",
+        "gc",
+        "si",
+        "cl",
+        "6e",
+        "6b",
+        "6j",
+        "6a",
+        "6c",
+        "dx",
+        "zn",
+        "btc"
+      ],
+      "timeframes": [
+        "Daily",
+        "4H",
+        "1H",
+        "15m",
+        "5m"
+      ],
+      "sessions": [
+        "Asia",
+        "London",
+        "New York AM",
+        "New York PM"
+      ],
+      "biasDirections": [
+        "bullish",
+        "bearish"
+      ],
+      "sourceEvidenceLabel": "SOURCED",
+      "performanceEvidenceLabel": null,
+      "url": "/ict-futures/academy/pdh-pdl.html"
+    },
+    {
+      "id": "pwh-pwl",
+      "title": "Prior Week High / Low (PWH / PWL)",
+      "category": "Liquidity",
+      "level": "Beginner",
+      "definition": "Previous completed week high and low; higher-timeframe liquidity reference levels.",
+      "aliases": [
+        "Prior Week High / Low (PWH / PWL)",
+        "PWH",
+        "PWL"
+      ],
+      "acronym": "PWH",
+      "trackId": "liquidity-draw-on-liquidity",
+      "purpose": [
+        "target",
+        "location"
+      ],
+      "instrumentFamilies": [
+        "nq",
+        "es",
+        "ym",
+        "rty",
+        "gc",
+        "si",
+        "cl",
+        "6e",
+        "6b",
+        "6j",
+        "6a",
+        "6c",
+        "dx",
+        "zn",
+        "btc"
+      ],
+      "timeframes": [
+        "Daily",
+        "4H",
+        "1H",
+        "15m",
+        "5m"
+      ],
+      "sessions": [
+        "Asia",
+        "London",
+        "New York AM",
+        "New York PM"
+      ],
+      "biasDirections": [
+        "bullish",
+        "bearish"
+      ],
+      "sourceEvidenceLabel": "SOURCED",
+      "performanceEvidenceLabel": null,
+      "url": "/ict-futures/academy/pwh-pwl.html"
+    },
+    {
+      "id": "session-high-low",
+      "title": "Session High / Low",
+      "category": "Liquidity",
+      "level": "Beginner",
+      "definition": "High and low formed during a defined session, such as Asia or London. The PDF uses these as potential sweep levels.",
+      "aliases": [
+        "Session High / Low"
+      ],
+      "acronym": "",
+      "trackId": "liquidity-draw-on-liquidity",
+      "purpose": [
+        "target",
+        "location"
+      ],
+      "instrumentFamilies": [
+        "nq",
+        "es",
+        "ym",
+        "rty",
+        "gc",
+        "si",
+        "cl",
+        "6e",
+        "6b",
+        "6j",
+        "6a",
+        "6c",
+        "dx",
+        "zn",
+        "btc"
+      ],
+      "timeframes": [
+        "Daily",
+        "4H",
+        "1H",
+        "15m",
+        "5m"
+      ],
+      "sessions": [
+        "Asia",
+        "London",
+        "New York AM",
+        "New York PM"
+      ],
+      "biasDirections": [
+        "bullish",
+        "bearish"
+      ],
+      "sourceEvidenceLabel": "SOURCED",
+      "performanceEvidenceLabel": null,
+      "url": "/ict-futures/academy/session-high-low.html"
+    },
+    {
+      "id": "liquidity-sweep",
+      "title": "Liquidity Sweep / Raid",
+      "category": "Liquidity",
+      "level": "Intermediate",
+      "definition": "Price trades beyond an obvious liquidity level and closes back inside under the playbook's simplified description. A sweep alone is not an entry.",
+      "aliases": [
+        "Liquidity Sweep / Raid"
+      ],
+      "acronym": "",
+      "trackId": "liquidity-draw-on-liquidity",
+      "purpose": [
+        "target",
+        "location"
+      ],
+      "instrumentFamilies": [
+        "nq",
+        "es",
+        "ym",
+        "rty",
+        "gc",
+        "si",
+        "cl",
+        "6e",
+        "6b",
+        "6j",
+        "6a",
+        "6c",
+        "dx",
+        "zn",
+        "btc"
+      ],
+      "timeframes": [
+        "Daily",
+        "4H",
+        "1H",
+        "15m",
+        "5m"
+      ],
+      "sessions": [
+        "Asia",
+        "London",
+        "New York AM",
+        "New York PM"
+      ],
+      "biasDirections": [
+        "bullish",
+        "bearish"
+      ],
+      "sourceEvidenceLabel": "SOURCED",
+      "performanceEvidenceLabel": null,
+      "url": "/ict-futures/academy/liquidity-sweep.html"
+    },
+    {
+      "id": "liquidity-run",
+      "title": "Liquidity Run / Breakout Acceptance",
+      "category": "Liquidity",
+      "level": "Intermediate",
+      "definition": "A move through a liquidity level that continues instead of rejecting back inside. The playbook distinguishes a run from a sweep.",
+      "aliases": [
+        "Liquidity Run / Breakout Acceptance"
+      ],
+      "acronym": "",
+      "trackId": "liquidity-draw-on-liquidity",
+      "purpose": [
+        "target",
+        "location"
+      ],
+      "instrumentFamilies": [
+        "nq",
+        "es",
+        "ym",
+        "rty",
+        "gc",
+        "si",
+        "cl",
+        "6e",
+        "6b",
+        "6j",
+        "6a",
+        "6c",
+        "dx",
+        "zn",
+        "btc"
+      ],
+      "timeframes": [
+        "Daily",
+        "4H",
+        "1H",
+        "15m",
+        "5m"
+      ],
+      "sessions": [
+        "Asia",
+        "London",
+        "New York AM",
+        "New York PM"
+      ],
+      "biasDirections": [
+        "bullish",
+        "bearish"
+      ],
+      "sourceEvidenceLabel": "SOURCED",
+      "performanceEvidenceLabel": null,
+      "url": "/ict-futures/academy/liquidity-run.html"
+    },
+    {
+      "id": "irl-erl",
+      "title": "Internal & External Range Liquidity (IRL / ERL)",
+      "category": "Liquidity",
+      "level": "Advanced",
+      "definition": "External liquidity refers to highs/lows outside a dealing range; internal references include imbalances/zones inside it. Movement between them is a conceptual model.",
+      "aliases": [
+        "Internal & External Range Liquidity (IRL / ERL)",
+        "Internal Range Liquidity",
+        "External Range Liquidity",
+        "IRL",
+        "ERL"
+      ],
+      "acronym": "IRL",
+      "trackId": "liquidity-draw-on-liquidity",
+      "purpose": [
+        "target",
+        "location"
+      ],
+      "instrumentFamilies": [
+        "nq",
+        "es",
+        "ym",
+        "rty",
+        "gc",
+        "si",
+        "cl",
+        "6e",
+        "6b",
+        "6j",
+        "6a",
+        "6c",
+        "dx",
+        "zn",
+        "btc"
+      ],
+      "timeframes": [
+        "Daily",
+        "4H",
+        "1H",
+        "15m",
+        "5m"
+      ],
+      "sessions": [
+        "Asia",
+        "London",
+        "New York AM",
+        "New York PM"
+      ],
+      "biasDirections": [
+        "bullish",
+        "bearish"
+      ],
+      "sourceEvidenceLabel": "SOURCED",
+      "performanceEvidenceLabel": null,
+      "url": "/ict-futures/academy/irl-erl.html"
+    },
+    {
+      "id": "opposing-liquidity",
+      "title": "Opposing Liquidity / Draw on Liquidity",
+      "category": "Liquidity",
+      "level": "Intermediate",
+      "definition": "The next relevant liquidity pool in the direction of a directional hypothesis. The PDF's models often target opposing liquidity after entry.",
+      "aliases": [
+        "Opposing Liquidity / Draw on Liquidity"
+      ],
+      "acronym": "",
+      "trackId": "liquidity-draw-on-liquidity",
+      "purpose": [
+        "target",
+        "location"
+      ],
+      "instrumentFamilies": [
+        "nq",
+        "es",
+        "ym",
+        "rty",
+        "gc",
+        "si",
+        "cl",
+        "6e",
+        "6b",
+        "6j",
+        "6a",
+        "6c",
+        "dx",
+        "zn",
+        "btc"
+      ],
+      "timeframes": [
+        "Daily",
+        "4H",
+        "1H",
+        "15m",
+        "5m"
+      ],
+      "sessions": [
+        "Asia",
+        "London",
+        "New York AM",
+        "New York PM"
+      ],
+      "biasDirections": [
+        "bullish",
+        "bearish"
+      ],
+      "sourceEvidenceLabel": "SOURCED",
+      "performanceEvidenceLabel": null,
+      "url": "/ict-futures/academy/opposing-liquidity.html"
+    },
+    {
+      "id": "fvg",
+      "title": "Fair Value Gap (FVG)",
+      "category": "Imbalances",
+      "level": "Intermediate",
+      "definition": "Three-candle price imbalance. Bullish: candle 3 low is above candle 1 high. Bearish: candle 3 high is below candle 1 low. It is an entry zone in some models, not a signal by itself.",
+      "aliases": [
+        "Fair Value Gap (FVG)",
+        "Fair Value Gap",
+        "FVG"
+      ],
+      "acronym": "FVG",
+      "trackId": "displacement-imbalances",
+      "purpose": [
+        "entry-zone",
+        "location"
+      ],
+      "instrumentFamilies": [
+        "nq",
+        "es",
+        "gc",
+        "si",
+        "cl",
+        "6e",
+        "6b",
+        "6j",
+        "6a",
+        "6c",
+        "btc"
+      ],
+      "timeframes": [
+        "4H",
+        "1H",
+        "15m",
+        "5m",
+        "1m"
+      ],
+      "sessions": [
+        "Asia",
+        "London",
+        "New York AM",
+        "New York PM"
+      ],
+      "biasDirections": [
+        "bullish",
+        "bearish"
+      ],
+      "sourceEvidenceLabel": "SOURCED",
+      "performanceEvidenceLabel": null,
+      "url": "/ict-futures/academy/fvg.html"
+    },
+    {
+      "id": "htf-fvg",
+      "title": "Higher-Timeframe FVG",
+      "category": "Imbalances",
+      "level": "Intermediate",
+      "definition": "An FVG on a larger timeframe such as 1H, 4H or Daily, used as context on a lower execution timeframe.",
+      "aliases": [
+        "Higher-Timeframe FVG",
+        "Higher-timeframe FVG",
+        "FVG"
+      ],
+      "acronym": "FVG",
+      "trackId": "displacement-imbalances",
+      "purpose": [
+        "entry-zone",
+        "location"
+      ],
+      "instrumentFamilies": [
+        "nq",
+        "es",
+        "gc",
+        "si",
+        "cl",
+        "6e",
+        "6b",
+        "6j",
+        "6a",
+        "6c",
+        "btc"
+      ],
+      "timeframes": [
+        "4H",
+        "1H",
+        "15m",
+        "5m",
+        "1m"
+      ],
+      "sessions": [
+        "Asia",
+        "London",
+        "New York AM",
+        "New York PM"
+      ],
+      "biasDirections": [
+        "bullish",
+        "bearish"
+      ],
+      "sourceEvidenceLabel": "SOURCED",
+      "performanceEvidenceLabel": null,
+      "url": "/ict-futures/academy/htf-fvg.html"
+    },
+    {
+      "id": "ce",
+      "title": "Consequent Encroachment (CE)",
+      "category": "Imbalances",
+      "level": "Intermediate",
+      "definition": "The 50% midpoint of an FVG. Some practitioners treat touch of this midpoint as partial mitigation or entry reference.",
+      "aliases": [
+        "Consequent Encroachment (CE)",
+        "Consequent Encroachment",
+        "CE"
+      ],
+      "acronym": "CE",
+      "trackId": "displacement-imbalances",
+      "purpose": [
+        "entry-zone",
+        "location"
+      ],
+      "instrumentFamilies": [
+        "nq",
+        "es",
+        "gc",
+        "si",
+        "cl",
+        "6e",
+        "6b",
+        "6j",
+        "6a",
+        "6c",
+        "btc"
+      ],
+      "timeframes": [
+        "4H",
+        "1H",
+        "15m",
+        "5m",
+        "1m"
+      ],
+      "sessions": [
+        "Asia",
+        "London",
+        "New York AM",
+        "New York PM"
+      ],
+      "biasDirections": [
+        "bullish",
+        "bearish"
+      ],
+      "sourceEvidenceLabel": "SOURCED",
+      "performanceEvidenceLabel": null,
+      "url": "/ict-futures/academy/ce.html"
+    },
+    {
+      "id": "ifvg",
+      "title": "Inversion Fair Value Gap (IFVG)",
+      "category": "Imbalances",
+      "level": "Advanced",
+      "definition": "A gap whose role is treated as reversed after price closes through its far edge. The playbook specifies a body close, not merely a wick.",
+      "aliases": [
+        "Inversion Fair Value Gap (IFVG)",
+        "Inversion FVG",
+        "IFVG"
+      ],
+      "acronym": "IFVG",
+      "trackId": "displacement-imbalances",
+      "purpose": [
+        "entry-zone",
+        "location"
+      ],
+      "instrumentFamilies": [
+        "nq",
+        "es",
+        "gc",
+        "si",
+        "cl",
+        "6e",
+        "6b",
+        "6j",
+        "6a",
+        "6c",
+        "btc"
+      ],
+      "timeframes": [
+        "4H",
+        "1H",
+        "15m",
+        "5m",
+        "1m"
+      ],
+      "sessions": [
+        "Asia",
+        "London",
+        "New York AM",
+        "New York PM"
+      ],
+      "biasDirections": [
+        "bullish",
+        "bearish"
+      ],
+      "sourceEvidenceLabel": "CONVENTION",
+      "performanceEvidenceLabel": null,
+      "url": "/ict-futures/academy/ifvg.html"
+    },
+    {
+      "id": "bpr",
+      "title": "Balanced Price Range (BPR)",
+      "category": "Imbalances",
+      "level": "Advanced",
+      "definition": "Overlap between a bullish FVG and a bearish FVG. The PDF describes it as a consolidation/reference zone, not inherently directional.",
+      "aliases": [
+        "Balanced Price Range (BPR)",
+        "Balanced Price Range",
+        "BPR"
+      ],
+      "acronym": "BPR",
+      "trackId": "displacement-imbalances",
+      "purpose": [
+        "entry-zone",
+        "location"
+      ],
+      "instrumentFamilies": [
+        "nq",
+        "es",
+        "gc",
+        "si",
+        "cl",
+        "6e",
+        "6b",
+        "6j",
+        "6a",
+        "6c",
+        "btc"
+      ],
+      "timeframes": [
+        "4H",
+        "1H",
+        "15m",
+        "5m",
+        "1m"
+      ],
+      "sessions": [
+        "Asia",
+        "London",
+        "New York AM",
+        "New York PM"
+      ],
+      "biasDirections": [
+        "bullish",
+        "bearish"
+      ],
+      "sourceEvidenceLabel": "SOURCED",
+      "performanceEvidenceLabel": null,
+      "url": "/ict-futures/academy/bpr.html"
+    },
+    {
+      "id": "volume-imbalance",
+      "title": "Volume Imbalance",
+      "category": "Imbalances",
+      "level": "Advanced",
+      "definition": "A gap between consecutive candle bodies while their wicks overlap. It is distinct from the three-candle FVG definition.",
+      "aliases": [
+        "Volume Imbalance"
+      ],
+      "acronym": "",
+      "trackId": "displacement-imbalances",
+      "purpose": [
+        "entry-zone",
+        "location"
+      ],
+      "instrumentFamilies": [
+        "nq",
+        "es",
+        "gc",
+        "si",
+        "cl",
+        "6e",
+        "6b",
+        "6j",
+        "6a",
+        "6c",
+        "btc"
+      ],
+      "timeframes": [
+        "4H",
+        "1H",
+        "15m",
+        "5m",
+        "1m"
+      ],
+      "sessions": [
+        "Asia",
+        "London",
+        "New York AM",
+        "New York PM"
+      ],
+      "biasDirections": [
+        "bullish",
+        "bearish"
+      ],
+      "sourceEvidenceLabel": "SOURCED",
+      "performanceEvidenceLabel": null,
+      "url": "/ict-futures/academy/volume-imbalance.html"
+    },
+    {
+      "id": "fpfvg",
+      "title": "First Presented FVG (FPFVG)",
+      "category": "Imbalances",
+      "level": "Advanced",
+      "definition": "The first FVG of a session that meets trader-defined qualification rules. The PDF labels its perceived quality a community convention.",
+      "aliases": [
+        "First Presented FVG (FPFVG)",
+        "First Presented FVG",
+        "FVG",
+        "FPFVG"
+      ],
+      "acronym": "FVG",
+      "trackId": "displacement-imbalances",
+      "purpose": [
+        "entry-zone",
+        "location"
+      ],
+      "instrumentFamilies": [
+        "nq",
+        "es",
+        "gc",
+        "si",
+        "cl",
+        "6e",
+        "6b",
+        "6j",
+        "6a",
+        "6c",
+        "btc"
+      ],
+      "timeframes": [
+        "4H",
+        "1H",
+        "15m",
+        "5m",
+        "1m"
+      ],
+      "sessions": [
+        "Asia",
+        "London",
+        "New York AM",
+        "New York PM"
+      ],
+      "biasDirections": [
+        "bullish",
+        "bearish"
+      ],
+      "sourceEvidenceLabel": "CONVENTION",
+      "performanceEvidenceLabel": null,
+      "url": "/ict-futures/academy/fpfvg.html"
+    },
+    {
+      "id": "liquidity-void",
+      "title": "Liquidity Void",
+      "category": "Imbalances",
+      "level": "Advanced",
+      "definition": "A fast one-sided move leaving relatively little two-way trading or overlapping candles. The PDF lists liquidity voids among PD Array references.",
+      "aliases": [
+        "Liquidity Void"
+      ],
+      "acronym": "",
+      "trackId": "displacement-imbalances",
+      "purpose": [
+        "entry-zone",
+        "location"
+      ],
+      "instrumentFamilies": [
+        "nq",
+        "es",
+        "gc",
+        "si",
+        "cl",
+        "6e",
+        "6b",
+        "6j",
+        "6a",
+        "6c",
+        "btc"
+      ],
+      "timeframes": [
+        "4H",
+        "1H",
+        "15m",
+        "5m",
+        "1m"
+      ],
+      "sessions": [
+        "Asia",
+        "London",
+        "New York AM",
+        "New York PM"
+      ],
+      "biasDirections": [
+        "bullish",
+        "bearish"
+      ],
+      "sourceEvidenceLabel": "CONVENTION",
+      "performanceEvidenceLabel": null,
+      "url": "/ict-futures/academy/liquidity-void.html"
+    },
+    {
+      "id": "order-block",
+      "title": "Order Block (OB)",
+      "category": "Blocks & PD Arrays",
+      "level": "Intermediate",
+      "definition": "Last opposing candle/zone before a displacement move. The PDF stresses that displacement quality makes the zone meaningful.",
+      "aliases": [
+        "Order Block (OB)",
+        "OB"
+      ],
+      "acronym": "OB",
+      "trackId": "pd-arrays",
+      "purpose": [
+        "entry-zone",
+        "location"
+      ],
+      "instrumentFamilies": [
+        "nq",
+        "es",
+        "gc",
+        "si",
+        "cl",
+        "6e",
+        "6b",
+        "6j",
+        "6a",
+        "6c",
+        "btc"
+      ],
+      "timeframes": [
+        "4H",
+        "1H",
+        "15m",
+        "5m",
+        "1m"
+      ],
+      "sessions": [
+        "Asia",
+        "London",
+        "New York AM",
+        "New York PM"
+      ],
+      "biasDirections": [
+        "bullish",
+        "bearish"
+      ],
+      "sourceEvidenceLabel": "SOURCED",
+      "performanceEvidenceLabel": null,
+      "url": "/ict-futures/academy/order-block.html"
+    },
+    {
+      "id": "mean-threshold",
+      "title": "Mean Threshold (MT)",
+      "category": "Blocks & PD Arrays",
+      "level": "Intermediate",
+      "definition": "The 50% level of an Order Block range. Different practitioners may define the OB boundary differently.",
+      "aliases": [
+        "Mean Threshold (MT)",
+        "MT"
+      ],
+      "acronym": "MT",
+      "trackId": "pd-arrays",
+      "purpose": [
+        "entry-zone",
+        "location"
+      ],
+      "instrumentFamilies": [
+        "nq",
+        "es",
+        "gc",
+        "si",
+        "cl",
+        "6e",
+        "6b",
+        "6j",
+        "6a",
+        "6c",
+        "btc"
+      ],
+      "timeframes": [
+        "4H",
+        "1H",
+        "15m",
+        "5m",
+        "1m"
+      ],
+      "sessions": [
+        "Asia",
+        "London",
+        "New York AM",
+        "New York PM"
+      ],
+      "biasDirections": [
+        "bullish",
+        "bearish"
+      ],
+      "sourceEvidenceLabel": "SOURCED",
+      "performanceEvidenceLabel": null,
+      "url": "/ict-futures/academy/mean-threshold.html"
+    },
+    {
+      "id": "breaker-block",
+      "title": "Breaker Block",
+      "category": "Blocks & PD Arrays",
+      "level": "Advanced",
+      "definition": "A failed Order Block whose polarity is treated as reversed after price closes through it. A return may be studied as a pullback.",
+      "aliases": [
+        "Breaker Block"
+      ],
+      "acronym": "",
+      "trackId": "pd-arrays",
+      "purpose": [
+        "entry-zone",
+        "location"
+      ],
+      "instrumentFamilies": [
+        "nq",
+        "es",
+        "gc",
+        "si",
+        "cl",
+        "6e",
+        "6b",
+        "6j",
+        "6a",
+        "6c",
+        "btc"
+      ],
+      "timeframes": [
+        "4H",
+        "1H",
+        "15m",
+        "5m",
+        "1m"
+      ],
+      "sessions": [
+        "Asia",
+        "London",
+        "New York AM",
+        "New York PM"
+      ],
+      "biasDirections": [
+        "bullish",
+        "bearish"
+      ],
+      "sourceEvidenceLabel": "SOURCED",
+      "performanceEvidenceLabel": null,
+      "url": "/ict-futures/academy/breaker-block.html"
+    },
+    {
+      "id": "mitigation-block",
+      "title": "Mitigation Block",
+      "category": "Blocks & PD Arrays",
+      "level": "Advanced",
+      "definition": "The PDF distinguishes a mitigation block from a breaker, describing a zone associated with mitigation in a reversal structure; definitions vary.",
+      "aliases": [
+        "Mitigation Block"
+      ],
+      "acronym": "",
+      "trackId": "pd-arrays",
+      "purpose": [
+        "entry-zone",
+        "location"
+      ],
+      "instrumentFamilies": [
+        "nq",
+        "es",
+        "gc",
+        "si",
+        "cl",
+        "6e",
+        "6b",
+        "6j",
+        "6a",
+        "6c",
+        "btc"
+      ],
+      "timeframes": [
+        "4H",
+        "1H",
+        "15m",
+        "5m",
+        "1m"
+      ],
+      "sessions": [
+        "Asia",
+        "London",
+        "New York AM",
+        "New York PM"
+      ],
+      "biasDirections": [
+        "bullish",
+        "bearish"
+      ],
+      "sourceEvidenceLabel": "CONVENTION",
+      "performanceEvidenceLabel": null,
+      "url": "/ict-futures/academy/mitigation-block.html"
+    },
+    {
+      "id": "rejection-block",
+      "title": "Rejection Block",
+      "category": "Blocks & PD Arrays",
+      "level": "Advanced",
+      "definition": "A zone around a rejection from a reference extreme. Definitions vary, so the page treats it as a glossary topic requiring a fixed rule.",
+      "aliases": [
+        "Rejection Block"
+      ],
+      "acronym": "",
+      "trackId": "pd-arrays",
+      "purpose": [
+        "entry-zone",
+        "location"
+      ],
+      "instrumentFamilies": [
+        "nq",
+        "es",
+        "gc",
+        "si",
+        "cl",
+        "6e",
+        "6b",
+        "6j",
+        "6a",
+        "6c",
+        "btc"
+      ],
+      "timeframes": [
+        "4H",
+        "1H",
+        "15m",
+        "5m",
+        "1m"
+      ],
+      "sessions": [
+        "Asia",
+        "London",
+        "New York AM",
+        "New York PM"
+      ],
+      "biasDirections": [
+        "bullish",
+        "bearish"
+      ],
+      "sourceEvidenceLabel": "CONVENTION",
+      "performanceEvidenceLabel": null,
+      "url": "/ict-futures/academy/rejection-block.html"
+    },
+    {
+      "id": "unicorn",
+      "title": "Unicorn Model",
+      "category": "Entry Models",
+      "level": "Advanced",
+      "definition": "The PDF defines Unicorn as overlap between a Breaker Block and an FVG, usually after a sweep and shift.",
+      "aliases": [
+        "Unicorn Model"
+      ],
+      "acronym": "",
+      "trackId": "entry-models-execution",
+      "purpose": [
+        "trigger",
+        "entry"
+      ],
+      "instrumentFamilies": [
+        "nq",
+        "es",
+        "gc",
+        "6e",
+        "6b",
+        "cl",
+        "btc"
+      ],
+      "timeframes": [
+        "1H",
+        "15m",
+        "5m",
+        "1m"
+      ],
+      "sessions": [
+        "Asia",
+        "London",
+        "New York AM",
+        "New York PM"
+      ],
+      "biasDirections": [
+        "bullish",
+        "bearish"
+      ],
+      "sourceEvidenceLabel": "SOURCED",
+      "performanceEvidenceLabel": "NO DATA",
+      "url": "/ict-futures/academy/unicorn.html"
+    },
+    {
+      "id": "pd-arrays",
+      "title": "PD Arrays",
+      "category": "Blocks & PD Arrays",
+      "level": "Intermediate",
+      "definition": "Umbrella term for old highs/lows, OBs, FVGs, liquidity voids, breakers, mitigation and rejection blocks.",
+      "aliases": [
+        "PD Arrays",
+        "PD"
+      ],
+      "acronym": "PD",
+      "trackId": "pd-arrays",
+      "purpose": [
+        "entry-zone",
+        "location"
+      ],
+      "instrumentFamilies": [
+        "nq",
+        "es",
+        "gc",
+        "si",
+        "cl",
+        "6e",
+        "6b",
+        "6j",
+        "6a",
+        "6c",
+        "btc"
+      ],
+      "timeframes": [
+        "4H",
+        "1H",
+        "15m",
+        "5m",
+        "1m"
+      ],
+      "sessions": [
+        "Asia",
+        "London",
+        "New York AM",
+        "New York PM"
+      ],
+      "biasDirections": [
+        "bullish",
+        "bearish"
+      ],
+      "sourceEvidenceLabel": "SOURCED",
+      "performanceEvidenceLabel": null,
+      "url": "/ict-futures/academy/pd-arrays.html"
+    },
+    {
+      "id": "premium-discount",
+      "title": "Premium & Discount",
+      "category": "Range & Retracement",
+      "level": "Beginner",
+      "definition": "Within a defined dealing range, above the 50% equilibrium is premium and below is discount. The PDF advises using a range formed by a meaningful structural event.",
+      "aliases": [
+        "Premium & Discount"
+      ],
+      "acronym": "",
+      "trackId": "market-structure-dealing-ranges",
+      "purpose": [
+        "location",
+        "entry-zone"
+      ],
+      "instrumentFamilies": [
+        "nq",
+        "es",
+        "gc",
+        "si",
+        "cl",
+        "6e",
+        "6b",
+        "btc"
+      ],
+      "timeframes": [
+        "Daily",
+        "4H",
+        "1H",
+        "15m",
+        "5m"
+      ],
+      "sessions": [
+        "Asia",
+        "London",
+        "New York AM",
+        "New York PM"
+      ],
+      "biasDirections": [
+        "bullish",
+        "bearish"
+      ],
+      "sourceEvidenceLabel": "SOURCED",
+      "performanceEvidenceLabel": null,
+      "url": "/ict-futures/academy/premium-discount.html"
+    },
+    {
+      "id": "equilibrium",
+      "title": "Equilibrium (EQ)",
+      "category": "Range & Retracement",
+      "level": "Beginner",
+      "definition": "The 50% midpoint of a defined dealing range; it separates premium from discount.",
+      "aliases": [
+        "Equilibrium (EQ)",
+        "EQ"
+      ],
+      "acronym": "EQ",
+      "trackId": "market-structure-dealing-ranges",
+      "purpose": [
+        "location",
+        "entry-zone"
+      ],
+      "instrumentFamilies": [
+        "nq",
+        "es",
+        "gc",
+        "si",
+        "cl",
+        "6e",
+        "6b",
+        "btc"
+      ],
+      "timeframes": [
+        "Daily",
+        "4H",
+        "1H",
+        "15m",
+        "5m"
+      ],
+      "sessions": [
+        "Asia",
+        "London",
+        "New York AM",
+        "New York PM"
+      ],
+      "biasDirections": [
+        "bullish",
+        "bearish"
+      ],
+      "sourceEvidenceLabel": "SOURCED",
+      "performanceEvidenceLabel": null,
+      "url": "/ict-futures/academy/equilibrium.html"
+    },
+    {
+      "id": "dealing-range",
+      "title": "Dealing Range",
+      "category": "Range & Retracement",
+      "level": "Intermediate",
+      "definition": "A high-to-low range chosen from a meaningful structural event, such as BOS or MSS; basis for premium/discount analysis.",
+      "aliases": [
+        "Dealing Range"
+      ],
+      "acronym": "",
+      "trackId": "market-structure-dealing-ranges",
+      "purpose": [
+        "location",
+        "entry-zone"
+      ],
+      "instrumentFamilies": [
+        "nq",
+        "es",
+        "gc",
+        "si",
+        "cl",
+        "6e",
+        "6b",
+        "btc"
+      ],
+      "timeframes": [
+        "Daily",
+        "4H",
+        "1H",
+        "15m",
+        "5m"
+      ],
+      "sessions": [
+        "Asia",
+        "London",
+        "New York AM",
+        "New York PM"
+      ],
+      "biasDirections": [
+        "bullish",
+        "bearish"
+      ],
+      "sourceEvidenceLabel": "SOURCED",
+      "performanceEvidenceLabel": null,
+      "url": "/ict-futures/academy/dealing-range.html"
+    },
+    {
+      "id": "ote",
+      "title": "Optimal Trade Entry (OTE)",
+      "category": "Range & Retracement",
+      "level": "Intermediate",
+      "definition": "The PDF describes a retracement band around 62%–79% of an impulsive leg, with 70.5% as a midpoint convention.",
+      "aliases": [
+        "Optimal Trade Entry (OTE)",
+        "Optimal Trade Entry",
+        "OTE"
+      ],
+      "acronym": "OTE",
+      "trackId": "pd-arrays",
+      "purpose": [
+        "location",
+        "entry-zone"
+      ],
+      "instrumentFamilies": [
+        "nq",
+        "es",
+        "gc",
+        "si",
+        "cl",
+        "6e",
+        "6b",
+        "btc"
+      ],
+      "timeframes": [
+        "Daily",
+        "4H",
+        "1H",
+        "15m",
+        "5m"
+      ],
+      "sessions": [
+        "Asia",
+        "London",
+        "New York AM",
+        "New York PM"
+      ],
+      "biasDirections": [
+        "bullish",
+        "bearish"
+      ],
+      "sourceEvidenceLabel": "SOURCED",
+      "performanceEvidenceLabel": null,
+      "url": "/ict-futures/academy/ote.html"
+    },
+    {
+      "id": "fib-extensions",
+      "title": "Fibonacci / Range Extensions",
+      "category": "Range & Retracement",
+      "level": "Advanced",
+      "definition": "Extensions such as -27% and -62% are cited as potential measured objectives. Their use is convention and depends on anchors.",
+      "aliases": [
+        "Fibonacci / Range Extensions"
+      ],
+      "acronym": "",
+      "trackId": "time-sessions-narratives",
+      "purpose": [
+        "location",
+        "entry-zone"
+      ],
+      "instrumentFamilies": [
+        "nq",
+        "es",
+        "gc",
+        "si",
+        "cl",
+        "6e",
+        "6b",
+        "btc"
+      ],
+      "timeframes": [
+        "Daily",
+        "4H",
+        "1H",
+        "15m",
+        "5m"
+      ],
+      "sessions": [
+        "Asia",
+        "London",
+        "New York AM",
+        "New York PM"
+      ],
+      "biasDirections": [
+        "bullish",
+        "bearish"
+      ],
+      "sourceEvidenceLabel": "CONVENTION",
+      "performanceEvidenceLabel": null,
+      "url": "/ict-futures/academy/fib-extensions.html"
+    },
+    {
+      "id": "time-anchors",
+      "title": "Time Anchors",
+      "category": "Time & Sessions",
+      "level": "Intermediate",
+      "definition": "The PDF lists Midnight/True Day Open, 08:30 ET data reference, 09:30 ET cash open, NDOG and NWOG.",
+      "aliases": [
+        "Time Anchors"
+      ],
+      "acronym": "",
+      "trackId": "time-sessions-narratives",
+      "purpose": [
+        "timing",
+        "context"
+      ],
+      "instrumentFamilies": [
+        "nq",
+        "es",
+        "gc",
+        "6e",
+        "6b",
+        "cl",
+        "6j",
+        "6a",
+        "6c",
+        "btc"
+      ],
+      "timeframes": [
+        "Daily",
+        "1H",
+        "15m",
+        "5m",
+        "1m"
+      ],
+      "sessions": [
+        "Asia range",
+        "London",
+        "New York AM",
+        "New York PM"
+      ],
+      "biasDirections": [
+        "bullish",
+        "bearish"
+      ],
+      "sourceEvidenceLabel": "SOURCED",
+      "performanceEvidenceLabel": null,
+      "url": "/ict-futures/academy/time-anchors.html"
+    },
+    {
+      "id": "midnight-open",
+      "title": "Midnight / True Day Open",
+      "category": "Time & Sessions",
+      "level": "Intermediate",
+      "definition": "00:00 New York price used by the playbook as a daily reference, not necessarily broker server midnight or exchange day open.",
+      "aliases": [
+        "Midnight / True Day Open"
+      ],
+      "acronym": "",
+      "trackId": "time-sessions-narratives",
+      "purpose": [
+        "timing",
+        "context"
+      ],
+      "instrumentFamilies": [
+        "nq",
+        "es",
+        "gc",
+        "6e",
+        "6b",
+        "cl",
+        "6j",
+        "6a",
+        "6c",
+        "btc"
+      ],
+      "timeframes": [
+        "Daily",
+        "1H",
+        "15m",
+        "5m",
+        "1m"
+      ],
+      "sessions": [
+        "Asia range",
+        "London",
+        "New York AM",
+        "New York PM"
+      ],
+      "biasDirections": [
+        "bullish",
+        "bearish"
+      ],
+      "sourceEvidenceLabel": "SOURCED",
+      "performanceEvidenceLabel": null,
+      "url": "/ict-futures/academy/midnight-open.html"
+    },
+    {
+      "id": "ndog",
+      "title": "New Day Opening Gap (NDOG)",
+      "category": "Time & Sessions",
+      "level": "Intermediate",
+      "definition": "Gap between previous day's close and new day's opening reference under a chosen ICT convention. The PDF distinguishes NDOG from an ordinary FVG.",
+      "aliases": [
+        "New Day Opening Gap (NDOG)",
+        "New Day Opening Gap",
+        "NDOG"
+      ],
+      "acronym": "NDOG",
+      "trackId": "time-sessions-narratives",
+      "purpose": [
+        "timing",
+        "context"
+      ],
+      "instrumentFamilies": [
+        "nq",
+        "es",
+        "gc",
+        "6e",
+        "6b",
+        "cl",
+        "6j",
+        "6a",
+        "6c",
+        "btc"
+      ],
+      "timeframes": [
+        "Daily",
+        "1H",
+        "15m",
+        "5m",
+        "1m"
+      ],
+      "sessions": [
+        "Asia range",
+        "London",
+        "New York AM",
+        "New York PM"
+      ],
+      "biasDirections": [
+        "bullish",
+        "bearish"
+      ],
+      "sourceEvidenceLabel": "SOURCED",
+      "performanceEvidenceLabel": null,
+      "url": "/ict-futures/academy/ndog.html"
+    },
+    {
+      "id": "nwog",
+      "title": "New Week Opening Gap (NWOG)",
+      "category": "Time & Sessions",
+      "level": "Intermediate",
+      "definition": "Gap between prior week's close and new week's open. The PDF treats it as a support/resistance or magnet hypothesis.",
+      "aliases": [
+        "New Week Opening Gap (NWOG)",
+        "New Week Opening Gap",
+        "NWOG"
+      ],
+      "acronym": "NWOG",
+      "trackId": "time-sessions-narratives",
+      "purpose": [
+        "timing",
+        "context"
+      ],
+      "instrumentFamilies": [
+        "nq",
+        "es",
+        "gc",
+        "6e",
+        "6b",
+        "cl",
+        "6j",
+        "6a",
+        "6c",
+        "btc"
+      ],
+      "timeframes": [
+        "Daily",
+        "1H",
+        "15m",
+        "5m",
+        "1m"
+      ],
+      "sessions": [
+        "Asia range",
+        "London",
+        "New York AM",
+        "New York PM"
+      ],
+      "biasDirections": [
+        "bullish",
+        "bearish"
+      ],
+      "sourceEvidenceLabel": "SOURCED",
+      "performanceEvidenceLabel": null,
+      "url": "/ict-futures/academy/nwog.html"
+    },
+    {
+      "id": "weekly-open",
+      "title": "Weekly Open",
+      "category": "Time & Sessions",
+      "level": "Intermediate",
+      "definition": "Opening reference for the new futures trading week, often near Sunday Globex reopen for CME products. Schedules vary by product/holiday.",
+      "aliases": [
+        "Weekly Open"
+      ],
+      "acronym": "",
+      "trackId": "time-sessions-narratives",
+      "purpose": [
+        "timing",
+        "context"
+      ],
+      "instrumentFamilies": [
+        "nq",
+        "es",
+        "gc",
+        "6e",
+        "6b",
+        "cl",
+        "6j",
+        "6a",
+        "6c",
+        "btc"
+      ],
+      "timeframes": [
+        "Daily",
+        "1H",
+        "15m",
+        "5m",
+        "1m"
+      ],
+      "sessions": [
+        "Asia range",
+        "London",
+        "New York AM",
+        "New York PM"
+      ],
+      "biasDirections": [
+        "bullish",
+        "bearish"
+      ],
+      "sourceEvidenceLabel": "SOURCED",
+      "performanceEvidenceLabel": null,
+      "url": "/ict-futures/academy/weekly-open.html"
+    },
+    {
+      "id": "killzones",
+      "title": "ICT Killzones",
+      "category": "Time & Sessions",
+      "level": "Beginner",
+      "definition": "Time windows to pay attention to potential setups. The PDF includes Forex and index-specific windows. A killzone tells when, not where or direction.",
+      "aliases": [
+        "ICT Killzones"
+      ],
+      "acronym": "",
+      "trackId": "time-sessions-narratives",
+      "purpose": [
+        "timing",
+        "context"
+      ],
+      "instrumentFamilies": [
+        "nq",
+        "es",
+        "gc",
+        "6e",
+        "6b",
+        "cl",
+        "6j",
+        "6a",
+        "6c",
+        "btc"
+      ],
+      "timeframes": [
+        "Daily",
+        "1H",
+        "15m",
+        "5m",
+        "1m"
+      ],
+      "sessions": [
+        "Asia range",
+        "London",
+        "New York AM",
+        "New York PM"
+      ],
+      "biasDirections": [
+        "bullish",
+        "bearish"
+      ],
+      "sourceEvidenceLabel": "SOURCED",
+      "performanceEvidenceLabel": null,
+      "url": "/ict-futures/academy/killzones.html"
+    },
+    {
+      "id": "asian-range",
+      "title": "Asian Range",
+      "category": "Time & Sessions",
+      "level": "Beginner",
+      "definition": "The PDF's reference range is 20:00–00:00 New York time. Its high/low become potential liquidity references for London/NY.",
+      "aliases": [
+        "Asian Range"
+      ],
+      "acronym": "",
+      "trackId": "time-sessions-narratives",
+      "purpose": [
+        "timing",
+        "context"
+      ],
+      "instrumentFamilies": [
+        "nq",
+        "es",
+        "gc",
+        "6e",
+        "6b",
+        "cl",
+        "6j",
+        "6a",
+        "6c",
+        "btc"
+      ],
+      "timeframes": [
+        "Daily",
+        "1H",
+        "15m",
+        "5m",
+        "1m"
+      ],
+      "sessions": [
+        "Asia range",
+        "London",
+        "New York AM",
+        "New York PM"
+      ],
+      "biasDirections": [
+        "bullish",
+        "bearish"
+      ],
+      "sourceEvidenceLabel": "SOURCED",
+      "performanceEvidenceLabel": null,
+      "url": "/ict-futures/academy/asian-range.html"
+    },
+    {
+      "id": "silver-bullet",
+      "title": "Silver Bullet",
+      "category": "Time & Sessions",
+      "level": "Advanced",
+      "definition": "Three one-hour New York windows in the PDF: 03:00–04:00, 10:00–11:00 and 14:00–15:00 ET. Entry requires an FVG formed inside the selected window.",
+      "aliases": [
+        "Silver Bullet"
+      ],
+      "acronym": "",
+      "trackId": "time-sessions-narratives",
+      "purpose": [
+        "timing",
+        "context"
+      ],
+      "instrumentFamilies": [
+        "nq",
+        "es",
+        "gc",
+        "6e",
+        "6b",
+        "cl",
+        "6j",
+        "6a",
+        "6c",
+        "btc"
+      ],
+      "timeframes": [
+        "Daily",
+        "1H",
+        "15m",
+        "5m",
+        "1m"
+      ],
+      "sessions": [
+        "Asia range",
+        "London",
+        "New York AM",
+        "New York PM"
+      ],
+      "biasDirections": [
+        "bullish",
+        "bearish"
+      ],
+      "sourceEvidenceLabel": "SOURCED",
+      "performanceEvidenceLabel": "NO DATA",
+      "url": "/ict-futures/academy/silver-bullet.html"
+    },
+    {
+      "id": "amd-po3",
+      "title": "AMD / Power of Three",
+      "category": "Time & Narrative",
+      "level": "Advanced",
+      "definition": "Accumulation, Manipulation and Distribution as a daily narrative. The PDF associates accumulation with Asia, manipulation with London/NY and later distribution.",
+      "aliases": [
+        "AMD / Power of Three",
+        "Power of Three",
+        "AMD"
+      ],
+      "acronym": "AMD",
+      "trackId": "time-sessions-narratives",
+      "purpose": [
+        "timing",
+        "narrative"
+      ],
+      "instrumentFamilies": [
+        "nq",
+        "es",
+        "gc",
+        "6e",
+        "6b",
+        "cl",
+        "btc"
+      ],
+      "timeframes": [
+        "Weekly",
+        "Daily",
+        "4H",
+        "1H",
+        "15m"
+      ],
+      "sessions": [
+        "Asia range",
+        "London",
+        "New York AM",
+        "New York PM"
+      ],
+      "biasDirections": [
+        "bullish",
+        "bearish"
+      ],
+      "sourceEvidenceLabel": "CONVENTION",
+      "performanceEvidenceLabel": null,
+      "url": "/ict-futures/academy/amd-po3.html"
+    },
+    {
+      "id": "judas-swing",
+      "title": "Judas Swing",
+      "category": "Time & Narrative",
+      "level": "Advanced",
+      "definition": "Session-associated false push through a marked level, often around London/NY opens, followed by a move the other way. The PDF says to use pre-defined daily bias.",
+      "aliases": [
+        "Judas Swing"
+      ],
+      "acronym": "",
+      "trackId": "time-sessions-narratives",
+      "purpose": [
+        "timing",
+        "narrative"
+      ],
+      "instrumentFamilies": [
+        "nq",
+        "es",
+        "gc",
+        "6e",
+        "6b",
+        "cl",
+        "btc"
+      ],
+      "timeframes": [
+        "Weekly",
+        "Daily",
+        "4H",
+        "1H",
+        "15m"
+      ],
+      "sessions": [
+        "Asia range",
+        "London",
+        "New York AM",
+        "New York PM"
+      ],
+      "biasDirections": [
+        "bullish",
+        "bearish"
+      ],
+      "sourceEvidenceLabel": "CONVENTION",
+      "performanceEvidenceLabel": null,
+      "url": "/ict-futures/academy/judas-swing.html"
+    },
+    {
+      "id": "ipda",
+      "title": "IPDA 20/40/60 Lookback",
+      "category": "Time & Narrative",
+      "level": "Advanced",
+      "definition": "The PDF frames 20-, 40- and 60-trading-day highs/lows as reference ranges. It says algorithm language is a model, not a proven mechanism.",
+      "aliases": [
+        "IPDA 20/40/60 Lookback",
+        "20/40/60 lookback",
+        "IPDA",
+        "20",
+        "40",
+        "60"
+      ],
+      "acronym": "IPDA",
+      "trackId": "time-sessions-narratives",
+      "purpose": [
+        "timing",
+        "narrative"
+      ],
+      "instrumentFamilies": [
+        "nq",
+        "es",
+        "gc",
+        "6e",
+        "6b",
+        "cl",
+        "btc"
+      ],
+      "timeframes": [
+        "Weekly",
+        "Daily",
+        "4H",
+        "1H",
+        "15m"
+      ],
+      "sessions": [
+        "Asia range",
+        "London",
+        "New York AM",
+        "New York PM"
+      ],
+      "biasDirections": [
+        "bullish",
+        "bearish"
+      ],
+      "sourceEvidenceLabel": "CONVENTION",
+      "performanceEvidenceLabel": null,
+      "url": "/ict-futures/academy/ipda.html"
+    },
+    {
+      "id": "smt",
+      "title": "SMT Divergence",
+      "category": "Cross-Market",
+      "level": "Advanced",
+      "definition": "Related markets fail to confirm comparable highs/lows around the same time. PDF pairs include NQ/ES/YM, 6E/6B/DX and GC/SI.",
+      "aliases": [
+        "SMT Divergence",
+        "SMT divergence",
+        "SMT"
+      ],
+      "acronym": "SMT",
+      "trackId": "cross-market-futures-smt",
+      "purpose": [
+        "confirmation",
+        "context"
+      ],
+      "instrumentFamilies": [
+        "nq",
+        "es",
+        "ym",
+        "rty",
+        "6e",
+        "6b",
+        "dx",
+        "gc",
+        "si"
+      ],
+      "timeframes": [
+        "Daily",
+        "4H",
+        "1H",
+        "15m",
+        "5m"
+      ],
+      "sessions": [
+        "London",
+        "New York AM"
+      ],
+      "biasDirections": [
+        "bullish",
+        "bearish"
+      ],
+      "sourceEvidenceLabel": "CONVENTION",
+      "performanceEvidenceLabel": null,
+      "url": "/ict-futures/academy/smt.html"
+    },
+    {
+      "id": "weekly-profiles",
+      "title": "ICT Weekly Profiles",
+      "category": "Time & Narrative",
+      "level": "Advanced",
+      "definition": "Possible Tuesday/Wednesday weekly-high/low and midweek-reversal tendencies. PDF labels them tendencies, not fixed rules.",
+      "aliases": [
+        "ICT Weekly Profiles"
+      ],
+      "acronym": "",
+      "trackId": "time-sessions-narratives",
+      "purpose": [
+        "timing",
+        "narrative"
+      ],
+      "instrumentFamilies": [
+        "nq",
+        "es",
+        "gc",
+        "6e",
+        "6b",
+        "cl",
+        "btc"
+      ],
+      "timeframes": [
+        "Weekly",
+        "Daily",
+        "4H",
+        "1H",
+        "15m"
+      ],
+      "sessions": [
+        "Asia range",
+        "London",
+        "New York AM",
+        "New York PM"
+      ],
+      "biasDirections": [
+        "bullish",
+        "bearish"
+      ],
+      "sourceEvidenceLabel": "CONVENTION",
+      "performanceEvidenceLabel": null,
+      "url": "/ict-futures/academy/weekly-profiles.html"
+    },
+    {
+      "id": "smt-index",
+      "title": "Index SMT: NQ / ES / YM / RTY",
+      "category": "Cross-Market",
+      "level": "Advanced",
+      "definition": "The playbook compares NQ, ES and YM for non-confirming highs/lows; RTY adds small-cap/risk-appetite context.",
+      "aliases": [
+        "Index SMT: NQ / ES / YM / RTY",
+        "SMT",
+        "NQ",
+        "ES",
+        "YM",
+        "RTY"
+      ],
+      "acronym": "SMT",
+      "trackId": "cross-market-futures-smt",
+      "purpose": [
+        "confirmation",
+        "context"
+      ],
+      "instrumentFamilies": [
+        "nq",
+        "es",
+        "ym",
+        "rty",
+        "6e",
+        "6b",
+        "dx",
+        "gc",
+        "si"
+      ],
+      "timeframes": [
+        "Daily",
+        "4H",
+        "1H",
+        "15m",
+        "5m"
+      ],
+      "sessions": [
+        "London",
+        "New York AM"
+      ],
+      "biasDirections": [
+        "bullish",
+        "bearish"
+      ],
+      "sourceEvidenceLabel": "CONVENTION",
+      "performanceEvidenceLabel": null,
+      "url": "/ict-futures/academy/smt-index.html"
+    },
+    {
+      "id": "smt-fx-metals",
+      "title": "FX & Metals SMT Pairs",
+      "category": "Cross-Market",
+      "level": "Advanced",
+      "definition": "The PDF describes 6E/6B versus DX (inverse comparison) and GC versus SI. Swings should match in time and expiry when applicable.",
+      "aliases": [
+        "FX & Metals SMT Pairs",
+        "FX",
+        "SMT"
+      ],
+      "acronym": "FX",
+      "trackId": "cross-market-futures-smt",
+      "purpose": [
+        "confirmation",
+        "context"
+      ],
+      "instrumentFamilies": [
+        "nq",
+        "es",
+        "ym",
+        "rty",
+        "6e",
+        "6b",
+        "dx",
+        "gc",
+        "si"
+      ],
+      "timeframes": [
+        "Daily",
+        "4H",
+        "1H",
+        "15m",
+        "5m"
+      ],
+      "sessions": [
+        "London",
+        "New York AM"
+      ],
+      "biasDirections": [
+        "bullish",
+        "bearish"
+      ],
+      "sourceEvidenceLabel": "CONVENTION",
+      "performanceEvidenceLabel": null,
+      "url": "/ict-futures/academy/smt-fx-metals.html"
+    },
+    {
+      "id": "cbdr",
+      "title": "Central Bank Dealers Range (CBDR)",
+      "category": "Time & Sessions",
+      "level": "Advanced",
+      "definition": "PDF describes CBDR around 14:00–20:00 ET, often using candle bodies in some sources; source variation noted.",
+      "aliases": [
+        "Central Bank Dealers Range (CBDR)",
+        "Central Bank Dealers Range",
+        "CBDR"
+      ],
+      "acronym": "CBDR",
+      "trackId": "time-sessions-narratives",
+      "purpose": [
+        "timing",
+        "context"
+      ],
+      "instrumentFamilies": [
+        "nq",
+        "es",
+        "gc",
+        "6e",
+        "6b",
+        "cl",
+        "6j",
+        "6a",
+        "6c",
+        "btc"
+      ],
+      "timeframes": [
+        "Daily",
+        "1H",
+        "15m",
+        "5m",
+        "1m"
+      ],
+      "sessions": [
+        "Asia range",
+        "London",
+        "New York AM",
+        "New York PM"
+      ],
+      "biasDirections": [
+        "bullish",
+        "bearish"
+      ],
+      "sourceEvidenceLabel": "SOURCED",
+      "performanceEvidenceLabel": null,
+      "url": "/ict-futures/academy/cbdr.html"
+    },
+    {
+      "id": "flout",
+      "title": "Flout Range",
+      "category": "Time & Sessions",
+      "level": "Advanced",
+      "definition": "Extended CBDR-style range. PDF notes sources differ on exact start (14:00 or 15:00 ET) through midnight.",
+      "aliases": [
+        "Flout Range"
+      ],
+      "acronym": "",
+      "trackId": "time-sessions-narratives",
+      "purpose": [
+        "timing",
+        "context"
+      ],
+      "instrumentFamilies": [
+        "nq",
+        "es",
+        "gc",
+        "6e",
+        "6b",
+        "cl",
+        "6j",
+        "6a",
+        "6c",
+        "btc"
+      ],
+      "timeframes": [
+        "Daily",
+        "1H",
+        "15m",
+        "5m",
+        "1m"
+      ],
+      "sessions": [
+        "Asia range",
+        "London",
+        "New York AM",
+        "New York PM"
+      ],
+      "biasDirections": [
+        "bullish",
+        "bearish"
+      ],
+      "sourceEvidenceLabel": "CONVENTION",
+      "performanceEvidenceLabel": null,
+      "url": "/ict-futures/academy/flout.html"
+    },
+    {
+      "id": "sd-projections",
+      "title": "Standard-Deviation Projections",
+      "category": "Time & Sessions",
+      "level": "Advanced",
+      "definition": "The PDF repeats an anchor range height as a projection unit at ±1, ±2 and ±2.5. It explicitly says this is not statistical standard deviation.",
+      "aliases": [
+        "Standard-Deviation Projections"
+      ],
+      "acronym": "",
+      "trackId": "time-sessions-narratives",
+      "purpose": [
+        "timing",
+        "context"
+      ],
+      "instrumentFamilies": [
+        "nq",
+        "es",
+        "gc",
+        "6e",
+        "6b",
+        "cl",
+        "6j",
+        "6a",
+        "6c",
+        "btc"
+      ],
+      "timeframes": [
+        "Daily",
+        "1H",
+        "15m",
+        "5m",
+        "1m"
+      ],
+      "sessions": [
+        "Asia range",
+        "London",
+        "New York AM",
+        "New York PM"
+      ],
+      "biasDirections": [
+        "bullish",
+        "bearish"
+      ],
+      "sourceEvidenceLabel": "SOURCED",
+      "performanceEvidenceLabel": null,
+      "url": "/ict-futures/academy/sd-projections.html"
+    },
+    {
+      "id": "ict-macros",
+      "title": "ICT Macros — Research Note",
+      "category": "Time & Narrative",
+      "level": "Advanced",
+      "definition": "The PDF deliberately omits a fixed ICT Macros list because sources disagree on exact time segments. This page documents uncertainty rather than inventing a canonical list.",
+      "aliases": [
+        "ICT Macros — Research Note"
+      ],
+      "acronym": "",
+      "trackId": "time-sessions-narratives",
+      "purpose": [
+        "timing",
+        "narrative"
+      ],
+      "instrumentFamilies": [
+        "nq",
+        "es",
+        "gc",
+        "6e",
+        "6b",
+        "cl",
+        "btc"
+      ],
+      "timeframes": [
+        "Weekly",
+        "Daily",
+        "4H",
+        "1H",
+        "15m"
+      ],
+      "sessions": [
+        "Asia range",
+        "London",
+        "New York AM",
+        "New York PM"
+      ],
+      "biasDirections": [
+        "bullish",
+        "bearish"
+      ],
+      "sourceEvidenceLabel": "CONVENTION",
+      "performanceEvidenceLabel": null,
+      "url": "/ict-futures/academy/ict-macros.html"
+    },
+    {
+      "id": "midnight-open-vs-day-open",
+      "title": "Midnight Open vs Exchange Trading-Day Open",
+      "category": "Time & Sessions",
+      "level": "Intermediate",
+      "definition": "ICT midnight open is a New York reference. It is not necessarily the exchange trading-day open or broker server-day open.",
+      "aliases": [
+        "Midnight Open vs Exchange Trading-Day Open"
+      ],
+      "acronym": "",
+      "trackId": "time-sessions-narratives",
+      "purpose": [
+        "timing",
+        "context"
+      ],
+      "instrumentFamilies": [
+        "nq",
+        "es",
+        "gc",
+        "6e",
+        "6b",
+        "cl",
+        "6j",
+        "6a",
+        "6c",
+        "btc"
+      ],
+      "timeframes": [
+        "Daily",
+        "1H",
+        "15m",
+        "5m",
+        "1m"
+      ],
+      "sessions": [
+        "Asia range",
+        "London",
+        "New York AM",
+        "New York PM"
+      ],
+      "biasDirections": [
+        "bullish",
+        "bearish"
+      ],
+      "sourceEvidenceLabel": "CONVENTION",
+      "performanceEvidenceLabel": null,
+      "url": "/ict-futures/academy/midnight-open-vs-day-open.html"
+    },
+    {
+      "id": "cisd",
+      "title": "Change in State of Delivery (CISD)",
+      "category": "Market Structure",
+      "level": "Intermediate",
+      "definition": "A short-term delivery-change label used when price closes through a chosen opening-price reference from a prior directional candle run. It is a defined close/open observation, not proof of institutional intent.",
+      "aliases": [
+        "Change in State of Delivery (CISD)",
+        "Change in State of Delivery",
+        "CISD"
+      ],
+      "acronym": "CISD",
+      "trackId": "market-structure-dealing-ranges",
+      "purpose": [
+        "directional-bias",
+        "confirmation"
+      ],
+      "instrumentFamilies": [
+        "nq",
+        "es",
+        "ym",
+        "rty",
+        "gc",
+        "si",
+        "cl",
+        "6e",
+        "6b",
+        "6j",
+        "6a",
+        "6c",
+        "dx",
+        "zn",
+        "btc"
+      ],
+      "timeframes": [
+        "Monthly",
+        "Weekly",
+        "Daily",
+        "4H",
+        "1H",
+        "15m"
+      ],
+      "sessions": [
+        "Asia",
+        "London",
+        "New York AM",
+        "New York PM"
+      ],
+      "biasDirections": [
+        "bullish",
+        "bearish"
+      ],
+      "sourceEvidenceLabel": "CONVENTION",
+      "performanceEvidenceLabel": null,
+      "url": "/ict-futures/academy/cisd.html"
+    },
+    {
+      "id": "mmxm",
+      "title": "Market Maker Model (MMXM)",
+      "category": "Daily Narrative",
+      "level": "Advanced",
+      "definition": "A broad campaign narrative describing price moving away from an origin range in stages, reaching a higher-timeframe reference area, and potentially reversing through prior ranges or pauses. The wording does not prove the actual orders or intentions of a market maker.",
+      "aliases": [
+        "Market Maker Model (MMXM)",
+        "Market Maker Model",
+        "MMXM"
+      ],
+      "acronym": "MMXM",
+      "trackId": "entry-models-execution",
+      "purpose": [
+        "narrative",
+        "context"
+      ],
+      "instrumentFamilies": [
+        "nq",
+        "es",
+        "gc",
+        "6e",
+        "cl",
+        "btc"
+      ],
+      "timeframes": [
+        "Daily",
+        "4H",
+        "1H",
+        "15m",
+        "5m"
+      ],
+      "sessions": [
+        "Asia range",
+        "London",
+        "New York AM"
+      ],
+      "biasDirections": [
+        "bullish",
+        "bearish"
+      ],
+      "sourceEvidenceLabel": "CONVENTION",
+      "performanceEvidenceLabel": "NO DATA",
+      "url": "/ict-futures/academy/mmxm.html"
+    },
+    {
+      "id": "turtle-soup",
+      "title": "Turtle Soup (false-breakout setup)",
+      "category": "Liquidity",
+      "level": "Intermediate",
+      "definition": "A false breakout of a prior high or low that fails and reverses back through the level. The label originated outside ICT and is also used in later SMC/ICT discussions.",
+      "aliases": [
+        "Turtle Soup (false-breakout setup)"
+      ],
+      "acronym": "",
+      "trackId": "liquidity-draw-on-liquidity",
+      "purpose": [
+        "target",
+        "location"
+      ],
+      "instrumentFamilies": [
+        "nq",
+        "es",
+        "ym",
+        "rty",
+        "gc",
+        "si",
+        "cl",
+        "6e",
+        "6b",
+        "6j",
+        "6a",
+        "6c",
+        "dx",
+        "zn",
+        "btc"
+      ],
+      "timeframes": [
+        "Daily",
+        "4H",
+        "1H",
+        "15m",
+        "5m"
+      ],
+      "sessions": [
+        "Asia",
+        "London",
+        "New York AM",
+        "New York PM"
+      ],
+      "biasDirections": [
+        "bullish",
+        "bearish"
+      ],
+      "sourceEvidenceLabel": "CONVENTION",
+      "performanceEvidenceLabel": null,
+      "url": "/ict-futures/academy/turtle-soup.html"
+    },
+    {
+      "id": "propulsion-block",
+      "title": "Propulsion Block",
+      "category": "PD Arrays",
+      "level": "Advanced",
+      "definition": "A specialised order-block refinement described in some ICT education. Secondary definitions describe an order-block reaction and a subsequent close through a reference candle level, but the exact sequence differs by source.",
+      "aliases": [
+        "Propulsion Block"
+      ],
+      "acronym": "",
+      "trackId": "pd-arrays",
+      "purpose": [
+        "entry-zone",
+        "location"
+      ],
+      "instrumentFamilies": [
+        "nq",
+        "es",
+        "gc",
+        "si",
+        "cl",
+        "6e",
+        "6b",
+        "btc"
+      ],
+      "timeframes": [
+        "4H",
+        "1H",
+        "15m",
+        "5m",
+        "1m"
+      ],
+      "sessions": [
+        "Asia",
+        "London",
+        "New York AM",
+        "New York PM"
+      ],
+      "biasDirections": [
+        "bullish",
+        "bearish"
+      ],
+      "sourceEvidenceLabel": "CONVENTION",
+      "performanceEvidenceLabel": null,
+      "url": "/ict-futures/academy/propulsion-block.html"
+    },
+    {
+      "id": "breakaway-gap",
+      "title": "Breakaway Gap",
+      "category": "Imbalances & Gaps",
+      "level": "Advanced",
+      "definition": "A label found in some secondary ICT/SMC references for an imbalance left behind during a decisive move that does not promptly rebalance. It should not be confused with an exchange-session opening gap.",
+      "aliases": [
+        "Breakaway Gap"
+      ],
+      "acronym": "",
+      "trackId": "displacement-imbalances",
+      "purpose": [
+        "location",
+        "context"
+      ],
+      "instrumentFamilies": [
+        "nq",
+        "es",
+        "gc",
+        "si",
+        "cl",
+        "6e",
+        "6b",
+        "btc"
+      ],
+      "timeframes": [
+        "4H",
+        "1H",
+        "15m",
+        "5m",
+        "1m"
+      ],
+      "sessions": [
+        "Asia",
+        "London",
+        "New York AM",
+        "New York PM"
+      ],
+      "biasDirections": [
+        "bullish",
+        "bearish"
+      ],
+      "sourceEvidenceLabel": "CONVENTION",
+      "performanceEvidenceLabel": null,
+      "url": "/ict-futures/academy/breakaway-gap.html"
+    },
+    {
+      "id": "opening-range-gap",
+      "title": "Opening Range Gap (ORG)",
+      "category": "Time & Session Concepts",
+      "level": "Advanced",
+      "definition": "A session-reference gap label appearing in some ICT transcript indexes. The exact opening session and price anchors are not universally specified, so they must be documented from the source being followed.",
+      "aliases": [
+        "Opening Range Gap (ORG)",
+        "ORG"
+      ],
+      "acronym": "ORG",
+      "trackId": "time-sessions-narratives",
+      "purpose": [
+        "timing",
+        "context"
+      ],
+      "instrumentFamilies": [
+        "nq",
+        "es",
+        "gc",
+        "6e",
+        "6b",
+        "cl",
+        "btc"
+      ],
+      "timeframes": [
+        "Daily",
+        "1H",
+        "15m",
+        "5m",
+        "1m"
+      ],
+      "sessions": [
+        "Asia",
+        "London",
+        "New York AM",
+        "New York PM"
+      ],
+      "biasDirections": [
+        "bullish",
+        "bearish"
+      ],
+      "sourceEvidenceLabel": "CONVENTION",
+      "performanceEvidenceLabel": null,
+      "url": "/ict-futures/academy/opening-range-gap.html"
+    },
+    {
+      "id": "event-horizon",
+      "title": "Event Horizon (EH)",
+      "category": "Imbalances & Gaps",
+      "level": "Advanced",
+      "definition": "A niche term in some transcript-indexed ICT glossaries for a midpoint reference derived between two opening-gap structures, such as NDOG and NWOG. It is not a core, universal ICT definition.",
+      "aliases": [
+        "Event Horizon (EH)",
+        "EH"
+      ],
+      "acronym": "EH",
+      "trackId": "displacement-imbalances",
+      "purpose": [
+        "location",
+        "context"
+      ],
+      "instrumentFamilies": [
+        "nq",
+        "es",
+        "gc",
+        "si",
+        "cl",
+        "6e",
+        "6b",
+        "btc"
+      ],
+      "timeframes": [
+        "4H",
+        "1H",
+        "15m",
+        "5m",
+        "1m"
+      ],
+      "sessions": [
+        "Asia",
+        "London",
+        "New York AM",
+        "New York PM"
+      ],
+      "biasDirections": [
+        "bullish",
+        "bearish"
+      ],
+      "sourceEvidenceLabel": "CONVENTION",
+      "performanceEvidenceLabel": null,
+      "url": "/ict-futures/academy/event-horizon.html"
+    },
+    {
+      "id": "reclaimed-order-block",
+      "title": "Reclaimed Order Block",
+      "category": "PD Arrays",
+      "level": "Advanced",
+      "definition": "A community label for a previously violated or lost order-block area that price later re-enters or reclaims. Exact criteria for “reclaimed” vary and must be made explicit.",
+      "aliases": [
+        "Reclaimed Order Block"
+      ],
+      "acronym": "",
+      "trackId": "pd-arrays",
+      "purpose": [
+        "entry-zone",
+        "location"
+      ],
+      "instrumentFamilies": [
+        "nq",
+        "es",
+        "gc",
+        "si",
+        "cl",
+        "6e",
+        "6b",
+        "btc"
+      ],
+      "timeframes": [
+        "4H",
+        "1H",
+        "15m",
+        "5m",
+        "1m"
+      ],
+      "sessions": [
+        "Asia",
+        "London",
+        "New York AM",
+        "New York PM"
+      ],
+      "biasDirections": [
+        "bullish",
+        "bearish"
+      ],
+      "sourceEvidenceLabel": "CONVENTION",
+      "performanceEvidenceLabel": null,
+      "url": "/ict-futures/academy/reclaimed-order-block.html"
+    },
+    {
+      "id": "suspension-block",
+      "title": "Suspension Block",
+      "category": "PD Arrays",
+      "level": "Advanced",
+      "definition": "A niche PD-array term appearing in secondary ICT transcript indexes. It is not consistently defined across accessible sources; the lesson treats it as a research term rather than a standard signal.",
+      "aliases": [
+        "Suspension Block"
+      ],
+      "acronym": "",
+      "trackId": "pd-arrays",
+      "purpose": [
+        "entry-zone",
+        "location"
+      ],
+      "instrumentFamilies": [
+        "nq",
+        "es",
+        "gc",
+        "si",
+        "cl",
+        "6e",
+        "6b",
+        "btc"
+      ],
+      "timeframes": [
+        "4H",
+        "1H",
+        "15m",
+        "5m",
+        "1m"
+      ],
+      "sessions": [
+        "Asia",
+        "London",
+        "New York AM",
+        "New York PM"
+      ],
+      "biasDirections": [
+        "bullish",
+        "bearish"
+      ],
+      "sourceEvidenceLabel": "CONVENTION",
+      "performanceEvidenceLabel": null,
+      "url": "/ict-futures/academy/suspension-block.html"
+    },
+    {
+      "id": "vacuum-block",
+      "title": "Vacuum Block",
+      "category": "PD Arrays",
+      "level": "Advanced",
+      "definition": "A niche label reported in secondary ICT transcript indexes for a price area associated with a fast move or limited trading through a region. The term is not consistently defined in the supplied playbook.",
+      "aliases": [
+        "Vacuum Block"
+      ],
+      "acronym": "",
+      "trackId": "pd-arrays",
+      "purpose": [
+        "entry-zone",
+        "location"
+      ],
+      "instrumentFamilies": [
+        "nq",
+        "es",
+        "gc",
+        "si",
+        "cl",
+        "6e",
+        "6b",
+        "btc"
+      ],
+      "timeframes": [
+        "4H",
+        "1H",
+        "15m",
+        "5m",
+        "1m"
+      ],
+      "sessions": [
+        "Asia",
+        "London",
+        "New York AM",
+        "New York PM"
+      ],
+      "biasDirections": [
+        "bullish",
+        "bearish"
+      ],
+      "sourceEvidenceLabel": "CONVENTION",
+      "performanceEvidenceLabel": null,
+      "url": "/ict-futures/academy/vacuum-block.html"
+    },
+    {
+      "id": "ny-lunch-reversal",
+      "title": "New York Lunch Algorithmic Reversal (community label)",
+      "category": "Time & Session Concepts",
+      "level": "Advanced",
+      "definition": "A community label for a possible midday reversal narrative. It is not a core model in the supplied playbook, which explicitly treats the NY lunch window (12:00–1:30 PM ET) as an avoid period.",
+      "aliases": [
+        "New York Lunch Algorithmic Reversal (community label)"
+      ],
+      "acronym": "",
+      "trackId": "time-sessions-narratives",
+      "purpose": [
+        "timing",
+        "context"
+      ],
+      "instrumentFamilies": [
+        "nq",
+        "es",
+        "gc",
+        "6e",
+        "6b",
+        "cl",
+        "btc"
+      ],
+      "timeframes": [
+        "Daily",
+        "1H",
+        "15m",
+        "5m",
+        "1m"
+      ],
+      "sessions": [
+        "Asia",
+        "London",
+        "New York AM",
+        "New York PM"
+      ],
+      "biasDirections": [
+        "bullish",
+        "bearish"
+      ],
+      "sourceEvidenceLabel": "CONVENTION",
+      "performanceEvidenceLabel": null,
+      "url": "/ict-futures/academy/ny-lunch-reversal.html"
+    },
+    {
+      "id": "market-maker-buy-model",
+      "title": "Market Maker Buy Model (MMBM)",
+      "category": "Entry Models",
+      "level": "Advanced",
+      "definition": "A directional variant of the broader market-maker-model narrative, commonly described as a range/accumulation and possible sell-side manipulation followed by upside delivery. Exact phase boundaries vary.",
+      "aliases": [
+        "Market Maker Buy Model (MMBM)",
+        "MMBM"
+      ],
+      "acronym": "MMBM",
+      "trackId": "entry-models-execution",
+      "purpose": [
+        "trigger",
+        "entry"
+      ],
+      "instrumentFamilies": [
+        "nq",
+        "es",
+        "gc",
+        "6e",
+        "6b",
+        "cl",
+        "btc"
+      ],
+      "timeframes": [
+        "1H",
+        "15m",
+        "5m",
+        "1m"
+      ],
+      "sessions": [
+        "Asia",
+        "London",
+        "New York AM",
+        "New York PM"
+      ],
+      "biasDirections": [
+        "bullish",
+        "bearish"
+      ],
+      "sourceEvidenceLabel": "CONVENTION",
+      "performanceEvidenceLabel": "NO DATA",
+      "url": "/ict-futures/academy/market-maker-buy-model.html"
+    },
+    {
+      "id": "market-maker-sell-model",
+      "title": "Market Maker Sell Model (MMSM)",
+      "category": "Entry Models",
+      "level": "Advanced",
+      "definition": "A directional variant of the broader market-maker-model narrative, commonly described as range/accumulation and possible buy-side manipulation followed by downside delivery. Exact boundaries are discretionary.",
+      "aliases": [
+        "Market Maker Sell Model (MMSM)",
+        "MMSM"
+      ],
+      "acronym": "MMSM",
+      "trackId": "entry-models-execution",
+      "purpose": [
+        "trigger",
+        "entry"
+      ],
+      "instrumentFamilies": [
+        "nq",
+        "es",
+        "gc",
+        "6e",
+        "6b",
+        "cl",
+        "btc"
+      ],
+      "timeframes": [
+        "1H",
+        "15m",
+        "5m",
+        "1m"
+      ],
+      "sessions": [
+        "Asia",
+        "London",
+        "New York AM",
+        "New York PM"
+      ],
+      "biasDirections": [
+        "bullish",
+        "bearish"
+      ],
+      "sourceEvidenceLabel": "CONVENTION",
+      "performanceEvidenceLabel": "NO DATA",
+      "url": "/ict-futures/academy/market-maker-sell-model.html"
+    },
+    {
+      "id": "ict-2022-model",
+      "title": "ICT 2022 Model",
+      "category": "Entry Models",
+      "level": "Intermediate",
+      "definition": "The supplied playbook describes this model as a liquidity raid followed by displacement with MSS, then a retracement into the FVG for execution. It is commonly associated with the 2022 Mentorship.",
+      "aliases": [
+        "ICT 2022 Model",
+        "2022"
+      ],
+      "acronym": "2022",
+      "trackId": "entry-models-execution",
+      "purpose": [
+        "trigger",
+        "entry"
+      ],
+      "instrumentFamilies": [
+        "nq",
+        "es",
+        "gc",
+        "6e",
+        "6b",
+        "cl",
+        "btc"
+      ],
+      "timeframes": [
+        "1H",
+        "15m",
+        "5m",
+        "1m"
+      ],
+      "sessions": [
+        "Asia",
+        "London",
+        "New York AM",
+        "New York PM"
+      ],
+      "biasDirections": [
+        "bullish",
+        "bearish"
+      ],
+      "sourceEvidenceLabel": "SOURCED",
+      "performanceEvidenceLabel": "NO DATA",
+      "url": "/ict-futures/academy/ict-2022-model.html"
+    },
+    {
+      "id": "liquidity-sweep-mss-model",
+      "title": "Liquidity Sweep + MSS Model",
+      "category": "Entry Models",
+      "level": "Intermediate",
+      "definition": "A reversal framework that waits for a meaningful liquidity level to be swept, then requires a Market Structure Shift with displacement before considering a pullback entry.",
+      "aliases": [
+        "Liquidity Sweep + MSS Model",
+        "MSS"
+      ],
+      "acronym": "MSS",
+      "trackId": "entry-models-execution",
+      "purpose": [
+        "trigger",
+        "entry"
+      ],
+      "instrumentFamilies": [
+        "nq",
+        "es",
+        "gc",
+        "6e",
+        "6b",
+        "cl",
+        "btc"
+      ],
+      "timeframes": [
+        "1H",
+        "15m",
+        "5m",
+        "1m"
+      ],
+      "sessions": [
+        "Asia",
+        "London",
+        "New York AM",
+        "New York PM"
+      ],
+      "biasDirections": [
+        "bullish",
+        "bearish"
+      ],
+      "sourceEvidenceLabel": "SOURCED",
+      "performanceEvidenceLabel": "NO DATA",
+      "url": "/ict-futures/academy/liquidity-sweep-mss-model.html"
+    },
+    {
+      "id": "fvg-continuation-model",
+      "title": "FVG Continuation Model",
+      "category": "Entry Models",
+      "level": "Intermediate",
+      "definition": "A continuation idea in which an impulsive move aligned with higher-timeframe context leaves an FVG and price later retraces into the imbalance before potentially continuing.",
+      "aliases": [
+        "FVG Continuation Model",
+        "FVG"
+      ],
+      "acronym": "FVG",
+      "trackId": "entry-models-execution",
+      "purpose": [
+        "trigger",
+        "entry"
+      ],
+      "instrumentFamilies": [
+        "nq",
+        "es",
+        "gc",
+        "6e",
+        "6b",
+        "cl",
+        "btc"
+      ],
+      "timeframes": [
+        "1H",
+        "15m",
+        "5m",
+        "1m"
+      ],
+      "sessions": [
+        "Asia",
+        "London",
+        "New York AM",
+        "New York PM"
+      ],
+      "biasDirections": [
+        "bullish",
+        "bearish"
+      ],
+      "sourceEvidenceLabel": "CONVENTION",
+      "performanceEvidenceLabel": "NO DATA",
+      "url": "/ict-futures/academy/fvg-continuation-model.html"
+    },
+    {
+      "id": "ifvg-reversal-model",
+      "title": "Inversion FVG (IFVG) Reversal Model",
+      "category": "Entry Models",
+      "level": "Advanced",
+      "definition": "The supplied playbook defines an IFVG when price body-closes through the far boundary of an existing FVG, changing its role. A retest entry is a further model convention.",
+      "aliases": [
+        "Inversion FVG (IFVG) Reversal Model",
+        "FVG",
+        "IFVG"
+      ],
+      "acronym": "FVG",
+      "trackId": "entry-models-execution",
+      "purpose": [
+        "trigger",
+        "entry"
+      ],
+      "instrumentFamilies": [
+        "nq",
+        "es",
+        "gc",
+        "6e",
+        "6b",
+        "cl",
+        "btc"
+      ],
+      "timeframes": [
+        "1H",
+        "15m",
+        "5m",
+        "1m"
+      ],
+      "sessions": [
+        "Asia",
+        "London",
+        "New York AM",
+        "New York PM"
+      ],
+      "biasDirections": [
+        "bullish",
+        "bearish"
+      ],
+      "sourceEvidenceLabel": "CONVENTION",
+      "performanceEvidenceLabel": "NO DATA",
+      "url": "/ict-futures/academy/ifvg-reversal-model.html"
+    },
+    {
+      "id": "fvg-ote-confluence-model",
+      "title": "FVG + OTE Confluence Model",
+      "category": "Entry Models",
+      "level": "Advanced",
+      "definition": "A confluence idea that looks for an FVG overlapping the 62%–79% retracement band of a defined impulse leg. The supplied playbook highlights 70.5% as a common reference.",
+      "aliases": [
+        "FVG + OTE Confluence Model",
+        "FVG",
+        "OTE"
+      ],
+      "acronym": "FVG",
+      "trackId": "entry-models-execution",
+      "purpose": [
+        "trigger",
+        "entry"
+      ],
+      "instrumentFamilies": [
+        "nq",
+        "es",
+        "gc",
+        "6e",
+        "6b",
+        "cl",
+        "btc"
+      ],
+      "timeframes": [
+        "1H",
+        "15m",
+        "5m",
+        "1m"
+      ],
+      "sessions": [
+        "Asia",
+        "London",
+        "New York AM",
+        "New York PM"
+      ],
+      "biasDirections": [
+        "bullish",
+        "bearish"
+      ],
+      "sourceEvidenceLabel": "CONVENTION",
+      "performanceEvidenceLabel": "NO DATA",
+      "url": "/ict-futures/academy/fvg-ote-confluence-model.html"
+    },
+    {
+      "id": "listed-futures-market-basics",
+      "title": "Listed Futures Market Basics",
+      "category": "Futures Foundations",
+      "level": "Beginner",
+      "definition": "A listed futures contract is a standardised exchange-traded product with a defined unit, quote, minimum price increment, expiry/settlement and exchange rulebook. A platform symbol may show one expiry or a vendor-mapped continuous series; these are not interchangeable.",
+      "aliases": [
+        "Listed Futures Market Basics"
+      ],
+      "acronym": "",
+      "trackId": "foundations-futures-mechanics",
+      "purpose": [
+        "context",
+        "study"
+      ],
+      "instrumentFamilies": [
+        "nq",
+        "es",
+        "gc",
+        "6e",
+        "6b",
+        "ym",
+        "rty",
+        "dx",
+        "zn",
+        "cl",
+        "6j",
+        "6a",
+        "6c",
+        "si",
+        "btc"
+      ],
+      "timeframes": [
+        "Daily",
+        "4H",
+        "1H",
+        "15m",
+        "5m"
+      ],
+      "sessions": [
+        "Asia",
+        "London",
+        "New York AM",
+        "New York PM"
+      ],
+      "biasDirections": [
+        "bullish",
+        "bearish"
+      ],
+      "sourceEvidenceLabel": "SOURCED",
+      "performanceEvidenceLabel": null,
+      "url": "/ict-futures/academy/listed-futures-market-basics.html"
+    },
+    {
+      "id": "contract-specs-and-tick-math",
+      "title": "Contract Specs & Tick Math",
+      "category": "Futures Foundations",
+      "level": "Beginner",
+      "definition": "Contract specifications define the traded unit, quote convention, tick increment, tick value and point value. Tick arithmetic translates a stop distance into estimated money risk; it must match the exact product and expiry.",
+      "aliases": [
+        "Contract Specs & Tick Math"
+      ],
+      "acronym": "",
+      "trackId": "foundations-futures-mechanics",
+      "purpose": [
+        "context",
+        "study"
+      ],
+      "instrumentFamilies": [
+        "nq",
+        "es",
+        "gc",
+        "6e",
+        "6b",
+        "ym",
+        "rty",
+        "dx",
+        "zn",
+        "cl",
+        "6j",
+        "6a",
+        "6c",
+        "si",
+        "btc"
+      ],
+      "timeframes": [
+        "Daily",
+        "4H",
+        "1H",
+        "15m",
+        "5m"
+      ],
+      "sessions": [
+        "Asia",
+        "London",
+        "New York AM",
+        "New York PM"
+      ],
+      "biasDirections": [
+        "bullish",
+        "bearish"
+      ],
+      "sourceEvidenceLabel": "SOURCED",
+      "performanceEvidenceLabel": null,
+      "url": "/ict-futures/academy/contract-specs-and-tick-math.html"
+    },
+    {
+      "id": "futures-expiry-first-notice-and-roll",
+      "title": "Futures Expiry, First Notice & Roll",
+      "category": "Futures Foundations",
+      "level": "Intermediate",
+      "definition": "Expiry, last trade, settlement and (where applicable) first notice/delivery are product-specific. Roll is a documented transition between listed contract months, often informed by current contract calendar and observed liquidity migration.",
+      "aliases": [
+        "Futures Expiry, First Notice & Roll"
+      ],
+      "acronym": "",
+      "trackId": "futures-contract-roll-risk",
+      "purpose": [
+        "context",
+        "study"
+      ],
+      "instrumentFamilies": [
+        "nq",
+        "es",
+        "gc",
+        "6e",
+        "6b",
+        "ym",
+        "rty",
+        "dx",
+        "zn",
+        "cl",
+        "6j",
+        "6a",
+        "6c",
+        "si",
+        "btc"
+      ],
+      "timeframes": [
+        "Daily",
+        "4H",
+        "1H",
+        "15m",
+        "5m"
+      ],
+      "sessions": [
+        "Asia",
+        "London",
+        "New York AM",
+        "New York PM"
+      ],
+      "biasDirections": [
+        "bullish",
+        "bearish"
+      ],
+      "sourceEvidenceLabel": "SOURCED",
+      "performanceEvidenceLabel": null,
+      "url": "/ict-futures/academy/futures-expiry-first-notice-and-roll.html"
+    },
+    {
+      "id": "continuous-contract-mapping",
+      "title": "Continuous Contract Mapping",
+      "category": "Futures Foundations",
+      "level": "Intermediate",
+      "definition": "A continuous futures symbol links multiple expiring listed contracts into a vendor/platform series. Roll date, adjustment and splice can alter the visible price history; the continuous series is useful for context but is not itself an executable expiry contract.",
+      "aliases": [
+        "Continuous Contract Mapping"
+      ],
+      "acronym": "",
+      "trackId": "futures-contract-roll-risk",
+      "purpose": [
+        "context",
+        "study"
+      ],
+      "instrumentFamilies": [
+        "nq",
+        "es",
+        "gc",
+        "6e",
+        "6b",
+        "ym",
+        "rty",
+        "dx",
+        "zn",
+        "cl",
+        "6j",
+        "6a",
+        "6c",
+        "si",
+        "btc"
+      ],
+      "timeframes": [
+        "Daily",
+        "4H",
+        "1H",
+        "15m",
+        "5m"
+      ],
+      "sessions": [
+        "Asia",
+        "London",
+        "New York AM",
+        "New York PM"
+      ],
+      "biasDirections": [
+        "bullish",
+        "bearish"
+      ],
+      "sourceEvidenceLabel": "SOURCED",
+      "performanceEvidenceLabel": null,
+      "url": "/ict-futures/academy/continuous-contract-mapping.html"
+    },
+    {
+      "id": "futures-margin-and-position-risk",
+      "title": "Futures Margin & Position Risk",
+      "category": "Futures Foundations",
+      "level": "Intermediate",
+      "definition": "Margin is collateral required by an FCM/broker and clearing venue; it is not the same as planned loss at a structural stop. Stop risk depends on ticks, tick value, contract count and transaction costs, with gaps/slippage potentially increasing loss.",
+      "aliases": [
+        "Futures Margin & Position Risk"
+      ],
+      "acronym": "",
+      "trackId": "futures-contract-roll-risk",
+      "purpose": [
+        "context",
+        "study"
+      ],
+      "instrumentFamilies": [
+        "nq",
+        "es",
+        "gc",
+        "6e",
+        "6b",
+        "ym",
+        "rty",
+        "dx",
+        "zn",
+        "cl",
+        "6j",
+        "6a",
+        "6c",
+        "si",
+        "btc"
+      ],
+      "timeframes": [
+        "Daily",
+        "4H",
+        "1H",
+        "15m",
+        "5m"
+      ],
+      "sessions": [
+        "Asia",
+        "London",
+        "New York AM",
+        "New York PM"
+      ],
+      "biasDirections": [
+        "bullish",
+        "bearish"
+      ],
+      "sourceEvidenceLabel": "SOURCED",
+      "performanceEvidenceLabel": null,
+      "url": "/ict-futures/academy/futures-margin-and-position-risk.html"
+    },
+    {
+      "id": "futures-volume-open-interest",
+      "title": "Futures Volume, Open Interest & COT",
+      "category": "Futures Foundations",
+      "level": "Intermediate",
+      "definition": "Exchange volume counts traded contracts in an interval; open interest counts outstanding open contracts at a reporting time; CFTC COT classifies aggregate positions at a report cadence. They are distinct measures and cannot replace each other or order-book depth.",
+      "aliases": [
+        "Futures Volume, Open Interest & COT",
+        "COT"
+      ],
+      "acronym": "COT",
+      "trackId": "futures-contract-roll-risk",
+      "purpose": [
+        "context",
+        "study"
+      ],
+      "instrumentFamilies": [
+        "nq",
+        "es",
+        "gc",
+        "6e",
+        "6b",
+        "ym",
+        "rty",
+        "dx",
+        "zn",
+        "cl",
+        "6j",
+        "6a",
+        "6c",
+        "si",
+        "btc"
+      ],
+      "timeframes": [
+        "Daily",
+        "4H",
+        "1H",
+        "15m",
+        "5m"
+      ],
+      "sessions": [
+        "Asia",
+        "London",
+        "New York AM",
+        "New York PM"
+      ],
+      "biasDirections": [
+        "bullish",
+        "bearish"
+      ],
+      "sourceEvidenceLabel": "SOURCED",
+      "performanceEvidenceLabel": null,
+      "url": "/ict-futures/academy/futures-volume-open-interest.html"
+    }
+  ]
+}

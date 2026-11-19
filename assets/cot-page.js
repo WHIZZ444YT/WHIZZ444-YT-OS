@@ -8,6 +8,7 @@
  const number=v=>v===null||v===undefined||v===""||!Number.isFinite(Number(v))?"—":Number(v).toLocaleString(undefined,{maximumFractionDigits:0});
  const percent=v=>v===null||v===undefined||!Number.isFinite(Number(v))?"—":`${Number(v).toFixed(2)}%`;
  function setState(text,kind="neutral"){state.textContent=text;state.className="muted cot-state "+kind;}
+ function syncSearchControls(){const ready=search.value.trim().length>=3,busy=refresh.dataset.busy==="true";refresh.disabled=busy||!ready;searchButton.disabled=busy||!ready;}
  function marketKey(row){return row.contractMarketCode||row.marketName||"";}
  function filteredRows(){
   const market=marketSelect.value,category=categorySelect.value;
@@ -51,11 +52,19 @@
   renderChart();
  }
  async function load(){
-  refresh.disabled=true;searchButton.disabled=true;refresh.textContent="Loading CFTC…";setState("Requesting the selected official CFTC dataset. No private account information is involved.");
+  const term=search.value.trim();
+  if(term.length<3){
+   rows=[];payload=null;refreshOptions();render();
+   meta.textContent="Select a market to see the report date, retrieval time and source.";
+   setState("Enter at least 3 characters from a CFTC market name, or an exact contract-market code, then search.");
+   syncSearchControls();
+   return;
+  }
+  refresh.dataset.busy="true";syncSearchControls();refresh.textContent="Loading CFTC…";setState("Requesting the selected official CFTC dataset. No private account information is involved.");
   try{
    const api=(window.FINANCE_OS_CONFIG?.apiBase||"").replace(/\/$/,"");if(!api)throw new Error("Cloudflare API endpoint is not configured.");
    const params=new URLSearchParams({report:reportSelect.value,variant:variantSelect.value});
-   const term=search.value.trim();if(term){if(/^[A-Za-z0-9]{3,12}$/.test(term))params.set("contract_market_code",term);else params.set("q",term);}
+   if(/^[A-Za-z0-9]{3,12}$/.test(term))params.set("contract_market_code",term);else params.set("q",term);
    const response=await fetch(`${api}/api/v1/cot?${params}`,{headers:{Accept:"application/json"},cache:"no-store",signal:AbortSignal.timeout(20000)});
    const data=await response.json();if(!response.ok)throw new Error(data.error?.message||data.error||`CFTC API returned HTTP ${response.status}`);
    payload=data;rows=Array.isArray(data.normalizedRows)?data.normalizedRows:[];refreshOptions();render();
@@ -65,9 +74,10 @@
    $("cotDataset").href=data.source_url||"https://publicreporting.cftc.gov/stories/s/r4w3-av2u";
    setState(`${data.provider||"CFTC"} · ${data.report_name||data.report_family} · ${rows.length.toLocaleString()} normalized category rows. Position date and retrieval time are separate; per-row publication timestamp is not supplied.`,data.status==="fresh"?"good":data.status==="stale"?"warn":"bad");
   }catch(error){rows=[];payload=null;refreshOptions();render();meta.textContent="CFTC data is unavailable. No values have been substituted.";setState(`${error.message} Use the official CFTC dataset link as fallback.`,"bad");}
-  finally{refresh.disabled=false;searchButton.disabled=false;refresh.textContent="Load latest CFTC snapshot";}
+  finally{delete refresh.dataset.busy;refresh.textContent="Refresh CFTC data";syncSearchControls();}
  }
  [reportSelect,variantSelect].forEach(element=>element.addEventListener("change",load));
+ search.addEventListener("input",syncSearchControls);
  searchButton.addEventListener("click",load);search.addEventListener("keydown",event=>{if(event.key==="Enter"){event.preventDefault();load();}});
  refresh.addEventListener("click",load);marketSelect.addEventListener("change",render);categorySelect.addEventListener("change",render);exportButton.addEventListener("click",exportCsv);
  load();

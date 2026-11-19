@@ -87,7 +87,11 @@ test('COT route selects the exact combined dataset and separates report, positio
     const env = makeEnv();
     const response = await worker.fetch(new Request('https://edge.example/api/v1/cot?report=tff&variant=combined&q=NASDAQ'), env, context());
     assert.equal(response.status, 200);
-    assert.match(requestedUrl, /yw9f-hn96\.json/);
+    const sourceUrl = new URL(requestedUrl);
+    assert.match(sourceUrl.pathname, /yw9f-hn96\.json/);
+    assert.equal(sourceUrl.searchParams.get('$limit'), '156');
+    assert.ok(sourceUrl.searchParams.get('$select').includes('lev_money_positions_long'));
+    assert.match(sourceUrl.searchParams.get('$where'), /NASDAQ/);
     const payload = await response.json();
     assert.equal(payload.data_type, 'cftc_cot_positions');
     assert.equal(payload.report_family, 'tff');
@@ -96,7 +100,35 @@ test('COT route selects the exact combined dataset and separates report, positio
     assert.equal(payload.published_at, null);
     assert.ok(payload.retrieved_at);
     assert.ok(payload.normalizedRows.some(row => row.traderCategory === 'Leveraged Funds' && row.net === 100));
+    assert.equal(payload.rows.length, payload.normalizedRows.length);
+    assert.equal(Object.hasOwn(payload.normalizedRows[0], 'sourceNativeFields'), false);
     assert.equal(payload.persistence.status, 'not-configured');
+  } finally {
+    globalThis.fetch = originalFetch;
+  }
+});
+
+test('unfiltered COT requests return a bounded latest-market snapshot for older frontends', async () => {
+  const originalFetch = globalThis.fetch;
+  let requestedUrl = '';
+  globalThis.fetch = async input => {
+    requestedUrl = String(input);
+    return new Response(JSON.stringify([{
+      report_date_as_yyyy_mm_dd: '2026-11-10T00:00:00.000',
+      cftc_contract_market_code: '123456', contract_market_name: 'NASDAQ', open_interest_all: '1000',
+      lev_money_positions_long: '250', lev_money_positions_short: '150'
+    }]), { status: 200, headers: { 'Content-Type': 'application/json' } });
+  };
+  try {
+    const env = makeEnv();
+    const response = await worker.fetch(new Request('https://edge.example/api/v1/cot?report=tff'), env, context());
+    const payload = await response.json();
+    assert.equal(response.status, 200);
+    assert.equal(new URL(requestedUrl).searchParams.get('$limit'), '156');
+    assert.equal(new URL(requestedUrl).searchParams.get('$where'), null);
+    assert.equal(payload.filtered, false);
+    assert.equal(payload.query_scope, 'latest-provider-observations');
+    assert.ok(payload.normalizedRows.length > 0);
   } finally {
     globalThis.fetch = originalFetch;
   }

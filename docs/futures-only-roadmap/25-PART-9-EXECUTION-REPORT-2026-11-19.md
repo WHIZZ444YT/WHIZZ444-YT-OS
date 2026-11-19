@@ -1,5 +1,7 @@
 # Part 9 Execution Report — Journal and Private Workspace
 
+> Historical checkpoint. Later on 19 November the additive Part 9 migration was applied and verified in the active production project. Account deletion, disposable-user tests and Auth/attachment/export runtime checks remain incomplete. See [the current production implementation and site audit](26-PRODUCTION-IMPLEMENTATION-AND-SITE-AUDIT-2026-11-19.md).
+
 **Review date:** 19 November 2026
 **Repository:** `WHIZZ444YT/WHIZZ444-YT-OS`
 **Branch:** `codex/charter-alignment-2026-11-19`
@@ -16,7 +18,7 @@ This inspection read policy/schema metadata and an object count only. No private
 
 ## Implemented locally
 
-- `supabase/migrations/20261119190000_complete_private_workspace_records.sql` adds futures contract/expiry, timezone, tick/target, plan/review/adherence, backtest linkage, watchlist expiry/session/source/display/active fields and research-note context, source references and review conclusion. Existing rows are not rewritten; their new watchlist status remains unknown rather than being assumed active. Blank fees become nullable so unknown remains different from zero.
+- `supabase/migrations/20261119125110_complete_private_workspace_records.sql` adds futures contract/expiry, timezone, tick/target, plan/review/adherence, backtest linkage, watchlist expiry/session/source/display/active fields and research-note context, source references and review conclusion. Existing rows are not rewritten; their new watchlist status remains unknown rather than being assumed active. Blank fees become nullable so unknown remains different from zero.
 - `assets/account.js` expands the private workspace. New trades require an exact contract and expiry; timestamps use an IANA timezone; P&L does not infer missing fees. Watchlists can edit expiry, alias, session, source label, display label and active status. Research notes include invalidation, alternate scenario, HTF context, confirmations, liquidity targets, sources and review conclusion.
 - Sensitive REST and Storage requests use `no-store`. Private-row edits use `updated_at` preconditions and reject stale versions. Full backup v2 paginates each private table with exact-count checks, includes this browser's legacy sources and embeds private chart files up to 50 MB raw. It labels the backup as a non-transactional snapshot.
 - `assets/academy-learning.js` retains failed local lesson-progress writes as pending and retries after reconnection/focus/page load with session refresh.
@@ -27,7 +29,7 @@ This inspection read policy/schema metadata and an object count only. No private
 ## Files changed for Part 9
 
 - `assets/account.js`, `assets/academy-learning.js`, `assets/runtime-config.js`
-- `supabase/migrations/20261119190000_complete_private_workspace_records.sql`
+- `supabase/migrations/20261119125110_complete_private_workspace_records.sql`
 - `supabase/functions/delete-account/index.ts`
 - `scripts/build_site.py`, `scripts/validate.py`
 - `docs/ARCHITECTURE.md`, `docs/IMPLEMENTATION.md`, `docs/RELEASE-CHECKLIST.md`
