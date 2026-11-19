@@ -1,5 +1,7 @@
 # Part 3 — Futures Contract Intelligence
 
+**Review date:** 19 November 2026. **Repository:** https://github.com/WHIZZ444YT/WHIZZ444-YT-OS. Recheck live source and official references before implementation; this document is not runtime or deployment evidence.
+
 **Goal:** Make every supported futures contract an accurate, expiry-aware, source-traceable instrument profile and enable safe cross-contract comparison.
 
 ## 1. Instrument universe
@@ -147,6 +149,9 @@ Inspect and update:
 
 Consolidate to a canonical registry. Do not hardcode a different tick value in a widget, calculator and contract profile.
 
+### Licensed exchange data and plugin boundary
+
+Contract metadata/specifications, settlement/volume snapshots, and real-time trades/quotes/depth are separate products with separate verification and licence rules. Consider CME's [F&O Website Information API](https://dataservices.cmegroup.com/pages/fo-api-websites) only as a possible, licensed, approved path; it is not evidence of a configured feed or a free quote API. Under the CME update effective 1 January 2027, certain specifically licensed website packages permit restricted hourly snapshots and prior-trading-date daily information with stated display timing. Verify the current product schedule, package, approval, timing, fees and display category with CME before implementation. ICE requires its own approval/licence for public website display. Do not scrape exchange pages or infer a verified contract field from the Futures Risk Manager plugin.
 ## 9. Acceptance criteria
 
 - [ ] All 15 families have a profile and an explicit verification state.
@@ -166,7 +171,7 @@ Consolidate to a canonical registry. Do not hardcode a different tick value in a
 
 ## Standalone handoff context — use this file by itself
 
-**Repository:** https://github.com/whizz444yt-ux/Finance-Intelligence-OS  
+**Repository:** https://github.com/WHIZZ444YT/WHIZZ444-YT-OS  
 **Product:** Futures Intelligence OS — futures-only markets, ICT futures education, futures news/data, positioning, backtesting, risk and trader workspace.  
 **Architecture to inspect and preserve:** static HTML/JavaScript/JSON; Python build at `scripts/build_site.py`; Cloudflare Worker at `cloudflare/src/index.js` with KV; Supabase Postgres/Auth/RLS; Vercel static output `dist/`; GitHub Actions and tests. This is a baseline, not proof each service/credential is currently healthy.
 
