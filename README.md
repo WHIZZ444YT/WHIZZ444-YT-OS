@@ -2,7 +2,7 @@
 
 A futures-only research and education workspace for exchange-listed futures and ICT Futures. It includes a 15-family futures catalogue, the 82-lesson ICT Futures Academy (preserving all 76 original concept IDs), nine guided tutorials and ten prerequisite-based learning tracks, futures news and official macro adapters, CFTC positioning, deterministic backtesting, risk tools and a Supabase-backed private workspace.
 
-**Current release:** `v1.1.0` · **Production branch:** `main` · **Deployment:** Live on Vercel · **Release date:** 10 November 2026. The tagged GitHub release remains a separate release-management step.
+**Tracked app version:** `v1.1.0` · **Production source branch:** `main` · **Release record date:** 10 November 2026. See the current platform check below for observed deployment status; the tagged GitHub release remains a separate release-management step.
 
 ## Product scope and preserved baselines
 
@@ -24,10 +24,10 @@ A futures-only research and education workspace for exchange-listed futures and 
 - `/entry-models/` — eight educational model concepts, without unsupported performance rankings.
 - `/news/` — futures-focused GDELT discovery snapshots.
 - `/macro/` — BLS, BEA, EIA, FRED, Treasury and ECB observations with provider-specific freshness and credentials.
-- `/research/positioning/` — CFTC TFF and Disaggregated weekly futures positioning.
+- `/research/positioning/` — CFTC Legacy, TFF and Disaggregated weekly positioning, with futures-only and futures-and-options-combined variants kept separate.
 - `/volume-open-interest/` — CFTC weekly open interest; daily/intraday exchange volume remains explicitly unavailable until a verified licensed feed is connected.
 - `/strategy-lab/` — deterministic signal-driven futures backtesting.
-- `/risk/` — futures risk calculator and prop-firm rulebook status. Imported tick values remain unverified and prop-firm records are not configured.
+- `/risk/` — futures risk calculator with conditional sizing, all-in cost inputs and versioned prop-firm verification registry. Imported tick values remain unverified and no firm program is numerically verified.
 - `/tools/` — compatibility redirect to `/risk/`.
 - `/account/` — authenticated private journal/watchlists/notes/alerts/progress.
 - `/contract-specs/` — 15-family reference view; imported tick references are marked unverified, and expiry/first-notice fields are not supplied.
@@ -54,7 +54,7 @@ The primary app shell has 13 futures-only areas: Overview, Futures Markets, ICT 
 - Prices and order-book depth are explicitly not connected. The economic release calendar is not consolidated/connected. Session high/low is not displayed without an underlying intraday feed.
 - /sessions/ reuses the existing ICT terminal section rather than maintaining a second session clock/calendar.
 - /contract-specs/ displays 15 imported family references with UNVERIFIED IMPORTED REFERENCE labels. Expiry/first-notice/roll dates are NOT SUPPLIED by the current registry.
-- /risk/ uses the existing calculator; prop-firm rulebooks, fees, drawdown and payout terms are labelled NOT CONFIGURED until source-backed records exist. /tools/ redirects to /risk/.
+- /risk/ uses a tick-safe fixed-point calculator with standard/micro profiles, round-turn fees, spread/slippage estimates, user-entered remaining daily/max loss caps and a maximum-contract cap. The contract registry remains unverified, so results are prominently conditional. No margin, currency conversion, correlated exposure or automatic account-rule interpretation is claimed. /tools/ redirects to /risk/.
 - The Futures Desk and ICT terminal retain their existing page-specific tools inside the shared shell. No React/framework migration was introduced.
 
 ## v1.1.0 — Premium interface and release engineering
@@ -91,21 +91,31 @@ python3 scripts/validate.py
 python3 scripts/audit_internal_links.py
 ```
 
-## Platform state (verified 10 November 2026)
+## Current source and live provider snapshot (19 November 2026)
+
+The active source repository is [`WHIZZ444YT/WHIZZ444-YT-OS`](https://github.com/WHIZZ444YT/WHIZZ444-YT-OS). At the start of the 19 November audit, `main` was at `ca8c86d`; its latest GitHub Actions quality run succeeded. Local Windows verification after the UTF-8 portability repair is recorded in [`docs/futures-only-roadmap/15-PART-0-EXECUTION-REPORT-2026-11-19.md`](docs/futures-only-roadmap/15-PART-0-EXECUTION-REPORT-2026-11-19.md).
+
+Read-only production checks on 19 November returned HTTP 200 for the Vercel homepage, Futures Markets, Academy, Strategy Lab and retired prediction-market redirect. The current Vercel project reports its latest production deployment as `READY`; the deployment-to-source commit linkage was not established in this check.
+
+The Cloudflare Worker `/api/v1/health`, `/api/v1/providers` and `/api/v1/news` routes returned HTTP 200 during the pre-branch production check. Its snapshot reported KV configured, CMS/database/ingestion-token configuration absent, and five economic providers. GDELT was `UNAVAILABLE` after a timeout; BLS was `RATE-LIMITED` until 20 November 00:00 UTC; CFTC was `FRESH` with data as of 10 November; Treasury and ECB were `FRESH` with data as of 31 October and 18 November respectively; BEA, EIA, FRED, Supabase and Builder credentials were not configured. These historical point-in-time states are not a promise of ongoing availability or licensed market data. The feature-branch COT and news changes below are local and have not been deployed or rechecked against production.
+
+### Earlier infrastructure snapshot (10 November 2026; historical)
+
+The following table records the earlier Finance Intelligence OS infrastructure review. It predates the current repository snapshot and must not be used as current Git, deployment, database or credential evidence.
 
 | Platform | Verified state | Remaining setup |
 |---|---|---|
-| GitHub | Public repo `whizz444yt-ux/Finance-Intelligence-OS` on `main`; CI quality workflow is enabled. | Continue using the linked repository and protect production releases with CI status checks. |
-| Vercel | `finance-intelligence-os` project is linked to GitHub; latest verified production deployment is `READY`; both public production aliases return HTTP 200. SSO protection is now limited to Preview deployments. | No custom domain is configured; the public `vercel.app` aliases are the current production URLs. |
-| Supabase | Active healthy Mumbai (`ap-south-1`) project; 22 public tables have RLS enabled; security and health advisors return no findings. | Complete a real end-user signup, email confirmation and sign-in smoke test; verify Auth redirect URLs and email delivery. |
-| Cloudflare | `finance-intelligence-os-edge` Worker is deployed (Worker version 13) with KV binding, a 30-minute Cron and production-origin CORS allow-list. | No Worker secrets are currently bound. Protected Supabase writes and BEA/EIA/FRED credential-backed ingestion remain inactive until secrets are configured. |
+| GitHub | Historical source was `whizz444yt-ux/Finance-Intelligence-OS` on `main`. | Use the current `WHIZZ444YT/WHIZZ444-YT-OS` repository documented above. |
+| Vercel | `finance-intelligence-os` project; latest verified production deployment was `READY`; Preview SSO protection was enabled. | Recheck project-to-repository linkage and current domains before a release. |
+| Supabase | Earlier review found 22 public tables with RLS enabled in the prior project. | Current Worker reports its database integration as not configured; independently verify the intended Supabase project and its RLS state before enabling writes. |
+| Cloudflare | Earlier review found `finance-intelligence-os-edge` deployed with KV and a 30-minute Cron. | Use the live health/provider snapshot above; the current Worker reports database and ingestion-token configuration absent. |
 | Builder.io | Allow-listed content proxy code remains available. | A Builder Space public API key and read-only Admin PAT have not been configured. |
 
 ### Deployed Cloudflare API
 
 `https://finance-intelligence-os-edge.finance-intelligence-os.workers.dev`
 
-Routes include `/health`, `/api/v1/providers`, `/api/v1/news`, `/api/v1/macro`, `/api/v1/cot?report=tff|disaggregated`, `/api/v1/macro/funding` (New York Fed SOFR/EFFR/overnight rates), and `/api/v1/cms/{model}`. Legacy `/api/v1/prediction/polymarket` and `/api/v1/prediction/kalshi` handlers remain dormant for compatibility only; they are not linked to or consumed by the active product. News refresh remains scheduled every 30 minutes; the frontend reload button fetches the latest cached snapshot rather than bypassing the provider cache. GDELT collection is scheduled every 30 minutes; BLS, CFTC and NY Fed snapshots are fetched on demand and cached. BEA, EIA, FRED, Treasury and ECB use dedicated provider adapters with provider-specific TTLs. A 30-minute Cron checks whether each provider is due and performs historical ingestion no more frequently than its configured freshness interval. This is not an exchange real-time price or order-book feed.
+The previously deployed routes include `/health`, `/api/v1/providers`, `/api/v1/news`, `/api/v1/macro`, `/api/v1/cot`, `/api/v1/macro/funding` (New York Fed SOFR/EFFR/overnight rates), and `/api/v1/cms/{model}`. Local feature-branch source extends COT to `report=legacy|tff|disaggregated` and `variant=futures-only|combined`, and extends Volume & Open Interest with CFTC weekly OI selection; these changes are not production-deployed. Legacy `/api/v1/prediction/polymarket` and `/api/v1/prediction/kalshi` handlers remain dormant for compatibility only; they are not linked to or consumed by the active product. News refresh remains scheduled every 30 minutes; BLS, CFTC and NY Fed snapshots are fetched on demand and cached. A 30-minute Cron checks configured economic providers against their freshness intervals. This is not an exchange real-time price or order-book feed.
 
 ## Historical ingestion and Supabase persistence
 
@@ -123,7 +133,7 @@ Routes include `/health`, `/api/v1/providers`, `/api/v1/news`, `/api/v1/macro`, 
 - Supabase browser configuration uses only the public publishable key; no service-role key is in this repository.
 - RLS is enabled on all 22 project public tables; user-owned rows are scoped to `auth.uid()`. Historical economic observations are read-only to browser roles; the ingestion-run ledger is private and server-role only.
 - Fifteen imported contract specification rows are explicitly `unverified`; they must be reconciled with exchange documents before being treated as current.
-- CFTC COT is a weekly trader-category report with distinct TFF and Disaggregated classifications; the desk normalizes these categories using the provider's report-specific fields. The Volume & OI module uses CFTC weekly open interest only; it does not label this as daily exchange volume; BLS, BEA, EIA, FRED, Treasury and ECB series are official historical macro observations; GDELT is a discovery index, not a complete licensed newswire.
+- CFTC COT is a weekly trader-category report. Local branch code distinguishes Legacy, TFF and Disaggregated families and futures-only versus futures-and-options-combined variants; position date, retrieval time and unknown per-row publication timestamp remain separate. The Volume & OI module uses CFTC weekly open interest only and does not label it as daily exchange volume. CFTC COT is not contract-expiry-specific open interest.
 - Builder CMS content is editorial content, not a source for market prices or issuer release facts.
 - Real-time CME/ICE quotes, DOM/depth, licensed intraday history and redistribution rights are outside the free integration baseline.
 - The new Futures Desk is a research interface; it deliberately does not label delayed/snapshot public data as live exchange quotes.
@@ -140,22 +150,23 @@ See `docs/BUILD-REPORT.md`, `docs/ARCHITECTURE.md`, `docs/IMPLEMENTATION.md`, `d
 - CME and CFTC material is linked for general futures mechanics and risk education, not represented as ICT certification or evidence of strategy performance.
 
 
-## P4 — Reproducible Strategy Lab
+## Strategy Lab — Part 4 baseline extended in Part 7
 
-- The /strategy-lab/ route now contains a browser-based deterministic futures signal backtester. Upload one timestamped OHLC series with causal LONG, SHORT or FLAT signals. The engine does not claim to generate or verify ICT signals; signal generation is an upstream, user-documented step.
-- Required CSV columns: timestamp, open, high, low, close and signal. Timestamps require an explicit UTC offset or Z; rows must be strictly increasing; one contract/expiry is accepted per run. Optional stop_ticks, contract and volume are validated.
+- The /strategy-lab/ route contains a deterministic futures backtester for user-supplied LONG, SHORT or FLAT signals. Signals are assumed known at source-bar close and enter at next-bar open. ICT labels are research tags only; no named model detector is implemented. The ten candidate rule cards state what remains to define before any detector can be built: [Part 7 model rule cards](docs/futures-only-roadmap/22-PART-7-MODEL-RULE-CARDS.md).
+- Required CSV columns: timestamp, open, high, low, close, signal, exact contract code and source-supplied expiry date. Timestamps require an explicit UTC offset or Z; rows must be strictly increasing; one exact contract/expiry is accepted per run. Unknown columns are refused to reduce accidental use of future-derived fields. Optional stop_ticks and volume are validated; supplied volume requires units.
+- Run configuration records the data source/provider, dataset ID and download date, plus the source/date for commission and slippage assumptions. OHLC prices must align to the user-supplied exact-contract tick size; misaligned data is refused. The manifest contains the exact expiry, provenance, gap summary, engine version, full parameters and input hash.
 - Entry is next-bar open after a source-bar-close signal. One position at a time; fixed stop and reward/risk target; whole-contract risk sizing; max position cap; commission/slippage; stop-gap adverse fills; conservative stop-first same-bar ambiguity; limit targets without queue/partial-fill improvement; time and end-of-data exits.
-- Results report gross and net P&L, net expectancy per trade, average net R, net profit factor, win rate, commissions, estimated slippage, bar-close mark-to-market max drawdown in USD/percent, underwater duration and full trade ledger.
+- Results report gross/net P&L, net expectancy, average net R, net profit factor, win rate with 95% Wilson interval, average win/loss, trade frequency per 1,000 bars, longest win/loss streak, commissions, estimated slippage, bar-close drawdown and full trade ledger. Timestamp gaps over 1.5× the declared interval are listed for review; valid session closures are not distinguished without a verified product calendar.
 - Chronological in-sample / validation / out-of-sample splits are computed independently, with capital reset per split. Keep the OOS segment untouched until the signal rule and parameters are frozen. Run fingerprints use the dataset SHA-256, engine version, full configuration and split policy.
 - Download a JSON manifest and CSV trade ledger. The raw uploaded CSV stays in the browser. Local history stores summary/fingerprint; signed-in users can sync manifests/metrics and trade rows to private RLS-protected Supabase tables.
 - Migration 20261108151112_add_strategy_backtest_runs_and_trades creates strategy_backtests and strategy_backtest_trades; both use user ownership policies and no browser service-role credential.
-- The eight preserved ICT models remain playbook descriptions; they are not yet automatically converted into machine-testable setup detectors. No preloaded historical bars or performance ranking is fabricated. Tick values, commissions, expiry/roll methodology and market-data licensing must be supplied/verified for each dataset.
+- Only one exact listed expiry is supported. Roll-adjusted continuous data, automatic session/news exclusion, exchange expiry rules, margin, separate spread, queue/partial fills, market impact and broker execution are not modeled. Tick size/value, cost inputs, source, and licensing must be verified for the dataset.
 
 ## P5 — Cloud personal workspace
 
 - The /account/ page is now a private cloud workspace with trade journal CRUD, multiple named watchlists, research-note CRUD, alert rules and event history, account preferences, analytics, JSON backup export and cross-device refresh/sync.
 - Auth sessions are persisted in browser local storage using the shared finance-os-supabase-session-v1 key and mirrored to session storage for the existing Academy and Strategy Lab clients. Expiring Supabase tokens are refreshed with the rotating refresh token; failed 401 requests get one refresh/retry.
-- Cloud journal CRUD uses journal_trades. Analytics use closed records with user-entered net P&L and R-multiples; no broker statement or contract conversion is inferred. Net P&L defaults to gross P&L minus recorded fees only when the user leaves net P&L blank.
+- Cloud journal CRUD uses journal_trades. Analytics use user-entered net P&L and R-multiples; no broker statement or contract conversion is inferred. Net P&L is derived from gross P&L only when fees are also entered; blank fees remain unknown.
 - Watchlists use watchlists and watchlist_items. Profiles store display name/timezone; user_preferences store theme/preferences. New research_notes store scenario/evidence/invalidation notes. alert_rules stores threshold rules; alert_events stores user-triggered event history.
 - The explicit import action reads the older Global Research watchlist and scenario-note keys plus the ICT Futures browser trade journal. Research-note, watchlist-item and legacy-trade imports use stable identifiers/upsert constraints for retry safety. Local originals are not deleted.
 - Migration 20261108161355_add_cloud_workspace_notes_and_alert_events adds owner-protected research_notes and alert_events. Migration 20261108161450_add_idempotent_legacy_trade_import adds journal_trades.legacy_id and a per-user unique constraint for retry-safe legacy trade import.
@@ -163,3 +174,32 @@ See `docs/BUILD-REPORT.md`, `docs/ARCHITECTURE.md`, `docs/IMPLEMENTATION.md`, `d
 - Analytics include closed-trade count, net realised P&L, win rate, net profit factor, average recorded R, a daily realised P&L chart and counts for watchlists, notes and alerts. These are manual-journal metrics, not broker-linked portfolio analytics.
 - Cloud tables use owner-scoped RLS. Browser requests use the authenticated JWT and publishable key only; no service-role secret is sent to the page.
 - Migration `20261108163000_add_workspace_composite_fk_indexes` adds covering indexes for alert-event and backtest-trade composite foreign keys.
+
+## P9 — Private workspace hardening
+
+- Trade and research forms now store exact exchange contract/expiry and the requested futures context, risk and review fields. Watchlists visibly distinguish user-entered expiry dates from missing or expired dates.
+- The journal accepts private PNG/JPEG/WebP chart files in the owner-UUID folder of the existing private Storage bucket. Its RLS path rules were inspected live; the bucket currently has no stored objects.
+- JSON backup v2 paginates every private table, includes lesson progress, reminders, backtest rows, local legacy data and base64 attachment files. It reports the 50 MB attachment-export limit and that concurrent updates can make a multi-table export non-transactional.
+- Lesson progress keeps offline changes pending and retries when the device reconnects or the page regains focus; the shared session refresh flow also runs on the Academy.
+- Alerts explicitly store user-entered source, manual-only cadence, exact contract/expiry, timezone, optional active window and optional expiry. A pending event ID makes threshold event retries idempotent; no background market feed or delivery service is claimed.
+- A server-side account deletion function validates the signed-in user, checks the configured app origin, removes their private attachment files, and then deletes the Auth user (which cascades owned rows). The account page requires password reauthentication and a typed confirmation. The function and additive schema migration are local only; deployment and two-user runtime verification remain outstanding.
+- Live inspection on 19 November 2026 found RLS enabled on the private workspace tables and owner-scoped policies; Supabase security advisories returned no lints. This is policy inspection, not a two-user isolation test. No Auth accounts, private records or database schema were changed in that inspection.
+- See [`docs/futures-only-roadmap/25-PART-9-EXECUTION-REPORT-2026-11-19.md`](docs/futures-only-roadmap/25-PART-9-EXECUTION-REPORT-2026-11-19.md). Apply the new migration before serving this branch against Supabase; configure and deploy the deletion function before offering account deletion.
+
+## P6 — COT and weekly open-interest research
+
+- CFTC report selection now separates Legacy, TFF and Disaggregated families and the Futures Only / Futures and Options Combined variants using official PRE datasets.
+- Position date, provider retrieval time and publication time are separate. CFTC PRE does not expose a per-row publication timestamp, so `published_at` remains null; the CFTC release schedule is linked instead of guessed.
+- CFTC market-name searches expose the source-native contract-market code and exchange/market label. Users can request an exact code; the UI does not claim that a fuzzy root-symbol match is a reviewed expiry-level crosswalk.
+- Category normalization preserves source fields and report-specific column mappings. Net, weekly change and percent-of-open-interest calculations retain nulls; no missing field becomes zero. The COT page includes weekly category history, table and filtered CSV export.
+- The `/volume-open-interest/` page is limited to weekly CFTC open interest. Daily/intraday exchange volume, intraday OI and expiry-level exchange OI remain unavailable until an authorized provider is configured.
+- Additive migration `20261119173000_add_cot_report_observations` defines an indexed, idempotent, RLS read-only-to-browser table. The Worker only writes when server-side Supabase credentials exist. The migration has not been applied or verified against the production database.
+- See [`docs/futures-only-roadmap/21-PART-6-EXECUTION-REPORT-2026-11-19.md`](docs/futures-only-roadmap/21-PART-6-EXECUTION-REPORT-2026-11-19.md) for tested changes and remaining gaps.
+
+## P8 — Futures risk and prop-firm rule status
+
+- The Risk page calculates all-in stop risk from exchange tick value, stop ticks, round-turn fees, estimated spread and slippage. Fixed-point micro-dollar arithmetic and whole-contract floor sizing avoid decimal/tick-rounding drift; daily-loss and maximum-drawdown remaining amounts can cap the requested risk budget.
+- Exact contract code and expiry are entered by the user. Imported tick references are still unverified, so every output is marked conditional and shows the source reference version, official exchange link, verification timestamp and effective date when available. Current profiles have no verified timestamp/effective interval.
+- The versioned `data/prop-firm-programs.json` registry contains the typed drawdown-rule schema and no verified program records. `Blue Shift 25K` remains an unverified mention; the exact firm, product, official rulebook and numerical terms are not published.
+- Private balance and guardrail entries stay in the browser and are not synced. Margin, FX conversion, platform-specific trailing logic, event rules, correlated exposures, a rule simulator and fee/payout comparisons are unavailable until exact source-backed terms are verified.
+- See [`docs/futures-only-roadmap/24-PART-8-EXECUTION-REPORT-2026-11-19.md`](docs/futures-only-roadmap/24-PART-8-EXECUTION-REPORT-2026-11-19.md) for verification and gaps.

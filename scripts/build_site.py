@@ -4,7 +4,7 @@ from __future__ import annotations
 import json, os, shutil, re
 from pathlib import Path
 from html import escape
-from build_academy import build_academy
+from build_academy import academy_video_coverage, build_academy, verified_lesson_videos
 
 ROOT = Path(__file__).resolve().parents[1]
 DIST = ROOT / 'dist'
@@ -102,8 +102,66 @@ def json_script(value):
     return json.dumps(value, ensure_ascii=False).replace('</', '<\\/')
 
 
+def futures_terminal_bundle():
+    markets_data=load(ROOT/'ict-futures/data/market-universe.json',{})
+    academy_data=load(ROOT/'ict-futures/data/ict-academy.json',{})
+    playbook=load(ROOT/'ict-futures/data/ict-playbook.json',{})
+    source_data=load(ROOT/'ict-futures/data/source-directory.json',{})
+    snapshot=load(ROOT/'data/news-snapshot.json',{})
+    source_registry={x.get('id'):x for x in academy_data.get('curriculum',{}).get('resourceRegistry',[]) if x.get('id')}
+    featured={}
+    concepts=[]
+    for concept in academy_data.get('concepts',[]):
+        curriculum=concept.get('curriculum') or {}
+        learning=concept.get('learning') or {}
+        refs=learning.get('references') or {}
+        verified=verified_lesson_videos(concept)
+        verified_ids=[]
+        for video in verified:
+            video_id=video.get('resourceId') or video.get('id') or video.get('videoId')
+            if not video_id: continue
+            verified_ids.append(video_id)
+            featured.setdefault(video.get('url'),{
+                'id':video_id,'title':video.get('title'),'url':video.get('url'),
+                'publisher':video.get('channelName'),'verifiedOfficial':video.get('sourceClass')=='official_ict',
+                'conceptIds':video.get('conceptIds',[]),'sourceNote':video.get('sourceNote','')
+            })
+        references=[]
+        for source_id in curriculum.get('sourceRefs',[]):
+            item=source_registry.get(source_id,{})
+            url=str(item.get('url') or '')
+            if url.startswith('https://'):
+                references.append({'name':item.get('name') or item.get('title') or source_id,'url':url})
+        concepts.append({
+            'id':concept.get('id'),'name':concept.get('name'),'category':concept.get('category'),
+            'level':concept.get('level'),'definition':concept.get('definition'),
+            'howToUse':concept.get('howToUse') or curriculum.get('identificationRules',[]),
+            'useCase':concept.get('useCase'),'commonMistakes':concept.get('commonMistakes'),
+            'evidence':concept.get('evidence') or curriculum.get('sourceEvidenceLabel'),
+            'sourceNote':concept.get('sourceNote') or learning.get('sourceCaution'),
+            'related':concept.get('related',[]),'referenceLinks':references,
+            'verifiedVideoIds':verified_ids,
+            'videoSearch':curriculum.get('topicDiscoveryUrl') or refs.get('topicDiscovery'),
+            'officialChannel':refs.get('officialChannel') or academy_data.get('officialChannel'),
+            'officialPlaylists':refs.get('officialPlaylists') or academy_data.get('officialPlaylists'),
+        })
+    return {
+        'generatedAt':markets_data.get('generatedAt'),
+        'markets':markets_data.get('markets',[]),
+        'academy':{
+            'conceptCount':len(concepts),'concepts':concepts,'tracks':academy_data.get('tracks',[]),
+            'featuredVideos':list(featured.values()),
+            'officialChannel':academy_data.get('officialChannel'),
+            'officialPlaylists':academy_data.get('officialPlaylists'),
+        },
+        'playbook':playbook,
+        'snapshot':snapshot,
+        'sources':source_data.get('sources',[]),
+    }
+
+
 def shell(title, description, body, canonical_path='/', extra_head='', right_panel=''):
-    canonical = f'<link rel="canonical" href="{escape(SITE_URL + canonical_path)}">' if SITE_URL else '<meta name="robots" content="noindex,follow">'
+    canonical = '<meta name="robots" content="noindex,nofollow">' if canonical_path == '/account/' else (f'<link rel="canonical" href="{escape(SITE_URL + canonical_path)}">' if SITE_URL else '<meta name="robots" content="noindex,follow">')
     og_url = escape(SITE_URL + canonical_path) if SITE_URL else ''
     speed_insights = '<script>window.si = window.si || function () { (window.siq = window.siq || []).push(arguments); };</script><script defer src="/_vercel/speed-insights/script.js"></script>'
     area = escape(current_area(canonical_path))
@@ -190,6 +248,12 @@ def build():
         else: shutil.copy2(src,dst)
     obsolete_prediction_client = DIST/'assets/prediction-markets.js'
     if obsolete_prediction_client.exists(): obsolete_prediction_client.unlink()
+    ict_terminal=DIST/'ict-futures/index.html'
+    ict_html=ict_terminal.read_text(encoding='utf-8')
+    placeholder='__FUTURES_DATA_BUNDLE__'
+    if ict_html.count(placeholder)!=1:
+        raise ValueError('ICT terminal must contain one futures data bundle placeholder')
+    ict_terminal.write_text(ict_html.replace(placeholder,json_script(futures_terminal_bundle()),1),encoding='utf-8')
     # Apply the shared app shell to the two standalone terminal applications after copying their sources.
     wrap_standalone_shell(DIST/'futures-intelligence/index.html', '/futures-intelligence/', 'desk')
     wrap_standalone_shell(DIST/'ict-futures/index.html', '/academy/', 'ict')
@@ -242,14 +306,22 @@ def build():
         official=str(m.get('specsUrl') or '')
         official_link=f'<a class="os-source-link" href="{escape(official, quote=True)}" target="_blank" rel="noopener noreferrer">Official exchange specification ↗</a>' if official.startswith(('https://','http://')) else '<span class="muted">Official specification link not supplied</span>'
         specs=[
+            ('Contract unit / reference basis',contract_value(m.get('unit'))),
+            ('Micro alias / reference',contract_value(m.get('micro'))),
             ('Tick size',contract_value(m.get('tickSize'))),
             ('Tick value',contract_value(m.get('tickValue'))),
             ('Point value',contract_value(m.get('pointValue'))),
+            ('Quote convention','<span class="os-unverified-value">NOT SUPPLIED IN REGISTRY</span>'),
+            ('Settlement / delivery','<span class="os-unverified-value">NOT SUPPLIED IN REGISTRY</span>'),
             ('Expiry / first notice','<span class="os-unverified-value">NOT SUPPLIED IN REGISTRY</span>'),
+            ('Roll / continuous-series method','<span class="os-unverified-value">NOT SUPPLIED IN REGISTRY</span>'),
+            ('Reference set',escape(str(m.get('specVersionId') or 'version-not-recorded'))),
+            ('Verified at','<span class="os-unverified-value">NOT VERIFIED</span>'),
+            ('Effective date range','<span class="os-unverified-value">NOT SUPPLIED IN REGISTRY</span>'),
         ]
         spec_rows=''.join(f'<div class="os-spec-field"><span>{label}</span>{value}</div>' for label,value in specs)
         contract_cards.append(
-            f'<article id="{escape(str(m.get("id","")))}" class="os-contract-spec-card"><div class="os-contract-spec-head"><div><span class="os-eyebrow">{escape(str(m.get("exchange","Exchange")))} · {escape(str(m.get("tier","")))}</span><h3>{escape(str(m.get("label","Futures family")))}</h3></div><span class="os-state-chip warn">UNVERIFIED</span></div>'
+            f'<article id="{escape(str(m.get("id","")))}" class="os-contract-spec-card"><div class="os-contract-spec-head"><div><span class="os-eyebrow">{escape(str(m.get("exchange","Exchange")))} · {escape(str(m.get("tier","")))}</span><h3>{escape(str(m.get("label","Futures family")))}</h3></div><span class="os-state-chip warn">{escape(str(m.get("specStatus","unverified")).upper())}</span></div>'
             f'<div class="os-spec-grid">{spec_rows}</div><div class="os-contract-spec-source">{official_link}</div></article>'
         )
     body=page_intro('Contract reference registry','Contract Specs & Expiry','Imported contract reference values are shown for traceability only. They have not been independently reconciled against the current exchange rulebook in this UI phase. Expiry, first-notice and roll dates are not present in the current registry.')
@@ -272,6 +344,8 @@ def build():
     program=academy_data.get('learningProgram',{})
     tutorials=program.get('tutorials',[])
     tracks=academy_data.get('tracks',[])
+    video_coverage=academy_video_coverage(academy_data)
+    video_status_by_id={x['id']:x for x in video_coverage['lessons']}
     concept_by_id={c.get('id'):c for c in academy}
     track_by_id={t.get('id'):t for t in tracks}
     track_cards=[]
@@ -346,6 +420,7 @@ def build():
         catalog_cards.append(
             f'<article class="academy-catalog-card" data-academy-card {attrs}>'
             f'<div class="academy-card-top"><span class="badge">{escape(str(c.get("level","Study")))}</span><span class="academy-evidence-label">{escape(evidence_for_search)}</span></div>'
+            f'<p class="academy-video-status" data-video-status="{escape(video_status_by_id.get(slug,{}).get("status","VIDEO NEEDED"),quote=True)}">{escape(video_status_by_id.get(slug,{}).get("status","VIDEO NEEDED"))}</p>'
             f'<h3>{escape(str(c.get("name","Lesson")))}</h3><p>{escape(str(c.get("definition","")))}</p>'
             f'<div class="academy-card-tags">{escape(" · ".join(str(x) for x in curriculum.get("instrumentLabels",[])[:3]))}</div>'
             f'<small class="muted">{escape(evidence_raw)}</small><p><a href="/ict-futures/academy/{escape(slug)}.html">Study lesson →</a></p></article>'
@@ -355,6 +430,7 @@ def build():
         'A prerequisite-based futures learning library with 82 concept lessons, 9 preserved guided tutorials and 10 study tracks. Includes futures mechanics, ICT concept chains, contract-roll context, replay practice and explicit evidence limits.',
         f'<div class="stats-row"><b>{len(academy)}</b><span>Concept lessons</span><b>{len(tutorials)}</b><span>Guided tutorials</span><b>{len(tracks)}</b><span>Learning tracks</span></div>')
     body+='<section class="academy-progress-summary"><strong data-academy-global-progress>0 / 82 lessons completed</strong><span id="academyProgressMeta">Previous completions are retained when lesson content is revised; current-version completion requires the updated practice and checks.</span></section>'
+    body+=f'<p class="small-note" role="status"><strong>VIDEO COVERAGE: {escape(video_coverage["status"])}</strong> · {video_coverage["coveredCount"]} of {video_coverage["eligibleCount"]} lessons have exact verified video mappings ({video_coverage["coveragePercent"]}%). <a href="/ict-futures/academy/video-coverage.json">View coverage register ↗</a></p>'
     body+='<section class="content-section"><div class="section-top"><div><h2>Guided practice tutorials</h2><p>Nine preserved workbooks with chart-replay workflows, deliverables and review criteria.</p></div><a class="text-link" href="/ict-futures/academy/tutorials/">Open all tutorials →</a></div><div class="academy-course-grid">'+''.join(tutorial_cards)+'</div></section>'
     body+='<section class="content-section"><div class="section-top"><div><h2>10 prerequisite-based learning tracks</h2><p>Follow the recommended sequence. Reading and practice times are editorial estimates, not promises.</p></div></div><div class="academy-course-grid">'+''.join(track_cards)+'</div></section>'
     body+='<section class="content-section"><div class="section-top"><div><h2>82-concept lesson catalogue</h2><p>Search by concept, acronym, instrument, model, timeframe, session, bias direction or evidence label. Six new foundations lessons cover listed futures mechanics, tick math, expiry/roll, continuous mapping, margin and volume/open interest.</p></div></div>'
@@ -385,7 +461,7 @@ def build():
         })
     write(DIST/'academy/search-index.json',json.dumps({'version':2,'generatedAt':academy_data.get('generatedAt'),'count':len(academy_search_index),'lessons':academy_search_index},ensure_ascii=False,indent=2))
     body+='<section class="content-section"><h2>Evidence and source standards</h2><p><b>SOURCED</b> means a named source must support the exact claim. <b>CONVENTION</b> identifies community practice or editorial synthesis. <b>NO DATA</b> means independently audited public performance evidence was not located in the reviewed material. <b>HYPOTHESIS</b> is a testable interpretation. <b>TESTED</b> is reserved for a reproducible test with dataset, dates, costs, rules, sample size and out-of-sample results.</p><p>The 39-page playbook discloses limitations in its source review: some details were taken from search excerpts, and ICT original videos plus Reddit/Discord were not exhaustively reviewed. A channel/playlist or topic search is discovery, not a verified one-to-one video citation. Contract, tick, margin, session, roll and event values must be rechecked from current primary sources.</p><div class="source-notes"><a href="https://www.youtube.com/@InnerCircleTrader" target="_blank" rel="noopener noreferrer">Official ICT channel ↗</a><a href="https://www.youtube.com/@InnerCircleTrader/playlists" target="_blank" rel="noopener noreferrer">Official ICT playlists ↗</a><a href="https://www.cmegroup.com/markets.html" target="_blank" rel="noopener noreferrer">CME contract specifications ↗</a><a href="https://www.cmegroup.com/tools-information/calendars/expiration-calendar.html" target="_blank" rel="noopener noreferrer">CME expiry calendar ↗</a><a href="https://www.cmegroup.com/market-data/volume-open-interest.html" target="_blank" rel="noopener noreferrer">CME Volume &amp; Open Interest ↗</a><a href="https://www.cftc.gov/MarketReports/CommitmentsofTraders/index.htm" target="_blank" rel="noopener noreferrer">CFTC COT ↗</a></div></section>'
-    write(DIST/'academy/index.html',shell('ICT Futures Academy | Futures Intelligence OS','82 source-traceable lessons, 10 curriculum tracks, nine guided tutorials, futures mechanics, search and current-version progress tracking.',body,'/academy/', '<script defer src="/assets/academy-catalog.js"></script>'))
+    write(DIST/'academy/index.html',shell('ICT Futures Academy | Futures Intelligence OS','82 source-traceable lessons, 10 curriculum tracks, nine guided tutorials, futures mechanics, search and current-version progress tracking.',body,'/academy/', '<link rel="stylesheet" href="/assets/academy-learning.css"><script defer src="/assets/academy-catalog.js"></script>'))
 
     # Macro indicators: official BLS historical observations via the edge gateway.
     body=page_intro('Official macro data','US inflation & labour indicators','Five series from the US Bureau of Labor Statistics Public Data API v1. Values are published historical observations with their own index bases and units; they are not live market quotes or a complete economic calendar.')
@@ -395,8 +471,8 @@ def build():
     write(DIST/'macro/index.html',shell('US Macro Indicators | Futures Intelligence OS','Official BLS, BEA, EIA, FRED, Treasury and ECB historical observations with source labels, units and retrieval times.',body,'/macro/', '<script defer src="/assets/macro-page.js"></script><script defer src="/assets/economic-data.js"></script>'))
 
     # COT / institutional positioning.
-    body=page_intro('Institutional positioning','CFTC Commitments of Traders','Query CFTC Public Reporting Environment datasets: TFF Futures Only for financial futures or Disaggregated Futures Only for covered commodity markets. COT is a weekly report with Tuesday positions published on Friday; it is not intraday positioning.')
-    body += """<section class="content-section"><div class="section-top"><div><h2>Latest COT records</h2><p>Cached public CFTC API response. Search a contract name such as Nasdaq, S&P, Gold, Crude Oil or Euro FX.</p></div><button class="primary-button" id="cotRefresh">Load latest CFTC snapshot</button></div><div class="cot-controls"><button class="cot-toggle active" data-cot-report="tff" type="button">TFF · Financial futures</button><button class="cot-toggle" data-cot-report="disaggregated" type="button">Disaggregated · Commodities</button><input class="search-input" id="cotSearch" type="search" placeholder="Filter by market or code"><span class="muted" id="cotCount"></span></div><p class="muted" id="cotState">Loading CFTC data…</p><div class="table-wrap"><table class="cot-table"><thead><tr><th>Contract market</th><th>Report date</th><th>Open interest</th><th>Long</th><th>Short</th><th>Net</th></tr></thead><tbody id="cotRows"><tr><td colspan="6">Loading CFTC snapshot…</td></tr></tbody></table></div></section><section class="content-section"><h2>Interpretation and data caveats</h2><p>For TFF, the default net calculation uses the Leveraged Money category. For the Disaggregated report, it uses Managed Money. These are report categories, not a complete view of all market participants. Check the underlying row fields and report type before interpretation. Positions are aggregated and reported with a time lag.</p><div class="source-notes"><a href="https://publicreporting.cftc.gov/Commitments-of-Traders/TFF-Futures-Only/gpe5-46if" target="_blank" rel="noopener noreferrer">Official TFF futures-only dataset ↗</a><a href="https://publicreporting.cftc.gov/w/72hh-3qpy/default" target="_blank" rel="noopener noreferrer">Official Disaggregated dataset ↗</a><a href="https://www.cftc.gov/MarketReports/CommitmentsofTraders/index.htm" target="_blank" rel="noopener noreferrer">CFTC COT reports ↗</a><a href="https://publicreporting.cftc.gov/stories/s/Public-Reporting-FAQ/inwp-fmhz/" target="_blank" rel="noopener noreferrer">CFTC PRE FAQ ↗</a></div></section>"""
+    body=page_intro('Institutional positioning','CFTC Commitments of Traders','Compare Legacy, TFF and Disaggregated reports while keeping futures-only and futures-and-options combined datasets separate. COT reports Tuesday positions; publication schedule and retrieval time are shown separately when available.')
+    body += """<section class="content-section"><div class="section-top"><div><h2>Weekly COT positioning</h2><p>Choose a report family and variant, then search a source market name or exact CFTC contract-market code.</p></div><div class="cot-actions"><button class="primary-button" id="cotRefresh" type="button">Load latest CFTC snapshot</button><button class="secondary-button" id="cotExport" type="button" disabled>Export filtered CSV</button></div></div><div class="cot-controls"><label>Report family<select id="cotReport"><option value="tff">TFF · financial markets</option><option value="disaggregated">Disaggregated · physical commodities</option><option value="legacy">Legacy · commercial / non-commercial</option></select></label><label>Report variant<select id="cotVariant"><option value="futures-only">Futures Only</option><option value="combined">Futures and Options Combined</option></select></label><label>Market search<input class="search-input" id="cotSearch" type="search" placeholder="CFTC market name or exact code" maxlength="80"></label><button class="secondary-button" id="cotApplySearch" type="button">Search CFTC market</button><label>Market<select id="cotMarket"><option value="">All returned markets</option></select></label><label>Trader category<select id="cotCategory"><option value="">All categories</option></select></label><span class="muted" id="cotCount"></span></div><p class="muted" id="cotState">Loading CFTC data…</p><div class="cot-meta" id="cotMeta">Position date, publication timing and retrieval time will be shown independently.</div><div id="cotChart" class="cot-chart" role="img" aria-label="Weekly COT net positioning chart"><span class="empty-state">Choose a source market and trader category to display the weekly net-position history.</span></div><p class="fine-print">Chart values are net contracts (reported long minus reported short) for one exact CFTC market code, report family, variant and category. Net position is a descriptive calculation, not a signal.</p><div class="table-wrap"><table class="cot-table"><thead><tr><th>Market / CFTC code</th><th>Position date</th><th>Trader category</th><th>Open interest</th><th>Long</th><th>Short</th><th>Spreading</th><th>Net</th><th>Weekly net change</th><th>Net % of OI</th></tr></thead><tbody id="cotRows"><tr><td colspan="10">Loading CFTC snapshot…</td></tr></tbody></table></div></section><section class="content-section"><h2>Definitions and release timing</h2><p>Legacy, TFF and Disaggregated classifications describe different CFTC reporting schemes. Do not combine categories between them. Futures-only and futures-and-options combined reports are separate datasets. The position date is not the publication date; the API does not supply a per-row publication timestamp, so the interface leaves that field unknown and shows retrieval time separately. CFTC generally releases reports Friday at 3:30 p.m. Eastern using the preceding Tuesday’s positions; holiday schedules may shift release.</p><p>“Net % of OI” is calculated as (long − short) ÷ reported open interest × 100 only when all required values are present. Missing values remain missing, never zero. COT reports are delayed aggregate positioning and do not identify individual traders or explain their intent.</p><div class="source-notes"><a id="cotDataset" href="https://publicreporting.cftc.gov/stories/s/r4w3-av2u" target="_blank" rel="noopener noreferrer">CFTC PRE report catalogue ↗</a><a id="cotSchedule" href="https://www.cftc.gov/MarketReports/CommitmentsofTraders/ReleaseSchedule/index.htm" target="_blank" rel="noopener noreferrer">CFTC release schedule ↗</a><a href="https://www.cftc.gov/MarketReports/CommitmentsofTraders/index.htm" target="_blank" rel="noopener noreferrer">CFTC COT methodology and datasets ↗</a><a href="https://publicreporting.cftc.gov/stories/s/Public-Reporting-FAQ/inwp-fmhz/" target="_blank" rel="noopener noreferrer">CFTC PRE API FAQ ↗</a></div></section>"""
     write(DIST/'research/positioning/index.html',shell('CFTC COT Positioning | Futures Intelligence OS','Fetch official CFTC Public Reporting Environment futures-only TFF and Disaggregated positioning datasets.',body,'/research/positioning/', '<script defer src="/assets/cot-page.js"></script>'))
 
     # Futures-only source directory. Root resources.json is the reviewed public allowlist.
@@ -411,13 +487,16 @@ def build():
     nstatus=news.get('status','not-yet-fetched') if isinstance(news,dict) else 'not-yet-fetched'
     body=page_intro('Futures news intelligence','Futures headlines & catalysts','Futures-focused source discovery across exchange releases, macro, rates, metals, energy and listed currency/Bitcoin futures. Aggregated discovery is a research lead, not verified fact or a trading signal.')
     body+=f'<section class="status-panel"><div><span class="status-label">Snapshot status</span><strong>{escape(str(nstatus).upper())}</strong></div><div><span class="status-label">Stored articles</span><strong>{len(articles)}</strong></div><p>Last check: {escape(str(news.get("lastCheckedAt") or "Not yet fetched"))}</p><p>Provider: {escape(str(news.get("provider") or "GDELT DOC API"))}</p></section>'
-    body+='<section class="content-section"><div class="section-top"><div><h2>Curated headlines</h2><p>Last saved snapshot. Each item opens its original publisher.</p></div><button class="primary-button" id="refreshNews">Refresh news snapshot</button></div><div class="news-grid" id="newsGrid"></div><p id="newsState" class="muted"></p></section><section class="content-section"><h2>Search external sources</h2><p>Use the ICT Futures terminal for contract-specific news and public research links.</p><a class="text-link" href="/ict-futures/#news">Open full Finance research desk →</a></section>'
+    market_filter=''.join(f'<option value="{escape(str(m.get("id","")),quote=True)}">{escape(str(m.get("label","")))}</option>' for m in mdata)
+    topic_values=['macro','policy','rates','inflation','employment','energy','metals','currencies','treasuries','positioning','exchange','geopolitics','supply','earnings']
+    topic_filter=''.join(f'<option value="{topic}">{topic.title()}</option>' for topic in topic_values)
+    body+=f'<section class="content-section"><div class="section-top"><div><h2>Futures headlines</h2><p>Headline discovery only. Publisher publication time and full article text may be unavailable; use the original source.</p></div><button class="primary-button" id="refreshNews">Refresh snapshot</button></div><div class="filter-row"><select id="newsInstrument" class="search-input"><option value="">All contract families</option>{market_filter}</select><select id="newsTopic" class="search-input"><option value="all">All event types</option>{topic_filter}</select><select id="newsPublisher" class="search-input"><option value="">All publishers</option></select><select id="newsTime" class="search-input"><option value="72">GDELT seen · last 72 hours</option><option value="24">GDELT seen · last 24 hours</option><option value="6">GDELT seen · last 6 hours</option></select></div><p class="muted" id="newsSourceStatus">News source status not checked.</p><p class="small-text">Source attribution: <a href="https://www.gdeltproject.org/about.html" target="_blank" rel="noopener noreferrer">GDELT Project terms and citation ↗</a>. Publisher article rights remain separate; open each original source.</p><div class="news-grid" id="newsGrid"></div><p id="newsState" class="muted"></p></section><section class="content-section"><h2>Search external sources</h2><p>Use the ICT Futures terminal for contract-specific news and public research links. Headlines are discovery leads, not verified facts or trading signals.</p><a class="text-link" href="/ict-futures/#news">Open full Finance research desk →</a></section>'
     write(DIST/'news/index.html',shell('Futures News | Futures Intelligence OS','Futures news discovery with source traceability, retrieval times and provider status.',body,'/news/', '<script defer src="/assets/news-page.js"></script>'))
 
     # Volume & Open Interest: weekly futures-only CFTC OI, with exchange volume explicitly unavailable.
     voi_options = ''.join(f'<option value="{escape(m.get("id",""))}">{escape(m.get("label",""))}</option>' for m in mdata)
     body=page_intro('Market participation data','Volume & Open Interest','A contract-aware participation research area. Weekly open interest is sourced from CFTC futures-only reports where the selected contract is covered. Daily exchange volume is deliberately withheld until a verified provider and redistribution basis are connected.')
-    body+='<section class="voi-control-panel"><div class="voi-controls"><label>Futures family<select id="voiMarket">'+voi_options+'</select></label><label>CFTC market label<select id="voiInstrument" disabled><option>Loading contract rows…</option></select></label><button id="voiRefresh" class="primary-button">Refresh weekly OI</button></div><div class="voi-source-row"><span id="voiStatus" class="status-pill warn">WAITING</span><span id="voiReport">CFTC report</span><a id="voiSource" href="https://www.cftc.gov/MarketReports/CommitmentsofTraders/index.htm" target="_blank" rel="noopener noreferrer">Official CFTC dataset ↗</a></div><p id="voiRetrieved" class="muted">Waiting for the provider response…</p></section>'
+    body+='<section class="voi-control-panel"><div class="voi-controls"><label>Futures family<select id="voiMarket">'+voi_options+'</select></label><label>CFTC report variant<select id="voiVariant"><option value="futures-only">Futures Only</option><option value="combined">Futures and Options Combined</option></select></label><label>CFTC market label<select id="voiInstrument" disabled><option>Loading contract rows…</option></select></label><button id="voiRefresh" class="primary-button">Refresh weekly OI</button></div><div class="voi-source-row"><span id="voiStatus" class="status-pill warn">WAITING</span><span id="voiReport">CFTC report</span><a id="voiSource" href="https://www.cftc.gov/MarketReports/CommitmentsofTraders/index.htm" target="_blank" rel="noopener noreferrer">Official CFTC dataset ↗</a></div><p id="voiRetrieved" class="muted">Waiting for the provider response…</p></section>'
     body+='<section class="voi-metric-grid"><article class="voi-metric"><span>Latest open interest</span><strong id="voiLatest">—</strong><small id="voiAsOf">No report date yet</small></article><article class="voi-metric"><span>Week-on-week change</span><strong id="voiChange">—</strong><small>Change in reported open-interest contracts</small></article><article class="voi-metric"><span>Historical coverage</span><strong id="voiRange">—</strong><small>Latest available rows in this CFTC dataset</small></article><article class="voi-metric unavailable"><span>Exchange trading volume</span><strong>Not connected</strong><small>Daily / intraday volume is not supplied by the COT adapter</small></article></section>'
     body+='<section class="content-section"><div class="section-top"><div><h2>Weekly open-interest history</h2><p id="voiMarketName">Select a market to load the CFTC series.</p></div><span class="data-pill">WEEKLY · CFTC REPORT</span></div><div id="voiState" class="data-message">Waiting for data…</div><div id="voiChart" class="oi-chart"><div class="loading-state">Loading open-interest history…</div></div><div class="fine-print">Each bar represents a reported weekly open-interest observation for one specific CFTC market label. It is not daily trading volume, open contracts on a broker, or order-book depth.</div></section>'
     body+='<section class="content-section"><div class="section-top"><div><h2>Reported weekly observations</h2><p>Newest report first. No synthetic values or interpolation are used.</p></div><span id="voiCount" class="muted">— rows</span></div><div class="table-wrap"><table class="cot-table"><thead><tr><th>Report date</th><th>Open interest</th><th>Week change</th><th>Source market label</th></tr></thead><tbody id="voiTable"><tr><td colspan="4">No data loaded.</td></tr></tbody></table></div></section>'
@@ -436,37 +515,40 @@ def build():
     write(DIST/'entry-models/index.html',shell('ICT Entry Models | Futures Intelligence OS','Eight ICT entry-model concepts with educational playbook links and no unsupported performance claims.',body,'/entry-models/'))
 
     # P4 Strategy Lab: deterministic signal-driven futures backtesting.
-    body=page_intro('Research & validation','Strategy Lab','Run a reproducible, cost-aware backtest from timestamped futures OHLC bars and explicit candle-close signals. The engine does not fabricate ICT signals or publish strategy rankings.')
+    body=page_intro('Research & validation','Strategy Lab','Run a reproducible, cost-aware backtest from timestamped bars for one exact futures expiry and explicit candle-close signals. The engine does not fabricate ICT signals or publish strategy rankings.')
     body+='''
 <section class="strategy-lab-wrap">
   <section class="strategy-hero">
-    <div><span class="eyebrow">P4 · REPRODUCIBLE RESEARCH</span><h2>Test the rule set, not the story.</h2><p>Upload a historical OHLC CSV with LONG / SHORT / FLAT signals. Signals are evaluated at the source-bar close and entries occur at the next bar open. Commission, slippage, risk sizing, conservative stop handling and chronological holdout testing are explicit run inputs.</p></div>
+    <div><span class="eyebrow">P7 · REPRODUCIBLE RESEARCH</span><h2>Test the rule set, not the story.</h2><p>Upload one exact-expiry futures OHLC CSV with LONG / SHORT / FLAT signals. Signals are evaluated at the source-bar close and entries occur at the next bar open. Commission, slippage, risk sizing, conservative stop handling and chronological holdout testing are explicit run inputs.</p></div>
     <aside class="strategy-state"><span class="status-pill warn">USER-SUPPLIED DATA REQUIRED</span><strong>No preloaded strategy performance</strong><span>Existing ICT model pages are descriptions, not executable rule engines. No win rate, expectancy or model ranking is invented.</span></aside>
   </section>
   <div class="strategy-grid">
     <section class="strategy-panel">
-      <h3>01 · Dataset &amp; model</h3><p>Use one futures expiry series per run. The uploaded file stays in this browser; only its hash, manifest and completed trade ledger can sync to your private account.</p>
+      <h3>01 · Dataset &amp; model tag</h3><p>Use one exact listed contract and expiry date per run. The uploaded file stays in this browser; only its hash, manifest and completed trade ledger can sync to your private account.</p>
       <div class="strategy-file-zone">
         <label>Historical signal CSV<br><input id="strategyCsv" type="file" accept=".csv,text/csv"></label>
         <div id="strategyFileMeta" class="strategy-file-meta">No file selected. Minimum 30 timestamped bars; maximum 250,000 bars / 50 MB.</div>
-        <div id="strategyDataQuality" class="strategy-quality">Required columns: timestamp, open, high, low, close, signal. Timestamps need Z or an explicit UTC offset.</div>
+        <div id="strategyDataQuality" class="strategy-quality">Required columns: timestamp, open, high, low, close, signal, contract, expiry. Timestamps need Z or an explicit UTC offset; expiry uses YYYY-MM-DD.</div>
         <p><a class="text-link" href="/strategy-lab/backtest-input-template.csv" download>Download CSV header template →</a></p>
       </div>
       <div class="strategy-form-grid" style="margin-top:12px">
         <label>Strategy name<input id="strategyName" type="text" value="My rule-based ICT setup" maxlength="120"></label>
-        <label>ICT model / research type<select id="modelId">
-          <option value="custom">Custom / other</option><option value="ict-2022-model">ICT 2022 Model</option><option value="liquidity-sweep-mss-model">Liquidity Sweep + MSS</option><option value="silver-bullet">Silver Bullet</option><option value="judas-mss">Judas + MSS</option><option value="unicorn">Unicorn</option><option value="fvg-continuation-model">FVG Continuation</option><option value="ifvg-reversal-model">IFVG</option><option value="fvg-ote-confluence-model">FVG + OTE</option>
+        <label>Research tag (does not generate signals)<select id="modelId">
+          <option value="custom">User-defined signal</option><option value="liquidity-sweep-mss">Liquidity Sweep + MSS · external signal only</option><option value="silver-bullet">Silver Bullet · external signal only</option><option value="ict-2022-model">ICT 2022 Model · external signal only</option><option value="judas-mss">Judas Swing + MSS · external signal only</option><option value="amd-po3">Power of Three / AMD · external signal only</option><option value="unicorn">Unicorn · external signal only</option><option value="fvg-continuation">FVG Continuation · external signal only</option><option value="ifvg">IFVG · external signal only</option><option value="fvg-ote">FVG + OTE · external signal only</option><option value="smt-assisted">SMT-assisted setup · external signal only</option>
         </select></label>
-        <label>Market / contract symbol<input id="marketSymbol" type="text" placeholder="e.g. ESZ6, GCZ6" maxlength="80" required></label>
-        <label>Bar timeframe<input id="timeframe" type="text" placeholder="e.g. 1m, 5m, 15m" maxlength="30" required></label>
+        <label>Exact contract code (must match CSV)<input id="marketSymbol" type="text" placeholder="Use the dataset's exact listed contract code" maxlength="80" required></label>
+        <label>Bar timeframe<input id="timeframe" type="text" placeholder="e.g. 1m, 5m, 1h, 1d" maxlength="30" required></label>
         <label>Timestamp / session timezone<input id="timezone" type="text" value="America/Chicago" maxlength="80"></label>
-        <label>Series type<select id="seriesType"><option value="single-expiry">Single expiry contract</option><option value="back-adjusted-continuous">Back-adjusted continuous</option></select></label>
-        <label id="rollNoteWrap" class="strategy-wide strategy-hidden">Roll / adjustment method and source<input id="rollNote" type="text" placeholder="Describe roll dates, adjustment method and vendor source" maxlength="500"></label>
+        <label>Data provider / source<input id="dataSource" type="text" placeholder="Name the provider or original dataset" maxlength="160" required></label>
+        <label>Provider dataset ID<input id="datasetId" type="text" placeholder="Provider ID or stable dataset reference" maxlength="160" required></label>
+        <label>Download date<input id="downloadDate" type="date" required></label>
+        <label>Volume units (required only when volume is supplied)<input id="volumeUnits" type="text" placeholder="e.g. contracts, lots, provider ticks" maxlength="80"></label>
         <label class="strategy-wide">Signal-generation rule / source note<textarea id="signalSourceNotes" rows="2" placeholder="Describe the causal rule and where signals were generated. Include Pine version, signal timestamp convention and any session filters."></textarea></label>
       </div>
+      <p class="strategy-help">The research tag is only a label. None of the ten listed ICT candidates has a machine-testable detector here. See the <a href="/docs/futures-only-roadmap/22-PART-7-MODEL-RULE-CARDS.md">rule-card status and decisions required</a>.</p>
     </section>
     <section class="strategy-panel">
-      <h3>02 · Execution &amp; costs</h3><p>Tick size/value must match the uploaded contract and currency. The legacy contract catalogue is marked unverified; do not copy its figures without checking the current exchange specification.</p>
+      <h3>02 · Execution &amp; costs</h3><p>Tick size/value must match this exact contract and currency. Verify current exchange specifications and enter all per-side broker, exchange, clearing, NFA and routing fees.</p>
       <div class="strategy-form-grid">
         <label>Starting capital (USD)<input id="startingCapital" type="number" min="1" step="100" value="10000" required></label>
         <label>Risk per trade (%)<input id="riskPercent" type="number" min="0.01" max="20" step="0.01" value="1" required></label>
@@ -475,11 +557,13 @@ def build():
         <label>Tick value (USD / contract)<input id="tickValue" type="number" min="0.00000001" step="any" placeholder="Verify exchange spec" required></label>
         <label>Commission / contract / side (USD)<input id="commissionPerSide" type="number" min="0" step="0.01" placeholder="Enter broker + exchange fees" required></label>
         <label>Slippage (ticks / side)<input id="slippageTicks" type="number" min="0" step="1" value="1" required></label>
+        <label>Execution-cost source<input id="costSource" type="text" placeholder="Broker fee schedule, fill study, or estimate" maxlength="160" required></label>
+        <label>Cost source date<input id="costAsOf" type="date" required></label>
         <label>Stop distance (ticks)<input id="stopTicks" type="number" min="1" step="1" value="12" required></label>
         <label>Target reward / risk<input id="targetRR" type="number" min="0.1" step="0.1" value="2" required></label>
         <label>Maximum bars in trade<input id="maxBarsInTrade" type="number" min="1" step="1" value="60" required></label>
       </div>
-      <div class="strategy-disclosure" style="margin-top:12px">Costs are applied per contract. Entry and stop/time-exit slippage are embedded in fill prices; commission is charged on both sides. A limit target is filled at its target price without queue or partial-fill simulation. Position size rounds down to whole contracts.</div>
+      <div class="strategy-disclosure" style="margin-top:12px">Costs are applied per contract. Entry and stop/time-exit slippage are embedded in fill prices; commission is charged on both sides. A limit target is filled at its target price without queue or partial-fill simulation. Position size rounds down to whole contracts. Spread is not separately modeled; account for it conservatively in slippage or do not treat this as execution evidence.</div>
     </section>
     <section class="strategy-panel">
       <h3>03 · Chronological holdout</h3><p>The data is split by time, not randomly. Each period starts flat with independent starting capital; no position is carried across period boundaries.</p>
@@ -499,6 +583,9 @@ def build():
         <li>If stop and target are both touched in one bar, stop is assumed first.</li>
         <li>Gaps through stops fill at the worse opening price plus configured slippage.</li>
         <li>Expectancy and net profit factor use P&amp;L after modeled costs.</li>
+        <li>Fixed-interval timestamp gaps are reported; the engine cannot distinguish session closures from missing bars.</li>
+        <li>ICT model choices are research labels; signals are externally supplied and their causality is not audited.</li>
+        <li>No automatic event/news filter, exchange session/expiry calendar, separate spread, or roll handling is configured.</li>
         <li>Drawdown uses bar-close mark-to-market equity with estimated exit costs reserved.</li>
         <li>Historical roll fills, margin, liquidity, market impact and broker-specific execution are not inferred.</li>
       </ul>
@@ -520,7 +607,7 @@ def build():
   <section class="strategy-panel"><h3>Evidence rules</h3><p>Win rate alone is not a decision metric. Review trade count, net expectancy, average R, net profit factor, drawdown size/duration, costs and out-of-sample stability together. Small samples, externally generated signals with look-ahead, unadjusted contract rolls, inaccurate tick values and omitted costs can invalidate results. A backtest is not a forecast or a guarantee of future performance.</p></section>
 </section>
 '''
-    write(DIST/'strategy-lab/backtest-input-template.csv','timestamp,open,high,low,close,signal,stop_ticks,contract,volume\n')
+    write(DIST/'strategy-lab/backtest-input-template.csv','timestamp,open,high,low,close,signal,contract,expiry,stop_ticks,volume\n')
     write(DIST/'strategy-lab/index.html',shell('Strategy Lab | Futures Intelligence OS','Reproducible futures signal backtesting with cost-aware expectancy, drawdown and chronological out-of-sample testing.',body,'/strategy-lab/', '<link rel="stylesheet" href="/assets/strategy-lab.css"><script type="module" defer src="/assets/strategy-lab.js"></script>'))
 
     # Independent provider and snapshot health dashboard.
@@ -532,16 +619,19 @@ def build():
     write(DIST/'data-health/index.html',shell('Sources & Data Health | Futures Intelligence OS','Independent gateway and provider snapshot health checks with provenance and freshness limitations.',body,'/data-health/', '<script defer src="/assets/data-health.js"></script>'))
 
     # Risk & Prop Firms. Keep /tools/ as a compatibility redirect.
-    body=page_intro('Risk preparation','Risk & Prop Firms','Contract-aware position sizing and risk preparation. Imported tick references are unverified, broker margin is not estimated, and no prop-firm rulebook registry is currently connected.')
-    body+='''<section class="content-section"><div class="section-top"><div><h2>Futures position size calculator</h2><p>Tick-based estimate; choose standard or micro size where the catalogue supplies a micro profile, then set account risk in USD.</p></div><span class="data-pill">ESTIMATE · NOT EXECUTION</span></div><div class="calc-grid"><label>Contract<select id="contract"></select></label><label>Account balance<input id="balance" type="number" min="0" value="10000"></label><label>Risk %<input id="riskPct" type="number" min="0.01" max="100" step="0.01" value="1"></label><label>Stop distance (ticks)<input id="stopTicks" type="number" min="1" value="20"></label><label>Target distance (ticks)<input id="targetTicks" type="number" min="1" value="60"></label><label>Round-turn commission / contract<input id="commission" type="number" min="0" step="0.01" value="4"></label><label>Entry + exit slippage (ticks)<input id="slippage" type="number" min="0" step="1" value="2"></label><button id="calculateRisk" class="primary-button">Calculate size</button></div><div id="riskResult" class="result-panel" aria-live="polite">Enter assumptions and calculate position size.</div><p class="fine-print">Tick values are copied from the supplied ICT dataset and remain unverified against current official exchange specifications. The calculator rounds contracts down and shows estimated gross/net outcomes; margin and liquidation risk are not estimated.</p></section>'''
-    body+='<section class="content-section os-prop-firm-panel"><div class="section-top"><div><h2>Prop-firm rulebooks</h2><p>Firm eligibility, fees, drawdown calculation, payout rules and prohibited strategies need current, firm-specific source evidence.</p></div><span class="os-state-chip warn">NOT CONFIGURED</span></div><p>No verified firm rulebook, pricing feed or payout history is connected to this product area yet. Do not treat cached third-party summaries or older challenge rules as current terms.</p><div class="os-data-footnote">Coverage status: no firm records loaded · verification required before purchase or account sizing.</div></section>'
+    risk_rules=load(ROOT/'data/prop-firm-programs.json',{})
+    body=page_intro('Risk preparation','Risk & Prop Firms','Futures position sizing uses versioned contract references, integer tick and micro-dollar arithmetic, all-in estimated costs and user-entered remaining-loss caps. The current contract profiles remain unverified and no prop-firm program rules are verified.')
+    body+='''<section class="content-section"><div class="section-top"><div><h2>Futures position size calculator</h2><p>Use a listed contract family and micro/standard profile, then enter the exact contract code and expiry from your source. Estimates are conditional until the tick values are verified against the applicable exchange contract specification.</p></div><span class="data-pill">CONDITIONAL ESTIMATE · NOT EXECUTION</span></div><div class="os-data-footnote"><b>Unverified contract data:</b> every imported profile currently lacks an exchange verification date and effective period. Check the linked official source, confirm tick value and currency for the exact contract, then interpret the result conditionally. USD-only; no FX conversion, margin or liquidation estimate. Remaining-loss fields are user-entered figures from the applicable account terms and platform; the site does not infer reset timezone or balance/equity basis.</div><div class="calc-grid"><label>Contract family<select id="contract"></select></label><label>Exact contract code<input id="exactContract" type="text" maxlength="32" placeholder="Exact code from your provider" required></label><label>Contract expiry date<input id="expiryDate" type="date" required></label><label>Account balance (USD)<input id="balance" type="text" inputmode="decimal" placeholder="Enter your balance" required></label><label>Risk per trade (%)<input id="riskPct" type="text" inputmode="decimal" placeholder="Enter your limit" required></label><label>Maximum contracts<input id="maxContracts" type="number" min="1" max="10000" step="1" placeholder="Enter a cap" required></label><label>Daily loss remaining (USD, optional)<input id="dailyLossRemaining" type="text" inputmode="decimal" placeholder="Use the current official account figure"></label><label>Maximum drawdown remaining (USD, optional)<input id="drawdownRemaining" type="text" inputmode="decimal" placeholder="Use the current official account figure"></label><label>Stop distance (ticks)<input id="stopTicks" type="number" min="1" max="1000000" step="1" placeholder="Enter stop distance" required></label><label>Target distance (ticks)<input id="targetTicks" type="number" min="1" max="1000000" step="1" placeholder="Enter target distance" required></label><label>Commission + other fees / contract / round turn (USD)<input id="commission" type="text" inputmode="decimal" placeholder="Enter all round-turn fees" required></label><label>Estimated spread (ticks / round turn)<input id="spreadTicks" type="number" min="0" max="1000000" step="1" placeholder="Enter 0 only if appropriate" required></label><label>Estimated slippage (ticks / round turn)<input id="slippageTicks" type="number" min="0" max="1000000" step="1" placeholder="Enter a conservative estimate" required></label><label>Cost source<input id="costSource" type="text" maxlength="160" placeholder="Broker schedule or documented estimate" required></label><label>Cost source date<input id="costAsOf" type="date" required></label><button id="calculateRisk" class="primary-button">Calculate conditional size</button></div><div id="riskResult" class="result-panel" aria-live="polite">Enter exact contract, expiry and cost assumptions to calculate a conditional estimate. Current tick references are unverified.</div><p class="fine-print">Tick value means dollars per exchange tick, not dollars per index point. Round-turn fees should include broker, exchange, clearing, NFA and routing costs. Spread and slippage are estimates supplied by you, not observed fills.</p></section>'''
+    unverified_cards=''.join('<article class="os-data-footnote"><b>'+escape(str(x.get('label') or 'Unverified mention'))+' · UNVERIFIED</b><p>'+escape(str(x.get('reason') or 'No official rules verified.'))+'</p><p>Exact firm: NOT VERIFIED · Plan/stage/platform: NOT VERIFIED · Fees, drawdown, contract limits, eligibility and payout: NOT PUBLISHED</p></article>' for x in risk_rules.get('unverifiedMentions',[]))
+    body+='<section class="content-section os-prop-firm-panel"><div class="section-top"><div><h2>Prop-firm rule registry</h2><p>Schema version '+escape(str(risk_rules.get('schemaVersion','unknown')))+' · reviewed '+escape(str(risk_rules.get('reviewedAt','not recorded')))+' · verified programs '+str(len(risk_rules.get('records',[])))+'</p></div><span class="os-state-chip warn">NO VERIFIED PROGRAMS</span></div><p>'+escape(str(risk_rules.get('verificationPolicy','Official current terms required.')))+' No numeric rule, fee, eligibility, payout or comparison is shown without an exact current official source.</p>'+unverified_cards+'<p class="os-data-footnote">No login credentials are requested or stored. Private account balances and remaining-loss allowances are entered in this browser only and are not sent to Supabase.</p></section>'
     body+='<section class="content-section"><h2>Personal risk workflow</h2><div class="card-grid">'+card('Journal & watchlists','Review planned and completed trades in your private workspace.','/account/','Private workspace')+card('Pre-session checklist','Prepare a repeatable market plan and evidence checklist.','/ict-futures/#checklist','ICT Futures')+card('Contract verification','Check imported tick references and missing expiry fields.','/contract-specs/','Reference registry')+'</div></section>'
-    write(DIST/'risk/index.html',shell('Risk & Prop Firms | Futures Intelligence OS','Futures position sizing and prop-firm rulebook verification status.',body,'/risk/', '<script defer src="/assets/risk-calculator.js"></script>'))
+    write(DIST/'data/prop-firm-programs.json',json.dumps(risk_rules,ensure_ascii=False,indent=2)+'\n')
+    write(DIST/'risk/index.html',shell('Risk & Prop Firms | Futures Intelligence OS','Conditional futures position sizing and versioned prop-firm rule verification status.',body,'/risk/', '<script type="module" defer src="/assets/risk-calculator.js"></script>'))
     write(DIST/'tools/index.html',redirect_page('Risk tools moved','/risk/'))
 
     # Supabase account sign-in and private workspace sync.
     body=page_intro('Account & sync','Your private cloud workspace','Manage your cloud trade journal, multi-list watchlists, research notes, price-alert rules, performance analytics and account preferences. Every private record is scoped to your authenticated account.')+'<div id="accountApp"><section class="content-section"><p>Loading your secure cloud workspace…</p></section></div>'
-    write(DIST/'account/index.html',shell('Account & Private Workspace | Futures Intelligence OS','Cloud trade journal, watchlists, research notes, alerts, analytics and cross-device account synchronization.',body,'/account/', '<script defer src="/assets/account.js"></script>'))
+    write(DIST/'account/index.html',shell('Account & Private Workspace | Futures Intelligence OS','Cloud trade journal, watchlists, research notes, alerts, analytics and cross-device account synchronization.',body,'/account/', '<script defer src="/assets/session-time.js"></script><script defer src="/assets/account.js"></script>'))
 
     # Status / docs pages
     status_rows=[('GitHub','Source repository and CI','Main repository connected; quality gates run on pushes and pull requests; v1.1.0 release workflow publishes only matching verified tags'),('Vercel','Frontend hosting','Latest main-branch production deployment is Ready; both public production aliases return HTTP 200; SSO protection is limited to Preview deployments'),('Supabase','Postgres and Auth','Active healthy Mumbai project; 22 public tables have RLS enabled and security/health advisors report no findings. Real end-user signup/sign-in still needs a browser smoke test.'),('Builder.io','Editorial CMS','Allow-listed proxy code exists; public API key and Admin PAT are not configured; the static Academy remains available'),('Cloudflare','Edge API and cache','Worker is deployed with KV and a 30-minute Cron (deployed Worker version 16). No Worker secrets are currently bound, so registered BLS v2, BEA/EIA/FRED ingestion and privileged Supabase writes remain inactive until their Worker secrets are configured.')]

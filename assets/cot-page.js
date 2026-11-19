@@ -1,12 +1,74 @@
-(async()=>{
- const table=document.getElementById('cotRows'),state=document.getElementById('cotState'),refresh=document.getElementById('cotRefresh'),query=document.getElementById('cotSearch'),reportButtons=[...document.querySelectorAll('[data-cot-report]')];if(!table)return;
- let report='tff',rows=[];
- const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
- const pick=(row,keys)=>{for(const k of keys){if(row[k]!==undefined&&row[k]!==null&&row[k]!=='')return row[k]}return null};
- const n=v=>v===null?'—':Number(v).toLocaleString(undefined,{maximumFractionDigits:0});
- const classification=r=>report==='tff'?{label:'Leveraged money',long:pick(r,['lev_money_positions_long','lev_money_positions_long_all']),short:pick(r,['lev_money_positions_short','lev_money_positions_short_all']),spread:pick(r,['lev_money_positions_spread','lev_money_positions_spread_all'])}:{label:'Managed money',long:pick(r,['m_money_positions_long','managed_money_positions_long']),short:pick(r,['m_money_positions_short','managed_money_positions_short']),spread:pick(r,['m_money_positions_spread','managed_money_positions_spread'])};
- function render(){const q=(query.value||'').toLowerCase().trim();const list=rows.filter(r=>[r.contract_market_name,r.market_and_exchange_names,r.cftc_contract_market_code].join(' ').toLowerCase().includes(q));table.innerHTML=list.slice(0,200).map(r=>{const g=classification(r);const net=g.long!==null&&g.short!==null?Number(g.long)-Number(g.short):null;return `<tr><td>${esc(r.contract_market_name||r.market_and_exchange_names||'—')}</td><td>${esc(r.report_date_as_yyyy_mm_dd||'—')}</td><td>${n(r.open_interest_all)}</td><td>${n(g.long)}</td><td>${n(g.short)}</td><td>${n(net)}</td></tr>`}).join('')||'<tr><td colspan="6">No matching contract rows in the latest CFTC snapshot.</td></tr>';document.getElementById('cotCount').textContent=`${list.length} record(s) · ${glabel()}`;}
- function glabel(){return report==='tff'?'TFF Futures Only / Leveraged Money':'Disaggregated Futures Only / Managed Money'}
- async function load(){refresh.disabled=true;refresh.textContent='Loading CFTC…';state.textContent='Requesting public CFTC PRE dataset. No private account information is involved.';try{const api=(window.FINANCE_OS_CONFIG?.apiBase||'').replace(/\/$/,'');if(!api)throw new Error('Cloudflare API endpoint is not configured.');const r=await fetch(`${api}/api/v1/cot?report=${report}`,{headers:{Accept:'application/json'}});const d=await r.json();if(!r.ok)throw new Error(d.error||`CFTC API returned HTTP ${r.status}`);rows=Array.isArray(d.rows)?d.rows:[];render();state.textContent=`${d.provider} · ${d.reportName} · data as of ${d.dataAsOf||'unknown'} · retrieved ${d.retrievedAt?new Date(d.retrievedAt).toLocaleString():'unknown'} · ${d.status||'unknown'}. Weekly positioning is based on Tuesday positions and published on Friday.`;}catch(e){rows=[];render();state.textContent=e.message+' Open the official CFTC PRE report as fallback.';}finally{refresh.disabled=false;refresh.textContent='Load latest CFTC snapshot';}}
- reportButtons.forEach(b=>b.addEventListener('click',()=>{report=b.dataset.cotReport;reportButtons.forEach(x=>x.classList.toggle('active',x===b));load();}));query.addEventListener('input',render);refresh.addEventListener('click',load);await load();
+(() => {
+ const $=id=>document.getElementById(id),table=$("cotRows");
+ if(!table)return;
+ const reportSelect=$("cotReport"),variantSelect=$("cotVariant"),search=$("cotSearch"),refresh=$("cotRefresh"),searchButton=$("cotApplySearch"),marketSelect=$("cotMarket"),categorySelect=$("cotCategory"),exportButton=$("cotExport"),chart=$("cotChart");
+ const state=$("cotState"),meta=$("cotMeta"),count=$("cotCount");
+ let rows=[],payload=null;
+ const esc=v=>String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+ const number=v=>v===null||v===undefined||v===""||!Number.isFinite(Number(v))?"—":Number(v).toLocaleString(undefined,{maximumFractionDigits:0});
+ const percent=v=>v===null||v===undefined||!Number.isFinite(Number(v))?"—":`${Number(v).toFixed(2)}%`;
+ function setState(text,kind="neutral"){state.textContent=text;state.className="muted cot-state "+kind;}
+ function marketKey(row){return row.contractMarketCode||row.marketName||"";}
+ function filteredRows(){
+  const market=marketSelect.value,category=categorySelect.value;
+  return rows.filter(row=>(!market||marketKey(row)===market)&&(!category||row.traderCategory===category));
+ }
+ function refreshOptions(){
+  const currentMarket=marketSelect.value,currentCategory=categorySelect.value;
+  const markets=[...new Map(rows.map(row=>[marketKey(row),row]).filter(([key])=>key)).values()];
+  marketSelect.innerHTML='<option value="">All returned markets</option>'+markets.map(row=>`<option value="${esc(marketKey(row))}">${esc(row.marketName||"Unnamed market")}${row.contractMarketCode?` · CFTC ${esc(row.contractMarketCode)}`:""}</option>`).join("");
+  if(markets.some(row=>marketKey(row)===currentMarket))marketSelect.value=currentMarket;
+  const categories=[...new Set(rows.map(row=>row.traderCategory).filter(Boolean))];
+  categorySelect.innerHTML='<option value="">All categories</option>'+categories.map(value=>`<option value="${esc(value)}">${esc(value)}</option>`).join("");
+  if(categories.includes(currentCategory))categorySelect.value=currentCategory;
+ }
+ function csvCell(value){return '"'+String(value??"").replace(/"/g,'""')+'"';}
+ function exportCsv(){
+  const selected=filteredRows();
+  const fields=["provider","reportFamily","reportVariant","marketName","contractMarketCode","cftcMarketCode","reportDate","publishedAt","publicationTimestampStatus","retrievedAt","traderCategory","openInterest","long","short","spread","net","longChange","shortChange","netChange","netPercentOfOpenInterest","unit","sourceUrl"];
+  const csv=[fields.map(csvCell).join(","),...selected.map(row=>fields.map(field=>csvCell(row[field])).join(","))].join("\r\n");
+  const blob=new Blob(["\ufeff",csv],{type:"text/csv;charset=utf-8"}),url=URL.createObjectURL(blob),link=document.createElement("a");
+  link.href=url;link.download=`cftc-${payload?.report_family||"cot"}-${payload?.report_variant||"futures-only"}-${new Date().toISOString().slice(0,10)}.csv`;link.click();URL.revokeObjectURL(url);
+ }
+ function renderChart(){
+  const market=marketSelect.value,category=categorySelect.value;
+  if(!market||!category){chart.innerHTML='<span class="empty-state">Choose one CFTC market and trader category to display its weekly net-position history.</span>';chart.setAttribute("aria-label","Weekly COT net-position history. Choose a market and category.");return;}
+  const series=rows.filter(row=>marketKey(row)===market&&row.traderCategory===category&&row.net!==null&&row.reportDate).sort((a,b)=>String(a.reportDate).localeCompare(String(b.reportDate))).slice(-52);
+  if(!series.length){chart.innerHTML='<span class="empty-state">No complete long and short observations are available for this selection.</span>';chart.setAttribute("aria-label","No complete net-position observations for this selection.");return;}
+  const values=series.map(row=>Number(row.net)),maxAbs=Math.max(1,...values.map(Math.abs)),w=920,h=220,pad=20,base=h/2,step=(w-pad*2)/series.length,barWidth=Math.max(2,step*.62);
+  const bars=series.map((row,i)=>{const value=Number(row.net),barHeight=Math.max(1,Math.abs(value)/maxAbs*(base-pad));const x=pad+i*step+(step-barWidth)/2,y=value>=0?base-barHeight:base;const color=value>=0?"#23866d":"#b85e53";return `<rect x="${x.toFixed(1)}" y="${y.toFixed(1)}" width="${barWidth.toFixed(1)}" height="${barHeight.toFixed(1)}" rx="2" fill="${color}"><title>${esc(row.reportDate)} · ${esc(row.marketName)} · ${esc(category)} · net ${number(value)} contracts</title></rect>`;}).join("");
+  const first=series[0],last=series.at(-1),marketRow=series.at(-1),marketLabel=`${marketRow.marketName||"CFTC market"}${marketRow.contractMarketCode?` · CFTC ${marketRow.contractMarketCode}`:""}`,reportLabel=payload?.report_name||payload?.report_family||"CFTC COT";
+  const label=`${marketLabel}; ${reportLabel}; ${category}; ${series.length} weekly observations from ${first.reportDate} to ${last.reportDate}; latest net ${number(last.net)} contracts`;
+  chart.innerHTML=`<div class="cot-chart-head"><b>${esc(marketLabel)}</b><span>${esc(reportLabel)} · ${esc(category)} · weekly contracts</span></div><svg viewBox="0 0 ${w} ${h}" role="img" aria-label="${esc(label)}"><line x1="${pad}" y1="${base}" x2="${w-pad}" y2="${base}" stroke="#9aabba" stroke-width="1"/>${bars}</svg><div class="cot-chart-foot"><span>${esc(first.reportDate)} → ${esc(last.reportDate)} · CFTC PRE</span><b>Position date ${esc(last.reportDate)} · Latest net ${number(last.net)} contracts</b><span>Green: positive · Red: negative</span></div>`;
+  chart.setAttribute("aria-label",label);
+ }
+ function render(){
+  const selected=filteredRows();
+  count.textContent=`${selected.length.toLocaleString()} of ${rows.length.toLocaleString()} normalized category rows`;
+  table.innerHTML=selected.slice(0,500).map(row=>`<tr><td>${esc(row.marketName||"—")}${row.contractMarketCode?`<small class="cot-code">CFTC ${esc(row.contractMarketCode)}</small>`:""}</td><td>${esc(row.positionDate||"—")}</td><td>${esc(row.traderCategory||"—")}</td><td>${number(row.openInterest)}</td><td>${number(row.long)}</td><td>${number(row.short)}</td><td>${number(row.spread)}</td><td>${number(row.net)}</td><td>${number(row.netChange)}</td><td>${percent(row.netPercentOfOpenInterest)}</td></tr>`).join("")||'<tr><td colspan="10">No matching CFTC category rows. Missing positions are not substituted with zero.</td></tr>';
+  if(selected.length>500)table.insertAdjacentHTML("beforeend",`<tr><td colspan="10">Showing 500 rows. Export includes all ${selected.length.toLocaleString()} filtered rows.</td></tr>`);
+  exportButton.disabled=!selected.length;
+  renderChart();
+ }
+ async function load(){
+  refresh.disabled=true;searchButton.disabled=true;refresh.textContent="Loading CFTC…";setState("Requesting the selected official CFTC dataset. No private account information is involved.");
+  try{
+   const api=(window.FINANCE_OS_CONFIG?.apiBase||"").replace(/\/$/,"");if(!api)throw new Error("Cloudflare API endpoint is not configured.");
+   const params=new URLSearchParams({report:reportSelect.value,variant:variantSelect.value});
+   const term=search.value.trim();if(term){if(/^[A-Za-z0-9]{3,12}$/.test(term))params.set("contract_market_code",term);else params.set("q",term);}
+   const response=await fetch(`${api}/api/v1/cot?${params}`,{headers:{Accept:"application/json"},cache:"no-store",signal:AbortSignal.timeout(20000)});
+   const data=await response.json();if(!response.ok)throw new Error(data.error?.message||data.error||`CFTC API returned HTTP ${response.status}`);
+   payload=data;rows=Array.isArray(data.normalizedRows)?data.normalizedRows:[];refreshOptions();render();
+   const publication=data.published_at?new Date(data.published_at).toLocaleString():"not supplied by the CFTC dataset";
+   meta.textContent=`Report: ${data.report_name||data.report_family} · Variant: ${data.report_variant||variantSelect.value} · Position date: ${data.position_date||"unknown"} · Published: ${publication} · Retrieved: ${data.retrieved_at?new Date(data.retrieved_at).toLocaleString():"unknown"} · Provider: ${data.status||"unknown"} · Database persistence: ${data.persistence?.status||"not reported"}`;
+   $("cotSchedule").href=data.schedule_url||"https://www.cftc.gov/MarketReports/CommitmentsofTraders/ReleaseSchedule/index.htm";
+   $("cotDataset").href=data.source_url||"https://publicreporting.cftc.gov/stories/s/r4w3-av2u";
+   setState(`${data.provider||"CFTC"} · ${data.report_name||data.report_family} · ${rows.length.toLocaleString()} normalized category rows. Position date and retrieval time are separate; per-row publication timestamp is not supplied.`,data.status==="fresh"?"good":data.status==="stale"?"warn":"bad");
+  }catch(error){rows=[];payload=null;refreshOptions();render();meta.textContent="CFTC data is unavailable. No values have been substituted.";setState(`${error.message} Use the official CFTC dataset link as fallback.`,"bad");}
+  finally{refresh.disabled=false;searchButton.disabled=false;refresh.textContent="Load latest CFTC snapshot";}
+ }
+ [reportSelect,variantSelect].forEach(element=>element.addEventListener("change",load));
+ searchButton.addEventListener("click",load);search.addEventListener("keydown",event=>{if(event.key==="Enter"){event.preventDefault();load();}});
+ refresh.addEventListener("click",load);marketSelect.addEventListener("change",render);categorySelect.addEventListener("change",render);exportButton.addEventListener("click",exportCsv);
+ load();
 })();

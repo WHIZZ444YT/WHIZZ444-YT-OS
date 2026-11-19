@@ -65,6 +65,8 @@
 .academy-catalog-card[hidden]{display:none}
 .academy-card-top{display:flex;align-items:flex-start;justify-content:space-between;gap:6px;flex-wrap:wrap}
 .academy-evidence-label{font-size:8px;color:#5e7c8d;line-height:1.4;text-align:right}
+.academy-video-status{align-self:flex-start;padding:3px 7px;border:1px solid #8da6b4;border-radius:999px;color:#536a78;background:#f3f7f8;font-size:8px;font-weight:900;letter-spacing:.04em}
+.academy-video-status[data-video-status="VERIFIED"]{border-color:#4b8f7d;color:#23664f;background:#e7f5ee}
 .academy-card-tags{font-size:9px;color:#398a88;line-height:1.5}
 .academy-catalog-card p{line-height:1.6}
 .academy-catalog-card>p:last-child{margin-top:auto}

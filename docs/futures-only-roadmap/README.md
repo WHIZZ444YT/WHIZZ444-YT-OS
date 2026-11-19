@@ -2,18 +2,25 @@
 
 **Repository:** [WHIZZ444YT/WHIZZ444-YT-OS](https://github.com/WHIZZ444YT/WHIZZ444-YT-OS)  
 **Review date:** 19 November 2026  
-**Scope:** This folder contains the implementation contract for a futures-only market-intelligence and ICT education product. It changes documentation only; it does not configure a provider, grant a license, change application code, or prove a production deployment.
+**Scope:** This folder contains the implementation contract and dated execution reports for the futures-only market-intelligence and ICT education product. A roadmap document alone does not configure a provider, grant a license or prove a production deployment.
 
 ## Read this first
 
 1. [Project charter and global execution rules](00-PROJECT-CHARTER-AND-EXECUTION-RULES.md)
 2. [Part 0 — Baseline audit and scope cleanup](01-PART-0-BASELINE-AUDIT-AND-SCOPE-CLEANUP.md)
+   - [Part 0 execution report — 19 November 2026](15-PART-0-EXECUTION-REPORT-2026-11-19.md)
 3. [Part 1 — Premium UI and information architecture](02-PART-1-PREMIUM-UI-AND-INFORMATION-ARCHITECTURE.md)
+   - [Part 1 execution report — 19 November 2026](16-PART-1-EXECUTION-REPORT-2026-11-19.md)
 4. [Part 2 — Complete ICT Academy](03-PART-2-COMPLETE-ICT-ACADEMY.md)
+   - [Part 2 execution report — 19 November 2026](17-PART-2-EXECUTION-REPORT-2026-11-19.md)
 5. [Part 3 — Futures contract intelligence](04-PART-3-FUTURES-CONTRACT-INTELLIGENCE.md)
+   - [Part 3 execution report — 19 November 2026](18-PART-3-EXECUTION-REPORT-2026-11-19.md)
 6. [Part 4 — Session engine and economic calendar](05-PART-4-SESSION-ENGINE-AND-ECONOMIC-CALENDAR.md)
+   - [Part 4 execution report — 19 November 2026](19-PART-4-EXECUTION-REPORT-2026-11-19.md)
 7. [Part 5 — Futures news and data gateway](06-PART-5-FUTURES-NEWS-AND-DATA-GATEWAY.md)
+   - [Part 5 execution report — 19 November 2026](20-PART-5-EXECUTION-REPORT-2026-11-19.md)
 8. [Part 6 — Volume, open interest and COT](07-PART-6-VOLUME-OPEN-INTEREST-AND-COT.md)
+   - [Part 6 execution report — 19 November 2026](21-PART-6-EXECUTION-REPORT-2026-11-19.md)
 9. [Part 7 — Strategy Lab and ICT backtesting](08-PART-7-STRATEGY-LAB-AND-ICT-BACKTESTING.md)
 10. [Part 8 — Risk and prop-firm intelligence](09-PART-8-RISK-AND-PROP-FIRM-INTELLIGENCE.md)
 11. [Part 9 — Journal and private workspace](10-PART-9-JOURNAL-AND-PRIVATE-WORKSPACE.md)
@@ -39,6 +46,20 @@ The main branch source reviewed on 19 November 2026 describes:
 - A deterministic OHLC signal backtester and private-workspace foundations.
 
 These are README/builder/validator observations, not proof that CI passed, each route works in a browser, content is complete, Supabase RLS is correct, the deployed site matches main, or any provider is configured/licensed. Inspect the exact branch and run the relevant checks before implementation. The historical route map records an earlier audit and must not be used as a current status report.
+
+## Current local execution status — 19 November 2026
+
+- Part 0 regression audit is recorded in [its execution report](15-PART-0-EXECUTION-REPORT-2026-11-19.md).
+- Part 1 source and build fixes are recorded, but a post-change browser screenshot is still pending because the generated local preview could not be reached.
+- Part 2 is **partial**: strict one-to-one verified video coverage is 0/82 Academy lessons and 0/8 Entry Models. The generated register and per-lesson `VIDEO NEEDED` state make the gap explicit.
+- Part 3 is **partial**: all 15 contract rows now have an explicit unverified source-set version and consumers share the canonical JSON; no current exchange specifications, expiry/first-notice schedule or roll records have been verified.
+- Part 4 is **partial**: ICT windows now use IANA timezone conversion with explicit DST gap/fold handling, and the stale imported calendar is excluded from scheduling/countdown/export. Publisher retrieval, revision history, event actuals and verified CME/ICE product hours remain unavailable.
+- Part 5 is **partial**: news API filters/source metadata, provider retry/circuit handling, and a disabled-until-licensed futures-market-data route are built locally. Production Worker/provider verification, real Supabase ingestion evidence, publisher-specific rights review and broader provider coverage remain outstanding.
+- Part 6 is **partial**: the local Worker and UI now distinguish official CFTC Legacy/TFF/Disaggregated and futures-only/combined reports, preserve source-native market codes, separate position/retrieval/publication times, and export normalized history. The COT upsert schema and Worker path are local only; live API, production Supabase migration, exact root-symbol crosswalk, COT percentile, daily exchange volume/OI provider and post-change browser screenshot still need evidence.
+- Part 7 is **partial**: the backtester now requires exact contract/expiry and dataset/cost provenance, refuses tick-misaligned OHLC and unreviewed input columns, records timestamp gaps and provides additional sample-aware metrics. Ten ICT model rule cards explicitly state that there are no executable detectors. Live data/calendar/cost verification, session/news filtering, spread and roll modeling, additional metrics/baselines, genuinely sealed OOS, RLS runtime verification and browser screenshot remain outstanding. See the [Part 7 execution report](23-PART-7-EXECUTION-REPORT-2026-11-19.md).
+- Part 8 is **partial**: a fixed-point, all-in futures sizing calculator now includes fees, spread/slippage and optional daily/max-loss caps. Imported contract specs remain unverified and all results are conditional. A typed prop-firm registry has zero verified program records; Blue Shift 25K remains explicitly unverified. Official contract-source reconciliation, exact account rule simulation, firm terms, RLS verification and browser screenshot remain outstanding. See the [Part 8 execution report](24-PART-8-EXECUTION-REPORT-2026-11-19.md).
+- Part 9 is **partial**: private-data export pagination, attachment transfer, richer journal fields, offline lesson-progress retry, manual-alert idempotency and an account-deletion workflow are implemented locally. Live RLS policies were inspected and Supabase security advisors returned no lints, but no two-user runtime test, real auth browser flow or attachment upload/download test was run. The additive schema migration and deletion function are not deployed. See the [Part 9 execution report](25-PART-9-EXECUTION-REPORT-2026-11-19.md).
+- Production QA is **not complete**: local build and structural checks are recorded in the Part 9 report, while production migration/function deployment, user-account smoke tests, two-user isolation, final browser/accessibility review and release sign-off remain open. Keep the current preview un-deployed until the migration is applied and deletion endpoint is configured or the account-deletion control is disabled.
 
 ### Verified gaps and release dependencies to close
 

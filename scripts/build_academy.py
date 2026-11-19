@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import json
 import re
+from datetime import date
 from html import escape
 from pathlib import Path
 from urllib.parse import urlparse
@@ -77,6 +78,109 @@ def _resource_cards(resources, label):
             + _link(label, url) + '</article>'
         )
     return "".join(cards) or '<p class="small-note">No mapped resource. Use the source portal as topic discovery only.</p>'
+
+
+def _lesson_video_records(concept):
+    curriculum = concept.get("curriculum") or {}
+    references = (concept.get("learning") or {}).get("references") or {}
+    records = []
+    for record in (curriculum.get("videoResources") or []) + (references.get("officialVideos") or []) + (curriculum.get("supplementalResources") or []):
+        if not isinstance(record, dict):
+            continue
+        host = urlparse(str(record.get("url") or "")).netloc.lower()
+        if host not in ("youtube.com", "www.youtube.com", "m.youtube.com", "youtu.be", "www.youtu.be"):
+            continue
+        key = (record.get("videoId"), record.get("url"), record.get("title"))
+        if not any((x.get("videoId"), x.get("url"), x.get("title")) == key for x in records):
+            records.append(record)
+    return records
+
+
+def _is_verified_lesson_video(record, lesson_id):
+    url = str(record.get("url") or "")
+    host = urlparse(url).netloc.lower()
+    if host not in ("youtube.com", "www.youtube.com", "m.youtube.com", "youtu.be", "www.youtu.be"):
+        return False
+    match = re.search(r"(?:youtube\.com/watch\?v=|youtu\.be/)([A-Za-z0-9_-]{11})(?:[^A-Za-z0-9_-]|$)", url)
+    verified_at = str(record.get("verifiedAt") or "")
+    link_checked_at = str(record.get("lastLinkCheck") or "")
+    try:
+        date.fromisoformat(verified_at)
+        date.fromisoformat(link_checked_at)
+        dates_valid = bool(re.fullmatch(r"\d{4}-\d{2}-\d{2}", verified_at) and re.fullmatch(r"\d{4}-\d{2}-\d{2}", link_checked_at))
+    except ValueError:
+        dates_valid = False
+    concept_ids = record.get("conceptIds") or []
+    segment = (record.get("segments") or {}).get(lesson_id) or {}
+    shared_video_segment_ok = len(concept_ids) <= 1 or (
+        isinstance(segment.get("startSeconds"), int)
+        and isinstance(segment.get("endSeconds"), int)
+        and segment.get("startSeconds", -1) >= 0
+        and segment.get("endSeconds", 0) > segment.get("startSeconds", 0)
+    )
+    return bool(
+        match
+        and record.get("resourceId")
+        and record.get("videoId") == match.group(1)
+        and record.get("title")
+        and record.get("channelId")
+        and record.get("channelName")
+        and record.get("sourceClass") in ("official_ict", "independent_supplement")
+        and lesson_id in concept_ids
+        and shared_video_segment_ok
+        and record.get("language")
+        and record.get("verificationStatus") == "verified"
+        and dates_valid
+        and record.get("verifiedBy")
+        and record.get("linkStatus") in ("verified", "embed_disabled")
+        and record.get("embedStatus") in ("enabled", "disabled")
+        and record.get("embedPermission") in ("allowed", "not_allowed")
+        and record.get("fallbackLinkStatus") == "available"
+    )
+
+
+def verified_lesson_videos(concept):
+    lesson_id = str(concept.get("id") or "")
+    return [r for r in _lesson_video_records(concept) if _is_verified_lesson_video(r, lesson_id)]
+
+
+def academy_video_coverage(academy):
+    concepts = academy.get("concepts") or []
+    lesson_records = []
+    for concept in concepts:
+        lesson_id = str(concept.get("id") or "")
+        records = _lesson_video_records(concept)
+        verified = [r for r in records if _is_verified_lesson_video(r, lesson_id)]
+        lesson_records.append({
+            "id": lesson_id,
+            "title": concept.get("name", ""),
+            "isEntryModel": concept.get("category") == "Entry Models",
+            "status": "VERIFIED" if verified else "VIDEO NEEDED",
+            "verifiedVideoCount": len(verified),
+            "unverifiedCandidateCount": len(records) - len(verified),
+        })
+    covered = [x["id"] for x in lesson_records if x["status"] == "VERIFIED"]
+    missing = [x["id"] for x in lesson_records if x["status"] != "VERIFIED"]
+    entry_models = [x for x in lesson_records if x["isEntryModel"]]
+    entry_covered = [x["id"] for x in entry_models if x["status"] == "VERIFIED"]
+    count = len(lesson_records)
+    return {
+        "schemaVersion": 1,
+        "status": "COMPLETE" if not missing else "PARTIAL",
+        "eligibleCount": count,
+        "coveredCount": len(covered),
+        "coveragePercent": round(len(covered) * 100 / count, 2) if count else 100,
+        "coveredIds": covered,
+        "missingCount": len(missing),
+        "missingIds": missing,
+        "entryModelCoverage": {
+            "eligibleCount": len(entry_models),
+            "coveredCount": len(entry_covered),
+            "coveredIds": entry_covered,
+            "missingIds": [x["id"] for x in entry_models if x["status"] != "VERIFIED"],
+        },
+        "lessons": lesson_records,
+    }
 
 
 def render_lesson(concept, all_concepts, site_url="", academy=None):
@@ -173,8 +277,11 @@ def render_lesson(concept, all_concepts, site_url="", academy=None):
     )
     source_refs = {x.get("id"): x for x in academy.get("curriculum", {}).get("resourceRegistry", [])}
     mapped_refs = [source_refs[x] for x in curriculum.get("sourceRefs", []) if x in source_refs]
-    official_videos = curriculum.get("videoResources") or refs.get("officialVideos") or []
-    official_html = _resource_cards(official_videos, "Open original ICT upload")
+    video_records = _lesson_video_records(concept)
+    verified_videos = [r for r in video_records if _is_verified_lesson_video(r, str(concept.get("id") or ""))]
+    candidate_videos = [r for r in video_records if r not in verified_videos]
+    verified_video_html = _resource_cards(verified_videos, "Watch this lesson on YouTube") if verified_videos else '<p class="small-note">No exact verified video mapping is currently recorded.</p>'
+    candidate_video_html = _resource_cards(candidate_videos, "Open unverified candidate") if candidate_videos else '<p class="small-note">No individual YouTube candidate has been recorded. The channel/playlist and topic-search links below are discovery only.</p>'
     supplemental = curriculum.get("supplementalResources") or refs.get("secondary") or []
     supplemental_html = _resource_cards(supplemental, "Open supplemental reference")
     general_refs = refs.get("generalMarketEducation") or []
@@ -184,10 +291,10 @@ def render_lesson(concept, all_concepts, site_url="", academy=None):
     official_portal = _link("Official ICT channel portal", refs.get("officialChannel"))
     playlist_portal = _link("Official ICT playlists portal", refs.get("officialPlaylists"))
     topic_link = _link("Topic discovery only — not a verified video", topic_url)
-    video_note = (
-        "An existing curated source mapping is present. The exact upload/uploader and current link status "
-        "must be checked before treating it as a verified one-to-one lesson reference."
-    )
+    if verified_videos:
+        video_note = '<p class="video-coverage-status" role="status"><strong>VERIFIED LESSON VIDEO</strong> · Exact video, uploader, lesson mapping and direct-link fallback meet the registry checks.</p>'
+    else:
+        video_note = '<p class="video-coverage-status video-needed" role="status"><strong>VIDEO NEEDED</strong> · No exact video currently meets the one-to-one verification checks for this lesson. Candidate links below are unverified and do not count toward Academy coverage.</p>'
     quiz = curriculum.get("knowledgeChecks") or learning.get("knowledgeChecks") or []
     quiz_payload = []
     quiz_sections = []
@@ -257,7 +364,7 @@ def render_lesson(concept, all_concepts, site_url="", academy=None):
 {_section(13,'NO-TRADE CONDITIONS','Common failures and no-trade rules',no_trade_html)}
 {_section(14,'DEFINITION VARIANTS','Conflicting sources and terminology',variants_html)}
 {_section(15,'RELATED CONCEPTS','Continue the learning chain','<div class="related-lessons">'+related_html+'</div>'+next_link)}
-{_section(16,'SOURCES AND VIDEO CLASSIFICATION','Original creator, supplemental and primary references','<h3>Existing curated original ICT upload records</h3>'+official_html+'<p class="small-note">'+escape(video_note)+'</p><h3>Original ICT portals</h3><div class="reference-actions">'+official_portal+playlist_portal+topic_link+'</div><h3>Supplemental sources</h3>'+supplemental_html+'<h3>Exchange, regulator and data references</h3>'+mapped_html+'<h3>General market education</h3>'+general_html)}
+{_section(16,'SOURCES AND VIDEO CLASSIFICATION','Original creator, supplemental and primary references',video_note+'<h3>Verified lesson video</h3>'+verified_video_html+'<h3>Unverified candidate videos</h3>'+candidate_video_html+'<h3>Original ICT portals</h3><div class="reference-actions">'+official_portal+playlist_portal+topic_link+'</div><h3>Supplemental sources</h3>'+supplemental_html+'<h3>Exchange, regulator and data references</h3>'+mapped_html+'<h3>General market education</h3>'+general_html)}
 {_section(17,'PRACTICE TASK','Chart replay and written deliverable','<h3>'+escape(str(practice.get("title") or "Chart-replay assignment"))+'</h3><p class="exercise-task">'+escape(str(practice.get("task") or "Create a dated chart study using a predeclared rule."))+'</p><div class="exercise-checks">'+checks_html+'</div><div class="deliverable"><b>Save / submit</b><p>'+escape(str(practice.get("deliverable") or "Save annotated screenshots and a written rule sheet."))+'</p></div><h3>Review criteria</h3>'+review_html)}
 {_section(18,'SELF-REVIEW AND KNOWLEDGE CHECK','Check understanding and rule discipline','<div class="self-review">'+_items(practice.get("reviewCriteria"))+'</div><div class="quiz-stack">'+("".join(quiz_sections) or '<p class="small-note">No quiz questions supplied.</p>')+'</div><button class="complete-lesson" type="button" data-mark-complete disabled>Complete lesson after exercise + all correct answers</button><p class="small-note" data-progress-message>Complete the practice checklist and answer all questions correctly to complete this current content version. Earlier progress is retained as history.</p>')}
 {_section(19,'SOURCE NOTES AND EDITORIAL REVIEW','Provenance, version and maintenance','<p><b>Source note:</b> '+escape(str(concept.get("sourceNote") or source_caution))+'</p><p><b>Editor:</b> Curriculum editorial synthesis · <b>Content version:</b> '+escape(str(content_version))+' · <b>Last reviewed:</b> '+escape(str(source_date))+'</p><p><b>Editorial status:</b> '+escape(str(curriculum.get("editorialStatus") or "Needs review"))+'</p><p class="small-note">The PDF is a secondary synthesis and its own research notes disclose limits in source review. Do not treat its historical session, tick-value, expiry or event-calendar snapshots as current without checking primary exchange/regulator sources.</p>')}
@@ -426,6 +533,8 @@ def build_academy(dist: Path, academy: dict, site_url=""):
     root = dist / "ict-futures" / "academy"
     tutorials_root = root / "tutorials"
     tutorials_root.mkdir(parents=True, exist_ok=True)
+    coverage = academy_video_coverage(academy)
+    (root / "video-coverage.json").write_text(json.dumps(coverage, ensure_ascii=False, indent=2), encoding="utf-8")
     for concept in concepts:
         slug = re.sub(r"[^a-z0-9-]", "", str(concept.get("id") or "").lower())
         if not slug:

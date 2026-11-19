@@ -43,8 +43,13 @@ import {
       marketSymbol:$("marketSymbol").value.trim(),
       timeframe:$("timeframe").value.trim(),
       timezone:$("timezone").value.trim(),
-      seriesType:$("seriesType").value,
-      rollNote:$("rollNote").value.trim(),
+      seriesType:"single-expiry",
+      dataSource:$("dataSource").value.trim(),
+      datasetId:$("datasetId").value.trim(),
+      downloadDate:$("downloadDate").value,
+      volumeUnits:$("volumeUnits").value.trim(),
+      costSource:$("costSource").value.trim(),
+      costAsOf:$("costAsOf").value,
       startingCapital:$("startingCapital").value,
       riskPercent:$("riskPercent").value,
       maxContracts:$("maxContracts").value,
@@ -59,16 +64,11 @@ import {
       validationPercent:$("validationPercent").value
     };
   }
-  function updateRollNote(){
-    const isContinuous=$("seriesType").value==="back-adjusted-continuous";
-    $("rollNoteWrap").classList.toggle("strategy-hidden",!isContinuous);
-    $("rollNote").required=isContinuous;
-  }
   function previewFile(file){
     csvFile=file; csvText="";
     $("strategyFileMeta").textContent=file ? file.name+" · "+file.size.toLocaleString()+" bytes · reading…" : "No file selected.";
     $("strategyDataQuality").className="strategy-quality";
-    $("strategyDataQuality").textContent="Select a CSV with timestamp, open, high, low, close and signal columns.";
+    $("strategyDataQuality").textContent="Select a CSV with timestamp, open, high, low, close, signal, contract and expiry columns.";
     $("runStrategy").disabled=true;
     if(!file)return;
     if(file.size>50*1024*1024){
@@ -85,7 +85,7 @@ import {
       $("strategyDataQuality").textContent=
         q.rows.toLocaleString()+" bars · "+q.firstTimestamp+" → "+q.lastTimestamp+
         " · "+q.signalCount.toLocaleString()+" signals ("+q.longSignals+" long / "+q.shortSignals+" short)"+
-        (q.contract?" · contract "+q.contract:"")+
+        (q.contract?" · contract "+q.contract+" · expiry "+q.expiry:"")+
         (q.stopOverrideCount?" · "+q.stopOverrideCount+" row-level stop overrides":"");
       $("runStrategy").disabled=false;
     }).catch(error=>{
@@ -109,6 +109,9 @@ import {
       '<div class="split-stats">'+
       '<div><span>Closed trades</span><b>'+m.trades+'</b></div>'+
       '<div><span>Win rate</span><b>'+formatPct(m.winRatePct)+'</b></div>'+
+      '<div><span>95% win-rate interval</span><b>'+(m.winRate95PctInterval?formatPct(m.winRate95PctInterval[0])+'–'+formatPct(m.winRate95PctInterval[1]):'—')+'</b></div>'+
+      '<div><span>Average win / loss</span><b>'+(m.averageWinLossRatio===null?'—':Number(m.averageWinLossRatio).toFixed(2)+'×')+'</b></div>'+
+      '<div><span>Longest win / loss streak</span><b>'+m.maxConsecutiveWins+' / '+m.maxConsecutiveLosses+'</b></div>'+
       '<div><span>Net P&L</span><b>'+formatMoney(m.netPnlUsd)+'</b></div>'+
       '<div><span>Expectancy</span><b>'+formatMoney(m.expectancyUsdPerTrade)+'</b></div>'+
       '<div><span>Average R</span><b>'+formatR(m.averageR)+'</b></div>'+
@@ -118,10 +121,10 @@ import {
       '</div></article>';
   }
   function renderSplitTable(splits){
-    return '<div class="strategy-table-wrap"><table class="strategy-table"><thead><tr><th>Period</th><th>Bars</th><th>Trades</th><th>Win rate</th><th>Net P&amp;L</th><th>Expectancy / trade</th><th>Avg R</th><th>Net PF</th><th>Max DD</th></tr></thead><tbody>'+
+    return '<div class="strategy-table-wrap"><table class="strategy-table"><thead><tr><th>Period</th><th>Bars</th><th>Trades / 1,000 bars</th><th>Win rate · 95% interval</th><th>Avg win / loss</th><th>Max win / loss streak</th><th>Net P&amp;L</th><th>Expectancy / trade</th><th>Avg R</th><th>Net PF</th><th>Max DD</th></tr></thead><tbody>'+
       splits.map(s=>{
         const m=s.metrics;
-        return '<tr><td>'+escapeHtml(s.key)+'</td><td>'+s.bars+'</td><td>'+m.trades+'</td><td>'+formatPct(m.winRatePct)+'</td><td>'+formatMoney(m.netPnlUsd)+'</td><td>'+formatMoney(m.expectancyUsdPerTrade)+'</td><td>'+formatR(m.averageR)+'</td><td>'+escapeHtml(profitFactor(m))+'</td><td>'+formatMoney(m.maxDrawdownUsd)+' ('+formatPct(m.maxDrawdownPct)+')</td></tr>';
+        return '<tr><td>'+escapeHtml(s.key)+'</td><td>'+s.bars+'</td><td>'+m.trades+' · '+m.tradesPer1000Bars+'</td><td>'+formatPct(m.winRatePct)+' · '+(m.winRate95PctInterval?formatPct(m.winRate95PctInterval[0])+'–'+formatPct(m.winRate95PctInterval[1]):'—')+'</td><td>'+(m.averageWinLossRatio===null?'—':Number(m.averageWinLossRatio).toFixed(2)+'×')+'</td><td>'+m.maxConsecutiveWins+' / '+m.maxConsecutiveLosses+'</td><td>'+formatMoney(m.netPnlUsd)+'</td><td>'+formatMoney(m.expectancyUsdPerTrade)+'</td><td>'+formatR(m.averageR)+'</td><td>'+escapeHtml(profitFactor(m))+'</td><td>'+formatMoney(m.maxDrawdownUsd)+' ('+formatPct(m.maxDrawdownPct)+')</td></tr>';
       }).join("")+'</tbody></table></div>';
   }
   function renderWarnings(warnings){
@@ -331,7 +334,6 @@ import {
     }
   }
   $("strategyCsv")?.addEventListener("change",e=>previewFile(e.target.files?.[0]||null));
-  $("seriesType")?.addEventListener("change",updateRollNote);
   $("runStrategy")?.addEventListener("click",()=>{
     run().catch(error=>{
       $("strategyDataQuality").className="strategy-quality bad";
@@ -341,7 +343,6 @@ import {
   });
   $("downloadManifest")?.addEventListener("click",downloadManifest);
   $("downloadTrades")?.addEventListener("click",downloadTrades);
-  updateRollNote();
   renderHistory();
   loadCloudHistory().catch(error=>setStatus("Cloud history unavailable; local runs remain available: "+error.message,true));
   window.addEventListener("resize",()=>{if(lastResult){drawLine($("strategyEquityChart"),decimateEquity(lastResult.fullSample.equityCurve,500),"equity",true);drawLine($("strategyDrawdownChart"),decimateEquity(lastResult.fullSample.equityCurve,500),"drawdownUsd",true);}});
