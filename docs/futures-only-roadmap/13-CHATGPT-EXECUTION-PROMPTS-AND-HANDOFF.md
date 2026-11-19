@@ -1,5 +1,7 @@
 # ChatGPT / Claude / GitHub Execution Prompts and Handoff Protocol
 
+**Review date:** 19 November 2026. **Repository:** https://github.com/WHIZZ444YT/WHIZZ444-YT-OS. Recheck live source and official references before implementation; this document is not runtime or deployment evidence.
+
 **Purpose:** Make every Part executable in isolation while preserving the global Futures-Only product contract.
 
 ## 1. How to use this folder
@@ -19,7 +21,7 @@ The roadmap folder is the implementation specification; source code and live pla
 ```text
 You are the lead engineer/research engineer for Futures Intelligence OS.
 
-Repository: https://github.com/whizz444yt-ux/Finance-Intelligence-OS
+Repository: https://github.com/WHIZZ444YT/WHIZZ444-YT-OS
 Target branch: inspect current main and create/use a focused feature branch.
 Product: Futures-only market intelligence and ICT Futures education.
 
@@ -41,7 +43,7 @@ IMPLEMENT:
 - Use additive migrations; preserve all Supabase user data.
 - Do not remove useful futures features or legacy backups.
 - Keep secrets out of Git/browser and use official secret stores.
-- Do not invent provider data, current contract values, prop-firm rules, schedules, API limits, licence permission or model performance.
+- Do not invent provider data, current contract values, prop-firm rules, schedules, API limits, licence permission or model performance. Distinguish public API access from redistribution and distinguish installed Codex plugins from deployed website services. Never send licensed CME data to an LLM/plugin unless the applicable license explicitly allows it.
 - Attach sources and retrieval/effective dates.
 - Make loading/error/stale/unavailable states explicit.
 
@@ -148,5 +150,5 @@ If user asks "do Part 5 news only", treat it as a narrowed Part 5 scope and stil
 ## 8. Prompt for documentation maintenance
 
 ```text
-Review this futures-only roadmap against the current default branch and the latest official provider/exchange documentation. Update only the affected roadmap file(s). Preserve history and mark changed assumptions with a last-reviewed date. Do not modify application source code. Verify internal links and folder index after editing.
+Review all requested files in docs/futures-only-roadmap against the current default branch and current official primary sources. Verify the application baseline directly; distinguish source evidence from successful CI, browser behavior, deployment, configured providers and live entitlements. Update only the requested roadmap documents, preserve historical snapshots with prominent dates, and add a last-reviewed date. Recheck dynamic API limits, pricing and exchange licensing rather than carrying stale figures forward. Verify internal links and folder index. For ICT Academy documentation, require a direct exact YouTube tutorial for every active concept and Entry Model ID, with verified uploader, source class and link status; report missing mappings rather than inventing links. Do not modify application source code unless separately requested.
 ```
