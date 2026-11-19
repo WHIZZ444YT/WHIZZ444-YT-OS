@@ -31,6 +31,8 @@ A weekly CFTC open-interest total is not intraday exchange OI and never a substi
 
 Use CFTC Public Reporting Environment / official COT downloadable data. Confirm each dataset's current API resource ID, field names, release schedule, schema and Futures Only selector before use.
 
+**Cadence watch (19 November 2026):** the current official release schedule still describes the usual Friday 3:30 p.m. Eastern publication, but CFTC announced a plan to move to semiweekly releases by the end of 2026. Recheck the operational date and current dataset cadence before labeling later observations weekly; do not assume the announced transition is already active. See the [CFTC announcement](https://www.cftc.gov/PressRoom/PressReleases/9316-26) and [current release schedule](https://www.cftc.gov/MarketReports/CommitmentsofTraders/ReleaseSchedule/index.htm).
+
 Store source-native fields unchanged in raw archive. Normalized view contains:
 - provider/report family (Legacy, TFF, Disaggregated).
 - futures-only vs futures-and-options combined.

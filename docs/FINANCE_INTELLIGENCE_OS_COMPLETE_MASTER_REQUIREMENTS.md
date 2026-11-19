@@ -5,6 +5,8 @@
 **Status:** Approved design brief / implementation baseline; not a claim that production infrastructure is already deployed  
 **Primary goal:** Build one source-traceable, research-first financial intelligence platform using GitHub, Vercel, Supabase, Builder.io and Cloudflare, prioritising free tiers without misrepresenting free, delayed, licensed or restricted data.
 
+> **Scope/status addendum — 19 November 2026:** This 8 November master brief is retained as historical product context. The active product scope is now the futures-only charter in [`docs/futures-only-roadmap/00-PROJECT-CHARTER-AND-EXECUTION-RULES.md`](futures-only-roadmap/00-PROJECT-CHARTER-AND-EXECUTION-RULES.md). For current implementation, deployment evidence and remaining acceptance gaps, use [`docs/futures-only-roadmap/26-PRODUCTION-IMPLEMENTATION-AND-SITE-AUDIT-2026-11-19.md`](futures-only-roadmap/26-PRODUCTION-IMPLEMENTATION-AND-SITE-AUDIT-2026-11-19.md). The original broad requirements and unchecked backlog below are not proof that those items remain in the active product scope or that the latest branch has completed them.
+
 ---
 
 ## 0. How this document is organised

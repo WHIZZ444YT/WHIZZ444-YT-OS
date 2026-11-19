@@ -21,14 +21,14 @@ try:
     academy=readj(Path('ict-futures/data/ict-academy.json')); ok('Part 2 ICT Academy preserves 76 IDs, expands to 82 lessons and 10 tracks, and keeps nine tutorials',len(academy.get('concepts',[]))==82 and len(academy.get('tracks',[]))==10 and len(academy.get('learningProgram',{}).get('tutorials',[]))==9 and len(academy.get('curriculum',{}).get('preservedConceptIds',[]))==76 and set(academy.get('curriculum',{}).get('preservedConceptIds',[])).issubset({c.get('id') for c in academy.get('concepts',[])}),f"lessons={len(academy.get('concepts',[]))}, tracks={len(academy.get('tracks',[]))}, tutorials={len(academy.get('learningProgram',{}).get('tutorials',[]))}")
 except Exception as e: errors.append(f'dataset parsing: {e}')
 
-for p in ['cloudflare/src/index.js','cloudflare/src/economic-providers.js','cloudflare/src/cot-contracts.mjs','assets/academy-learning.js','assets/academy-catalog.js','assets/site-shell.js','assets/overview-dashboard.js','assets/runtime-config.js','assets/research-directory.js','assets/academy-search.js','assets/academy-learning.js','assets/academy-catalog.js','assets/news-page.js','assets/risk-calculator.js','assets/futures-risk-engine.mjs','assets/account.js','assets/macro-page.js','assets/economic-data.js','assets/cot-page.js','assets/futures-intelligence.js','assets/volume-open-interest.js','assets/data-health.js','assets/strategy-lab.js','assets/strategy-backtest-engine.mjs']:
+for p in ['cloudflare/src/index.js','cloudflare/src/economic-calendar.mjs','cloudflare/src/economic-calendar-extended.mjs','cloudflare/src/economic-providers.js','cloudflare/src/cot-contracts.mjs','assets/academy-learning.js','assets/academy-catalog.js','assets/site-shell.js','assets/overview-dashboard.js','assets/runtime-config.js','assets/research-directory.js','assets/academy-search.js','assets/academy-learning.js','assets/academy-catalog.js','assets/news-page.js','assets/risk-calculator.js','assets/futures-risk-engine.mjs','assets/account.js','assets/macro-page.js','assets/economic-data.js','assets/cot-page.js','assets/futures-intelligence.js','assets/volume-open-interest.js','assets/data-health.js','assets/sessions-page.js','assets/strategy-lab.js','assets/strategy-backtest-engine.mjs']:
     r=subprocess.run(['node','--check',str(ROOT/p)],capture_output=True,text=True)
     ok(f'JavaScript syntax: {p}',r.returncode==0,(r.stderr or r.stdout).strip()[:300])
 
 worker=(ROOT/'cloudflare/src/index.js').read_text(encoding="utf-8")
 ok('Worker limits Builder models to allow-list','ALLOWED_BUILDER_MODELS' in worker and 'Model is not allow-listed' in worker)
 ok('Worker has GDELT scheduled collection','async scheduled' in worker and 'refreshNews(env)' in worker)
-ok('Worker contains health/news/provider endpoints','/api/v1/health' in worker and '/api/v1/news' in worker and '/api/v1/providers' in worker)
+ok('Worker contains health/news/provider/calendar endpoints','/api/v1/health' in worker and '/api/v1/news' in worker and '/api/v1/providers' in worker and all(x in worker for x in ['/api/v1/events','/api/v1/events/eia','/api/v1/events/cftc','/api/v1/events/fomc']))
 ok('Worker contains BLS and CFTC endpoints','/api/v1/macro' in worker and '/api/v1/cot' in worker and 'api.bls.gov/publicAPI/v1' in worker and 'publicreporting.cftc.gov/resource/' in worker)
 ok('Worker contains NY Fed public reference rates','/api/v1/macro/funding' in worker and 'markets.newyorkfed.org/api/rates/all/latest.json' in worker)
 ok('Worker prediction endpoints are retained as dormant compatibility code','/api/v1/prediction/polymarket' in worker and '/api/v1/prediction/kalshi' in worker and 'gamma-api.polymarket.com/events' in worker and 'external-api.kalshi.com/trade-api/v2/markets' in worker)
@@ -63,7 +63,7 @@ nav_source=(ROOT/'scripts/build_site.py').read_text(encoding="utf-8")
 p1_labels=['Overview','Futures Markets','ICT Academy','Entry Models','Sessions & Calendar','Futures News','Volume & Open Interest','COT & Positioning','Contract Specs & Expiry','Strategy Lab','Risk & Prop Firms','Journal & Watchlists','Data Health & Sources']
 ok('Part 1 has exactly 13 futures-only areas',all("('"+label+"'," in nav_source for label in p1_labels) and "('Prediction Markets'," not in nav_source)
 ok('Part 1 groups navigation in a shared accessible app shell','NAV_GROUPS' in nav_source and 'aria-label="13 futures product areas"' in nav_source and 'class="os-sidebar"' in nav_source)
-ok('Part 1 has compatibility redirects for sessions, risk and old tools',all(x in nav_source for x in ["DIST/'sessions/index.html'","DIST/'risk/index.html'","DIST/'tools/index.html',redirect_page"]))
+ok('Part 1 sessions route is a first-class calendar page while risk/tools keep compatibility redirects',all(x in nav_source for x in ["DIST/'sessions/index.html'","DIST/'risk/index.html'","DIST/'tools/index.html',redirect_page","sessions-page.css","sessions-page.js"]) and "redirect_page('Sessions & Calendar" not in nav_source)
 ok('Part 1 clearly marks imported contract references and missing expiry data','UNVERIFIED IMPORTED REFERENCE' in nav_source and 'NOT SUPPLIED IN REGISTRY' in nav_source and 'NOT CONFIGURED' in nav_source)
 ok('Weekly open-interest endpoint is distinct from exchange volume','/api/v1/volume-open-interest' in worker and 'cadence:"weekly"' in worker and 'metric:"open_interest"' in worker and 'status:"not-connected"' in worker)
 ok('P1 health checker tests provider endpoints independently','Promise.allSettled' in (ROOT/'assets/data-health.js').read_text(encoding="utf-8") and '/api/v1/providers' in (ROOT/'assets/data-health.js').read_text(encoding="utf-8"))
@@ -100,6 +100,12 @@ ok('Part 4 imported publisher events carry explicit stale/unverified provenance'
 time_engine=(ROOT/'assets/session-time.js').read_text(encoding='utf-8')
 ok('Part 4 terminal ships the tested DST-aware conversion engine',"<script src=\"/assets/session-time.js\"></script>" in terminal_template and (ROOT/'dist/assets/session-time.js').exists() and all(x in time_engine for x in ['resolveWallTime','nonexistent','ambiguous']))
 ok('Part 4 unverified references are excluded from calendar/countdown/export',all(x in terminal_built for x in ['calendarScheduleEvents()','Imported publisher references · not a schedule','No verified publisher schedule']) and 'rows=calendarScheduleEvents()' in terminal_built)
+calendar_api=(ROOT/'cloudflare/src/economic-calendar.mjs').read_text(encoding='utf-8')
+extended_calendar_api=(ROOT/'cloudflare/src/economic-calendar-extended.mjs').read_text(encoding='utf-8')
+session_page=(ROOT/'dist/sessions/index.html').read_text(encoding='utf-8')
+session_ui=(ROOT/'assets/sessions-page.js').read_text(encoding='utf-8')
+ok('Part 4 official BLS, EIA, CFTC and FOMC schedule adapters are source-attributed and bounded',all(x in calendar_api for x in ['BLS_CALENDAR_URL','EIA_WPSR_SCHEDULE_URL','BLS_CALENDAR_MAX_BYTES','America/New_York','parseBlsIcs','parseEiaWpsrSchedule','resolveCalendarWallTime','actual_release_at_utc: null']) and all(x in extended_calendar_api for x in ['CFTC_COT_SCHEDULE_URL','FOMC_CALENDAR_URL','parseCftcCotSchedule','parseFomcCalendar','MAX_SCHEDULE_BYTES']))
+ok('Part 4 dedicated sessions page separates publisher schedules, ICT conventions and unverified exchange hours',all(x in session_ui for x in ['/api/v1/events','/api/v1/events/eia','/api/v1/events/cftc','/api/v1/events/fomc']) and all(x in session_page for x in ['sessionsWindowDate','PRACTITIONER CONVENTION','Official product hours are not configured','CME holiday calendar','BLS · EIA · CFTC · FOMC','Verify CFTC COT schedule','Verify FOMC meeting dates']) and 'http-equiv="refresh"' not in session_page)
 
 economic=(ROOT/'cloudflare/src/economic-providers.js').read_text(encoding="utf-8")
 ok('P2 supports BEA, EIA, FRED, Treasury and ECB adapters',all(x in economic for x in ['case "bea"','case "eia"','case "fred"','case "us_treasury"','case "ecb"']))
@@ -233,7 +239,7 @@ if dist.exists():
     ok('Part 1 overview avoids fabricated quotes and economic release events','QUOTE NOT CONNECTED' in overview and 'NOT CONNECTED' in overview and 'calendar is not available' in overview.lower())
     contract_page=(dist/'contract-specs/index.html').read_text(errors='ignore')
     ok('Part 1 contract specs preserve all 15 families with unverified values',contract_page.count('class="os-contract-spec-card"')==15 and 'UNVERIFIED IMPORTED REFERENCE' in contract_page and 'NOT SUPPLIED IN REGISTRY' in contract_page)
-    ok('Part 1 sessions route preserves the existing timezone-aware ICT tools','#sessions' in (dist/'sessions/index.html').read_text(errors='ignore') and 'renderSessions' in ict_page)
+    ok('Part 1 first-class calendar route preserves the timezone-aware ICT tools','id="sessionsEventList"' in (dist/'sessions/index.html').read_text(errors='ignore') and 'renderSessions' in ict_page)
     risk_page=(dist/'risk/index.html').read_text(errors='ignore')
     ok('P8 risk route labels conditional sizing and no verified firm programs','CONDITIONAL ESTIMATE' in risk_page and 'NO VERIFIED PROGRAMS' in risk_page and 'Blue Shift 25K' in risk_page and 'type="module"' in risk_page)
     dist_prop_rules=readj(Path('dist/data/prop-firm-programs.json'))

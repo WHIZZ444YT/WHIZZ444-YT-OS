@@ -4,6 +4,8 @@
 **Branch:** `codex/charter-alignment-2026-11-19`
 **Status:** Partial. The timezone engine and clear reference labels are implemented; no current publisher schedule feed or verified product-level exchange-hours registry is connected.
 
+**Historical checkpoint:** This report records the initial Part 4 implementation before official publisher adapters were added. Use the current [production implementation and site audit](26-PRODUCTION-IMPLEMENTATION-AND-SITE-AUDIT-2026-11-19.md) for the latest branch and deployment state.
+
 ## Implemented
 
 - Added a shared IANA timezone engine in `assets/session-time.js`. It resolves wall-clock values against timezone rules, converts New York reference times to India time, rolls dates across month/year boundaries, and reports DST gaps and repeated times instead of silently selecting an offset.

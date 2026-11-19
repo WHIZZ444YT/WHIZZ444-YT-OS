@@ -80,6 +80,161 @@ test('provider registry reads the current bounded COT cache namespace', async ()
   assert.equal(cftc.state.retrievedAt, retrievedAt);
 });
 
+test('official BLS events route attributes a cached publisher snapshot and avoids repeat upstream requests', async () => {
+  const originalFetch = globalThis.fetch;
+  let calls = 0;
+  globalThis.fetch = async input => {
+    calls++;
+    assert.equal(String(input), 'https://www.bls.gov/schedule/news_release/bls.ics');
+    return new Response('BEGIN:VCALENDAR\r\nBEGIN:VEVENT\r\nUID:test\r\nDTSTART;TZID=America/New_York:20261204T083000\r\nSUMMARY:Employment Situation\r\nEND:VEVENT\r\nEND:VCALENDAR', { headers: { 'content-type': 'text/calendar' } });
+  };
+  try {
+    const env = makeEnv();
+    const response = await worker.fetch(new Request('https://edge.example/api/v1/events', { headers: { Origin: 'https://app.example' } }), env, context());
+    assert.equal(response.status, 200);
+    assert.equal(response.headers.get('Access-Control-Allow-Origin'), 'https://app.example');
+    const payload = await response.json();
+    assert.equal(payload.data_type, 'official_economic_release_schedule');
+    assert.equal(payload.status, 'fresh');
+    assert.equal(payload.event_count, 1);
+    assert.equal(payload.events[0].scheduled_at_utc, '2026-12-04T13:30:00.000Z');
+    assert.equal(payload.events[0].actual_release_at_utc, null);
+    assert.equal(payload.source_url, 'https://www.bls.gov/schedule/news_release/bls.ics');
+    await worker.fetch(new Request('https://edge.example/api/v1/events'), env, context());
+    assert.equal(calls, 1);
+  } finally { globalThis.fetch = originalFetch; }
+});
+
+test('official BLS events route serves a clearly stale snapshot when refresh fails', async () => {
+  const originalFetch = globalThis.fetch;
+  let calls = 0;
+  globalThis.fetch = async () => { calls++; throw new Error('upstream unavailable'); };
+  try {
+    const cached = { schema_version: 1, data_type: 'official_economic_release_schedule', status: 'fresh', retrieved_at: new Date(Date.now() - 3600000).toISOString(), event_count: 1, events: [{ event_id: 'bls:cached', title: 'Cached BLS item' }] };
+    const env = makeEnv({ 'schedule:bls:ics:v1': JSON.stringify(cached) });
+    const response = await worker.fetch(new Request('https://edge.example/api/v1/events'), env, context());
+    assert.equal(response.status, 200);
+    const payload = await response.json();
+    assert.equal(payload.status, 'stale');
+    assert.match(payload.last_error, /last successful/);
+    assert.equal(payload.events[0].event_id, 'bls:cached');
+    assert.ok(payload.retry_at);
+    const backedOff = await worker.fetch(new Request('https://edge.example/api/v1/events'), env, context());
+    assert.equal((await backedOff.json()).status, 'stale');
+    assert.equal(calls, 1);
+  } finally { globalThis.fetch = originalFetch; }
+});
+
+test('calendar upstream failures without a cached snapshot are reported unavailable and rate-limited by KV backoff', async () => {
+  const originalFetch = globalThis.fetch;
+  let calls = 0;
+  globalThis.fetch = async () => { calls++; throw new Error('provider unavailable'); };
+  try {
+    const env = makeEnv();
+    const first = await worker.fetch(new Request('https://edge.example/api/v1/events'), env, context());
+    assert.equal(first.status, 502);
+    const failure = await first.json();
+    assert.equal(failure.status, 'unavailable');
+    assert.ok(failure.retry_at);
+    const second = await worker.fetch(new Request('https://edge.example/api/v1/events'), env, context());
+    assert.equal(second.status, 502);
+    assert.equal(calls, 1);
+    assert.ok(Number(second.headers.get('Retry-After')) > 0);
+  } finally { globalThis.fetch = originalFetch; }
+});
+
+test('official EIA events route serves source-labelled petroleum release times and caches the page parse', async () => {
+  const originalFetch = globalThis.fetch;
+  let calls = 0;
+  globalThis.fetch = async input => {
+    calls++;
+    assert.equal(String(input), 'https://www.eia.gov/petroleum/supply/weekly/schedule.php');
+    return new Response('<html><h1>Weekly Petroleum Status Report Schedule</h1><p>The standard release time and day of the week will be at 10:30 a.m. eastern time on Wednesday with the following exceptions. All times are eastern.</p><table><tr><th>Data week ending</th><th>Alternate date</th><th>Release day</th><th>Release time</th><th>Holiday</th></tr><tr><td>January 16, 2026</td><td>January 22, 2026</td><td>Thursday</td><td>12:00 p.m.</td><td>Martin Luther King Jr. Day</td></tr></table></html>', { headers: { 'content-type': 'text/html', 'last-modified': 'Wed, 18 Nov 2026 12:00:00 GMT' } });
+  };
+  try {
+    const env = makeEnv();
+    const response = await worker.fetch(new Request('https://edge.example/api/v1/events/eia', { headers: { Origin: 'https://app.example' } }), env, context());
+    assert.equal(response.status, 200);
+    assert.equal(response.headers.get('Access-Control-Allow-Origin'), 'https://app.example');
+    const payload = await response.json();
+    assert.equal(payload.data_type, 'official_economic_release_schedule');
+    assert.equal(payload.status, 'fresh');
+    assert.equal(payload.publisher, 'U.S. Energy Information Administration');
+    assert.equal(payload.source_url, 'https://www.eia.gov/petroleum/supply/weekly/schedule.php');
+    assert.ok(payload.events.length > 0);
+    assert.ok(payload.events.every(event => event.affected_instruments.includes('CL') && event.forecast_value === null));
+    await worker.fetch(new Request('https://edge.example/api/v1/events/eia'), env, context());
+    assert.equal(calls, 1);
+  } finally { globalThis.fetch = originalFetch; }
+});
+
+test('provider registry exposes publisher calendar freshness separately from data providers', async () => {
+  const retrievedAt = new Date().toISOString();
+  const env = makeEnv({
+    'schedule:bls:ics:v1': JSON.stringify({ status: 'fresh', event_count: 12, retrieved_at: retrievedAt }),
+    'schedule:eia:wpsr:v1': JSON.stringify({ status: 'fresh', event_count: 8, retrieved_at: retrievedAt }),
+    'schedule:cftc:cot:v1': JSON.stringify({ status: 'fresh', event_count: 4, retrieved_at: retrievedAt }),
+    'schedule:fed:fomc:v1': JSON.stringify({ status: 'fresh', event_count: 2, retrieved_at: retrievedAt })
+  });
+  const response = await worker.fetch(new Request('https://edge.example/api/v1/providers'), env, context());
+  const providers = (await response.json()).providers;
+  const calendar = providers.find(provider => provider.id === 'bls-calendar');
+  const eiaSchedule = providers.find(provider => provider.id === 'eia-wpsr-schedule');
+  const cftcSchedule = providers.find(provider => provider.id === 'cftc-cot-schedule');
+  const fomcCalendar = providers.find(provider => provider.id === 'fomc-calendar');
+  assert.equal(calendar.state.status, 'fresh');
+  assert.equal(calendar.state.eventCount, 12);
+  assert.equal(calendar.state.retrievedAt, retrievedAt);
+  assert.match(calendar.notes, /not a complete macro calendar/);
+  assert.equal(eiaSchedule.state.eventCount, 8);
+  assert.match(eiaSchedule.notes, /holiday exceptions/);
+  assert.equal(cftcSchedule.state.eventCount, 4);
+  assert.match(cftcSchedule.notes, /semiweekly cadence change/);
+  assert.equal(fomcCalendar.state.eventCount, 2);
+  assert.match(fomcCalendar.notes, /no release time/);
+
+  const unconfigured = makeEnv({ __env: { SNAPSHOTS: null } });
+  const unavailableResponse = await worker.fetch(new Request('https://edge.example/api/v1/providers'), unconfigured, context());
+  const unavailableProviders = (await unavailableResponse.json()).providers;
+  for (const id of ['bls-calendar', 'eia-wpsr-schedule', 'cftc-cot-schedule', 'fomc-calendar']) {
+    assert.equal(unavailableProviders.find(provider => provider.id === id).state.status, 'not-configured');
+  }
+});
+
+test('official CFTC and Federal Reserve schedule routes fetch and cache separate publisher snapshots', async () => {
+  const originalFetch = globalThis.fetch;
+  const urls = [];
+  const cftc = '<html><h1>Release Schedule</h1><p>The Commitments of Traders reports are released at 3:30 p.m. Eastern time. The following is a tentative schedule of releases through 2026.</p><h2>2026 Release Schedule</h2><table><tr><th>Month</th><th>Dates</th></tr><tr><td>November</td><td>20</td><td>30*</td></tr><tr><td>December</td><td>04</td><td>11</td></tr></table><p>*Delayed release date due to a federal holiday.</p></html>';
+  const fomc = '<html><h1>Federal Open Market Committee</h1><p>Meeting calendars, statements, and minutes.</p><h3>2026 FOMC Meetings</h3><h4>December</h4><p>8-9*</p><h3>2027 FOMC Meetings</h3><h4>January</h4><p>26-27</p><p>Last Update: November 18, 2026</p></html>';
+  globalThis.fetch = async input => {
+    const url = String(input); urls.push(url);
+    if (url === 'https://www.cftc.gov/MarketReports/CommitmentsofTraders/ReleaseSchedule/index.htm') return new Response(cftc, { headers: { 'content-type': 'text/html' } });
+    if (url === 'https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm') return new Response(fomc, { headers: { 'content-type': 'text/html' } });
+    throw new Error('unexpected publisher endpoint');
+  };
+  try {
+    const env = makeEnv();
+    const cftcResponse = await worker.fetch(new Request('https://edge.example/api/v1/events/cftc', { headers: { Origin: 'https://app.example' } }), env, context());
+    assert.equal(cftcResponse.status, 200);
+    assert.equal(cftcResponse.headers.get('Access-Control-Allow-Origin'), 'https://app.example');
+    const cftcPayload = await cftcResponse.json();
+    assert.equal(cftcPayload.publisher_id, 'CFTC');
+    assert.equal(cftcPayload.event_count, 4);
+    assert.equal(cftcPayload.events[0].event_type, 'CFTC_COT_PUBLICATION');
+    await worker.fetch(new Request('https://edge.example/api/v1/events/cftc'), env, context());
+    assert.equal(urls.filter(url => url.includes('cftc.gov')).length, 1);
+
+    const fomcResponse = await worker.fetch(new Request('https://edge.example/api/v1/events/fomc'), env, context());
+    assert.equal(fomcResponse.status, 200);
+    const fomcPayload = await fomcResponse.json();
+    assert.equal(fomcPayload.publisher_id, 'FED');
+    assert.equal(fomcPayload.events[0].date_only, true);
+    assert.equal(fomcPayload.events[0].scheduled_at_utc, null);
+    await worker.fetch(new Request('https://edge.example/api/v1/events/fomc'), env, context());
+    assert.equal(urls.filter(url => url.includes('federalreserve.gov')).length, 1);
+  } finally { globalThis.fetch = originalFetch; }
+});
+
 test('COT route selects the exact combined dataset and separates report, position and retrieval dates', async () => {
   const originalFetch = globalThis.fetch;
   let requestedUrl = '';

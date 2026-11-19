@@ -21,3 +21,5 @@
 Never commit real values to `.env`, JSON, static HTML, Builder content or Git. `.env.example` contains placeholders only.
 
 Set Worker secrets through Cloudflare Workers & Pages → finance-intelligence-os-edge → Settings → Variables and Secrets, or with `wrangler secret put SECRET_NAME`. Configure `SUPABASE_URL`, preferably `SUPABASE_SECRET_KEY` (or the legacy `SUPABASE_SERVICE_ROLE_KEY`), `INGEST_TOKEN`, and the optional registered BLS key plus BEA/EIA/FRED provider keys. Treasury Fiscal Data and ECB public SDMX do not require API keys. Do not put any provider or Supabase secret key in `[vars]`, the browser runtime, a URL query string that is logged, or Git. The Worker removes BEA/EIA/FRED keys from stored `source_url` values.
+
+The current branch's publisher schedule snapshots for BLS ICS, EIA WPSR, CFTC COT release dates and Federal Reserve FOMC meeting dates do not require provider API keys. These public schedules do not provide licensed futures quotes, consensus forecasts or a complete global event calendar. Their Worker routes are not production-live until the reviewed Worker branch is deployed.

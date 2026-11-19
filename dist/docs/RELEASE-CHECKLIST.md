@@ -12,14 +12,15 @@
 - [ ] Confirm canonical SITE_URL matches the public production alias.
 - [ ] Confirm Production is publicly accessible and Preview remains protected.
 - [ ] Open every primary route and check for missing assets, 404s and client-side errors.
+- [ ] After frontend deployment, verify Sessions & Calendar shows per-source freshness, partial/unavailable states, timezone conversion, date-only FOMC entries and official source links; confirm the route does not claim complete global coverage.
 - [ ] Verify Speed Insights after real visitor traffic is collected.
 
 ## Cloudflare
 - [x] Confirm Worker 2.0.0, KV namespace and 30-minute Cron are deployed; query-string redaction is enabled (19 November 2026).
-- [ ] After validation, deploy Worker 2.0.1 and confirm both Legacy variants omit the unsupported commercial-spread field, the bounded `rows` source-native response still serves the deployed frontend, `normalizedRows` remains normalized, and provider status reads the v6 COT cache.
+- [ ] Review and validate the current Worker branch before deployment. It reports version 2.1.0 and includes the COT compatibility fixes plus separate BLS, EIA, CFTC-schedule and FOMC-date routes; these are not in production Worker 2.0.0 yet.
 - [ ] Configure server-side secrets in Cloudflare only; never commit them.
 - [x] Smoke-test the existing production site's no-search COT snapshot after the bounded Worker update; the TFF futures-only UI showed a fresh response with position date 10 November 2026 (19 November 2026).
-- [ ] Test /health, /api/v1/providers, news, macro and filtered COT variants individually; verify ingestion logs, provider freshness and Supabase upserts after a real configured run.
+- [ ] After approved deployment, test `/health`, `/api/v1/providers`, news, macro, filtered and unfiltered COT variants, both Legacy schemas, and `/api/v1/events`, `/api/v1/events/eia`, `/api/v1/events/cftc`, `/api/v1/events/fomc` individually; verify ingestion logs, cache/stale behavior and Supabase upserts after a real configured run.
 
 ## Supabase
 - [x] Confirm all repository migrations are applied to the active project; local migration filenames match remote history.

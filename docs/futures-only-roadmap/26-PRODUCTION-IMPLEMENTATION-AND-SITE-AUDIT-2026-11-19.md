@@ -1,78 +1,69 @@
 # Production Implementation and Site Audit — 19 November 2026
 
-**Status:** implementation branch; roadmap remains partial. **Repository:** [WHIZZ444YT/WHIZZ444-YT-OS](https://github.com/WHIZZ444YT/WHIZZ444-YT-OS). This report supersedes earlier same-day Part reports wherever current production evidence differs. It does not claim that the full roadmap is complete.
+**Status:** Partial implementation on a review branch; the full Futures Only roadmap is not complete. **Repository:** [WHIZZ444YT/WHIZZ444-YT-OS](https://github.com/WHIZZ444YT/WHIZZ444-YT-OS). This report is the current status source for this date. It does not treat a roadmap document, local build, or production deployment as proof that every requirement is accepted.
 
-## What was changed
+## Production and branch state
 
-- Bounded the Cloudflare CFTC request by selecting mapped report columns and limiting upstream rows to 156. Filtered searches remain available; an empty search returns a bounded latest-provider snapshot. After the follow-up compatibility fix below, source-native rows are retained under `rows` for the separately deployed frontend while normalized categories remain under `normalizedRows`.
-- Reduced COT response/cache size and versioned the cache key. The browser search now requires a three-character market term before making a filtered request, disables search/refresh until the term is valid, and labels both actions accurately. The page shows the returned category-row count and source limit.
-- Updated COT route tests, build assertions, status copy, architecture/runbook references and this current audit. Rebuilt the tracked `dist/` output from the canonical source.
-- Corrected the local migration filenames to match production history. The remote-applied versions are `20261119125044_add_cot_report_observations.sql` and `20261119125110_complete_private_workspace_records.sql`; the existing import migration is named `20261108162550_add_idempotent_legacy_trade_import.sql` in both local and remote history. This was a filename/history alignment, not a new schema change.
+- GitHub PR [#19](https://github.com/WHIZZ444YT/WHIZZ444-YT-OS/pull/19) is merged at `641347bccf534e169d5956e1cec299d0835ffa91`; Vercel reported the production deployment for that commit as `READY`.
+- The deployed Cloudflare Worker was last observed as version `2.0.0`. It retains the existing KV binding and 30-minute Cron. The bounded COT snapshot route is live, but other routes and database persistence still need their own verification.
+- This implementation follows commit `10be01c` on `codex/futures-calendar-free-provider-and-roadmap-2026-11-19`. The Worker source reports `2.1.0`; the new Sessions & Calendar frontend and four schedule routes are **not production-live** until reviewed and separately deployed. A branch build or Vercel preview is not a production release.
+- The active Supabase project is `xlhfxjseukjsifpwblrk`. The two additive migrations `20261119125044` and `20261119125110` are already applied and were reconciled to remote history. Production Auth/RLS/attachment workflows have not passed disposable-user runtime tests. Account deletion remains disabled.
 
-## Follow-up review fixes in the current branch
+## Work added on this branch
 
-- The CFTC Legacy mapping no longer projects `comm_positions_spread_all`: it is absent from the [official Legacy Combined field schema](https://publicreporting.cftc.gov/api/views/jun7-fc8e), and the shared Legacy mapping excludes it for both variants. Commercial spreading is explicitly `null` with a schema-specific missing reason; this prevents Socrata from rejecting the whole Legacy request.
-- The COT response keeps at most 156 source-native provider rows in `rows` for the independently deployed frontend and exposes normalized category rows separately in `normalizedRows`. Normalization can expand each source row into multiple category rows; nested raw fields remain removed from normalized rows. Cache key v6 invalidates v5 entries that may lack the raw-row compatibility contract.
-- The live provider registry now looks for the current TFF futures-only v6 cache namespace; its prior prefix no longer matched the route's actual cache keys and could misreport the CFTC snapshot as not yet fetched.
-- These are source changes on the PR branch, not yet validated, pushed, deployed or visible in production. The current production Worker must not be described as fixed until a post-change validation and Worker deployment are observed. The frontend remains independently deployed and still reads its source-native row contract.
-- The no-key/free baseline already has CFTC Public Reporting, unregistered BLS v1 (daily quota limited), New York Fed Markets API, Treasury Fiscal Data and ECB SDMX routes. BEA, EIA and FRED remain disabled until their free registration keys are configured. None of these public routes constitutes licensed real-time CME/ICE exchange data.
+- Built a first-class `/sessions/` page with timezone selection, date range and instrument filters, separate ICT reference windows, publisher schedule events, source attribution, retrieval/source status, partial/unavailable states and iCalendar export. Timed releases remain timed and FOMC meeting dates export as date-only multi-day events. The layout includes narrow-screen styling; browser preview access timed out, so visual, keyboard and accessibility acceptance remains open.
+- Added bounded, separate Worker schedule routes for the official BLS calendar, EIA WPSR schedule, CFTC COT release schedule and Federal Reserve FOMC meeting calendar. These use public publisher sources without API keys; they are calendar feeds, not market-price APIs. The EIA recurring time/day are read from its current schedule page, CFTC holiday markers are retained, and FOMC events stay date-only because the calendar gives meeting dates rather than a publication time.
+- Added per-source KV snapshots and provider-health reporting. Upstream requests have time limits and body-size bounds; successful snapshots can be served as explicitly stale when refresh fails. No expected/actual values or release times are manufactured.
+- Updated the macro and data-health pages, provider/licensing records, release checklist, architecture and Part 4 documentation. Generated `dist/` output is rebuilt from source.
 
-## Production actions and observed evidence
+### What this does and does not show as live
 
-- Applied and verified the two additive Supabase migrations in the active project `xlhfxjseukjsifpwblrk`, including remote history, expected columns, RLS and security/health advisor output. Existing rows were preserved. All local migration versions and names were reconciled against the remote history.
-- Deployed Cloudflare Worker `2.0.0` at `2026-11-19 13:26:40 UTC` after the first COT probe exceeded the CPU limit. Existing KV, allowed-origin binding and 30-minute Cron were retained. Current Worker settings show query-string redaction enabled. No secrets were added.
-- Visually opened the production COT page at `https://finance-intelligence-os-alpha.vercel.app/research/positioning/`. The current main-branch frontend requested its no-search snapshot successfully. The page displayed a fresh CFTC TFF futures-only response, position date `2026-11-10`, retrieval time `2026-11-19 18:57 IST`, and 780 normalized category rows. The source query was capped at 156 records; 780 is the category-normalized count, not 780 raw observations.
-- The production static site still runs the previously merged `main` source. The code and generated frontend changes in this branch require review, merge and a successful Vercel deployment before they become the site's new frontend. The Worker and database changes were deployed separately and are already live.
-- The feature-branch Vercel Preview for commit `41cbeb8` reached `READY`; the COT route returned HTTP 200. Its generated UI contains the three-character search guidance and initially disabled search/refresh buttons. The Preview requires Vercel SSO, so an interactive browser screenshot of that branch was unavailable; the production `main` page was visually inspected, and mobile/keyboard/error-state review remains open.
-- GitHub PR [#19](https://github.com/WHIZZ444YT/WHIZZ444-YT-OS/pull/19) is open against `main`. The initial commit's GitHub Actions quality workflow and Vercel Preview both succeeded; the PR is not merged. Check the live PR for any later rerun triggered by follow-up documentation changes.
-- Runtime configuration still reports Supabase database writes, Builder CMS and the Worker ingestion token as not configured. No `delete-account` Edge Function is deployed. `accountDeletionEnabled` remains `false`.
+The current branch can display live publisher schedule snapshots **after its Worker code is deployed with KV configured**, and the reviewed frontend is present after its Vercel deployment. It is not live in production now. The current production Worker remains `2.0.0`; branch version `2.1.0` and its four schedule endpoints must not be represented as deployed. Even after deployment, these four sources are only partial U.S. event coverage, not a complete macro calendar or futures market-data feed.
 
 ## Roadmap acceptance status
 
-| Part | Current status | Remaining acceptance evidence |
+| Part | Status | Still required for acceptance |
 |---|---|---|
-| 0 — Scope cleanup | Implemented in source; release review pending | Review the complete PR and generated route inventory on the target commit. |
-| 1 — UI and information architecture | Implemented in source; manual QA partial | Tablet/mobile, keyboard/focus, screen-reader, failure-state and production post-merge route checks. |
-| 2 — ICT Academy | Partial | Exact independently verified videos for 82 lesson IDs and 8 Entry Model IDs remain 0/82 and 0/8; generic channel/search links do not count. |
-| 3 — Contract intelligence | Partial | Verify all 15 families' current official tick/specification, expiry, first-notice and roll data with dated primary sources. |
-| 4 — Sessions and calendar | Partial | IANA/DST conversion exists; official product hours/holidays and sourced release/revision calendar feeds remain outstanding. |
-| 5 — News and data gateway | Partial | Provider credentials/entitlements, configured persistence, source freshness coverage and licensed futures market data are not complete. |
-| 6 — Volume, OI and COT | Partial | Weekly COT path is live; exchange daily/intraday volume/OI, reviewed crosswalk/percentile history and Supabase persistence remain unavailable. |
-| 7 — Strategy Lab | Partial | Deterministic OHLC signal engine exists; it does not detect the ten ICT candidates. Sealed OOS, licensed history, roll-aware execution and fill realism are unproven. |
-| 8 — Risk and prop firms | Partial | Zero verified prop-firm programs and no verified current contract tick values; calculations remain conditional on user inputs. |
-| 9 — Private workspace | Partial | Schema is applied, but signup/session, two-user RLS, upload/download/export and deletion tests with disposable users remain open. Deletion stays disabled. |
-| Production QA/release | Partial | API/provider matrix, mobile/accessibility, test-user, license, deployment/CI, review and version/tag checks are not all complete. No release tag is authorized by this report. |
+| 0 — Scope cleanup | Source changes exist; review/release verification remains | Review the final route inventory, generated output and legacy-link behavior on the merged target commit. |
+| 1 — UI and information architecture | Built in source; manual QA partial | Complete route-by-route desktop/mobile, keyboard/focus, screen-reader, loading/error, and post-deployment browser review. The local preview was unreachable in Chrome during this task. |
+| 2 — ICT Academy | Partial | Exact verified videos remain **0/82 lessons and 0/8 Entry Models**. Channel/search links do not meet the per-item requirement. |
+| 3 — Futures contract intelligence | Partial | Verify all **15 contract families** against current official CME/ICE contract, tick-value, expiry, first-notice, last-trade and roll sources; add dates and source evidence. Current imported rows are explicitly unverified. |
+| 4 — Sessions and economic calendar | Partial | Four branch adapters exist. Still verify official product hours, breaks, holidays and early closes; add missing official/major releases and global sources; track source revisions; deploy and smoke-test Worker and frontend. FOMC is date-only. |
+| 5 — News and data gateway | Partial | Configure and verify provider credentials/entitlements, server-side ingestion and persistence; review data-display rights. Licensed CME/ICE realtime quotes, bars, depth and redistribution remain unavailable. |
+| 6 — Volume, open interest and COT | Partial | The weekly COT snapshot route is deployed, but daily/intraday exchange volume/OI, reviewed contract-code crosswalks, percentile history and production persistence evidence remain. The CFTC schedule currently lists weekly releases; its announced semiweekly plan must not be treated as active until the live publisher schedule confirms it. |
+| 7 — Strategy Lab and ICT backtesting | Partial | Ten named ICT model candidates are not automatic detectors. Obtain permitted historical data, define reproducible rules and execution assumptions, and produce sealed out-of-sample evidence with roll/fill/cost realism. No strategy edge is established. |
+| 8 — Risk and prop firms | Partial | Zero prop-firm program rows are verified and contract tick values remain unverified. Sizing outputs are conditional on user inputs until official specifications and current rulebooks are sourced. |
+| 9 — Journal and private workspace | Partial | Migrations are applied and schema/RLS metadata was inspected. Still run real signup/session, two-user isolation, attachment upload/download, export/restore and deletion-cleanup checks with disposable accounts. **Account deletion stays disabled** until all deletion checks pass. |
+| Production QA/release | Partial | Finish automated checks, deployment route/provider smoke tests, responsive/accessibility/manual QA, licensing review, disposable-user tests, merge/deploy verification, rollback readiness and version/tag sign-off. Do not create a release tag before the checklist passes. |
 
-## Run and release order
+## Free/public-source boundary
 
-1. Review the feature branch diff and merge only after repository checks and required human review pass.
-2. Confirm the production Supabase project ref before any CLI operation. The two additive migrations above are already applied; inspect `supabase migration list --remote` first and do not reapply or manually run their SQL when history shows them applied. Keep a current backup/restore point for any future schema change.
-3. Confirm Cloudflare Worker version, KV, 30-minute schedule, exact allowed origins, secret-presence flags and log redaction. Test health, provider registry, news, macro, filtered COT and no-filter COT separately. Keep provider/API tokens server-side.
-4. Merge the reviewed frontend branch and wait for Vercel Production to report Ready on the expected main commit. Smoke-test affected routes and the deployed Data Health/COT states.
-5. Before enabling account deletion or public provider writes, create dedicated disposable test users, configure only the required server-side secrets, and verify Auth, two-user isolation, attachments, export/deletion cleanup and database upserts. Leave deletion disabled until those tests pass.
-6. Create a release tag only after the full release checklist, version consistency and CI are green. This branch does not create or imply a release tag.
+- The BLS ICS calendar, EIA WPSR schedule, CFTC release schedule and Federal Reserve FOMC calendar are public publisher sources with no key required for these schedule reads. Publisher schedules do not supply consensus/actual values or prove a market-data license.
+- Other public APIs in the existing Worker have separate rate, attribution and use conditions. A no-key endpoint is not automatically unrestricted for commercial display, bulk reuse or AI/ML use.
+- No exchange-site scraping, invented credentials, fabricated video matches, assumed contract specifications or unverified strategy results are acceptable substitutes for missing evidence.
+- Realtime/intraday exchange prices, order-book depth and public redistribution need an approved licensed provider/exchange entitlement. Keep those routes disabled until the exact product, rights, audience and data-delivery terms are configured and checked.
 
-## Follow-up verification on this branch
+## Release sequence
 
-- `python scripts/build_site.py` — passed; 50 resources, 15 futures families and 82 Academy pages generated.
-- `python -m unittest discover -s tests -v` — passed, 53 tests.
-- `python scripts/validate.py` — passed, 162/162 checks.
-- `python scripts/audit_internal_links.py` — passed; 130 HTML pages and 1,362 internal links checked, 0 issues.
-- `node --test tests/test_worker_news_routes.mjs` — passed, 9/9 cases, including both Legacy projections, bounded source-native `rows`, v5 cache invalidation and the v6 provider-status lookup. Node emitted its existing non-failing module-type advisory.
-- `git diff --check` — passed; Git reported only the existing LF-to-CRLF normalization notice for the dated audit report.
-- The local site could not be opened in the integrated browser because its `localhost` preview connection timed out. Responsive and keyboard review remains open. These results are local branch evidence only; production Worker deployment and the independently deployed frontend smoke test are still pending.
+1. Finish this branch's checks and review its complete source/generated diff. Submit it through the normal PR workflow; do not bypass repository protections.
+2. After review approval, merge through the repository's normal protections. Wait until Vercel Production is `READY` for the expected merge commit, then smoke-test `/sessions/`, Data Health and all affected static routes.
+3. Separately review and deploy Worker `2.1.0` only after validating its KV binding, exact allowed origins, secret-presence flags, request logs and Cron. Verify `/health`, `/api/v1/providers`, `/api/v1/events`, `/api/v1/events/eia`, `/api/v1/events/cftc` and `/api/v1/events/fomc`; check fresh, stale, unavailable and cache behavior against the deployed service.
+4. Before public writes or enabling account deletion, use named disposable users in the production-equivalent environment. Verify cross-user isolation and file cleanup, then confirm the feature flag and configured server-only secrets. Until then leave deletion disabled.
+5. Complete the official-source, licensing, route, accessibility and rollback checklist; only then decide whether the release version/tag is ready.
 
-## Previous validation record
-
-The checks below passed on the prior implementation commit before the follow-up Legacy projection, raw-row compatibility, and provider-cache fixes. They are historical baseline evidence only; the follow-up code still needs its final local checks and deployment verification.
-
-Against the implementation tree on this branch:
+## Final local verification
 
 - `python scripts/build_site.py` — passed; generated 50 resources, 15 futures families and 82 Academy pages.
-- `python -m unittest discover -s tests -v` — passed, 53 tests.
-- `python scripts/validate.py` — passed, 162/162 checks, including JavaScript syntax, route/assets, migration structure, RLS boundaries and no browser service-role secret.
-- `python scripts/audit_internal_links.py` — passed; 130 HTML pages and 1,362 internal links checked, 0 issues.
-- `node --test tests/test_worker_news_routes.mjs` — passed, 7/7 Worker route cases, including bounded no-filter COT compatibility. Node emitted a non-failing module-type advisory for the Worker `.js` file.
-- `git diff --check` on edited source files — passed. The full staged check also reports intentional Markdown hard-line-break spaces and trailing blank lines in existing documents mirrored into generated `dist/`; no JavaScript, Python, HTML or SQL whitespace issue was identified.
+- `python -m unittest discover -s tests -v` — passed, 55 tests.
+- `python scripts/validate.py` — passed, 167/167 checks.
+- `python scripts/audit_internal_links.py` — passed; 130 HTML pages and 1,383 internal links checked, 0 issues.
+- `node --test tests/test_economic_calendar.mjs` — passed, 14/14 cases for BLS, EIA, CFTC and FOMC schedule parsing and metadata.
+- `node --test tests/test_worker_news_routes.mjs` — passed, 15/15 route cases, including cache/stale behavior and all four publisher schedules. Node printed its existing non-failing ESM module-type advisory.
+- `git diff --check` — passed; Git printed LF-to-CRLF normalization notices for the dated audit report only.
+- Local Chrome could not connect to the generated preview (`ERR_CONNECTION_TIMED_OUT`); desktop/mobile appearance, keyboard navigation and screen-reader QA remain open.
 
-A passing local check does not replace production provider, licensed-data or disposable-account acceptance tests listed above.
+These are local branch checks. They do not substitute for production deployment, licensed-data access, or disposable-account QA.
+
+## Historical records
+
+The dated Part 0–9 reports are checkpoints from earlier stages on 19 November. Their statements about an open/unmerged PR or earlier route/deployment state are historical; this report and live service state take precedence for current status. Earlier check results in those reports do not validate the current branch changes.
