@@ -6,6 +6,10 @@
  const endpoints=[
   {id:"news",name:"GDELT News Discovery",path:"/api/v1/news",detail:"Global discovery index; scheduled collection every 30 minutes."},
   {id:"bls",name:"US Bureau of Labor Statistics",path:"/api/v1/macro",detail:"Historical inflation and labour observations; not a real-time market feed."},
+  {id:"bls-calendar",name:"Official BLS Release Calendar",path:"/api/v1/events",detail:"Publisher-maintained ICS schedule for most BLS national-office releases; not a complete macro calendar."},
+  {id:"eia-calendar",name:"Official EIA WPSR Schedule",path:"/api/v1/events/eia",detail:"Weekly petroleum report schedule and publisher-listed holiday exceptions; not a forecast or inventory feed."},
+  {id:"cftc-calendar",name:"Official CFTC COT Schedule",path:"/api/v1/events/cftc",detail:"Publisher-listed COT publication dates; cadence may change and is not exchange intraday volume/open interest."},
+  {id:"fomc-calendar",name:"Official Federal Reserve FOMC Calendar",path:"/api/v1/events/fomc",detail:"Publisher meeting dates only; this feed does not supply statement release times."},
   {id:"cftc",name:"CFTC COT · TFF",path:"/api/v1/cot?report=tff&q=NASDAQ",detail:"Weekly financial-futures positioning and reported open interest."},
   {id:"nyfed",name:"Federal Reserve Bank of New York",path:"/api/v1/macro/funding",detail:"Published overnight reference rates; daily/business-day cadence."},
   {id:"bea",name:"BEA National Accounts",path:"/api/v1/economic/bea",detail:"Quarterly national-accounts data; requires BEA_API_KEY."},

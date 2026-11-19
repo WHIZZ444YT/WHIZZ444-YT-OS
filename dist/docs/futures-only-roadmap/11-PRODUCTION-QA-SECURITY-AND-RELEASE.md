@@ -56,7 +56,7 @@ If command/package/tooling changes, update CI consistently. Capture full outputs
 - Homepage, all primary pages and all 15 contract profiles.
 - Every Academy index, lesson, tutorial and related link.
 - Entry model pages and session tools.
-- Futures news, macro calendar, COT and Data Health.
+- Futures news, BLS/EIA/CFTC/Federal Reserve calendar snapshots, COT and Data Health.
 - Strategy Lab upload and results export.
 - Risk calculator and prop-firm records.
 - Account Auth, journal, watchlist, alerts, notes and export.
@@ -67,6 +67,7 @@ If command/package/tooling changes, update CI consistently. Capture full outputs
 - `/health`, `/api/v1/health`, `/api/v1/providers`.
 - News and source list.
 - Macro providers individually.
+- `/api/v1/events`, `/api/v1/events/eia`, `/api/v1/events/cftc` and `/api/v1/events/fomc` independently, including stale cache, provider failure and date-only handling.
 - CFTC TFF and Disaggregated variants.
 - Market data status and any licensed bars route.
 - Ingestion success, missing credential, bad token, rate limit and upstream failure.

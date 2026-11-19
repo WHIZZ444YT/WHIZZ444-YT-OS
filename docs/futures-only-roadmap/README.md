@@ -37,7 +37,7 @@ The active product is for exchange-traded futures and futures-specific learning/
 
 Use **ICT** (Inner Circle Trader) consistently for the curriculum terminology. The roadmap preserves and expands the existing product; it does not treat any framework or entry model as a proven edge.
 
-## Current repository snapshot — source evidence only
+## Current repository snapshot — source and deployment evidence
 
 The main branch source reviewed on 19 November 2026 describes:
 - A static HTML/CSS/JavaScript and JSON product built through the Python site builder.
@@ -46,7 +46,7 @@ The main branch source reviewed on 19 November 2026 describes:
 - 82 Academy lesson pages while preserving 76 original concept IDs, 10 learning tracks and nine guided tutorials.
 - A deterministic OHLC signal backtester and private-workspace foundations.
 
-These are README/builder/validator observations, not proof that CI passed, each route works in a browser, content is complete, Supabase RLS is correct, the deployed site matches main, or any provider is configured/licensed. Inspect the exact branch and run the relevant checks before implementation. The historical route map records an earlier audit and must not be used as a current status report.
+PR #19 was merged as `641347bccf534e169d5956e1cec299d0835ffa91`; Vercel reports the production deployment for that commit as `READY`. The deployment metadata does not by itself prove every route or provider works. The historical route map records an earlier audit and must not be used as a current status report.
 
 ## Current implementation status — verified 19 November 2026
 
@@ -54,7 +54,7 @@ The dated production implementation and site audit is the current status source;
 
 - Both additive Supabase migrations are applied to the active project and verified against remote migration history, table columns, RLS, and security/health advisors. Local filenames now match production migration versions `20261119125044` and `20261119125110`.
 - Cloudflare Worker `2.0.0` is deployed with the configured KV binding and 30-minute Cron; query-string redaction is enabled. Runtime verification reports database, CMS and ingestion-token secrets are not configured. The first live COT probe exceeded Cloudflare's CPU limit; the bounded route was deployed at 13:26:40 UTC and the existing live site's no-search COT request then displayed a fresh TFF futures-only snapshot, position date 10 November 2026, with 780 normalized category rows. Other Worker endpoints and Supabase persistence still need their separate smoke tests.
-- The public front-end remains on the last merged `main` source until this branch passes checks, is reviewed and is merged. The current local build regenerates `dist/` from the canonical source.
+- GitHub PR #19 is merged at `641347bccf534e169d5956e1cec299d0835ffa91`, and Vercel reports its production deployment `READY`. The deployed Worker remains `2.0.0`; the calendar and COT follow-up code in this working branch still needs review, merge and the relevant static-site/Worker deployment before production use.
 - Part 0 baseline and parts 1–9 have implementation source, but parts 2–9 and production QA remain **partial** under the charter's evidence rules. Existing implementation does not prove external source completeness, current exchange values or licensed data access.
 - Dedicated test accounts are unavailable for signup/session, two-user RLS, attachment, and deletion tests. Account deletion remains disabled; its Edge Function must not be enabled until configured and verified with disposable accounts.
 
@@ -62,9 +62,9 @@ The dated production implementation and site audit is the current status source;
 
 - Part 2 exact verified tutorial mappings remain 0/82 Academy lessons and 0/8 Entry Models; channel/search links do not satisfy mapping requirements.
 - Part 3 has 15 contract families whose current contract/tick/expiry/first-notice/roll specifications still need official exchange verification.
-- Part 4 has IANA/DST session conversion, but official product-hours, holiday, release-calendar and revision feeds are not integrated.
+- Part 4 now has a first-class Sessions & Calendar page and branch implementations for official BLS ICS, EIA WPSR, CFTC COT release dates and Federal Reserve FOMC meeting dates, alongside IANA/DST reference windows. FOMC entries are date-only; sources remain partial and are not a full calendar. Official CME/ICE product hours/holidays, BEA/global calendars, event revision history, and production Worker deployment remain open.
 - Part 5 requires provider credentials and rights review for richer collection; Worker provider states are visible, but secrets, Supabase ingestion and licensed futures feeds are not configured.
-- Part 6 COT data is weekly aggregate positioning. Daily/intraday exchange volume/OI, reviewed root-to-CFTC market crosswalks, percentile history, and production persistence writes still need evidence and eligible credentials.
+- Part 6 COT is delayed aggregate positioning; the currently published CFTC schedule is weekly, with a twice-weekly rollout announced for later in 2026. Daily/intraday exchange volume/OI, reviewed root-to-CFTC market crosswalks, percentile history, and production persistence writes still need evidence and eligible credentials.
 - Part 7's OHLC backtester has no automatic detector for the ten candidate ICT models; sealed out-of-sample evidence and full execution-cost/roll realism remain open.
 - Part 8 has zero verified prop-firm program records and no verified tick specifications, so sizing remains conditional.
 - Part 9 still requires real auth, two-user isolation, attachment/export and deletion workflow tests; deletion stays disabled.
@@ -80,7 +80,7 @@ See the [current implementation and site audit](26-PRODUCTION-IMPLEMENTATION-AND
 - Part 1 source and build fixes are recorded, but a post-change browser screenshot is still pending because the generated local preview could not be reached.
 - Part 2 is **partial**: strict one-to-one verified video coverage is 0/82 Academy lessons and 0/8 Entry Models. The generated register and per-lesson `VIDEO NEEDED` state make the gap explicit.
 - Part 3 is **partial**: all 15 contract rows now have an explicit unverified source-set version and consumers share the canonical JSON; no current exchange specifications, expiry/first-notice schedule or roll records have been verified.
-- Part 4 is **partial**: ICT windows now use IANA timezone conversion with explicit DST gap/fold handling, and the stale imported calendar is excluded from scheduling/countdown/export. Publisher retrieval, revision history, event actuals and verified CME/ICE product hours remain unavailable.
+- Part 4 is **partial**: ICT windows use IANA timezone conversion with explicit DST gap/fold handling; branch routes now fetch bounded BLS, EIA WPSR, CFTC COT-date and Federal Reserve FOMC-date snapshots with source/retrieval state. FOMC is date-only. Stale imported events remain excluded. Global/BEA calendars, event revision history, actual release timestamps, verified CME/ICE product hours, production Worker deployment and browser QA remain outstanding.
 - Part 5 is **partial**: news API filters/source metadata, provider retry/circuit handling, and a disabled-until-licensed futures-market-data route are built locally. Production Worker/provider verification, real Supabase ingestion evidence, publisher-specific rights review and broader provider coverage remain outstanding.
 - Part 6 is **partial**: the local Worker and UI now distinguish official CFTC Legacy/TFF/Disaggregated and futures-only/combined reports, preserve source-native market codes, separate position/retrieval/publication times, and export normalized history. The COT upsert schema and Worker path are local only; live API, production Supabase migration, exact root-symbol crosswalk, COT percentile, daily exchange volume/OI provider and post-change browser screenshot still need evidence.
 - Part 7 is **partial**: the backtester now requires exact contract/expiry and dataset/cost provenance, refuses tick-misaligned OHLC and unreviewed input columns, records timestamp gaps and provides additional sample-aware metrics. Ten ICT model rule cards explicitly state that there are no executable detectors. Live data/calendar/cost verification, session/news filtering, spread and roll modeling, additional metrics/baselines, genuinely sealed OOS, RLS runtime verification and browser screenshot remain outstanding. See the [Part 7 execution report](23-PART-7-EXECUTION-REPORT-2026-11-19.md).
@@ -92,8 +92,8 @@ See the [current implementation and site audit](26-PRODUCTION-IMPLEMENTATION-AND
 
 - Imported contract fields remain unverified until checked against current official exchange sources; tick specs must not be inferred from the risk plugin.
 - Licensed CME/ICE real-time trades, quotes, order book and public redistribution are not part of the free baseline. CME's June 2026 F&O Website Information update has requirements effective 1 January 2027; any public website path needs current entitlement, approval and terms.
-- A consolidated calendar and release-time/revision workflow must be demonstrated against official schedules and provider responses.
-- CFTC COT is weekly; it is not intraday volume/OI.
+- Calendar coverage is still partial: the new branch adds four official publisher sources, but broader BEA/global releases, exchange schedules, event schedule-version history and production route verification remain open.
+- CFTC COT is delayed aggregate positioning, not intraday exchange volume/OI; confirm the announced cadence change from the live publisher schedule.
 - The site's deterministic Strategy Lab is not evidence that every named ICT detector or verified historical dataset exists.
 - The local Codex plugins are authoring tools, not website APIs. Their outputs need explicit integration, provenance, licensing, privacy controls and tests before appearing as hosted data.
 - Every active ICT concept and every Entry Model needs its own exact, verified YouTube tutorial link. Part 2 is incomplete until a coverage report proves 100%; official ICT is the original-source preference, while TTrades/other creators must be clearly labelled independent supplements.

@@ -2,10 +2,16 @@ import { ECONOMIC_PROVIDER_CONFIG, fetchEconomicProvider } from "./economic-prov
 import { filterNewsArticles, marketDataStatus, NEWS_SOURCE_REGISTRY, newsResponseEnvelope, validateNewsQuery, classifyNewsTopics, keywordRelevanceScore } from "./news-contracts.mjs";
 import { nextProviderCircuitState, providerCircuitIsOpen } from "./provider-http.mjs";
 import { COT_DATASETS, asFiniteNumber, cotResponseEnvelope, cotSourceColumns, normalizeCotRows, validateCotQuery } from "./cot-contracts.mjs";
+import { fetchBlsCalendar, fetchEiaWpsrSchedule } from "./economic-calendar.mjs";
+import { CFTC_COT_SCHEDULE_URL, FOMC_CALENDAR_URL, fetchCftcCotSchedule, fetchFomcCalendar } from "./economic-calendar-extended.mjs";
 
 const NEWS_KEY = "snapshot:gdelt:news:v1";
 const NEWS_REFRESH_LOCK_KEY = "lock:gdelt:manual-refresh:v1";
 const PROVIDER_STATE_KEY = "provider:gdelt:state:v1";
+const BLS_CALENDAR_KEY = "schedule:bls:ics:v1";
+const EIA_SCHEDULE_KEY = "schedule:eia:wpsr:v1";
+const CFTC_SCHEDULE_KEY = "schedule:cftc:cot:v1";
+const FOMC_SCHEDULE_KEY = "schedule:fed:fomc:v1";
 const ALLOWED_BUILDER_MODELS = new Set(["page", "ict-lesson", "research-article", "glossary"]);
 const GDELT_QUERY = {
  label: "Finance futures, macro & commodities",
@@ -37,15 +43,22 @@ export default {
    const results=await Promise.all(requested.map(async provider=>({provider,...await ingestEconomicProvider(provider,env,true)})));
    return json({status:results.every(x=>x.status==="fresh")?"fresh":results.some(x=>["fresh","partial"].includes(x.status))?"partial":"unavailable",results},200,cors);
   }
-  if(url.pathname==="/health"||url.pathname==="/api/v1/health")return json({ok:true,service:"finance-intelligence-os-edge",version:"2.0.0",time:new Date().toISOString(),storageConfigured:Boolean(env.SNAPSHOTS),cmsConfigured:Boolean(env.BUILDER_PUBLIC_API_KEY),databaseConfigured:Boolean(env.SUPABASE_URL&&supabaseAdminKey(env)),economicProviders:Object.keys(ECONOMIC_PROVIDER_CONFIG).length,ingestionTokenConfigured:Boolean(env.INGEST_TOKEN)},200,cors);
+  if(url.pathname==="/health"||url.pathname==="/api/v1/health")return json({ok:true,service:"finance-intelligence-os-edge",version:"2.1.0",time:new Date().toISOString(),storageConfigured:Boolean(env.SNAPSHOTS),cmsConfigured:Boolean(env.BUILDER_PUBLIC_API_KEY),databaseConfigured:Boolean(env.SUPABASE_URL&&supabaseAdminKey(env)),economicProviders:Object.keys(ECONOMIC_PROVIDER_CONFIG).length,ingestionTokenConfigured:Boolean(env.INGEST_TOKEN)},200,cors);
   if(url.pathname==="/api/v1/providers"){
    const state=env.SNAPSHOTS?await env.SNAPSHOTS.get(PROVIDER_STATE_KEY,"json"):null;
    const macroState=env.SNAPSHOTS?await env.SNAPSHOTS.get("macro:bls:v1","json"):null;
-   const cotKeys=env.SNAPSHOTS?await env.SNAPSHOTS.list({prefix:"cot:tff:v2:",limit:1}):{keys:[]};
+   const blsCalendarState=env.SNAPSHOTS?await env.SNAPSHOTS.get(BLS_CALENDAR_KEY,"json"):null;
+   const eiaScheduleState=env.SNAPSHOTS?await env.SNAPSHOTS.get(EIA_SCHEDULE_KEY,"json"):null;
+   const cftcScheduleState=env.SNAPSHOTS?await env.SNAPSHOTS.get(CFTC_SCHEDULE_KEY,"json"):null;
+   const fomcCalendarState=env.SNAPSHOTS?await env.SNAPSHOTS.get(FOMC_SCHEDULE_KEY,"json"):null;
+   const cotKeys=env.SNAPSHOTS?await env.SNAPSHOTS.list({prefix:"cot:tff:futures-only:v6:",limit:1}):{keys:[]};
    const cotState=env.SNAPSHOTS&&cotKeys.keys?.length?await env.SNAPSHOTS.get(cotKeys.keys[0].name,"json"):null;
    return json({providers:[
     {id:"gdelt-doc",label:"GDELT DOC API",access:"public-api",state:state||{status:"not-yet-fetched",lastCheckedAt:null},notes:"Discovery coverage is not comprehensive and not a licensed newswire."},
     {id:"bls-v1",label:env.BLS_API_KEY?"US BLS Public Data API v2":"US BLS Public Data API v1",access:env.BLS_API_KEY?"registered-api-key":"public-api-no-registration",state:macroState?{status:macroState.status,dataAsOf:macroState.dataAsOf,retrievedAt:macroState.retrievedAt,lastError:macroState.lastError||macroState.error||null,retryAt:macroState.retryAt||null}:{status:"available-on-demand"},notes:env.BLS_API_KEY?"Registered API v2 (up to 500 daily queries).":"Unregistered API v1 is limited to 25 daily queries; add BLS_API_KEY as a Cloudflare Worker secret to use registered API v2."},
+    {id:"bls-calendar",label:"BLS Online Calendar (official ICS)",access:"official-scheduled-feed-no-key",state:blsCalendarState?{status:blsCalendarState.status,eventCount:blsCalendarState.event_count,retrievedAt:blsCalendarState.retrieved_at,lastError:blsCalendarState.last_error||null}:{status:env.SNAPSHOTS?"available-on-demand":"not-configured"},notes:"Most scheduled releases from the BLS national office; updated by BLS as needed. This is not a complete macro calendar."},
+    {id:"cftc-cot-schedule",label:"CFTC COT Release Schedule",access:"official-publisher-schedule-no-key",state:cftcScheduleState?{status:cftcScheduleState.status,eventCount:cftcScheduleState.event_count,retrievedAt:cftcScheduleState.retrieved_at,lastError:cftcScheduleState.last_error||null}:{status:env.SNAPSHOTS?"available-on-demand":"not-configured"},notes:"Publisher-listed COT dates and Eastern release time. CFTC announced a planned semiweekly cadence change; verify the operational schedule."},
+    {id:"fomc-calendar",label:"Federal Reserve FOMC Meeting Calendar",access:"official-publisher-schedule-no-key",state:fomcCalendarState?{status:fomcCalendarState.status,eventCount:fomcCalendarState.event_count,retrievedAt:fomcCalendarState.retrieved_at,lastError:fomcCalendarState.last_error||null}:{status:env.SNAPSHOTS?"available-on-demand":"not-configured"},notes:"Publisher meeting dates only; no release time and not a complete macro calendar."},
     {id:"cftc-pre",label:"CFTC Public Reporting Environment",access:"public-api",state:cotState?{status:cotState.status,dataAsOf:cotState.dataAsOf,retrievedAt:cotState.retrievedAt}:{status:"available-on-demand"}},
     {id:"nyfed-markets",label:"Federal Reserve Bank of New York Markets Data API",access:"public-api-no-key",state:env.SNAPSHOTS?{status:"available-on-demand"}:{status:"not-configured"},notes:"SOFR, EFFR, OBFR and related published reference rates; not live futures prices."},
     {id:"builder-content",label:"Builder.io Content API",access:"public-content-api",state:{status:env.BUILDER_PUBLIC_API_KEY?"configured":"needs-public-space-key"}},
@@ -55,6 +68,7 @@ export default {
     {id:"licensed-futures-market-data",label:"Licensed CME / ICE futures market data",access:"licensed-vendor-or-exchange-entitlement-required",state:{status:"not-configured"},notes:"No approved vendor, exchange entitlement or public-display permission is configured. Price, quote, depth and bars routes remain disabled."},
     {id:"bea",label:"Bureau of Economic Analysis",access:"registered-api-key",state:await getEconomicProviderState(env,"bea"),notes:"BEA NIPA quarterly national-accounts data; BEA_API_KEY required."},
     {id:"eia",label:"US Energy Information Administration",access:"registered-api-key",state:await getEconomicProviderState(env,"eia"),notes:"Weekly US crude-oil stocks series PET.WCESTUS1.W; EIA_API_KEY required."},
+    {id:"eia-wpsr-schedule",label:"EIA Weekly Petroleum Status Report Schedule",access:"official-publisher-schedule-no-key",state:eiaScheduleState?{status:eiaScheduleState.status,eventCount:eiaScheduleState.event_count,retrievedAt:eiaScheduleState.retrieved_at,lastError:eiaScheduleState.last_error||null}:{status:env.SNAPSHOTS?"available-on-demand":"not-configured"},notes:"Weekly release rule and publisher-listed holiday exceptions; verify the EIA schedule before release."},
     {id:"fred",label:"Federal Reserve Economic Data",access:"registered-api-key",state:await getEconomicProviderState(env,"fred"),notes:"Daily and monthly macro histories; FRED_API_KEY required."},
     {id:"us-treasury",label:"US Treasury Fiscal Data",access:"public-api-no-key",state:await getEconomicProviderState(env,"us_treasury"),notes:"Monthly average interest rates on marketable Treasury securities; not the daily par yield curve."},
     {id:"ecb",label:"European Central Bank Data Portal",access:"public-sdmx-api-no-key",state:await getEconomicProviderState(env,"ecb"),notes:"Daily USD/EUR reference exchange-rate series; not a live FX quote."},
@@ -81,6 +95,30 @@ export default {
    const state=env.SNAPSHOTS?await env.SNAPSHOTS.get(PROVIDER_STATE_KEY,"json"):null;
    const sources=NEWS_SOURCE_REGISTRY.map(source=>({...source,enabled:source.enabled&&Boolean(env.SNAPSHOTS),last_checked:state?.lastCheckedAt||null,state:env.SNAPSHOTS?(state?.status||"not-yet-fetched"):"not-configured"}));
    return json({schema_version:1,data_type:"news_source_registry",retrieved_at:new Date().toISOString(),status:env.SNAPSHOTS?(state?.status||"not-yet-fetched"):"not-configured",sources},200,{...cors,"Cache-Control":"public, max-age=60, s-maxage=120"});
+  }
+
+  if(url.pathname==="/api/v1/events"){
+   if(!env.SNAPSHOTS)return json({schema_version:1,data_type:"official_economic_release_schedule",status:"not-configured",provider:"U.S. Bureau of Labor Statistics Online Calendar",source_url:"https://www.bls.gov/schedule/news_release/bls.ics",schedule_url:"https://www.bls.gov/schedule/",events:[],event_count:0,error:"Calendar snapshot storage is not configured."},503,{...cors,"Cache-Control":"no-store"});
+   const result=await getPublisherSchedule(env,BLS_CALENDAR_KEY,fetchBlsCalendar,{provider:"U.S. Bureau of Labor Statistics Online Calendar",publisher:"U.S. Bureau of Labor Statistics",source_url:"https://www.bls.gov/schedule/news_release/bls.ics",schedule_url:"https://www.bls.gov/schedule/",source_timezone:"America/New_York",error:"The official BLS calendar could not be retrieved. Check the issuer schedule directly."});
+   return json(result.snapshot,result.status,{...cors,"Cache-Control":result.status===200?"public, max-age=300, s-maxage=900":"no-store",...(result.retryAfter?{"Retry-After":String(result.retryAfter)}:{})});
+  }
+
+  if(url.pathname==="/api/v1/events/eia"){
+   if(!env.SNAPSHOTS)return json({schema_version:1,data_type:"official_economic_release_schedule",status:"not-configured",provider:"U.S. Energy Information Administration WPSR Schedule",source_url:"https://www.eia.gov/petroleum/supply/weekly/schedule.php",events:[],event_count:0,error:"Calendar snapshot storage is not configured."},503,{...cors,"Cache-Control":"no-store"});
+   const result=await getPublisherSchedule(env,EIA_SCHEDULE_KEY,fetchEiaWpsrSchedule,{provider:"U.S. Energy Information Administration WPSR Schedule",publisher:"U.S. Energy Information Administration",source_url:"https://www.eia.gov/petroleum/supply/weekly/schedule.php",schedule_url:"https://www.eia.gov/petroleum/supply/weekly/schedule.php",source_timezone:"America/New_York",error:"The official EIA schedule could not be retrieved. Check the issuer schedule directly."});
+   return json(result.snapshot,result.status,{...cors,"Cache-Control":result.status===200?"public, max-age=300, s-maxage=900":"no-store",...(result.retryAfter?{"Retry-After":String(result.retryAfter)}:{})});
+  }
+
+  if(url.pathname==="/api/v1/events/cftc"){
+   if(!env.SNAPSHOTS)return json({schema_version:1,data_type:"official_economic_release_schedule",status:"not-configured",provider:"CFTC Commitments of Traders Release Schedule",source_url:CFTC_COT_SCHEDULE_URL,events:[],event_count:0,error:"Calendar snapshot storage is not configured."},503,{...cors,"Cache-Control":"no-store"});
+   const result=await getPublisherSchedule(env,CFTC_SCHEDULE_KEY,fetchCftcCotSchedule,{provider:"CFTC Commitments of Traders Release Schedule",publisher:"Commodity Futures Trading Commission",source_url:CFTC_COT_SCHEDULE_URL,schedule_url:CFTC_COT_SCHEDULE_URL,source_timezone:"America/New_York",error:"The official CFTC schedule could not be retrieved. Check the issuer schedule directly."});
+   return json(result.snapshot,result.status,{...cors,"Cache-Control":result.status===200?"public, max-age=300, s-maxage=900":"no-store",...(result.retryAfter?{"Retry-After":String(result.retryAfter)}:{})});
+  }
+
+  if(url.pathname==="/api/v1/events/fomc"){
+   if(!env.SNAPSHOTS)return json({schema_version:1,data_type:"official_economic_release_schedule",status:"not-configured",provider:"Federal Reserve FOMC meeting calendar",source_url:FOMC_CALENDAR_URL,events:[],event_count:0,error:"Calendar snapshot storage is not configured."},503,{...cors,"Cache-Control":"no-store"});
+   const result=await getPublisherSchedule(env,FOMC_SCHEDULE_KEY,fetchFomcCalendar,{provider:"Federal Reserve FOMC meeting calendar",publisher:"Board of Governors of the Federal Reserve System",source_url:FOMC_CALENDAR_URL,schedule_url:FOMC_CALENDAR_URL,source_timezone:null,error:"The official Federal Reserve calendar could not be retrieved. Check the issuer schedule directly."});
+   return json(result.snapshot,result.status,{...cors,"Cache-Control":result.status===200?"public, max-age=300, s-maxage=900":"no-store",...(result.retryAfter?{"Retry-After":String(result.retryAfter)}:{})});
   }
 
   if(url.pathname==="/api/v1/market-data/status"){
@@ -144,19 +182,21 @@ export default {
    if(!validation.ok)return json({schema_version:1,data_type:"cftc_cot_positions",status:"invalid-query",error:{code:validation.code,message:validation.message}},400,cors);
    const {report,variant,q,contractMarketCode}=validation.query;
    const marketKey=(contractMarketCode||q).toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"")||"all";
-    const cacheKey="cot:"+report+":"+variant+":v5:"+marketKey;
+    // v6 restores the source-native `rows` response contract consumed by the
+    // independently deployed static frontend. It also invalidates v5 entries,
+    // which intentionally discarded those rows.
+    const cacheKey="cot:"+report+":"+variant+":v6:"+marketKey;
    let snapshot=env.SNAPSHOTS?await env.SNAPSHOTS.get(cacheKey,"json"):null;
    if(!snapshot||!snapshot.retrievedAt||Date.now()-Date.parse(snapshot.retrievedAt)>6*60*60*1000){
      try{
       snapshot=await fetchCot(report,variant,q,contractMarketCode,env);
-      const {rows:_sourceRows,...compactSnapshot}=snapshot;
-      snapshot={...compactSnapshot,normalizedRows:(snapshot.normalizedRows||[]).map(({sourceNativeFields,...row})=>row)};
+      snapshot={...snapshot,normalizedRows:(snapshot.normalizedRows||[]).map(({sourceNativeFields,...row})=>row)};
       if(env.SNAPSHOTS)await env.SNAPSHOTS.put(cacheKey,JSON.stringify(snapshot),{expirationTtl:60*60*8});
      }
     catch(error){if(!snapshot)return json({schema_version:1,data_type:"cftc_cot_positions",status:"unavailable",report_family:report,report_variant:variant,rows:[],normalizedRows:[],source_url:validation.dataset.sourceUrl,error:"CFTC PRE request failed"},502,cors);snapshot.status="stale";snapshot.lastError="CFTC PRE refresh failed; showing last successful cache";}
    }
    const payload=cotResponseEnvelope(snapshot,snapshot.normalizedRows||normalizeCotRows(snapshot.rows||[],{report,variant,retrievedAt:snapshot.retrievedAt,sourceUrl:snapshot.sourceUrl}));
-    return json({...snapshot,...payload,normalizedRows:payload.rows,filtered:Boolean(q||contractMarketCode),query:q||null,contract_market_code:contractMarketCode||null,query_scope:q||contractMarketCode?"filtered-market-history":"latest-provider-observations",last_error:snapshot.lastError||null},200,{...cors,"Cache-Control":"public, max-age=900, s-maxage=1800"});
+   return json({...snapshot,...payload,rows:snapshot.rows||[],normalizedRows:payload.rows,filtered:Boolean(q||contractMarketCode),query:q||null,contract_market_code:contractMarketCode||null,query_scope:q||contractMarketCode?"filtered-market-history":"latest-provider-observations",last_error:snapshot.lastError||null},200,{...cors,"Cache-Control":"public, max-age=900, s-maxage=1800"});
   }
   if(url.pathname==="/api/v1/macro"){
    const cacheKey="macro:bls:v1";
@@ -598,6 +638,32 @@ async function fetchKalshi(){
  const data=await response.json();if(!Array.isArray(data.markets))throw new Error("Kalshi response did not include markets");
  const items=data.markets.map(m=>({title:String(m.title||m.subtitle||m.ticker||"Untitled market"),ticker:String(m.ticker||""),eventTicker:String(m.event_ticker||""),yesBid:Number(m.yes_bid_dollars??m.yes_bid??NaN),yesAsk:Number(m.yes_ask_dollars??m.yes_ask??NaN),lastPrice:Number(m.last_price_dollars??m.last_price??NaN),volume24h:asFiniteNumber(m.volume_24h_fp??m.volume_24h),volume:asFiniteNumber(m.volume_fp??m.volume),liquidity:asFiniteNumber(m.liquidity_dollars),closeTime:m.close_time||m.expected_expiration_time||null,updatedAt:m.updated_time||null,url:"https://kalshi.com/markets"})).filter(item=>item.ticker&&item.title);
  return{schemaVersion:1,provider:"Kalshi public Trade API v2",status:"fresh",retrievedAt:new Date().toISOString(),dataAsOf:null,access:"public read-only market-data endpoint; no key required",items,notes:["YES bid/ask and volume are Kalshi event-contract data, not exchange futures prices.","Displayed market probabilities are venue-specific and may be thinly traded.","No portfolio, wallet or order-entry endpoints are connected."]};
+}
+
+async function getPublisherSchedule(env,key,loader,metadata){
+ const now=Date.now();
+ let snapshot=await env.SNAPSHOTS.get(key,"json");
+ const retryAt=Date.parse(snapshot?.retry_at||"");
+ if(Number.isFinite(retryAt)&&retryAt>now){
+  const hasSnapshot=Boolean(snapshot&&Array.isArray(snapshot.events)&&Number.isFinite(Date.parse(snapshot.retrieved_at||"")));
+  const cached={...snapshot,status:hasSnapshot?"stale":"unavailable"};
+  return{snapshot:cached,status:hasSnapshot?200:502,retryAfter:Math.max(1,Math.ceil((retryAt-now)/1000))};
+ }
+ const retrievedAt=Date.parse(snapshot?.retrieved_at||"");
+ if(snapshot?.status==="fresh"&&Number.isFinite(retrievedAt)&&now-retrievedAt<=30*60*1000)return{snapshot,status:200};
+ try{
+  snapshot=await loader();
+  await env.SNAPSHOTS.put(key,JSON.stringify(snapshot),{expirationTtl:60*60*8});
+  return{snapshot,status:200};
+ }catch{
+  const retry_at=new Date(now+5*60*1000).toISOString();
+  const hasSnapshot=Boolean(snapshot&&Array.isArray(snapshot.events)&&Number.isFinite(Date.parse(snapshot.retrieved_at||"")));
+  const failure=hasSnapshot
+   ?{...snapshot,status:"stale",last_error:`${metadata.provider} refresh failed; showing the last successful publisher snapshot.`,retry_at}
+   :{schema_version:1,data_type:"official_economic_release_schedule",status:"unavailable",...metadata,retrieved_at:null,data_as_of:null,event_count:0,events:[],error:metadata.error,retry_at};
+  await env.SNAPSHOTS.put(key,JSON.stringify(failure),{expirationTtl:60*60});
+  return{snapshot:failure,status:hasSnapshot?200:502,retryAfter:300};
+ }
 }
 
 function json(value,status=200,headers={}){return new Response(JSON.stringify(value),{status,headers:{"Content-Type":"application/json; charset=utf-8","X-Content-Type-Options":"nosniff",...headers}});}

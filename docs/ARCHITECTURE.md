@@ -9,16 +9,20 @@ Browser
   │    ├── Dark-first CSS tokens / optional light preference / independent widget states
   │    └── Overview widgets: contract reference, gateway health, news, weekly COT, clocks, private summary
   ├─ Static modules: 15 Futures Families / Futures Desk / Futures News / Macro / COT / Volume & OI / Contract Specs / Risk
-  └─ ICT Futures terminal: 15 futures families + 76 ICT concepts + 9 guided tutorials + existing DST-aware sessions/calendar
+  ├─ Sessions & Calendar page: official BLS, EIA, CFTC and Federal Reserve schedule snapshots + IANA-aware ICT reference windows
+  └─ ICT Futures terminal: 15 futures families + 76 preserved ICT concepts + 9 guided tutorials + integrated session/calendar tools
        │
        ├── Vercel static hosting (Git-linked from main)
        ├── Cloudflare Worker API gateway
        │      ├── GDELT futures-focused discovery → KV snapshot (scheduled every 30 minutes)
        │      ├── US BLS Public Data API v1 → KV (historical macro series)
+       │      ├── Official BLS ICS schedule → bounded KV snapshot / GET /api/v1/events
+       │      ├── Official EIA WPSR schedule → bounded KV snapshot / GET /api/v1/events/eia
+       │      ├── Official CFTC COT release schedule → bounded KV snapshot / GET /api/v1/events/cftc
+       │      ├── Official Federal Reserve FOMC meeting dates → bounded KV snapshot / GET /api/v1/events/fomc
        │      ├── CFTC Public Reporting Environment → KV (TFF / Disaggregated weekly COT)
        │      ├── New York Fed Markets API (SOFR / EFFR / OBFR / repo reference rates)
-       │      ├── Polymarket Gamma public events → KV (read-only venue odds/volume)
-       │      ├── Kalshi public Trade API v2 → KV (read-only event markets/bid-ask metadata)
+       │      ├── Legacy prediction-market handlers remain dormant and are excluded from active futures navigation
        │      ├── Builder Content API allow-listed proxy (not configured)
        │      └── provider health / freshness metadata
        └── Supabase Postgres/Auth (public normalized data model + private per-user workspace)
@@ -26,18 +30,18 @@ Browser
 
 ## User-interface architecture
 
-The Python builder owns the shared shell for generated pages and applies the same sidebar wrapper to the two standalone Futures Desk and ICT terminal apps. The root overview remains a maintained static HTML page and loads its own small dashboard controller. The shell is browser-native HTML/CSS/JavaScript; it does not add a framework or component-library dependency.
+The Python builder owns the shared shell for generated pages and applies the same sidebar wrapper to the two standalone Futures Desk and ICT terminal apps. The root overview remains a maintained static HTML page and loads its own small dashboard controller. The Sessions & Calendar route is a generated page with a dedicated controller and responsive stylesheet; it does not redirect to the ICT terminal. The shell is browser-native HTML/CSS/JavaScript; it does not add a framework or component-library dependency.
 
 The 13 primary areas are Overview, Futures Markets, ICT Academy, Entry Models, Sessions & Calendar, Futures News, Volume & Open Interest, COT & Positioning, Contract Specs & Expiry, Strategy Lab, Risk & Prop Firms, Journal & Watchlists, and Data Health & Sources. Existing routes /markets/, /macro/, /tools/, and /sources/ remain compatible supporting routes or redirects.
 
 Overview widgets request data independently. A failed news or COT request must not blank the session clock or other page modules. The overview shows ET and a selectable browser/profile timezone; the current ICT terminal keeps its own DST-aware ET/IST session clock. No session high/low or range is shown unless an intraday source is connected.
 
-The imported 15-family contract registry currently lacks expiry/first-notice fields and its tick references remain unverified. The contract-specs page marks the source values accordingly and shows missing lifecycle fields as unavailable. The sessions route reuses the ICT Futures terminal sessions anchor; no second event calendar is fabricated. The risk page uses conditional fixed-point position sizing and a versioned registry with no verified prop-firm program records. Real-time CME/ICE quotes, depth, delayed quotes, consolidated event schedules and prop-firm pricing are not implied by shell state.
+The imported 15-family contract registry currently lacks expiry/first-notice fields and its tick references remain unverified. The contract-specs page marks the source values accordingly and shows missing lifecycle fields as unavailable. The Sessions & Calendar route combines separate, source-attributed BLS, EIA, CFTC and FOMC schedule snapshots; it is partial coverage, not a complete global calendar. The risk page uses conditional fixed-point position sizing and a versioned registry with no verified prop-firm program records. Real-time CME/ICE quotes, depth, delayed quotes, full release schedules and prop-firm pricing are not implied by shell state.
 
 ## Runtime and provider responsibilities
 
 - **Vercel** serves the static application, generated routes, and published sitemap.
-- **Cloudflare Worker** is the single public-data gateway. It owns upstream calls, per-provider timeouts, bounded transient retries, provider circuit state, cache and freshness labels. The GDELT scheduled refresh uses the existing 30-minute Cron trigger. A manual `/api/v1/news?refresh=1` request queues a Worker-side refresh under a five-minute cooldown/lock; the API immediately returns the prior snapshot with refresh state, so the browser does not make upstream GDELT calls. BLS and CFTC feeds are refreshed on request with KV fallback. The former event-market handlers are retained as dormant compatibility code; the active frontend no longer requests them.
+- **Cloudflare Worker** is the single public-data gateway. It owns upstream calls, per-provider timeouts, bounded transient retries, provider circuit state, cache and freshness labels. The GDELT scheduled refresh uses the existing 30-minute Cron trigger. A manual `/api/v1/news?refresh=1` request queues a Worker-side refresh under a five-minute cooldown/lock; the API immediately returns the prior snapshot with refresh state, so the browser does not make upstream GDELT calls. BLS, EIA, CFTC and Federal Reserve schedule feeds refresh on request with separate KV snapshots and stale fallback. The former event-market handlers are retained as dormant compatibility code; the active frontend no longer requests them.
 - **Supabase** stores the normalized data model and user-owned journal/watchlists/progress. All 22 public tables currently have RLS enabled. The Worker currently has no Supabase service-role/secret key configured, so its optional server-side ingestion writes remain disabled; do not put privileged keys in browser code.
 - **Builder.io** remains optional editorial CMS. Its public Content API key and Admin PAT are not configured, so existing static lessons and JSON remain the fallback.
 - **GitHub Actions** runs build, unit, validation and internal-link checks on pushes and pull requests.
@@ -51,7 +55,7 @@ The imported 15-family contract registry currently lacks expiry/first-notice fie
 | `/api/v1/market-data/status` | Gateway market-data entitlement state | Reports exchange-data status, delay/frequency, source and licensing limitation. Returns `not-configured`; no CME/ICE bars route is enabled. |
 | `/api/v1/volume-open-interest?report=tff&variant=futures-only&q=...` | CFTC PRE | Contract-filtered weekly reported open-interest history. `report` supports Legacy, TFF or Disaggregated; `variant` keeps futures-only and futures-and-options-combined datasets separate. Exact CFTC contract-market codes are accepted. Exchange trading volume remains not connected. |
 | `/api/v1/macro` | US BLS v1 | Historical CPI, core CPI, unemployment, payroll and PPI observations. Not live market data. |
-| `/api/v1/cot?report=tff&variant=futures-only[&q=...]` | CFTC PRE | Weekly report-family/category rows. `report` accepts `legacy`, `tff`, or `disaggregated`; `variant` accepts `futures-only` or `combined`. A market query returns a bounded filtered set; an empty query returns a bounded latest-provider snapshot for the existing site client. The public response contains normalized fields only; source-native fields are retained for optional server-side persistence. |
+| `/api/v1/cot?report=tff&variant=futures-only[&q=...]` | CFTC PRE | Weekly report-family/category rows. `report` accepts `legacy`, `tff`, or `disaggregated`; `variant` accepts `futures-only` or `combined`. A market query returns a bounded filtered set; an empty query returns a bounded latest-provider snapshot. For rolling deployment compatibility, `rows` retains at most 156 source-native CFTC rows for the independently deployed frontend; `normalizedRows` contains normalized categories and excludes nested raw rows. One source row can expand to multiple category rows. Server-side persistence uses its own normalized/raw mapping. |
 | `/api/v1/macro/funding` | New York Fed Markets API | Latest published SOFR, EFFR and supported overnight reference rates; daily business-day observations. |
 | `/api/v1/economic/providers` | Worker provider registry | Credential configuration, cadence, last attempt/success, persistence state and freshness per provider. |
 | `/api/v1/economic/bea` | BEA NIPA | Quarterly NIPA Table T10101; requires `BEA_API_KEY`. |
