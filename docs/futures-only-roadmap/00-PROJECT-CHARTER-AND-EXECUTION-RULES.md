@@ -1,5 +1,7 @@
 # Project Charter and Global Execution Rules
 
+**Review date:** 19 November 2026. **Repository:** https://github.com/WHIZZ444YT/WHIZZ444-YT-OS. Recheck live source and official references before implementation; this document is not runtime or deployment evidence.
+
 ## 1. Product mission
 
 Build one premium, clear, futures-only research and education platform. A trader should be able to move from a futures contract's specifications and session context to the relevant ICT concepts, news, positioning, data sources, replay/backtest and personal risk/journal workflow without leaving the platform.
@@ -80,6 +82,10 @@ Every normalized market/economic/news observation should carry provider/source i
 
 Do not turn missing data into zero. Do not silently carry forward a stale value as current. Do not combine different expiries into an SMT or volume comparison without a labelled contract mapping. Do not merge spot, CFD, continuous synthetic and listed futures series.
 
+### Public data, exchange licensing and AI boundary
+
+A public/open API means documented access; it does not automatically mean open-source software, real-time delivery, unlimited quota, public display, redistribution, or permission to reuse the data in AI/ML. For every dataset record the source, exact product/series, endpoint/version, frequency, delay, event-time and retrieval-time, freshness threshold, revision policy, license and permitted audience. A public market page may show only what the source's current agreement and the product's entitlement permit. Do not scrape exchange pages. The CME June 2026 F&O Website Information update describes restricted public-site packages and a 1 January 2027 effective date, and restricts AI/ML/LLM use under those terms; do not pass CME data to ChatGPT, Codex, another model, or a local plugin unless a current agreement explicitly permits that use. See the official [CME update](https://www.cmegroup.com/market-data/files/market-data-license-agreement-updates-june-2026.pdf) and [CME market-data policy](https://www.cmegroup.com/market-data/license-data/information-policies.html).
+
 ## 9. Global security contract
 
 - No provider/API/ingestion token, Supabase secret/service-role key, private Builder token or broker secret in browser code or Git.
@@ -101,8 +107,9 @@ The connected Codex plugins below are authoring-environment tools, not dependenc
 | ICT Liquidity Lab 0.1.1 | Calendar-day highs/lows and a prior-N-bar wick-through/close-back sweep proxy over a local OHLC CSV. | Calendar days are not CME/Globex trading sessions. The proxy is not a complete ICT detector, forecast or entry signal. |
 | ICT Backtest Lab 0.1.2 | A narrow prior-N-bar wick-through/close-back reversion test over a local OHLC CSV, with explicit lookback, reward/risk and cost inputs. | This is separate from the website Strategy Lab and is not a full ICT setup, licensed history feed, or proof of an edge. Points are not dollars without verified contract values. |
 | Futures Risk Manager 0.1.1 | Directional R:R and whole-contract sizing from supplied tick specifications and cost assumptions. | It does not look up contract specifications, margin, currency conversion or prop-firm rules, and it does not execute orders. Results are conditional on verified inputs. |
+| Trading Journal (local plugin) | Lists/logs completed trades supplied by the user and summarizes locally stored records. | Separate local storage and tool surface; not the website/Supabase journal, not automatically synced, and not a verified import/export or backup service. Never copy private records into the site without an explicit consented integration. |
 
-For any proposed website integration, first decide whether the user asked for a one-off local analysis or a deployed product feature. A website feature requires an explicit, reviewed server-side integration and input/output contract; source, instrument, contract/expiry, timestamp, timezone, frequency, units, roll policy, quality and licence/display limits must remain attached to the result. Keep secrets server-side, do not upload local/private plugin files without an explicit product flow and consent, and render `NOT CONFIGURED`, `PARTIAL`, `STALE` or `UNAVAILABLE` honestly. Do not count a local plugin action as a website route or claim an integration before its real call path and tests exist. Missing optional Codex plugins do not block unrelated repository work.
+For any proposed website integration, first decide whether the user asked for a one-off local analysis or a deployed product feature. A website feature requires an explicit, reviewed server-side integration and input/output contract; source, instrument, contract/expiry, timestamp, timezone, frequency, units, roll policy, quality and licence/display limits must remain attached to the result. Keep secrets server-side, do not upload local/private plugin files without an explicit product flow and consent, and render `NOT CONFIGURED`, `PARTIAL`, `STALE` or `UNAVAILABLE` honestly. Do not count a local plugin action as a website route or claim an integration before its real call path and tests exist. Missing optional Codex plugins do not block unrelated repository work. These capabilities are an authoring-environment snapshot, not a complete list of deployable product providers. The website's own Worker, Supabase tables, connector credentials, account entitlements and current source must be audited separately.
 
 ## 11. Standard ChatGPT execution prompt
 
