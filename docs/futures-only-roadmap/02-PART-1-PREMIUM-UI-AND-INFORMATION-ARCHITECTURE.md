@@ -1,5 +1,7 @@
 # Part 1 — Premium UI and Information Architecture
 
+**Review date:** 19 November 2026. **Repository:** https://github.com/WHIZZ444YT/WHIZZ444-YT-OS. Recheck live source and official references before implementation; this document is not runtime or deployment evidence.
+
 **Goal:** Maintain and close any verified gaps in the Futures Command Center and its information architecture without changing the existing static architecture unnecessarily.
 
 > **Current-source review (19 November 2026):** The inspected `main` source already defines 13 futures-only navigation areas in `scripts/build_site.py`, and `scripts/validate.py` contains structural assertions for that navigation and compatibility routes. The repository README describes the shared responsive shell and current route map. Use this Part as a gap-based review rubric: inspect the live source and built pages first, retain passing work, and implement only demonstrated gaps. These source and documentation checks do not by themselves prove the build, browser behavior, accessibility or deployment was verified.
@@ -134,6 +136,11 @@ Keep the 13-area product navigation focused on the deployed website. Do not add 
 - Futures Risk Manager uses supplied tick size/value and cost assumptions. It does not verify contract specs, calculate margin or fetch prop-firm rules; any website sizing output must retain its own source and verification state.
 - A website integration needs an explicit server-side call path, safe authentication, provenance/licence metadata, independent loading/error states, and tests. If no such path exists, render a truthful not-connected or not-configured state and keep the local action in Codex.
 
+### Current UX requirements for education and local tools
+
+Keep the 13-area futures navigation from the current source; do not introduce a generic plugin destination. On an Academy lesson or Entry Model page, show a prominent, accessible **Watch this specific lesson on YouTube** action only when an exact verified video is mapped to that lesson/model ID. Display creator/source class (Official ICT or independent supplement), title, language, timestamped deep link where useful, and a clear external-link indicator. Use a permitted embedded player only after a user action; retain player controls and provide a direct-link fallback when embedding is disabled. If coverage is missing, show an editorial `VIDEO NEEDED` state internally and do not claim Academy completion.
+
+For local Codex plugin actions, use truthful `LOCAL IN CODEX` wording and keep them outside website navigation until a separate server integration exists. Show provenance, as-of time, delay and configured state on every data-backed card. A polished interface must never visually imply that a stale, cached, illustrative or unlicensed value is live.
 ## 10. Acceptance criteria
 
 - [ ] All 13 primary areas have functioning links and unique page purpose.
