@@ -1,7 +1,7 @@
-# Part 4 — Session Engine and Economic Calendar Execution Repor
+# Part 4 — Session Engine and Economic Calendar Execution Report
 
 **Review date:** 19 November 2026
-**Branch:** `codex/charter-alignment-2026-11-19
+**Branch:** `codex/charter-alignment-2026-11-19`
 **Status:** Partial. The timezone engine and clear reference labels are implemented; no current publisher schedule feed or verified product-level exchange-hours registry is connected.
 
 ## Implemented
@@ -23,12 +23,12 @@
 
 ## Changed source paths
 
-- `assets/session-time.js
-- `ict-futures/data/ict-playbook.json
-- `ict-futures/index.html
-- `tests/test_session_time.mjs
-- `tests/test_build.py
-- `scripts/validate.py
+- `assets/session-time.js`
+- `ict-futures/data/ict-playbook.json`
+- `ict-futures/index.html`
+- `tests/test_session_time.mjs`
+- `tests/test_build.py`
+- `scripts/validate.py`
 
 Generated `dist/` assets come from the site builder and were not edited by hand.
 

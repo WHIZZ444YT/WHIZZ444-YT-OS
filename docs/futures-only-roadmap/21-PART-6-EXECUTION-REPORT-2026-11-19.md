@@ -1,7 +1,7 @@
-# Part 6 — Volume, Open Interest and COT Execution Repor
+# Part 6 — Volume, Open Interest and COT Execution Report
 
 **Review date:** 19 November 2026
-**Branch:** `codex/charter-alignment-2026-11-19
+**Branch:** `codex/charter-alignment-2026-11-19`
 **Status:** Partial. Local COT family/variant handling, source attribution, category normalization, weekly history, export and optional Supabase persistence are implemented. Live source smoke checks, production migration/write verification, verified futures-root crosswalks and licensed exchange volume/OI remain outstanding.
 
 ## Implemented
@@ -46,23 +46,23 @@ Sources: [CFTC COT reports](https://www.cftc.gov/MarketReports/CommitmentsofTrad
 
 ## Changed source paths
 
-- `cloudflare/src/cot-contracts.mjs
-- `cloudflare/src/index.js
-- `assets/cot-page.js
-- `assets/volume-open-interest.js
-- `assets/site-shell.css
-- `scripts/build_site.py
-- `scripts/validate.py
-- `tests/test_cot_contracts.mjs
-- `tests/test_worker_news_routes.mjs
-- `tests/test_build.py
-- `supabase/migrations/20261119173000_add_cot_report_observations.sql
-- `resources.json
-- `ict-futures/data/source-directory.json
-- `README.md
-- `docs/ARCHITECTURE.md
-- `docs/IMPLEMENTATION.md
-- `docs/futures-only-roadmap/README.md
+- `cloudflare/src/cot-contracts.mjs`
+- `cloudflare/src/index.js`
+- `assets/cot-page.js`
+- `assets/volume-open-interest.js`
+- `assets/site-shell.css`
+- `scripts/build_site.py`
+- `scripts/validate.py`
+- `tests/test_cot_contracts.mjs`
+- `tests/test_worker_news_routes.mjs`
+- `tests/test_build.py`
+- `supabase/migrations/20261119173000_add_cot_report_observations.sql`
+- `resources.json`
+- `ict-futures/data/source-directory.json`
+- `README.md`
+- `docs/ARCHITECTURE.md`
+- `docs/IMPLEMENTATION.md`
+- `docs/futures-only-roadmap/README.md`
 
 Generated `dist/` files come from the site builder and are not edited by hand.
 

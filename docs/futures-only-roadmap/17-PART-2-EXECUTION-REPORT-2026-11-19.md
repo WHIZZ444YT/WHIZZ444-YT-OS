@@ -1,7 +1,7 @@
-# Part 2 — ICT Academy Execution Repor
+# Part 2 — ICT Academy Execution Report
 
 **Review date:** 19 November 2026
-**Branch:** `codex/charter-alignment-2026-11-19
+**Branch:** `codex/charter-alignment-2026-11-19`
 **Status:** Partial. The content and progress model remain intact; the required verified-video gate is not met.
 
 ## Preserved baseline

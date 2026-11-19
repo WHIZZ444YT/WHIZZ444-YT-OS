@@ -1,9 +1,9 @@
 # Part 9 Execution Report — Journal and Private Workspace
 
 **Review date:** 19 November 2026
-**Repository:** `WHIZZ444YT/WHIZZ444-YT-OS
-**Branch:** `codex/charter-alignment-2026-11-19
-**Starting commit:** `ca8c86d
+**Repository:** `WHIZZ444YT/WHIZZ444-YT-OS`
+**Branch:** `codex/charter-alignment-2026-11-19`
+**Starting commit:** `ca8c86d`
 **Status:** Source implementation is ready for review. Production acceptance is **partial** until the migration and Edge Function are deployed and the authenticated runtime checks below pass.
 
 ## Baseline and scope
@@ -26,12 +26,12 @@ This inspection read policy/schema metadata and an object count only. No private
 
 ## Files changed for Part 9
 
-- `assets/account.js`, `assets/academy-learning.js`, `assets/runtime-config.js
-- `supabase/migrations/20261119190000_complete_private_workspace_records.sql
-- `supabase/functions/delete-account/index.ts
-- `scripts/build_site.py`, `scripts/validate.py
-- `docs/ARCHITECTURE.md`, `docs/IMPLEMENTATION.md`, `docs/RELEASE-CHECKLIST.md
-- `docs/futures-only-roadmap/README.md` and this repor
+- `assets/account.js`, `assets/academy-learning.js`, `assets/runtime-config.js`
+- `supabase/migrations/20261119190000_complete_private_workspace_records.sql`
+- `supabase/functions/delete-account/index.ts`
+- `scripts/build_site.py`, `scripts/validate.py`
+- `docs/ARCHITECTURE.md`, `docs/IMPLEMENTATION.md`, `docs/RELEASE-CHECKLIST.md`
+- `docs/futures-only-roadmap/README.md` and this report
 - Generated `dist/` output from the build
 
 Other files in the worktree are the prior Parts 0–8 charter-aligned implementation and reports; this report does not claim those as Part 9 changes.

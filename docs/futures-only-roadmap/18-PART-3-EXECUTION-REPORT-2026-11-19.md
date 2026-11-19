@@ -1,7 +1,7 @@
-# Part 3 — Contract Intelligence Execution Repor
+# Part 3 — Contract Intelligence Execution Report
 
 **Review date:** 19 November 2026
-**Branch:** `codex/charter-alignment-2026-11-19
+**Branch:** `codex/charter-alignment-2026-11-19`
 **Status:** Partial. Registry and consumers are aligned; official specification and expiry verification remain outstanding.
 
 ## Findings and changes
@@ -21,13 +21,13 @@
 
 ## Changed source paths
 
-- `ict-futures/data/market-universe.json
-- `ict-futures/index.html
-- `scripts/build_site.py
-- `scripts/build_academy.py
-- `assets/risk-calculator.js
-- `tests/test_build.py
-- `scripts/validate.py
+- `ict-futures/data/market-universe.json`
+- `ict-futures/index.html`
+- `scripts/build_site.py`
+- `scripts/build_academy.py`
+- `assets/risk-calculator.js`
+- `tests/test_build.py`
+- `scripts/validate.py`
 
 Generated pages/data in `dist/` were rebuilt by the canonical builder.
 

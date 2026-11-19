@@ -1,7 +1,7 @@
-# Part 8 — Risk and Prop-Firm Intelligence Execution Repor
+# Part 8 — Risk and Prop-Firm Intelligence Execution Report
 
 **Review date:** 19 November 2026
-**Branch:** `codex/charter-alignment-2026-11-19
+**Branch:** `codex/charter-alignment-2026-11-19`
 **Status:** Partial. Local all-in conditional sizing, guardrail caps, typed registry structure and explicit unverified states are built and tested. Current official contract specifications and exact prop-firm terms were not verified; no numerical firm rules are published.
 
 ## Implemented locally
@@ -34,18 +34,18 @@
 
 ## Changed canonical source paths
 
-- `assets/futures-risk-engine.mjs
-- `assets/risk-calculator.js
-- `data/prop-firm-programs.json
-- `scripts/build_site.py
-- `scripts/validate.py
-- `tests/test_futures_risk_engine.mjs
-- `tests/test_build.py
-- `README.md
-- `docs/ARCHITECTURE.md
-- `docs/IMPLEMENTATION.md
-- `docs/futures-only-roadmap/README.md
-- `docs/futures-only-roadmap/24-PART-8-EXECUTION-REPORT-2026-11-19.md
+- `assets/futures-risk-engine.mjs`
+- `assets/risk-calculator.js`
+- `data/prop-firm-programs.json`
+- `scripts/build_site.py`
+- `scripts/validate.py`
+- `tests/test_futures_risk_engine.mjs`
+- `tests/test_build.py`
+- `README.md`
+- `docs/ARCHITECTURE.md`
+- `docs/IMPLEMENTATION.md`
+- `docs/futures-only-roadmap/README.md`
+- `docs/futures-only-roadmap/24-PART-8-EXECUTION-REPORT-2026-11-19.md`
 
 The static build regenerates the `dist/` output, including `/risk/` and `/data/prop-firm-programs.json`.
 

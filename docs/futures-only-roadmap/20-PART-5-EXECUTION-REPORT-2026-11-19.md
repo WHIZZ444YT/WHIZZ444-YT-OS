@@ -1,7 +1,7 @@
-# Part 5 — Futures News and Data Gateway Execution Repor
+# Part 5 — Futures News and Data Gateway Execution Report
 
 **Review date:** 19 November 2026
-**Branch:** `codex/charter-alignment-2026-11-19
+**Branch:** `codex/charter-alignment-2026-11-19`
 **Status:** Partial. Local news contracts, filters, provider health and licensed-market-data status are implemented. Production verification, source-rights review for underlying publishers, and verified provider persistence remain outstanding.
 
 ## Implemented
@@ -26,20 +26,20 @@
 
 ## Changed source paths
 
-- `cloudflare/src/index.js
-- `cloudflare/src/news-contracts.mjs
-- `cloudflare/src/provider-http.mjs
-- `cloudflare/src/economic-providers.js
-- `assets/news-page.js
-- `assets/data-health.js
-- `scripts/build_site.py
-- `scripts/validate.py
-- `docs/ARCHITECTURE.md
-- `docs/IMPLEMENTATION.md
-- `tests/test_news_contracts.mjs
-- `tests/test_provider_http.mjs
-- `tests/test_worker_news_routes.mjs
-- `tests/test_build.py
+- `cloudflare/src/index.js`
+- `cloudflare/src/news-contracts.mjs`
+- `cloudflare/src/provider-http.mjs`
+- `cloudflare/src/economic-providers.js`
+- `assets/news-page.js`
+- `assets/data-health.js`
+- `scripts/build_site.py`
+- `scripts/validate.py`
+- `docs/ARCHITECTURE.md`
+- `docs/IMPLEMENTATION.md`
+- `tests/test_news_contracts.mjs`
+- `tests/test_provider_http.mjs`
+- `tests/test_worker_news_routes.mjs`
+- `tests/test_build.py`
 
 Generated `dist/` assets came from the site builder and were not edited by hand.
 
