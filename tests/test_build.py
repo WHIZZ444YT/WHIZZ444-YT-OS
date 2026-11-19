@@ -95,6 +95,11 @@ class BuildTests(unittest.TestCase):
         self.assertIn('report_variant',js)
         self.assertIn('publishedAt: null',js)
         self.assertIn('not treated as zero',js)
+        self.assertNotIn('comm_positions_spread_all',js)
+        worker=(ROOT/'cloudflare/src/index.js').read_text(encoding="utf-8")
+        self.assertIn('cot:"+report+":"+variant+":v6:',worker)
+        self.assertIn('rows:snapshot.rows||[]',worker)
+        self.assertIn('prefix:"cot:tff:futures-only:v6:"',worker)
     def test_cot_contract_unit_suite(self):
         result=subprocess.run(['node','--test',str(ROOT/'tests/test_cot_contracts.mjs')],cwd=ROOT,capture_output=True,text=True)
         self.assertEqual(result.returncode,0,result.stdout+result.stderr)

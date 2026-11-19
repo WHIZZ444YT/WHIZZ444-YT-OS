@@ -16,6 +16,7 @@
 
 ## Cloudflare
 - [x] Confirm Worker 2.0.0, KV namespace and 30-minute Cron are deployed; query-string redaction is enabled (19 November 2026).
+- [ ] After validation, deploy Worker 2.0.1 and confirm both Legacy variants omit the unsupported commercial-spread field, the bounded `rows` source-native response still serves the deployed frontend, `normalizedRows` remains normalized, and provider status reads the v6 COT cache.
 - [ ] Configure server-side secrets in Cloudflare only; never commit them.
 - [x] Smoke-test the existing production site's no-search COT snapshot after the bounded Worker update; the TFF futures-only UI showed a fresh response with position date 10 November 2026 (19 November 2026).
 - [ ] Test /health, /api/v1/providers, news, macro and filtered COT variants individually; verify ingestion logs, provider freshness and Supabase upserts after a real configured run.

@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { COT_DATASETS, cotResponseEnvelope, normalizeCotRows, validateCotQuery } from '../cloudflare/src/cot-contracts.mjs';
+import { COT_DATASETS, cotResponseEnvelope, cotSourceColumns, normalizeCotRows, validateCotQuery } from '../cloudflare/src/cot-contracts.mjs';
 
 test('all report families and futures-only versus combined views use distinct official dataset IDs', () => {
   for (const family of ['legacy', 'disaggregated', 'tff']) {
@@ -69,6 +69,11 @@ test('Disaggregated and Legacy mappings stay report-specific and missing values 
   }], { report: 'legacy' });
   assert.deepEqual(legacy.map(item => item.traderCategory).sort(), ['Commercial', 'Non-commercial']);
   assert.equal(legacy.find(item => item.traderCategory === 'Commercial').net, 15);
+  assert.ok(!cotSourceColumns('legacy').includes('comm_positions_spread_all'));
+  const commercial = legacy.find(item => item.traderCategory === 'Commercial');
+  assert.equal(commercial.spread, null);
+  assert.equal(commercial.sourceFieldMapping.spread, null);
+  assert.equal(commercial.missingReason.spread, 'not provided by the CFTC Legacy schema');
 });
 
 test('weekly changes are computed only within the same code, category, family and variant', () => {

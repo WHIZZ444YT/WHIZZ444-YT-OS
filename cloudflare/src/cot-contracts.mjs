@@ -20,7 +20,10 @@ export const COT_SCHEDULE_URL = "https://www.cftc.gov/MarketReports/Commitmentso
 
 const POSITION_FIELDS = Object.freeze({
   legacy: [
-    { label: "Commercial", long: "comm_positions_long_all", short: "comm_positions_short_all", spread: "comm_positions_spread_all" },
+    // The official Legacy schema (https://publicreporting.cftc.gov/api/views/jun7-fc8e)
+    // has no commercial spreading field. Keep this null so Socrata never
+    // rejects the entire $select projection for either Legacy dataset.
+    { label: "Commercial", long: "comm_positions_long_all", short: "comm_positions_short_all", spread: null, spreadReason: "not provided by the CFTC Legacy schema" },
     { label: "Non-commercial", long: "noncomm_positions_long_all", short: "noncomm_positions_short_all", spread: "noncomm_postions_spread_all" },
     { label: "Non-reportable", long: "nonrept_positions_long_all", short: "nonrept_positions_short_all", spread: null }
   ],
@@ -126,7 +129,7 @@ export function normalizeCotRows(rows, { report, variant = "futures-only", retri
         missingReason: {
           long: long === null ? "source field missing or blank; not treated as zero" : null,
           short: short === null ? "source field missing or blank; not treated as zero" : null,
-          spread: !category.spread ? "not a separate field for this category" : spread === null ? "source field missing or blank; not treated as zero" : null,
+          spread: !category.spread ? (category.spreadReason || "not a separate field for this category") : spread === null ? "source field missing or blank; not treated as zero" : null,
           openInterest: openInterest === null ? "source field missing or blank; not treated as zero" : null
         }
       });

@@ -37,11 +37,11 @@ export default {
    const results=await Promise.all(requested.map(async provider=>({provider,...await ingestEconomicProvider(provider,env,true)})));
    return json({status:results.every(x=>x.status==="fresh")?"fresh":results.some(x=>["fresh","partial"].includes(x.status))?"partial":"unavailable",results},200,cors);
   }
-  if(url.pathname==="/health"||url.pathname==="/api/v1/health")return json({ok:true,service:"finance-intelligence-os-edge",version:"2.0.0",time:new Date().toISOString(),storageConfigured:Boolean(env.SNAPSHOTS),cmsConfigured:Boolean(env.BUILDER_PUBLIC_API_KEY),databaseConfigured:Boolean(env.SUPABASE_URL&&supabaseAdminKey(env)),economicProviders:Object.keys(ECONOMIC_PROVIDER_CONFIG).length,ingestionTokenConfigured:Boolean(env.INGEST_TOKEN)},200,cors);
+  if(url.pathname==="/health"||url.pathname==="/api/v1/health")return json({ok:true,service:"finance-intelligence-os-edge",version:"2.0.1",time:new Date().toISOString(),storageConfigured:Boolean(env.SNAPSHOTS),cmsConfigured:Boolean(env.BUILDER_PUBLIC_API_KEY),databaseConfigured:Boolean(env.SUPABASE_URL&&supabaseAdminKey(env)),economicProviders:Object.keys(ECONOMIC_PROVIDER_CONFIG).length,ingestionTokenConfigured:Boolean(env.INGEST_TOKEN)},200,cors);
   if(url.pathname==="/api/v1/providers"){
    const state=env.SNAPSHOTS?await env.SNAPSHOTS.get(PROVIDER_STATE_KEY,"json"):null;
    const macroState=env.SNAPSHOTS?await env.SNAPSHOTS.get("macro:bls:v1","json"):null;
-   const cotKeys=env.SNAPSHOTS?await env.SNAPSHOTS.list({prefix:"cot:tff:v2:",limit:1}):{keys:[]};
+   const cotKeys=env.SNAPSHOTS?await env.SNAPSHOTS.list({prefix:"cot:tff:futures-only:v6:",limit:1}):{keys:[]};
    const cotState=env.SNAPSHOTS&&cotKeys.keys?.length?await env.SNAPSHOTS.get(cotKeys.keys[0].name,"json"):null;
    return json({providers:[
     {id:"gdelt-doc",label:"GDELT DOC API",access:"public-api",state:state||{status:"not-yet-fetched",lastCheckedAt:null},notes:"Discovery coverage is not comprehensive and not a licensed newswire."},
@@ -144,19 +144,21 @@ export default {
    if(!validation.ok)return json({schema_version:1,data_type:"cftc_cot_positions",status:"invalid-query",error:{code:validation.code,message:validation.message}},400,cors);
    const {report,variant,q,contractMarketCode}=validation.query;
    const marketKey=(contractMarketCode||q).toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"")||"all";
-    const cacheKey="cot:"+report+":"+variant+":v5:"+marketKey;
+    // v6 restores the source-native `rows` response contract consumed by the
+    // independently deployed static frontend. It also invalidates v5 entries,
+    // which intentionally discarded those rows.
+    const cacheKey="cot:"+report+":"+variant+":v6:"+marketKey;
    let snapshot=env.SNAPSHOTS?await env.SNAPSHOTS.get(cacheKey,"json"):null;
    if(!snapshot||!snapshot.retrievedAt||Date.now()-Date.parse(snapshot.retrievedAt)>6*60*60*1000){
      try{
       snapshot=await fetchCot(report,variant,q,contractMarketCode,env);
-      const {rows:_sourceRows,...compactSnapshot}=snapshot;
-      snapshot={...compactSnapshot,normalizedRows:(snapshot.normalizedRows||[]).map(({sourceNativeFields,...row})=>row)};
+      snapshot={...snapshot,normalizedRows:(snapshot.normalizedRows||[]).map(({sourceNativeFields,...row})=>row)};
       if(env.SNAPSHOTS)await env.SNAPSHOTS.put(cacheKey,JSON.stringify(snapshot),{expirationTtl:60*60*8});
      }
     catch(error){if(!snapshot)return json({schema_version:1,data_type:"cftc_cot_positions",status:"unavailable",report_family:report,report_variant:variant,rows:[],normalizedRows:[],source_url:validation.dataset.sourceUrl,error:"CFTC PRE request failed"},502,cors);snapshot.status="stale";snapshot.lastError="CFTC PRE refresh failed; showing last successful cache";}
    }
    const payload=cotResponseEnvelope(snapshot,snapshot.normalizedRows||normalizeCotRows(snapshot.rows||[],{report,variant,retrievedAt:snapshot.retrievedAt,sourceUrl:snapshot.sourceUrl}));
-    return json({...snapshot,...payload,normalizedRows:payload.rows,filtered:Boolean(q||contractMarketCode),query:q||null,contract_market_code:contractMarketCode||null,query_scope:q||contractMarketCode?"filtered-market-history":"latest-provider-observations",last_error:snapshot.lastError||null},200,{...cors,"Cache-Control":"public, max-age=900, s-maxage=1800"});
+   return json({...snapshot,...payload,rows:snapshot.rows||[],normalizedRows:payload.rows,filtered:Boolean(q||contractMarketCode),query:q||null,contract_market_code:contractMarketCode||null,query_scope:q||contractMarketCode?"filtered-market-history":"latest-provider-observations",last_error:snapshot.lastError||null},200,{...cors,"Cache-Control":"public, max-age=900, s-maxage=1800"});
   }
   if(url.pathname==="/api/v1/macro"){
    const cacheKey="macro:bls:v1";

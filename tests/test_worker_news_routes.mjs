@@ -13,7 +13,7 @@ function makeEnv(values = {}) {
       async get(key, type) { const value = store.get(key); if (value === undefined) return null; return type === 'json' && typeof value === 'string' ? JSON.parse(value) : value; },
       async put(key, value) { store.set(key, value); },
       async delete(key) { store.delete(key); },
-      async list() { return { keys: [] }; }
+      async list({ prefix = '' } = {}) { return { keys: [...store.keys()].filter(key => key.startsWith(prefix)).map(name => ({ name })) }; }
     }, ...values.__env
   };
 }
@@ -66,6 +66,20 @@ test('source registry exposes attribution and market-data status remains disable
   assert.equal(marketPayload.source_provider, null);
 });
 
+test('provider registry reads the current bounded COT cache namespace', async () => {
+  const retrievedAt = new Date().toISOString();
+  const env = makeEnv({
+    'cot:tff:futures-only:v6:all': JSON.stringify({ status: 'fresh', dataAsOf: '2026-11-10', retrievedAt })
+  });
+  const response = await worker.fetch(new Request('https://edge.example/api/v1/providers'), env, context());
+  assert.equal(response.status, 200);
+  const payload = await response.json();
+  const cftc = payload.providers.find(provider => provider.id === 'cftc-pre');
+  assert.equal(cftc.state.status, 'fresh');
+  assert.equal(cftc.state.dataAsOf, '2026-11-10');
+  assert.equal(cftc.state.retrievedAt, retrievedAt);
+});
+
 test('COT route selects the exact combined dataset and separates report, position and retrieval dates', async () => {
   const originalFetch = globalThis.fetch;
   let requestedUrl = '';
@@ -78,13 +92,24 @@ test('COT route selects the exact combined dataset and separates report, positio
       contract_market_name: 'NASDAQ E-MINI',
       market_and_exchange_names: 'NASDAQ E-MINI - CHICAGO MERCANTILE EXCHANGE',
       open_interest_all: '1000',
+      dealer_positions_long_all: '110',
+      dealer_positions_short_all: '90',
+      asset_mgr_positions_long: '120',
+      asset_mgr_positions_short: '100',
       lev_money_positions_long: '250',
       lev_money_positions_short: '150',
-      lev_money_positions_spread: '10'
+      lev_money_positions_spread: '10',
+      other_rept_positions_long: '80',
+      other_rept_positions_short: '70',
+      nonrept_positions_long_all: '20',
+      nonrept_positions_short_all: '25'
     }]), { status: 200, headers: { 'Content-Type': 'application/json' } });
   };
   try {
-    const env = makeEnv();
+    const env = makeEnv({ 'cot:tff:combined:v5:nasdaq': JSON.stringify({
+      status: 'fresh', retrievedAt: new Date().toISOString(), report: 'tff', variant: 'combined',
+      rows: [], normalizedRows: [], sourceUrl: 'https://source.example/obsolete-normalized-only-cache'
+    }) });
     const response = await worker.fetch(new Request('https://edge.example/api/v1/cot?report=tff&variant=combined&q=NASDAQ'), env, context());
     assert.equal(response.status, 200);
     const sourceUrl = new URL(requestedUrl);
@@ -100,7 +125,11 @@ test('COT route selects the exact combined dataset and separates report, positio
     assert.equal(payload.published_at, null);
     assert.ok(payload.retrieved_at);
     assert.ok(payload.normalizedRows.some(row => row.traderCategory === 'Leveraged Funds' && row.net === 100));
-    assert.equal(payload.rows.length, payload.normalizedRows.length);
+    assert.equal(payload.rows.length, 1);
+    assert.equal(payload.rows[0].contract_market_name, 'NASDAQ E-MINI');
+    assert.equal(payload.rows[0].report_date_as_yyyy_mm_dd, '2026-11-10T00:00:00.000');
+    assert.equal(payload.rows[0].lev_money_positions_long, '250');
+    assert.ok(payload.normalizedRows.length > payload.rows.length);
     assert.equal(Object.hasOwn(payload.normalizedRows[0], 'sourceNativeFields'), false);
     assert.equal(payload.persistence.status, 'not-configured');
   } finally {
@@ -129,6 +158,47 @@ test('unfiltered COT requests return a bounded latest-market snapshot for older 
     assert.equal(payload.filtered, false);
     assert.equal(payload.query_scope, 'latest-provider-observations');
     assert.ok(payload.normalizedRows.length > 0);
+    assert.equal(payload.rows[0].contract_market_name, 'NASDAQ');
+    assert.equal(payload.rows[0].lev_money_positions_long, '250');
+  } finally {
+    globalThis.fetch = originalFetch;
+  }
+});
+
+test('Legacy COT projection excludes unsupported commercial spreading and returns bounded raw rows', async () => {
+  const originalFetch = globalThis.fetch;
+  const requestedUrls = [];
+  globalThis.fetch = async input => {
+    requestedUrls.push(String(input));
+    return new Response(JSON.stringify([{
+      report_date_as_yyyy_mm_dd: '2026-11-10T00:00:00.000',
+      cftc_contract_market_code: '123456',
+      contract_market_name: 'NASDAQ E-MINI',
+      open_interest_all: '1000',
+      comm_positions_long_all: '500',
+      comm_positions_short_all: '300',
+      noncomm_positions_long_all: '250',
+      noncomm_positions_short_all: '450',
+      noncomm_postions_spread_all: '15'
+    }]), { status: 200, headers: { 'Content-Type': 'application/json' } });
+  };
+  try {
+    for (const variant of ['futures-only', 'combined']) {
+      const response = await worker.fetch(new Request(`https://edge.example/api/v1/cot?report=legacy&variant=${variant}`), makeEnv(), context());
+      assert.equal(response.status, 200);
+      const sourceUrl = new URL(requestedUrls.at(-1));
+      assert.match(sourceUrl.pathname, variant === 'combined' ? /jun7-fc8e\.json/ : /6dca-aqww\.json/);
+      const selected = sourceUrl.searchParams.get('$select');
+      assert.ok(selected.includes('comm_positions_long_all'));
+      assert.ok(!selected.includes('comm_positions_spread_all'));
+      const payload = await response.json();
+      assert.equal(payload.rows[0].contract_market_name, 'NASDAQ E-MINI');
+      const commercial = payload.normalizedRows.find(row => row.traderCategory === 'Commercial');
+      assert.equal(commercial.spread, null);
+      assert.equal(commercial.sourceFieldMapping.spread, null);
+      assert.equal(commercial.missingReason.spread, 'not provided by the CFTC Legacy schema');
+      assert.equal(Object.hasOwn(commercial, 'sourceNativeFields'), false);
+    }
   } finally {
     globalThis.fetch = originalFetch;
   }

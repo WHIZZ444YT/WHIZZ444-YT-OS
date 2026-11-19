@@ -4,10 +4,18 @@
 
 ## What was changed
 
-- Bounded the Cloudflare CFTC request by selecting only mapped report columns and limiting upstream rows to 156. Filtered searches remain available; an empty search now returns a bounded latest-provider snapshot so the already deployed frontend remains compatible. Public responses contain normalized records without the large source-native field object; the source fields remain available to the optional server-side persistence path.
+- Bounded the Cloudflare CFTC request by selecting mapped report columns and limiting upstream rows to 156. Filtered searches remain available; an empty search returns a bounded latest-provider snapshot. After the follow-up compatibility fix below, source-native rows are retained under `rows` for the separately deployed frontend while normalized categories remain under `normalizedRows`.
 - Reduced COT response/cache size and versioned the cache key. The browser search now requires a three-character market term before making a filtered request, disables search/refresh until the term is valid, and labels both actions accurately. The page shows the returned category-row count and source limit.
 - Updated COT route tests, build assertions, status copy, architecture/runbook references and this current audit. Rebuilt the tracked `dist/` output from the canonical source.
 - Corrected the local migration filenames to match production history. The remote-applied versions are `20261119125044_add_cot_report_observations.sql` and `20261119125110_complete_private_workspace_records.sql`; the existing import migration is named `20261108162550_add_idempotent_legacy_trade_import.sql` in both local and remote history. This was a filename/history alignment, not a new schema change.
+
+## Follow-up review fixes in the current branch
+
+- The CFTC Legacy mapping no longer projects `comm_positions_spread_all`: it is absent from the [official Legacy Combined field schema](https://publicreporting.cftc.gov/api/views/jun7-fc8e), and the shared Legacy mapping excludes it for both variants. Commercial spreading is explicitly `null` with a schema-specific missing reason; this prevents Socrata from rejecting the whole Legacy request.
+- The COT response keeps at most 156 source-native provider rows in `rows` for the independently deployed frontend and exposes normalized category rows separately in `normalizedRows`. Normalization can expand each source row into multiple category rows; nested raw fields remain removed from normalized rows. Cache key v6 invalidates v5 entries that may lack the raw-row compatibility contract.
+- The live provider registry now looks for the current TFF futures-only v6 cache namespace; its prior prefix no longer matched the route's actual cache keys and could misreport the CFTC snapshot as not yet fetched.
+- These are source changes on the PR branch, not yet validated, pushed, deployed or visible in production. The current production Worker must not be described as fixed until a post-change validation and Worker deployment are observed. The frontend remains independently deployed and still reads its source-native row contract.
+- The no-key/free baseline already has CFTC Public Reporting, unregistered BLS v1 (daily quota limited), New York Fed Markets API, Treasury Fiscal Data and ECB SDMX routes. BEA, EIA and FRED remain disabled until their free registration keys are configured. None of these public routes constitutes licensed real-time CME/ICE exchange data.
 
 ## Production actions and observed evidence
 
@@ -44,7 +52,19 @@
 5. Before enabling account deletion or public provider writes, create dedicated disposable test users, configure only the required server-side secrets, and verify Auth, two-user isolation, attachments, export/deletion cleanup and database upserts. Leave deletion disabled until those tests pass.
 6. Create a release tag only after the full release checklist, version consistency and CI are green. This branch does not create or imply a release tag.
 
-## Validation record
+## Follow-up verification on this branch
+
+- `python scripts/build_site.py` — passed; 50 resources, 15 futures families and 82 Academy pages generated.
+- `python -m unittest discover -s tests -v` — passed, 53 tests.
+- `python scripts/validate.py` — passed, 162/162 checks.
+- `python scripts/audit_internal_links.py` — passed; 130 HTML pages and 1,362 internal links checked, 0 issues.
+- `node --test tests/test_worker_news_routes.mjs` — passed, 9/9 cases, including both Legacy projections, bounded source-native `rows`, v5 cache invalidation and the v6 provider-status lookup. Node emitted its existing non-failing module-type advisory.
+- `git diff --check` — passed; Git reported only the existing LF-to-CRLF normalization notice for the dated audit report.
+- The local site could not be opened in the integrated browser because its `localhost` preview connection timed out. Responsive and keyboard review remains open. These results are local branch evidence only; production Worker deployment and the independently deployed frontend smoke test are still pending.
+
+## Previous validation record
+
+The checks below passed on the prior implementation commit before the follow-up Legacy projection, raw-row compatibility, and provider-cache fixes. They are historical baseline evidence only; the follow-up code still needs its final local checks and deployment verification.
 
 Against the implementation tree on this branch:
 
