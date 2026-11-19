@@ -1,6 +1,8 @@
 # Part 1 — Premium UI and Information Architecture
 
-**Goal:** Create a polished Futures Command Center and consistent navigation/design system without changing the existing static architecture unnecessarily.
+**Goal:** Maintain and close any verified gaps in the Futures Command Center and its information architecture without changing the existing static architecture unnecessarily.
+
+> **Current-source review (19 November 2026):** The inspected `main` source already defines 13 futures-only navigation areas in `scripts/build_site.py`, and `scripts/validate.py` contains structural assertions for that navigation and compatibility routes. The repository README describes the shared responsive shell and current route map. Use this Part as a gap-based review rubric: inspect the live source and built pages first, retain passing work, and implement only demonstrated gaps. These source and documentation checks do not by themselves prove the build, browser behavior, accessibility or deployment was verified.
 
 ## 1. Product experience
 
@@ -122,7 +124,17 @@ Never hand-edit `dist/`. Avoid a wholesale framework migration. Ensure all route
 - Respect reduced-motion, focus order and screen-reader labels.
 - Tables scroll horizontally on narrow screens or reflow to labelled cards without hiding essential columns.
 
-## 9. Acceptance criteria
+## 9. Codex plugin actions and website UX boundary
+
+Keep the 13-area product navigation focused on the deployed website. Do not add a generic Plugins area or show a connected/healthy badge merely because a tool exists in the authoring environment. If a plugin action is exposed in the website, place it in the relevant module (market data, Strategy Lab or Risk), show whether it is local-only, configured, stale or unavailable, and state which dataset or provider it uses.
+
+- The Futures Market Data Hub is not a CME/ICE feed. Binance USDⓈ-M perpetual candles are outside the product's listed-futures scope. FRED is economic data; Twelve Data coverage, delay, paid-plan entitlement and redistribution rights must be verified per series. Do not upload a local CSV from the plugin implicitly.
+- ICT Liquidity Lab reports calendar-day levels and a prior-N-bar wick-through/close-back proxy; show the timezone and calendar-day convention, and do not label it a complete ICT signal.
+- ICT Backtest Lab is a separate local CSV proxy runner, not the website's deterministic Strategy Lab. Never mix its results, data files, or history with hosted user records without an explicit, tested integration.
+- Futures Risk Manager uses supplied tick size/value and cost assumptions. It does not verify contract specs, calculate margin or fetch prop-firm rules; any website sizing output must retain its own source and verification state.
+- A website integration needs an explicit server-side call path, safe authentication, provenance/licence metadata, independent loading/error states, and tests. If no such path exists, render a truthful not-connected or not-configured state and keep the local action in Codex.
+
+## 10. Acceptance criteria
 
 - [ ] All 13 primary areas have functioning links and unique page purpose.
 - [ ] Homepage contains futures-only market/session/news/event/data-health widgets.
@@ -132,16 +144,17 @@ Never hand-edit `dist/`. Avoid a wholesale framework migration. Ensure all route
 - [ ] Accessible focus, labels, contrast and reduced-motion behavior are verified.
 - [ ] Loading/error/stale/empty/not-configured states tested for each data-backed widget.
 - [ ] Existing lesson, backtest, account and journal routes still work.
+- [ ] Plugin-only tools are not represented as website integrations; any actual integration has a documented server-side path, source/entitlement state, privacy boundary and test.
 - [ ] Build and link audit pass; manual screenshots are included in the Part report.
 
-## 10. Part-specific execution prompt
+## 11. Part-specific execution prompt
 
-> Execute Part 1 only. Inspect the current builder, route structure, CSS, JS and generated site. Implement the futures-only premium app shell and 13-area information architecture. Do not rewrite the site in a new framework. Reuse current futures modules and preserve all existing route compatibility. Build reusable UI primitives and honest data-state rendering. Test responsive layouts and accessibility as well as all routes, build and links. Do not add unverified market prices or start content/data-provider work outside what the UI needs to render correctly.
+> Review Part 1 only. Inspect the current builder, route structure, CSS, JS and generated site before changing anything. Compare the existing implementation with all 13 areas and the UI/UX acceptance criteria. Preserve criteria already met and implement only evidence-backed gaps. Do not rewrite the site in a new framework. Reuse current futures modules and preserve all existing route compatibility. Build or refine reusable UI primitives and honest data-state rendering. Keep authoring-environment plugin tools separate from deployed website capabilities unless an explicit server-side integration is implemented and tested. Verify responsive layouts, accessibility, affected routes, build and links. Do not add unverified market prices or start content/data-provider work outside what the UI needs to render correctly.
 
 
 ## Standalone handoff context — use this file by itself
 
-**Repository:** https://github.com/whizz444yt-ux/Finance-Intelligence-OS  
+**Repository:** https://github.com/WHIZZ444YT/WHIZZ444-YT-OS  
 **Product:** Futures Intelligence OS — futures-only markets, ICT futures education, futures news/data, positioning, backtesting, risk and trader workspace.  
 **Architecture to inspect and preserve:** static HTML/JavaScript/JSON; Python build at `scripts/build_site.py`; Cloudflare Worker at `cloudflare/src/index.js` with KV; Supabase Postgres/Auth/RLS; Vercel static output `dist/`; GitHub Actions and tests. This is a baseline, not proof each service/credential is currently healthy.
 
