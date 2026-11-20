@@ -670,6 +670,7 @@ class BuildTests(unittest.TestCase):
 
     def test_part4_sessions_route_has_accessible_live_controls_after_build(self):
         page=(ROOT/'dist/sessions/index.html').read_text(encoding='utf-8')
+        self.assertIn('official BLS, EIA, CFTC, Federal Reserve, ECB, Bank of England, Bank of Canada, RBA and BEA schedules',page)
         for token in ['id="sessionsTimezone"','id="sessionsRange"','id="sessionsFamily"','id="sessionsLiveState"','aria-live="polite"','Official product hours are not configured','id="sessionsWindowDate"','BLS · EIA · CFTC · FED · ECB · BOE · BOC · RBA · BEA','Verify CFTC COT schedule','Verify FOMC meeting dates','Verify ECB council dates','Verify Bank of England MPC dates','Verify Bank of Canada dates','Verify RBA board dates','Verify BEA release schedule']:
             self.assertIn(token,page)
         self.assertIn('/assets/sessions-page.css',page)
