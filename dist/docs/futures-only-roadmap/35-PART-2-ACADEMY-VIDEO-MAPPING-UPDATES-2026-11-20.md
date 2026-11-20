@@ -20,11 +20,12 @@
 
 - [ICT Power Of 3 - AMD](https://www.youtube.com/watch?v=TCFvsZeYvV8) directly teaches accumulation, manipulation and distribution, with examples and an explicit futures education tag. It is mapped only to the `amd-po3` lesson as an independent TTrades supplement, not Official ICT.
 - [Change In State Of Delivery [CISD] - Orderblock Formation - ICT Concepts](https://www.youtube.com/watch?v=CHIK5oBRKiw) directly teaches CISD with chart examples and an entry framework; the creator also tags futures education. It is mapped only to `cisd` and kept distinct from MSS. Neither video makes this site a tested or endorsed strategy source.
+- [Intro to Market Structure Shifts, Fair Value Gaps, and Displacement - ICT Concepts](https://www.youtube.com/watch?v=PePk1V0Q4QQ) is an independent TTrades supplement. Its description gives separate chapters for Market Structure (0:21), MSS (1:15), Displacement (1:50), and FVG (2:23). Those four concept pages each link directly to their own timestamped segment; none is reused as evidence for an Entry Model. The upload is general concept education, not a futures-specific worked test or performance evidence.
 
 The MMBM upload is an example, not a complete MMBM rulebook, an independently verified definition, or evidence of strategy performance. The Academy's MMBM definition remains supplemental and convention-sensitive, and the page continues to disclose that no audited performance evidence is available.
 
 ## Coverage and remaining work
 
-The strict generated registry now reports **12/82 lesson pages** and **3/8 Entry Models** with a verified exact-item video. The eight model pages are included within the 82 Academy pages and remain separately tracked for acceptance. The remaining 70 lesson pages and five Entry Model pages still need individually verified mappings. A channel page, search result, or adjacent topic is not counted as item coverage.
+The strict generated registry now reports **14/82 lesson pages** and **3/8 Entry Models** with a verified exact-item video. The eight model pages are included within the 82 Academy pages and remain separately tracked for acceptance. The remaining 68 lesson pages and five Entry Model pages still need individually verified mappings. A channel page, search result, or adjacent topic is not counted as item coverage.
 
 The mapping does not complete Part 2. Review direct-link availability and embed permission separately, keep the source and coverage current, and complete the full Academy's visual, mobile, keyboard and assistive-technology QA.

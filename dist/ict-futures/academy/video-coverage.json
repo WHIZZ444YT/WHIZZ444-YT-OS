@@ -2,10 +2,12 @@
   "schemaVersion": 1,
   "status": "PARTIAL",
   "eligibleCount": 82,
-  "coveredCount": 12,
-  "coveragePercent": 14.63,
+  "coveredCount": 14,
+  "coveragePercent": 17.07,
   "coveredIds": [
+    "market-structure",
     "mss",
+    "displacement",
     "liquidity",
     "fvg",
     "ifvg",
@@ -18,13 +20,11 @@
     "market-maker-buy-model",
     "ict-2022-model"
   ],
-  "missingCount": 70,
+  "missingCount": 68,
   "missingIds": [
-    "market-structure",
     "swing-high-low",
     "bos",
     "choch",
-    "displacement",
     "bsl",
     "ssl",
     "eqh",
@@ -112,8 +112,8 @@
       "id": "market-structure",
       "title": "Market Structure",
       "isEntryModel": false,
-      "status": "VIDEO NEEDED",
-      "verifiedVideoCount": 0,
+      "status": "VERIFIED",
+      "verifiedVideoCount": 1,
       "unverifiedCandidateCount": 3
     },
     {
@@ -137,7 +137,7 @@
       "title": "Market Structure Shift (MSS)",
       "isEntryModel": false,
       "status": "VERIFIED",
-      "verifiedVideoCount": 1,
+      "verifiedVideoCount": 2,
       "unverifiedCandidateCount": 0
     },
     {
@@ -152,8 +152,8 @@
       "id": "displacement",
       "title": "Displacement",
       "isEntryModel": false,
-      "status": "VIDEO NEEDED",
-      "verifiedVideoCount": 0,
+      "status": "VERIFIED",
+      "verifiedVideoCount": 1,
       "unverifiedCandidateCount": 3
     },
     {
@@ -257,7 +257,7 @@
       "title": "Fair Value Gap (FVG)",
       "isEntryModel": false,
       "status": "VERIFIED",
-      "verifiedVideoCount": 1,
+      "verifiedVideoCount": 2,
       "unverifiedCandidateCount": 0
     },
     {

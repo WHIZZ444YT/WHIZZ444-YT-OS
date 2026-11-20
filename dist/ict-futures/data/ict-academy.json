@@ -372,7 +372,8 @@
       "verifiedVideoIds": [
         "ict-2022-ep3",
         "ict-market-efficiency-fvg-mss",
-        "ict-2022-ep22"
+        "ict-2022-ep22",
+        "ttrades-structure-mss-fvg-displacement-2022"
       ],
       "learning": {
         "durationMinutes": 18,
@@ -808,6 +809,56 @@
             "classification": "original-creator",
             "verificationDate": null,
             "linkStatus": "Existing curated official-source record; re-check exact upload before use"
+          },
+          {
+            "resourceId": "ttrades-structure-mss-fvg-displacement-2022",
+            "title": "Intro to Market Structure Shifts, Fair Value Gaps, and Displacement - ICT Concepts",
+            "publisher": "TTrades",
+            "channelName": "TTrades",
+            "channelId": "UCQwUEVakiYDmNGe7UBza4sQ",
+            "videoId": "PePk1V0Q4QQ",
+            "url": "https://www.youtube.com/watch?v=PePk1V0Q4QQ&t=21s",
+            "language": "en",
+            "sourceClass": "independent_supplement",
+            "conceptIds": [
+              "market-structure",
+              "mss",
+              "displacement",
+              "fvg"
+            ],
+            "segments": {
+              "market-structure": {
+                "startSeconds": 21,
+                "endSeconds": 75,
+                "label": "Market structure overview"
+              },
+              "mss": {
+                "startSeconds": 75,
+                "endSeconds": 110,
+                "label": "Market Structure Shift (MSS)"
+              },
+              "displacement": {
+                "startSeconds": 110,
+                "endSeconds": 143,
+                "label": "Displacement"
+              },
+              "fvg": {
+                "startSeconds": 143,
+                "endSeconds": 165,
+                "label": "Fair Value Gap (FVG)"
+              }
+            },
+            "verificationStatus": "verified",
+            "verifiedAt": "2026-11-20",
+            "verifiedBy": "Codex research audit",
+            "lastLinkCheck": "2026-11-20",
+            "linkStatus": "verified",
+            "embedStatus": "not_checked",
+            "embedPermission": "not_checked",
+            "fallbackLinkStatus": "available",
+            "evidenceUrl": "https://www.youtube.com/watch?v=PePk1V0Q4QQ",
+            "summary": "Independent TTrades supplement, not Official ICT. The publisher description identifies this topic at 0:21 and links to a Market structure overview segment. This direct link starts at the lesson-specific segment. It is general concept education, not a futures-specific worked test or performance evidence.",
+            "sourceNote": "The verified TTrades channel upload description lists exact chapter timestamps for market structure (0:21), MSS (1:15), displacement (1:50), and FVG (2:23). Each Academy lesson links to its own reviewed segment. No futures-specific worked example or strategy performance claim is inferred."
           }
         ],
         "supplementalResources": [],
@@ -1697,7 +1748,8 @@
       "sourceNote": "The supplied PDF is the source for playbook framing where explicitly marked. Supplemental clarifications are identified as such. These are discovery links, not verified video-to-concept mappings.",
       "referenceLinks": [],
       "verifiedVideoIds": [
-        "ict-2022-ep03-mss"
+        "ict-2022-ep03-mss",
+        "ttrades-structure-mss-fvg-displacement-2022"
       ],
       "learning": {
         "durationMinutes": 22,
@@ -2122,6 +2174,56 @@
             "fallbackLinkStatus": "available",
             "evidenceUrl": "https://www.youtube.com/watch?v=nQfHZ2DEJ8c",
             "sourceNote": "Official ICT upload. Its description explicitly identifies Internal Range Liquidity and Market Structure Shifts. Mapped only to the Market Structure Shift lesson; the recording is not also counted toward other lesson pages without reviewed segments."
+          },
+          {
+            "resourceId": "ttrades-structure-mss-fvg-displacement-2022",
+            "title": "Intro to Market Structure Shifts, Fair Value Gaps, and Displacement - ICT Concepts",
+            "publisher": "TTrades",
+            "channelName": "TTrades",
+            "channelId": "UCQwUEVakiYDmNGe7UBza4sQ",
+            "videoId": "PePk1V0Q4QQ",
+            "url": "https://www.youtube.com/watch?v=PePk1V0Q4QQ&t=75s",
+            "language": "en",
+            "sourceClass": "independent_supplement",
+            "conceptIds": [
+              "market-structure",
+              "mss",
+              "displacement",
+              "fvg"
+            ],
+            "segments": {
+              "market-structure": {
+                "startSeconds": 21,
+                "endSeconds": 75,
+                "label": "Market structure overview"
+              },
+              "mss": {
+                "startSeconds": 75,
+                "endSeconds": 110,
+                "label": "Market Structure Shift (MSS)"
+              },
+              "displacement": {
+                "startSeconds": 110,
+                "endSeconds": 143,
+                "label": "Displacement"
+              },
+              "fvg": {
+                "startSeconds": 143,
+                "endSeconds": 165,
+                "label": "Fair Value Gap (FVG)"
+              }
+            },
+            "verificationStatus": "verified",
+            "verifiedAt": "2026-11-20",
+            "verifiedBy": "Codex research audit",
+            "lastLinkCheck": "2026-11-20",
+            "linkStatus": "verified",
+            "embedStatus": "not_checked",
+            "embedPermission": "not_checked",
+            "fallbackLinkStatus": "available",
+            "evidenceUrl": "https://www.youtube.com/watch?v=PePk1V0Q4QQ",
+            "summary": "Independent TTrades supplement, not Official ICT. The publisher description identifies this topic at 1:15 and links to a Market Structure Shift (MSS) segment. This direct link starts at the lesson-specific segment. It is general concept education, not a futures-specific worked test or performance evidence.",
+            "sourceNote": "The verified TTrades channel upload description lists exact chapter timestamps for market structure (0:21), MSS (1:15), displacement (1:50), and FVG (2:23). Each Academy lesson links to its own reviewed segment. No futures-specific worked example or strategy performance claim is inferred."
           }
         ],
         "supplementalResources": [],
@@ -2586,7 +2688,8 @@
       "verifiedVideoIds": [
         "ict-2022-ep3",
         "ict-market-efficiency-fvg-mss",
-        "ict-2022-ep22"
+        "ict-2022-ep22",
+        "ttrades-structure-mss-fvg-displacement-2022"
       ],
       "learning": {
         "durationMinutes": 22,
@@ -3028,6 +3131,56 @@
             "classification": "original-creator",
             "verificationDate": null,
             "linkStatus": "Existing curated official-source record; re-check exact upload before use"
+          },
+          {
+            "resourceId": "ttrades-structure-mss-fvg-displacement-2022",
+            "title": "Intro to Market Structure Shifts, Fair Value Gaps, and Displacement - ICT Concepts",
+            "publisher": "TTrades",
+            "channelName": "TTrades",
+            "channelId": "UCQwUEVakiYDmNGe7UBza4sQ",
+            "videoId": "PePk1V0Q4QQ",
+            "url": "https://www.youtube.com/watch?v=PePk1V0Q4QQ&t=110s",
+            "language": "en",
+            "sourceClass": "independent_supplement",
+            "conceptIds": [
+              "market-structure",
+              "mss",
+              "displacement",
+              "fvg"
+            ],
+            "segments": {
+              "market-structure": {
+                "startSeconds": 21,
+                "endSeconds": 75,
+                "label": "Market structure overview"
+              },
+              "mss": {
+                "startSeconds": 75,
+                "endSeconds": 110,
+                "label": "Market Structure Shift (MSS)"
+              },
+              "displacement": {
+                "startSeconds": 110,
+                "endSeconds": 143,
+                "label": "Displacement"
+              },
+              "fvg": {
+                "startSeconds": 143,
+                "endSeconds": 165,
+                "label": "Fair Value Gap (FVG)"
+              }
+            },
+            "verificationStatus": "verified",
+            "verifiedAt": "2026-11-20",
+            "verifiedBy": "Codex research audit",
+            "lastLinkCheck": "2026-11-20",
+            "linkStatus": "verified",
+            "embedStatus": "not_checked",
+            "embedPermission": "not_checked",
+            "fallbackLinkStatus": "available",
+            "evidenceUrl": "https://www.youtube.com/watch?v=PePk1V0Q4QQ",
+            "summary": "Independent TTrades supplement, not Official ICT. The publisher description identifies this topic at 1:50 and links to a Displacement segment. This direct link starts at the lesson-specific segment. It is general concept education, not a futures-specific worked test or performance evidence.",
+            "sourceNote": "The verified TTrades channel upload description lists exact chapter timestamps for market structure (0:21), MSS (1:15), displacement (1:50), and FVG (2:23). Each Academy lesson links to its own reviewed segment. No futures-specific worked example or strategy performance claim is inferred."
           }
         ],
         "supplementalResources": [],
@@ -8208,7 +8361,8 @@
       "sourceNote": "The supplied PDF is the source for playbook framing where explicitly marked. Supplemental clarifications are identified as such. These are discovery links, not verified video-to-concept mappings.",
       "referenceLinks": [],
       "verifiedVideoIds": [
-        "ict-2022-ep06-fvg"
+        "ict-2022-ep06-fvg",
+        "ttrades-structure-mss-fvg-displacement-2022"
       ],
       "learning": {
         "durationMinutes": 22,
@@ -8618,6 +8772,56 @@
             "fallbackLinkStatus": "available",
             "evidenceUrl": "https://www.youtube.com/watch?v=Bkt8B3kLATQ",
             "sourceNote": "Official ICT upload. Its description explicitly identifies a deep dive into Fair Value Gap and Market Structure Shifts. Mapped only to the Fair Value Gap lesson; the recording is not also counted toward other lesson pages without reviewed segments."
+          },
+          {
+            "resourceId": "ttrades-structure-mss-fvg-displacement-2022",
+            "title": "Intro to Market Structure Shifts, Fair Value Gaps, and Displacement - ICT Concepts",
+            "publisher": "TTrades",
+            "channelName": "TTrades",
+            "channelId": "UCQwUEVakiYDmNGe7UBza4sQ",
+            "videoId": "PePk1V0Q4QQ",
+            "url": "https://www.youtube.com/watch?v=PePk1V0Q4QQ&t=143s",
+            "language": "en",
+            "sourceClass": "independent_supplement",
+            "conceptIds": [
+              "market-structure",
+              "mss",
+              "displacement",
+              "fvg"
+            ],
+            "segments": {
+              "market-structure": {
+                "startSeconds": 21,
+                "endSeconds": 75,
+                "label": "Market structure overview"
+              },
+              "mss": {
+                "startSeconds": 75,
+                "endSeconds": 110,
+                "label": "Market Structure Shift (MSS)"
+              },
+              "displacement": {
+                "startSeconds": 110,
+                "endSeconds": 143,
+                "label": "Displacement"
+              },
+              "fvg": {
+                "startSeconds": 143,
+                "endSeconds": 165,
+                "label": "Fair Value Gap (FVG)"
+              }
+            },
+            "verificationStatus": "verified",
+            "verifiedAt": "2026-11-20",
+            "verifiedBy": "Codex research audit",
+            "lastLinkCheck": "2026-11-20",
+            "linkStatus": "verified",
+            "embedStatus": "not_checked",
+            "embedPermission": "not_checked",
+            "fallbackLinkStatus": "available",
+            "evidenceUrl": "https://www.youtube.com/watch?v=PePk1V0Q4QQ",
+            "summary": "Independent TTrades supplement, not Official ICT. The publisher description identifies this topic at 2:23 and links to a Fair Value Gap (FVG) segment. This direct link starts at the lesson-specific segment. It is general concept education, not a futures-specific worked test or performance evidence.",
+            "sourceNote": "The verified TTrades channel upload description lists exact chapter timestamps for market structure (0:21), MSS (1:15), displacement (1:50), and FVG (2:23). Each Academy lesson links to its own reviewed segment. No futures-specific worked example or strategy performance claim is inferred."
           }
         ],
         "supplementalResources": [],
