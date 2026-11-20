@@ -1353,7 +1353,9 @@
       "videoSearch": "https://www.youtube.com/results?search_query=Inner%20Circle%20Trader%20official%20Break%20of%20Structure%20%28BOS%29%20ICT%20futures",
       "sourceNote": "The supplied PDF is the source for playbook framing where explicitly marked. Supplemental clarifications are identified as such. These are discovery links, not verified video-to-concept mappings.",
       "referenceLinks": [],
-      "verifiedVideoIds": [],
+      "verifiedVideoIds": [
+        "ttrades-structure-shift-liquidity-grab-2022"
+      ],
       "learning": {
         "durationMinutes": 18,
         "evidenceBand": "SOURCED · rule-dependent",
@@ -1743,7 +1745,40 @@
           "resource-cme-institute-trade-and-risk-management-12",
           "resource-cftc-customer-education-advisory-13"
         ],
-        "videoResources": [],
+        "videoResources": [
+          {
+            "resourceId": "ttrades-structure-shift-liquidity-grab-2022",
+            "title": "Structure Shift vs Liquidity Grab - ICT Concepts",
+            "publisher": "TTrades",
+            "channelName": "TTrades",
+            "channelId": "UCQwUEVakiYDmNGe7UBza4sQ",
+            "videoId": "5rbFskdmEmU",
+            "url": "https://www.youtube.com/watch?v=5rbFskdmEmU&t=60s",
+            "language": "en",
+            "sourceClass": "independent_supplement",
+            "conceptIds": [
+              "bos"
+            ],
+            "segments": {
+              "bos": {
+                "startSeconds": 60,
+                "endSeconds": 470,
+                "label": "Break of structure vs liquidity grab walkthrough"
+              }
+            },
+            "verificationStatus": "verified",
+            "verifiedAt": "2026-11-20",
+            "verifiedBy": "Codex research audit",
+            "lastLinkCheck": "2026-11-20",
+            "linkStatus": "verified",
+            "embedStatus": "not_checked",
+            "embedPermission": "not_checked",
+            "fallbackLinkStatus": "available",
+            "evidenceUrl": "https://www.youtube.com/watch?v=5rbFskdmEmU",
+            "summary": "Independent TTrades lesson; its description explicitly contrasts break of structure with a liquidity grab. Mapped only to the BOS concept. It does not define a universal close, swing or displacement threshold and is not futures-specific performance evidence.",
+            "sourceNote": "The verified TTrades upload description names 'Break of structure vs Liquidity Grab' and lists a walkthrough from 1:00 to 7:50. This direct link starts at that walkthrough. Independent education, not Official ICT; no universal BOS threshold or futures performance evidence is inferred."
+          }
+        ],
         "supplementalResources": [],
         "topicDiscoveryUrl": "https://www.youtube.com/results?search_query=Inner%20Circle%20Trader%20official%20Break%20of%20Structure%20%28BOS%29%20ICT%20futures",
         "contentVersion": 2,
@@ -13168,7 +13203,9 @@
       "videoSearch": "https://www.youtube.com/results?search_query=Inner%20Circle%20Trader%20official%20Breaker%20Block%20ICT%20futures",
       "sourceNote": "The supplied PDF is the source for playbook framing where explicitly marked. Supplemental clarifications are identified as such. These are discovery links, not verified video-to-concept mappings.",
       "referenceLinks": [],
-      "verifiedVideoIds": [],
+      "verifiedVideoIds": [
+        "ttrades-breaker-blocks-simplified-2024"
+      ],
       "learning": {
         "durationMinutes": 28,
         "evidenceBand": "Supplemental / terminology may vary",
@@ -13547,7 +13584,40 @@
           "resource-cme-institute-trade-and-risk-management-12",
           "resource-cftc-customer-education-advisory-13"
         ],
-        "videoResources": [],
+        "videoResources": [
+          {
+            "resourceId": "ttrades-breaker-blocks-simplified-2024",
+            "title": "Breaker Blocks Simplified - ICT Concepts",
+            "publisher": "TTrades",
+            "channelName": "TTrades",
+            "channelId": "UCQwUEVakiYDmNGe7UBza4sQ",
+            "videoId": "75S4vwD4P1U",
+            "url": "https://www.youtube.com/watch?v=75S4vwD4P1U&t=26s",
+            "language": "en",
+            "sourceClass": "independent_supplement",
+            "conceptIds": [
+              "breaker-block"
+            ],
+            "segments": {
+              "breaker-block": {
+                "startSeconds": 26,
+                "endSeconds": 234,
+                "label": "Bullish Breaker Block and examples"
+              }
+            },
+            "verificationStatus": "verified",
+            "verifiedAt": "2026-11-20",
+            "verifiedBy": "Codex research audit",
+            "lastLinkCheck": "2026-11-20",
+            "linkStatus": "verified",
+            "embedStatus": "not_checked",
+            "embedPermission": "not_checked",
+            "fallbackLinkStatus": "available",
+            "evidenceUrl": "https://www.youtube.com/watch?v=75S4vwD4P1U",
+            "summary": "Independent TTrades tutorial on breaker blocks. Mapped only to the Breaker Block concept, not the separate Unicorn Entry Model. It does not establish a universal definition or strategy performance.",
+            "sourceNote": "The verified TTrades description identifies bullish breaker-block examples at 0:26 and 2:33, then starts the separate Unicorn topic at 3:54. This direct segment ends before Unicorn. Independent education, not Official ICT; the channel description also contains promotional links."
+          }
+        ],
         "supplementalResources": [],
         "topicDiscoveryUrl": "https://www.youtube.com/results?search_query=Inner%20Circle%20Trader%20official%20Breaker%20Block%20ICT%20futures",
         "contentVersion": 2,
@@ -13582,7 +13652,9 @@
       "videoSearch": "https://www.youtube.com/results?search_query=Inner%20Circle%20Trader%20official%20Mitigation%20Block%20ICT%20futures",
       "sourceNote": "The supplied PDF is the source for playbook framing where explicitly marked. Supplemental clarifications are identified as such. These are discovery links, not verified video-to-concept mappings.",
       "referenceLinks": [],
-      "verifiedVideoIds": [],
+      "verifiedVideoIds": [
+        "ttrades-mitigation-blocks-simplified-2024"
+      ],
       "learning": {
         "durationMinutes": 28,
         "evidenceBand": "Supplemental / terminology may vary",
@@ -13954,7 +14026,40 @@
           "resource-cme-institute-trade-and-risk-management-12",
           "resource-cftc-customer-education-advisory-13"
         ],
-        "videoResources": [],
+        "videoResources": [
+          {
+            "resourceId": "ttrades-mitigation-blocks-simplified-2024",
+            "title": "Mitigation Blocks Simplified - ICT Concepts",
+            "publisher": "TTrades",
+            "channelName": "TTrades",
+            "channelId": "UCQwUEVakiYDmNGe7UBza4sQ",
+            "videoId": "bbWPoajy2MY",
+            "url": "https://www.youtube.com/watch?v=bbWPoajy2MY&t=21s",
+            "language": "en",
+            "sourceClass": "independent_supplement",
+            "conceptIds": [
+              "mitigation-block"
+            ],
+            "segments": {
+              "mitigation-block": {
+                "startSeconds": 21,
+                "endSeconds": 146,
+                "label": "Mitigation reversal"
+              }
+            },
+            "verificationStatus": "verified",
+            "verifiedAt": "2026-11-20",
+            "verifiedBy": "Codex research audit",
+            "lastLinkCheck": "2026-11-20",
+            "linkStatus": "verified",
+            "embedStatus": "not_checked",
+            "embedPermission": "not_checked",
+            "fallbackLinkStatus": "available",
+            "evidenceUrl": "https://www.youtube.com/watch?v=bbWPoajy2MY",
+            "summary": "Independent TTrades lesson about mitigation blocks and their distinction from breaker blocks. This segment is mapped only to the Mitigation Block concept; it is not a futures-specific tested rule set or performance evidence.",
+            "sourceNote": "The verified TTrades description names a Mitigation (reversal) chapter at 0:21 and a separate mitigation-plus-SMT chapter at 2:26. This direct link starts at the first segment only. Independent education, not Official ICT."
+          }
+        ],
         "supplementalResources": [],
         "topicDiscoveryUrl": "https://www.youtube.com/results?search_query=Inner%20Circle%20Trader%20official%20Mitigation%20Block%20ICT%20futures",
         "contentVersion": 2,
@@ -15248,7 +15353,9 @@
       "videoSearch": "https://www.youtube.com/results?search_query=Inner%20Circle%20Trader%20official%20Premium%20%26%20Discount%20ICT%20futures",
       "sourceNote": "The supplied PDF is the source for playbook framing where explicitly marked. Supplemental clarifications are identified as such. These are discovery links, not verified video-to-concept mappings.",
       "referenceLinks": [],
-      "verifiedVideoIds": [],
+      "verifiedVideoIds": [
+        "ttrades-equilibrium-discount-premium-2025"
+      ],
       "learning": {
         "durationMinutes": 18,
         "evidenceBand": "SOURCED / operational range needed",
@@ -15619,7 +15726,46 @@
           "resource-cme-institute-trade-and-risk-management-12",
           "resource-cftc-customer-education-advisory-13"
         ],
-        "videoResources": [],
+        "videoResources": [
+          {
+            "resourceId": "ttrades-equilibrium-discount-premium-2025",
+            "title": "You Are Using Discount and Premium Wrong! - EQ For Expansions",
+            "publisher": "TTrades",
+            "channelName": "TTrades",
+            "channelId": "UCQwUEVakiYDmNGe7UBza4sQ",
+            "videoId": "IPZjNI1B5a0",
+            "url": "https://www.youtube.com/watch?v=IPZjNI1B5a0&t=26s",
+            "language": "en",
+            "sourceClass": "independent_supplement",
+            "conceptIds": [
+              "premium-discount",
+              "equilibrium"
+            ],
+            "segments": {
+              "premium-discount": {
+                "startSeconds": 26,
+                "endSeconds": 159,
+                "label": "Premium, Discount and Equilibrium framing"
+              },
+              "equilibrium": {
+                "startSeconds": 159,
+                "endSeconds": 1146,
+                "label": "Equilibrium examples"
+              }
+            },
+            "verificationStatus": "verified",
+            "verifiedAt": "2026-11-20",
+            "verifiedBy": "Codex research audit",
+            "lastLinkCheck": "2026-11-20",
+            "linkStatus": "verified",
+            "embedStatus": "not_checked",
+            "embedPermission": "not_checked",
+            "fallbackLinkStatus": "available",
+            "evidenceUrl": "https://www.youtube.com/watch?v=IPZjNI1B5a0",
+            "summary": "Independent TTrades video about Equilibrium and Premium/Discount. This direct segment is mapped only to the Premium & Discount concept; it does not prove a predictive edge or a universal dealing-range rule.",
+            "sourceNote": "The verified TTrades description says it covers Equilibrium (Discount & Premium), gives a PDF segment at 0:26 and examples from 2:39 to 19:06. The channel description mentions use for timeframe bias; that is the creator's framing, not evidence of performance. Independent education, not Official ICT; the channel description also contains promotional links."
+          }
+        ],
         "supplementalResources": [],
         "topicDiscoveryUrl": "https://www.youtube.com/results?search_query=Inner%20Circle%20Trader%20official%20Premium%20%26%20Discount%20ICT%20futures",
         "contentVersion": 2,
@@ -15654,7 +15800,9 @@
       "videoSearch": "https://www.youtube.com/results?search_query=Inner%20Circle%20Trader%20official%20Equilibrium%20%28EQ%29%20ICT%20futures",
       "sourceNote": "The supplied PDF is the source for playbook framing where explicitly marked. Supplemental clarifications are identified as such. These are discovery links, not verified video-to-concept mappings.",
       "referenceLinks": [],
-      "verifiedVideoIds": [],
+      "verifiedVideoIds": [
+        "ttrades-equilibrium-discount-premium-2025"
+      ],
       "learning": {
         "durationMinutes": 18,
         "evidenceBand": "SOURCED",
@@ -16018,7 +16166,46 @@
           "resource-cme-institute-trade-and-risk-management-12",
           "resource-cftc-customer-education-advisory-13"
         ],
-        "videoResources": [],
+        "videoResources": [
+          {
+            "resourceId": "ttrades-equilibrium-discount-premium-2025",
+            "title": "You Are Using Discount and Premium Wrong! - EQ For Expansions",
+            "publisher": "TTrades",
+            "channelName": "TTrades",
+            "channelId": "UCQwUEVakiYDmNGe7UBza4sQ",
+            "videoId": "IPZjNI1B5a0",
+            "url": "https://www.youtube.com/watch?v=IPZjNI1B5a0&t=159s",
+            "language": "en",
+            "sourceClass": "independent_supplement",
+            "conceptIds": [
+              "premium-discount",
+              "equilibrium"
+            ],
+            "segments": {
+              "premium-discount": {
+                "startSeconds": 26,
+                "endSeconds": 159,
+                "label": "Premium, Discount and Equilibrium framing"
+              },
+              "equilibrium": {
+                "startSeconds": 159,
+                "endSeconds": 1146,
+                "label": "Equilibrium examples"
+              }
+            },
+            "verificationStatus": "verified",
+            "verifiedAt": "2026-11-20",
+            "verifiedBy": "Codex research audit",
+            "lastLinkCheck": "2026-11-20",
+            "linkStatus": "verified",
+            "embedStatus": "not_checked",
+            "embedPermission": "not_checked",
+            "fallbackLinkStatus": "available",
+            "evidenceUrl": "https://www.youtube.com/watch?v=IPZjNI1B5a0",
+            "summary": "Independent TTrades video about Equilibrium and Premium/Discount. This direct segment is mapped only to the Equilibrium (EQ) concept; it does not prove a predictive edge or a universal dealing-range rule.",
+            "sourceNote": "The verified TTrades description says it covers Equilibrium (Discount & Premium), gives a PDF segment at 0:26 and examples from 2:39 to 19:06. The channel description mentions use for timeframe bias; that is the creator's framing, not evidence of performance. Independent education, not Official ICT; the channel description also contains promotional links."
+          }
+        ],
         "supplementalResources": [],
         "topicDiscoveryUrl": "https://www.youtube.com/results?search_query=Inner%20Circle%20Trader%20official%20Equilibrium%20%28EQ%29%20ICT%20futures",
         "contentVersion": 2,
@@ -16054,7 +16241,9 @@
       "videoSearch": "https://www.youtube.com/results?search_query=Inner%20Circle%20Trader%20official%20Dealing%20Range%20ICT%20futures",
       "sourceNote": "The supplied PDF is the source for playbook framing where explicitly marked. Supplemental clarifications are identified as such. These are discovery links, not verified video-to-concept mappings.",
       "referenceLinks": [],
-      "verifiedVideoIds": [],
+      "verifiedVideoIds": [
+        "ttrades-choosing-dealing-ranges-2022"
+      ],
       "learning": {
         "durationMinutes": 22,
         "evidenceBand": "SOURCED / operational definition",
@@ -16426,7 +16615,40 @@
           "resource-cme-institute-trade-and-risk-management-12",
           "resource-cftc-customer-education-advisory-13"
         ],
-        "videoResources": [],
+        "videoResources": [
+          {
+            "resourceId": "ttrades-choosing-dealing-ranges-2022",
+            "title": "Choosing Dealing Ranges & Displacement Ranges - ICT Concepts",
+            "publisher": "TTrades",
+            "channelName": "TTrades",
+            "channelId": "UCQwUEVakiYDmNGe7UBza4sQ",
+            "videoId": "CAuN4tvLInQ",
+            "url": "https://www.youtube.com/watch?v=CAuN4tvLInQ&t=20s",
+            "language": "en",
+            "sourceClass": "independent_supplement",
+            "conceptIds": [
+              "dealing-range"
+            ],
+            "segments": {
+              "dealing-range": {
+                "startSeconds": 20,
+                "endSeconds": 120,
+                "label": "Dealing Ranges"
+              }
+            },
+            "verificationStatus": "verified",
+            "verifiedAt": "2026-11-20",
+            "verifiedBy": "Codex research audit",
+            "lastLinkCheck": "2026-11-20",
+            "linkStatus": "verified",
+            "embedStatus": "not_checked",
+            "embedPermission": "not_checked",
+            "fallbackLinkStatus": "available",
+            "evidenceUrl": "https://www.youtube.com/watch?v=CAuN4tvLInQ",
+            "summary": "Independent TTrades segment directly named 'Dealing Ranges'. It maps only to the Dealing Range concept and does not determine objective swing anchors or prove a trading edge.",
+            "sourceNote": "The verified TTrades description lists the Dealing Ranges chapter from 0:20 to 2:00, followed by a separate Displacement Ranges chapter. Independent education, not Official ICT."
+          }
+        ],
         "supplementalResources": [],
         "topicDiscoveryUrl": "https://www.youtube.com/results?search_query=Inner%20Circle%20Trader%20official%20Dealing%20Range%20ICT%20futures",
         "contentVersion": 2,

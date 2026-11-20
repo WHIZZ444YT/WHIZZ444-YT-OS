@@ -1,6 +1,6 @@
 # Part 2 — Academy video mapping updates
 
-**Review date:** 20 November 2026 · **Roadmap state:** Part 2 remains partial · **Change scope:** One official, item-specific MMBM example and one independent OTE lesson supplement.
+**Review date:** 20 November 2026 · **Roadmap state:** Part 2 remains partial · **Change scope:** Item-specific Academy videos; this update adds six more concept mappings from independent publisher TTrades.
 
 ## Verified mapping
 
@@ -24,11 +24,18 @@
 - [Liquidity: Buyside & Sellside - ICT Concepts](https://www.youtube.com/watch?v=U8xH2dEgH5A) is an independent TTrades supplement whose description names Buy/Sell-side liquidity (1:13), Equal/Old Highs & Lows (4:34), and PWH/L, PDH/L and Session Highs & Lows (5:11). Seven matching concept lessons link to the listed chapter segments. It is general chart education, not a futures-specific worked test or performance evidence.
 - [ICT’s Fair Value Gap Essentials: Market Structure Shift, Displacement & Liquidity](https://www.youtube.com/watch?v=lI8QH0zAPYc) is an independent Paul Le Roy supplement. Its description names a dedicated “Swing High and Swing Low Patterns” chapter at 3:09, ending at the next named chapter at 4:19. It is mapped only to `swing-high-low`; it does not set a universal pivot rule, validate other structure lessons, or establish performance evidence. The publisher and video are not Official ICT. The direct YouTube link is retained; embed availability and permission remain unchecked.
 - [ICT Forex - Understanding The ICT Judas Swing](https://www.youtube.com/watch?v=xJMbva8SjzE) is an original upload on The Inner Circle Trader's verified channel, and its title directly names Judas Swing. It is mapped only to `judas-swing`; the general lesson is not a futures-specific test, a definition of this Academy's session filters, or performance evidence. Embed availability and permission remain unchecked.
+- [Structure Shift vs Liquidity Grab - ICT Concepts](https://www.youtube.com/watch?v=5rbFskdmEmU&t=60s) is an independent TTrades lesson. Its description distinguishes break of structure from a liquidity grab and lists a walkthrough from 1:00 to 7:50. It is mapped only to `bos`; it does not prescribe a universal BOS threshold or provide futures performance evidence.
+- [Breaker Blocks Simplified - ICT Concepts](https://www.youtube.com/watch?v=75S4vwD4P1U&t=26s) is an independent TTrades lesson mapped only to `breaker-block`. The selected segment ends before the separate Unicorn topic begins at 3:54. The video's promotional links are disclosed by its publisher; the site makes no endorsement or performance claim.
+- [Mitigation Blocks Simplified - ICT Concepts](https://www.youtube.com/watch?v=bbWPoajy2MY&t=21s) is an independent TTrades lesson mapped only to `mitigation-block`. The linked segment is the publisher's 0:21–2:26 mitigation section; later SMT, MMXM and market examples are outside the mapped segment.
+- [Choosing Dealing Ranges & Displacement Ranges - ICT Concepts](https://www.youtube.com/watch?v=CAuN4tvLInQ&t=20s) is an independent TTrades lesson mapped only to `dealing-range`. The linked 0:20–2:00 chapter ends before the separate Displacement Ranges chapter; it does not establish objective swing anchors.
+- [You Are Using Discount and Premium Wrong! - EQ For Expansions](https://www.youtube.com/watch?v=IPZjNI1B5a0&t=26s) is an independent TTrades lesson about Equilibrium and Premium/Discount. It is shared by the `premium-discount` and `equilibrium` concept pages, with separate direct timestamps for the PDF/framing section (0:26–2:39) and the examples (2:39–19:06). The creator's bias framework is educational framing, not evidence of predictive performance.
+
+For these six mappings, publisher identity, title, description/chapter scope, video ID and direct URLs were checked on 20 November 2026. They are independent educational supplements, not Official ICT material. YouTube embedding permission was not checked; the regular YouTube fallback link is retained. TTrades' descriptions contain promotional/affiliate links, which do not constitute an endorsement by this project.
 
 The MMBM upload is an example, not a complete MMBM rulebook, an independently verified definition, or evidence of strategy performance. The Academy's MMBM definition remains supplemental and convention-sensitive, and the page continues to disclose that no audited performance evidence is available.
 
 ## Coverage and remaining work
 
-The strict generated registry now reports **23/82 lesson pages** and **3/8 Entry Models** with a verified exact-item video. The eight model pages are included within the 82 Academy pages and remain separately tracked for acceptance. The remaining 59 lesson pages and five Entry Model pages still need individually verified mappings. A channel page, search result, or adjacent topic is not counted as item coverage.
+The strict generated registry now reports **29/82 lesson pages** and **3/8 Entry Models** with a verified exact-item video. The eight model pages are included within the 82 Academy pages and remain separately tracked for acceptance. The remaining 53 lesson pages and five Entry Model pages still need individually verified mappings. A channel page, search result, or adjacent topic is not counted as item coverage.
 
 The mapping does not complete Part 2. Review direct-link availability and embed permission separately, keep the source and coverage current, and complete the full Academy's visual, mobile, keyboard and assistive-technology QA.
