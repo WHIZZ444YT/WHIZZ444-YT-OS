@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "status": "not-configured",
+  "rightsStatus": "not-approved",
+  "generatedAt": null,
+  "asOfDate": null,
+  "cmeSourceBusinessDate": null,
+  "sourceFiles": [],
+  "coverage": {
+    "familyCount": 15,
+    "familiesWithCurrentOrFutureRows": 0,
+    "contractMonthRows": 0
+  },
+  "limitations": [
+    "No lifecycle rows are published because public display rights are not configured and reviewed.",
+    "Public availability or a free endpoint does not establish permission to republish market information.",
+    "Use linked exchange sources to confirm exact contract-month dates, hours, notices and settlement terms."
+  ],
+  "products": []
+}
