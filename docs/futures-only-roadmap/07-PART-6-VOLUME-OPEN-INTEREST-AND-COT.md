@@ -68,6 +68,17 @@ When an authorized exchange/vendor feed is available:
 - Roll continuous series only with a reproducible roll schedule. Do not combine old/new month volume as if same instrument.
 - Persist vendor schema, entitlement, source ID and licence restrictions.
 
+### Repository implementation checkpoint — 20 November 2026
+
+The current repository adds the following groundwork without enabling a market-data source:
+
+- Additive migration `20261120110000_add_futures_market_observations` stores contract-month OHLCV bars, daily volume and published open-interest observations with source, interval, unit, delay class and separate observation/data-as-of/retrieval timestamps.
+- `POST /api/v1/ingest/futures-market-data` uses the existing `INGEST_TOKEN`, validates a bounded batch and records an `ingestion_runs` audit row. It cannot create or modify display rights.
+- `futures_market_data_entitlements` stores the reviewed provider/venue/root/delay-class display scope, evidence reference, reviewer and optional expiry. `GET /api/v1/futures-observations` returns rows only when that scope is active, approved and unexpired. The RLS predicate enforces the same boundary without exposing the private entitlement register.
+- The Volume & Open Interest page has an accessible table for approved daily-volume/OI records and continues to keep weekly CFTC OI separate.
+
+This checkpoint is partial infrastructure only. The migration has not been applied to the active Supabase project. No CME/ICE or vendor feed, credential, exchange entitlement, delay classification review, public display license, or production ingestion run is configured or verified. Until those dependencies are satisfied, the UI has no approved market rows to show. Do not use public CFTC weekly reports as a substitute for exchange daily/intraday volume or expiry-specific OI.
+
 ## 5. Proposed normalized schema
 
 ```text

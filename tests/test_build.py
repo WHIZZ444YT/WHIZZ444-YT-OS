@@ -294,7 +294,9 @@ class BuildTests(unittest.TestCase):
         self.assertIn('metric:"open_interest"',worker)
         self.assertIn('status:"not-connected"',worker)
         self.assertIn('/api/v1/volume-open-interest?',voi)
-        self.assertIn('Daily / intraday volume', (ROOT/'scripts/build_site.py').read_text(encoding="utf-8"))
+        self.assertIn('/api/v1/futures-observations',worker)
+        self.assertIn('Authorized exchange observations', (ROOT/'scripts/build_site.py').read_text(encoding="utf-8"))
+        self.assertIn('intraday bars', voi)
     def test_provider_health_checks_are_independent(self):
         js=(ROOT/'assets/data-health.js').read_text(encoding="utf-8")
         self.assertIn('Promise.allSettled',js)
