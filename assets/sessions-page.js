@@ -18,7 +18,7 @@
     return m ? Date.UTC(+m[1], +m[2] - 1, +m[3]) : NaN;
   };
   const plusDays = (date, n) => new Date(dateOrdinal(date) + n * 86400000).toISOString().slice(0, 10);
-  const dateLabel = (date, timeZone = zone()) => {
+  const dateLabel = (date, timeZone = "UTC") => {
     const at = dateOrdinal(date);
     return Number.isFinite(at) ? new Intl.DateTimeFormat(undefined, { timeZone, dateStyle: "medium" }).format(new Date(at + 12 * 3600000)) : "Date unavailable";
   };
@@ -32,7 +32,7 @@
     try {
       const now = new Date();
       $("sessionsClock").textContent = new Intl.DateTimeFormat(undefined, { timeZone: zone(), dateStyle: "medium", timeStyle: "medium" }).format(now);
-      $("sessionsTimezoneLabel").textContent = `Displayed in ${zone()} · New York publisher time remains separately identified`;
+      $("sessionsTimezoneLabel").textContent = `Displayed in ${zone()} · each event retains its publisher timezone`;
       const ny = new Intl.DateTimeFormat(undefined, { timeZone: "America/New_York", dateStyle: "medium", timeStyle: "short" }).format(now);
       $("sessionsWindowNow").textContent = `Current New York time: ${ny} · all session references use IANA timezone rules.`;
     } catch {
@@ -52,13 +52,13 @@
     const now = Date.now();
     const range = $("sessionsRange").value;
     const selected = $("sessionsFamily").value;
-    const todaySource = dateOrdinal(todayIn("America/New_York"));
     const visible = events.filter(event => {
       if (event.schedule_status === "cancelled") return false;
       const at = Date.parse(event.scheduled_at_utc || "");
       const dateOnly = Boolean(event.date_only || !Number.isFinite(at));
       let age = 0;
       if (dateOnly) {
+        const todaySource = dateOrdinal(todayIn(event.scheduled_timezone || "America/New_York"));
         const date = dateOrdinal(event.scheduled_date);
         const lastDate = dateOrdinal(event.scheduled_end_date);
         const inclusiveEnd = Number.isFinite(lastDate) ? lastDate : date;
@@ -97,11 +97,12 @@
       const time = addClass("div", "sessions-event-time");
       if (Number.isFinite(scheduled)) {
         time.textContent = timeLabel(new Date(scheduled), zone());
-        const et = addClass("small", "", `New York: ${timeLabel(new Date(scheduled), "America/New_York")}`);
-        time.append(et);
+        const sourceZone = event.scheduled_timezone || "source timezone not supplied";
+        time.append(addClass("small", "", `${sourceZone}: ${clockLabel(new Date(scheduled), sourceZone)}`));
       } else if (event.date_only) {
-        time.textContent = `${dateLabel(event.scheduled_date, "America/New_York")} · date only`;
-        time.append(addClass("small", "", "The publisher did not provide a release time."));
+        time.textContent = `${dateLabel(event.scheduled_date, "UTC")} · date only`;
+        const sourceZone = event.scheduled_timezone ? ` Publisher calendar timezone: ${event.scheduled_timezone}.` : "";
+        time.append(addClass("small", "", `The publisher did not provide a release time.${sourceZone}`));
       } else {
         time.textContent = `${event.scheduled_date || "Scheduled date unavailable"} · ${event.scheduled_timezone || "local time"}`;
         time.append(addClass("small", "", "The local schedule time could not be resolved safely. Verify the issuer calendar."));
@@ -116,7 +117,7 @@
       const tags = addClass("div", "sessions-event-tags");
       const publisher = String(event.publisher_id || "").toUpperCase();
       tags.append(addClass("span", "sessions-tag official", publisher ? `OFFICIAL ${publisher} SCHEDULE` : "OFFICIAL PUBLISHER SCHEDULE"));
-      tags.append(addClass("span", "sessions-tag", event.schedule_time_resolution === "date-only" ? "DATE ONLY" : event.timezone_basis === "source-calendar-policy" ? "ET FROM SOURCE POLICY" : "TIMEZONE-SPECIFIC"));
+      tags.append(addClass("span", "sessions-tag", event.schedule_time_resolution === "date-only" ? "DATE ONLY" : event.timezone_basis === "source-calendar-policy" ? "TIME FROM PUBLISHER POLICY" : "TIMEZONE-SPECIFIC"));
       for (const market of event.affected_instruments || []) tags.append(addClass("span", "sessions-tag", instrumentLabel(market)));
       title.append(tags);
       card.append(time, title, detail);
@@ -188,7 +189,11 @@
         { id: "BLS", path: "/api/v1/events" },
         { id: "EIA", path: "/api/v1/events/eia" },
         { id: "CFTC", path: "/api/v1/events/cftc" },
-        { id: "FOMC", path: "/api/v1/events/fomc" }
+        { id: "FOMC", path: "/api/v1/events/fomc" },
+        { id: "ECB", path: "/api/v1/events/ecb" },
+        { id: "BoE", path: "/api/v1/events/boe" },
+        { id: "BoC", path: "/api/v1/events/boc" },
+        { id: "RBA", path: "/api/v1/events/rba" }
       ];
       const settled = await Promise.allSettled(feeds.map(async feed => {
         const response = await fetch(apiBase + feed.path, { headers: { Accept: "application/json" }, cache: "no-store", signal: AbortSignal.timeout(16000) });
@@ -214,7 +219,7 @@
         return `${feed.id}: ${label} · source time basis ${sourceZone}`;
       });
       $("sessionsRetrievedAt").textContent = `Publisher retrievals: ${retrievals.join(" · ")}`;
-      $("sessionsLiveState").textContent = incomplete ? `${failures.join(" · ") || "At least one publisher snapshot is stale."} Verify every event at its issuer before relying on the schedule.` : "Official BLS, EIA, CFTC and Federal Reserve schedules are included. FOMC entries are date-only; verify issuer revisions. Forecasts and actual values are not supplied.";
+      $("sessionsLiveState").textContent = incomplete ? `${failures.join(" · ") || "At least one publisher snapshot is stale."} Verify every event at its issuer before relying on the schedule.` : "Official BLS, EIA, CFTC, Federal Reserve, ECB, Bank of England, Bank of Canada and RBA schedules are included. ECB, FOMC and RBA entries are date-only; verify issuer revisions. Forecasts and actual values are not supplied.";
       $("sessionsLiveState").dataset.tone = incomplete ? "warn" : "";
     } catch (error) {
       snapshot = null; events = [];

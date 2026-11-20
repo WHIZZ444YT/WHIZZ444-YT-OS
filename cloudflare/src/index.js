@@ -3,7 +3,7 @@ import { filterNewsArticles, marketDataStatus, NEWS_SOURCE_REGISTRY, newsRespons
 import { nextProviderCircuitState, providerCircuitIsOpen } from "./provider-http.mjs";
 import { COT_DATASETS, asFiniteNumber, cotResponseEnvelope, cotSourceColumns, normalizeCotRows, validateCotQuery } from "./cot-contracts.mjs";
 import { fetchBlsCalendar, fetchEiaWpsrSchedule } from "./economic-calendar.mjs";
-import { CFTC_COT_SCHEDULE_URL, FOMC_CALENDAR_URL, fetchCftcCotSchedule, fetchFomcCalendar } from "./economic-calendar-extended.mjs";
+import { BOC_RATE_CALENDAR_URL, BOE_MPC_CALENDAR_URL, CFTC_COT_SCHEDULE_URL, ECB_COUNCIL_CALENDAR_URL, FOMC_CALENDAR_URL, RBA_BOARD_CALENDAR_URL, fetchBocRateCalendar, fetchBoeMpcCalendar, fetchCftcCotSchedule, fetchEcbCouncilCalendar, fetchFomcCalendar, fetchRbaBoardCalendar } from "./economic-calendar-extended.mjs";
 import { normalizeFuturesObservationBatch, validateFuturesObservationQuery } from "./futures-observations.mjs";
 
 const NEWS_KEY = "snapshot:gdelt:news:v1";
@@ -13,6 +13,10 @@ const BLS_CALENDAR_KEY = "schedule:bls:ics:v1";
 const EIA_SCHEDULE_KEY = "schedule:eia:wpsr:v1";
 const CFTC_SCHEDULE_KEY = "schedule:cftc:cot:v1";
 const FOMC_SCHEDULE_KEY = "schedule:fed:fomc:v1";
+const ECB_SCHEDULE_KEY = "schedule:ecb:council:v1";
+const BOE_SCHEDULE_KEY = "schedule:boe:mpc:v1";
+const BOC_SCHEDULE_KEY = "schedule:boc:policy-rate:v1";
+const RBA_SCHEDULE_KEY = "schedule:rba:monetary-policy-board:v1";
 const ALLOWED_BUILDER_MODELS = new Set(["page", "ict-lesson", "research-article", "glossary"]);
 const GDELT_QUERY = {
  label: "Finance futures, macro & commodities",
@@ -100,6 +104,10 @@ export default {
    const eiaScheduleState=env.SNAPSHOTS?await env.SNAPSHOTS.get(EIA_SCHEDULE_KEY,"json"):null;
    const cftcScheduleState=env.SNAPSHOTS?await env.SNAPSHOTS.get(CFTC_SCHEDULE_KEY,"json"):null;
    const fomcCalendarState=env.SNAPSHOTS?await env.SNAPSHOTS.get(FOMC_SCHEDULE_KEY,"json"):null;
+   const ecbCalendarState=env.SNAPSHOTS?await env.SNAPSHOTS.get(ECB_SCHEDULE_KEY,"json"):null;
+   const boeCalendarState=env.SNAPSHOTS?await env.SNAPSHOTS.get(BOE_SCHEDULE_KEY,"json"):null;
+   const bocCalendarState=env.SNAPSHOTS?await env.SNAPSHOTS.get(BOC_SCHEDULE_KEY,"json"):null;
+   const rbaCalendarState=env.SNAPSHOTS?await env.SNAPSHOTS.get(RBA_SCHEDULE_KEY,"json"):null;
    const cotKeys=env.SNAPSHOTS?await env.SNAPSHOTS.list({prefix:"cot:tff:futures-only:v6:",limit:1}):{keys:[]};
    const cotState=env.SNAPSHOTS&&cotKeys.keys?.length?await env.SNAPSHOTS.get(cotKeys.keys[0].name,"json"):null;
    return json({providers:[
@@ -108,6 +116,10 @@ export default {
     {id:"bls-calendar",label:"BLS Online Calendar (official ICS)",access:"official-scheduled-feed-no-key",state:blsCalendarState?{status:blsCalendarState.status,eventCount:blsCalendarState.event_count,retrievedAt:blsCalendarState.retrieved_at,lastError:blsCalendarState.last_error||null}:{status:env.SNAPSHOTS?"available-on-demand":"not-configured"},notes:"Most scheduled releases from the BLS national office; updated by BLS as needed. This is not a complete macro calendar."},
     {id:"cftc-cot-schedule",label:"CFTC COT Release Schedule",access:"official-publisher-schedule-no-key",state:cftcScheduleState?{status:cftcScheduleState.status,eventCount:cftcScheduleState.event_count,retrievedAt:cftcScheduleState.retrieved_at,lastError:cftcScheduleState.last_error||null}:{status:env.SNAPSHOTS?"available-on-demand":"not-configured"},notes:"Publisher-listed COT dates and Eastern release time. CFTC announced a planned semiweekly cadence change; verify the operational schedule."},
     {id:"fomc-calendar",label:"Federal Reserve FOMC Meeting Calendar",access:"official-publisher-schedule-no-key",state:fomcCalendarState?{status:fomcCalendarState.status,eventCount:fomcCalendarState.event_count,retrievedAt:fomcCalendarState.retrieved_at,lastError:fomcCalendarState.last_error||null}:{status:env.SNAPSHOTS?"available-on-demand":"not-configured"},notes:"Publisher meeting dates only; no release time and not a complete macro calendar."},
+    {id:"ecb-council-calendar",label:"European Central Bank Governing Council Calendar",access:"official-publisher-schedule-no-key",state:ecbCalendarState?{status:ecbCalendarState.status,eventCount:ecbCalendarState.event_count,retrievedAt:ecbCalendarState.retrieved_at,lastError:ecbCalendarState.last_error||null}:{status:env.SNAPSHOTS?"available-on-demand":"not-configured"},notes:"Official monetary-policy meeting dates only; no release time is inferred."},
+    {id:"boe-mpc-calendar",label:"Bank of England MPC Announcement Calendar",access:"official-publisher-schedule-no-key",state:boeCalendarState?{status:boeCalendarState.status,eventCount:boeCalendarState.event_count,retrievedAt:boeCalendarState.retrieved_at,lastError:boeCalendarState.last_error||null}:{status:env.SNAPSHOTS?"available-on-demand":"not-configured"},notes:"Confirmed announcement dates; time is included only while the separate official 12 noon policy page confirms it."},
+    {id:"boc-rate-calendar",label:"Bank of Canada Policy Rate Calendar",access:"official-publisher-schedule-no-key",state:bocCalendarState?{status:bocCalendarState.status,eventCount:bocCalendarState.event_count,retrievedAt:bocCalendarState.retrieved_at,lastError:bocCalendarState.last_error||null}:{status:env.SNAPSHOTS?"available-on-demand":"not-configured"},notes:"Fixed rate-announcement dates; time is included only while the separate official 9:45 Eastern policy page confirms it."},
+    {id:"rba-monetary-policy-calendar",label:"Reserve Bank of Australia Board Meeting Schedule",access:"official-publisher-schedule-no-key",state:rbaCalendarState?{status:rbaCalendarState.status,eventCount:rbaCalendarState.event_count,retrievedAt:rbaCalendarState.retrieved_at,lastError:rbaCalendarState.last_error||null}:{status:env.SNAPSHOTS?"available-on-demand":"not-configured"},notes:"Monetary Policy Board meeting date ranges only; no decision release time is inferred."},
     {id:"cftc-pre",label:"CFTC Public Reporting Environment",access:"public-api",state:cotState?{status:cotState.status,dataAsOf:cotState.dataAsOf,retrievedAt:cotState.retrievedAt}:{status:"available-on-demand"}},
     {id:"nyfed-markets",label:"Federal Reserve Bank of New York Markets Data API",access:"public-api-no-key",state:env.SNAPSHOTS?{status:"available-on-demand"}:{status:"not-configured"},notes:"SOFR, EFFR, OBFR and related published reference rates; not live futures prices."},
     {id:"builder-content",label:"Builder.io Content API",access:"public-content-api",state:{status:env.BUILDER_PUBLIC_API_KEY?"configured":"needs-public-space-key"}},
@@ -167,6 +179,30 @@ export default {
   if(url.pathname==="/api/v1/events/fomc"){
    if(!env.SNAPSHOTS)return json({schema_version:1,data_type:"official_economic_release_schedule",status:"not-configured",provider:"Federal Reserve FOMC meeting calendar",source_url:FOMC_CALENDAR_URL,events:[],event_count:0,error:"Calendar snapshot storage is not configured."},503,{...cors,"Cache-Control":"no-store"});
    const result=await getPublisherSchedule(env,FOMC_SCHEDULE_KEY,fetchFomcCalendar,{provider:"Federal Reserve FOMC meeting calendar",publisher:"Board of Governors of the Federal Reserve System",source_url:FOMC_CALENDAR_URL,schedule_url:FOMC_CALENDAR_URL,source_timezone:null,error:"The official Federal Reserve calendar could not be retrieved. Check the issuer schedule directly."});
+   return json(result.snapshot,result.status,{...cors,"Cache-Control":result.status===200?"public, max-age=300, s-maxage=900":"no-store",...(result.retryAfter?{"Retry-After":String(result.retryAfter)}:{})});
+  }
+
+  if(url.pathname==="/api/v1/events/ecb"){
+   if(!env.SNAPSHOTS)return json({schema_version:1,data_type:"official_economic_release_schedule",status:"not-configured",provider:"ECB Governing Council monetary policy meeting calendar",publisher:"European Central Bank",publisher_id:"ECB",source_url:ECB_COUNCIL_CALENDAR_URL,schedule_url:ECB_COUNCIL_CALENDAR_URL,source_timezone:"Europe/Berlin",events:[],event_count:0,error:"Calendar snapshot storage is not configured."},503,{...cors,"Cache-Control":"no-store"});
+   const result=await getPublisherSchedule(env,ECB_SCHEDULE_KEY,fetchEcbCouncilCalendar,{provider:"ECB Governing Council monetary policy meeting calendar",publisher:"European Central Bank",publisher_id:"ECB",source_url:ECB_COUNCIL_CALENDAR_URL,schedule_url:ECB_COUNCIL_CALENDAR_URL,source_timezone:"Europe/Berlin",error:"The official ECB calendar could not be retrieved. Check the issuer schedule directly."});
+   return json(result.snapshot,result.status,{...cors,"Cache-Control":result.status===200?"public, max-age=300, s-maxage=900":"no-store",...(result.retryAfter?{"Retry-After":String(result.retryAfter)}:{})});
+  }
+
+  if(url.pathname==="/api/v1/events/boe"){
+   if(!env.SNAPSHOTS)return json({schema_version:1,data_type:"official_economic_release_schedule",status:"not-configured",provider:"Bank of England Monetary Policy Committee announcement calendar",publisher:"Bank of England",publisher_id:"BOE",source_url:BOE_MPC_CALENDAR_URL,schedule_url:BOE_MPC_CALENDAR_URL,source_timezone:"Europe/London",events:[],event_count:0,error:"Calendar snapshot storage is not configured."},503,{...cors,"Cache-Control":"no-store"});
+   const result=await getPublisherSchedule(env,BOE_SCHEDULE_KEY,fetchBoeMpcCalendar,{provider:"Bank of England Monetary Policy Committee announcement calendar",publisher:"Bank of England",publisher_id:"BOE",source_url:BOE_MPC_CALENDAR_URL,schedule_url:BOE_MPC_CALENDAR_URL,source_timezone:"Europe/London",error:"The official Bank of England calendar could not be retrieved. Check the issuer schedule directly."});
+   return json(result.snapshot,result.status,{...cors,"Cache-Control":result.status===200?"public, max-age=300, s-maxage=900":"no-store",...(result.retryAfter?{"Retry-After":String(result.retryAfter)}:{})});
+  }
+
+  if(url.pathname==="/api/v1/events/boc"){
+   if(!env.SNAPSHOTS)return json({schema_version:1,data_type:"official_economic_release_schedule",status:"not-configured",provider:"Bank of Canada policy interest rate announcement schedule",publisher:"Bank of Canada",publisher_id:"BOC",source_url:BOC_RATE_CALENDAR_URL,schedule_url:BOC_RATE_CALENDAR_URL,source_timezone:"America/Toronto",events:[],event_count:0,error:"Calendar snapshot storage is not configured."},503,{...cors,"Cache-Control":"no-store"});
+   const result=await getPublisherSchedule(env,BOC_SCHEDULE_KEY,fetchBocRateCalendar,{provider:"Bank of Canada policy interest rate announcement schedule",publisher:"Bank of Canada",publisher_id:"BOC",source_url:BOC_RATE_CALENDAR_URL,schedule_url:BOC_RATE_CALENDAR_URL,source_timezone:"America/Toronto",error:"The official Bank of Canada schedule could not be retrieved. Check the issuer schedule directly."});
+   return json(result.snapshot,result.status,{...cors,"Cache-Control":result.status===200?"public, max-age=300, s-maxage=900":"no-store",...(result.retryAfter?{"Retry-After":String(result.retryAfter)}:{})});
+  }
+
+  if(url.pathname==="/api/v1/events/rba"){
+   if(!env.SNAPSHOTS)return json({schema_version:1,data_type:"official_economic_release_schedule",status:"not-configured",provider:"Reserve Bank of Australia Monetary Policy Board meeting calendar",publisher:"Reserve Bank of Australia",publisher_id:"RBA",source_url:RBA_BOARD_CALENDAR_URL,schedule_url:RBA_BOARD_CALENDAR_URL,source_timezone:"Australia/Sydney",events:[],event_count:0,error:"Calendar snapshot storage is not configured."},503,{...cors,"Cache-Control":"no-store"});
+   const result=await getPublisherSchedule(env,RBA_SCHEDULE_KEY,fetchRbaBoardCalendar,{provider:"Reserve Bank of Australia Monetary Policy Board meeting calendar",publisher:"Reserve Bank of Australia",publisher_id:"RBA",source_url:RBA_BOARD_CALENDAR_URL,schedule_url:RBA_BOARD_CALENDAR_URL,source_timezone:"Australia/Sydney",error:"The official Reserve Bank of Australia calendar could not be retrieved. Check the issuer schedule directly."});
    return json(result.snapshot,result.status,{...cors,"Cache-Control":result.status===200?"public, max-age=300, s-maxage=900":"no-store",...(result.retryAfter?{"Retry-After":String(result.retryAfter)}:{})});
   }
 

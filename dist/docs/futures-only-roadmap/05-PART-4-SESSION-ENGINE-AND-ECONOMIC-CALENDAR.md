@@ -129,7 +129,7 @@ Provider forecast fields may be unavailable; null is not zero. Store first-relea
 
 ## 8. Schedule ingestion and exception handling
 
-- Pull official agency schedules where machine-readable and permitted. The current branch has bounded no-key adapters for BLS ICS, the EIA WPSR schedule, the CFTC COT release schedule and Federal Reserve FOMC meeting dates. These are separate source snapshots, not a complete macro calendar.
+- Pull official agency schedules where machine-readable and permitted. The current implementation has bounded no-key adapters for BLS ICS, the EIA WPSR schedule, the CFTC COT release schedule, Federal Reserve FOMC meeting dates, ECB Governing Council monetary-policy meeting dates, Bank of England MPC announcement dates, Bank of Canada rate-announcement dates and RBA Monetary Policy Board date ranges. BoE noon and Bank of Canada 9:45 Eastern times are included only while a separate official policy page confirms the release-time rule; ECB, FOMC and RBA items remain date-only where no exact release time is supplied. These are separate source snapshots, not a complete macro calendar.
 - Prefer API/ICS/RSS or official page parsing over manually maintained dates.
 - Use an admin-maintained exception record when agency schedule is not machine-readable.
 - Every manual exception needs official URL, checked date, editor and expiry/confirmation date.
@@ -181,7 +181,7 @@ Use current official exchange schedule/holiday/contract notices as the authority
 - [ ] Holiday and rescheduled-event exceptions are represented.
 - [ ] No forecast/actual values are invented.
 - [ ] Contract-specific event relevance is visible.
-- [ ] BLS, EIA exception, CFTC release-date and date-only FOMC schedule adapters are tested.
+- [x] BLS, EIA exception, CFTC release-date, date-only FOMC and four central-bank schedule adapters have parser, metadata and route-cache tests, including UK/Canada daylight-saving conversion and date-only ECB/RBA ranges.
 - [ ] Production Worker routes are deployed and smoke-tested; scheduled snapshots remain partial coverage, not a complete global event calendar.
 - [ ] Calendar pages and feeds pass build, link and mobile QA.
 

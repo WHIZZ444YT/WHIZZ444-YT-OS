@@ -174,7 +174,11 @@ test('provider registry exposes publisher calendar freshness separately from dat
     'schedule:bls:ics:v1': JSON.stringify({ status: 'fresh', event_count: 12, retrieved_at: retrievedAt }),
     'schedule:eia:wpsr:v1': JSON.stringify({ status: 'fresh', event_count: 8, retrieved_at: retrievedAt }),
     'schedule:cftc:cot:v1': JSON.stringify({ status: 'fresh', event_count: 4, retrieved_at: retrievedAt }),
-    'schedule:fed:fomc:v1': JSON.stringify({ status: 'fresh', event_count: 2, retrieved_at: retrievedAt })
+    'schedule:fed:fomc:v1': JSON.stringify({ status: 'fresh', event_count: 2, retrieved_at: retrievedAt }),
+    'schedule:ecb:council:v1': JSON.stringify({ status: 'fresh', event_count: 3, retrieved_at: retrievedAt }),
+    'schedule:boe:mpc:v1': JSON.stringify({ status: 'fresh', event_count: 8, retrieved_at: retrievedAt }),
+    'schedule:boc:policy-rate:v1': JSON.stringify({ status: 'fresh', event_count: 8, retrieved_at: retrievedAt }),
+    'schedule:rba:monetary-policy-board:v1': JSON.stringify({ status: 'fresh', event_count: 8, retrieved_at: retrievedAt })
   });
   const response = await worker.fetch(new Request('https://edge.example/api/v1/providers'), env, context());
   const providers = (await response.json()).providers;
@@ -182,6 +186,10 @@ test('provider registry exposes publisher calendar freshness separately from dat
   const eiaSchedule = providers.find(provider => provider.id === 'eia-wpsr-schedule');
   const cftcSchedule = providers.find(provider => provider.id === 'cftc-cot-schedule');
   const fomcCalendar = providers.find(provider => provider.id === 'fomc-calendar');
+  const ecbCalendar = providers.find(provider => provider.id === 'ecb-council-calendar');
+  const boeCalendar = providers.find(provider => provider.id === 'boe-mpc-calendar');
+  const bocCalendar = providers.find(provider => provider.id === 'boc-rate-calendar');
+  const rbaCalendar = providers.find(provider => provider.id === 'rba-monetary-policy-calendar');
   assert.equal(calendar.state.status, 'fresh');
   assert.equal(calendar.state.eventCount, 12);
   assert.equal(calendar.state.retrievedAt, retrievedAt);
@@ -192,11 +200,17 @@ test('provider registry exposes publisher calendar freshness separately from dat
   assert.match(cftcSchedule.notes, /semiweekly cadence change/);
   assert.equal(fomcCalendar.state.eventCount, 2);
   assert.match(fomcCalendar.notes, /no release time/);
+  assert.equal(ecbCalendar.state.eventCount, 3);
+  assert.match(ecbCalendar.notes, /no release time/);
+  assert.equal(boeCalendar.state.eventCount, 8);
+  assert.equal(bocCalendar.state.eventCount, 8);
+  assert.equal(rbaCalendar.state.eventCount, 8);
+  assert.match(rbaCalendar.notes, /no decision release time/);
 
   const unconfigured = makeEnv({ __env: { SNAPSHOTS: null } });
   const unavailableResponse = await worker.fetch(new Request('https://edge.example/api/v1/providers'), unconfigured, context());
   const unavailableProviders = (await unavailableResponse.json()).providers;
-  for (const id of ['bls-calendar', 'eia-wpsr-schedule', 'cftc-cot-schedule', 'fomc-calendar']) {
+  for (const id of ['bls-calendar', 'eia-wpsr-schedule', 'cftc-cot-schedule', 'fomc-calendar', 'ecb-council-calendar', 'boe-mpc-calendar', 'boc-rate-calendar', 'rba-monetary-policy-calendar']) {
     assert.equal(unavailableProviders.find(provider => provider.id === id).state.status, 'not-configured');
   }
 });
@@ -232,6 +246,46 @@ test('official CFTC and Federal Reserve schedule routes fetch and cache separate
     assert.equal(fomcPayload.events[0].scheduled_at_utc, null);
     await worker.fetch(new Request('https://edge.example/api/v1/events/fomc'), env, context());
     assert.equal(urls.filter(url => url.includes('federalreserve.gov')).length, 1);
+  } finally { globalThis.fetch = originalFetch; }
+});
+
+test('central-bank calendar routes are independently source-labelled, cached, and policy-gated', async () => {
+  const originalFetch = globalThis.fetch;
+  const requested = [];
+  const sources = new Map([
+    ['https://www.ecb.europa.eu/press/calendars/mgcgc/html/index.en.html', '<html><h1>Schedules for the meetings of the Governing Council and General Council of the ECB and related press conferences</h1><p>16/12/2026</p><p>Governing Council of the ECB: monetary policy meeting in Frankfurt (Day 1)</p></html>'],
+    ['https://www.bankofengland.co.uk/monetary-policy/upcoming-mpc-dates', '<html><h1>Monetary Policy Committee dates for 2026 and 2027</h1><h2>2026 confirmed dates</h2><p>Thursday 17 December | December MPC Summary and minutes</p><p>This page was last updated 21 September 2026</p></html>'],
+    ['https://www.bankofengland.co.uk/monetary-policy', "<html><p>We publish the MPC's decision with the minutes of the meetings at 12 noon on the day of the announcement, which is usually a Thursday.</p></html>"],
+    ['https://www.bankofcanada.ca/core-functions/monetary-policy/key-interest-rate/', '<html><h1>Policy interest rate</h1><h2>Schedule for 2026</h2><p>December 9 Interest rate announcement</p></html>'],
+    ['https://www.bankofcanada.ca/core-functions/monetary-policy/key-interest-rate/blackout-guidelines/', '<html><p>The key policy rate decision is published on a Wednesday at 9:45 Eastern Time.</p></html>'],
+    ['https://www.rba.gov.au/schedules-events/board-meeting-schedules.html', '<html><h1>Board Meeting Schedules</h1><p>The meeting schedules for the Monetary Policy Board and Payments System Board are below.</p><h2>Board meeting schedules 2026</h2><table><tr><td>December</td><td>7–8 December</td><td></td></tr></table></html>']
+  ]);
+  globalThis.fetch = async input => {
+    const url = String(input); requested.push(url);
+    if (!sources.has(url)) throw new Error(`unexpected upstream ${url}`);
+    return new Response(sources.get(url), { headers: { 'content-type': 'text/html', 'last-modified': 'Wed, 18 Nov 2026 12:00:00 GMT' } });
+  };
+  try {
+    const env = makeEnv();
+    const expected = [
+      ['/api/v1/events/ecb', 'ECB', true], ['/api/v1/events/boe', 'BOE', false],
+      ['/api/v1/events/boc', 'BOC', false], ['/api/v1/events/rba', 'RBA', true]
+    ];
+    for (const [path, publisherId, dateOnly] of expected) {
+      const response = await worker.fetch(new Request(`https://edge.example${path}`), env, context());
+      assert.equal(response.status, 200, path);
+      const payload = await response.json();
+      assert.equal(payload.publisher_id, publisherId);
+      assert.ok(payload.events.length, `${path} returned no future meetings: ${payload.error || payload.last_error || payload.status}`);
+      assert.equal(payload.event_count, payload.events.length);
+      assert.equal(payload.events[0].date_only, dateOnly);
+      assert.equal(payload.events[0].source_url.startsWith('https://'), true);
+      await worker.fetch(new Request(`https://edge.example${path}`), env, context());
+    }
+    assert.equal(requested.length, 6);
+    const unconfigured = await worker.fetch(new Request('https://edge.example/api/v1/events/ecb'), makeEnv({ __env: { SNAPSHOTS: null } }), context());
+    assert.equal(unconfigured.status, 503);
+    assert.equal((await unconfigured.json()).status, 'not-configured');
   } finally { globalThis.fetch = originalFetch; }
 });
 

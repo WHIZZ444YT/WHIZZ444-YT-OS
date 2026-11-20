@@ -612,10 +612,18 @@ class BuildTests(unittest.TestCase):
         self.assertIn('/api/v1/events/eia',worker)
         self.assertIn('/api/v1/events/cftc',worker)
         self.assertIn('/api/v1/events/fomc',worker)
+        self.assertIn('/api/v1/events/ecb',worker)
+        self.assertIn('/api/v1/events/boe',worker)
+        self.assertIn('/api/v1/events/boc',worker)
+        self.assertIn('/api/v1/events/rba',worker)
         self.assertIn('bls-calendar',worker)
         self.assertIn('eia-wpsr-schedule',worker)
         self.assertIn('cftc-cot-schedule',worker)
         self.assertIn('fomc-calendar',worker)
+        self.assertIn('ecb-council-calendar',worker)
+        self.assertIn('boe-mpc-calendar',worker)
+        self.assertIn('boc-rate-calendar',worker)
+        self.assertIn('rba-monetary-policy-calendar',worker)
         self.assertIn('/api/v1/events',health)
         self.assertIn('/api/v1/events/eia',health)
         self.assertIn('/api/v1/events/cftc',health)
@@ -630,7 +638,7 @@ class BuildTests(unittest.TestCase):
 
     def test_part4_sessions_route_has_accessible_live_controls_after_build(self):
         page=(ROOT/'dist/sessions/index.html').read_text(encoding='utf-8')
-        for token in ['id="sessionsTimezone"','id="sessionsRange"','id="sessionsFamily"','id="sessionsLiveState"','aria-live="polite"','Official product hours are not configured','id="sessionsWindowDate"','BLS · EIA · CFTC · FOMC','Verify CFTC COT schedule','Verify FOMC meeting dates']:
+        for token in ['id="sessionsTimezone"','id="sessionsRange"','id="sessionsFamily"','id="sessionsLiveState"','aria-live="polite"','Official product hours are not configured','id="sessionsWindowDate"','BLS · EIA · CFTC · FED · ECB · BOE · BOC · RBA','Verify CFTC COT schedule','Verify FOMC meeting dates','Verify ECB council dates','Verify Bank of England MPC dates','Verify Bank of Canada dates','Verify RBA board dates']:
             self.assertIn(token,page)
         self.assertIn('/assets/sessions-page.css',page)
         self.assertIn('/assets/sessions-page.js',page)

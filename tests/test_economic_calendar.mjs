@@ -1,12 +1,18 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { BLS_CALENDAR_URL, EIA_WPSR_SCHEDULE_URL, fetchBlsCalendar, fetchEiaWpsrSchedule, parseBlsIcs, parseEiaWpsrSchedule, resolveCalendarWallTime } from '../cloudflare/src/economic-calendar.mjs';
-import { CFTC_COT_SCHEDULE_URL, FOMC_CALENDAR_URL, fetchCftcCotSchedule, fetchFomcCalendar, parseCftcCotSchedule, parseFomcCalendar } from '../cloudflare/src/economic-calendar-extended.mjs';
+import { BOC_POLICY_URL, BOC_RATE_CALENDAR_URL, BOE_MPC_CALENDAR_URL, BOE_POLICY_URL, CFTC_COT_SCHEDULE_URL, ECB_COUNCIL_CALENDAR_URL, FOMC_CALENDAR_URL, RBA_BOARD_CALENDAR_URL, fetchBocRateCalendar, fetchBoeMpcCalendar, fetchCftcCotSchedule, fetchEcbCouncilCalendar, fetchFomcCalendar, fetchRbaBoardCalendar, parseBocRateCalendar, parseBoeMpcCalendar, parseCftcCotSchedule, parseEcbCouncilCalendar, parseFomcCalendar, parseRbaBoardCalendar } from '../cloudflare/src/economic-calendar-extended.mjs';
 
 const calendar = `BEGIN:VCALENDAR\r\nVERSION:2.0\r\nBEGIN:VEVENT\r\nUID:release-1\r\nDTSTAMP:20261001T120000Z\r\nDTSTART;TZID=America/New_York:20261119T083000\r\nSUMMARY:Consumer Price Index for October\r\nURL:https://www.bls.gov/schedule/news_release/cpi.htm\r\nEND:VEVENT\r\nBEGIN:VEVENT\r\nUID:release-2\r\nDTSTART:20260701T083000\r\nSUMMARY:Employment Situation for June\r\nEND:VEVENT\r\nBEGIN:VEVENT\r\nUID:date-only\r\nDTSTART;VALUE=DATE:20261225\r\nSUMMARY:Publisher date only\r\nEND:VEVENT\r\nBEGIN:VEVENT\r\nUID:cancelled\r\nDTSTART;TZID=America/New_York:20261204T083000\r\nSUMMARY:Cancelled release\r\nSTATUS:CANCELLED\r\nEND:VEVENT\r\nEND:VCALENDAR`;
 const eiaSchedule = `<html><h1>Weekly Petroleum Status Report Schedule</h1><p>The standard release time and day of the week will be at 10:30 a.m. eastern time on Wednesday with the following exceptions. All times are eastern.</p><table><tr><th>Data for the week ending</th><th>Alternate release date</th><th>Release day</th><th>Release time</th><th>Holiday</th></tr><tr><td>January 16, 2026</td><td>January 22, 2026</td><td>Thursday</td><td>12:00 p.m.</td><td>Martin Luther King Jr. Day</td></tr></table></html>`;
 const cftcSchedule = `<html><h1>Release Schedule</h1><p>The Commitments of Traders reports are released at 3:30 p.m. Eastern time. The following is a tentative schedule of releases through 2026.</p><h2>2026 Release Schedule</h2><table><tr><th>Month</th><th>Dates</th></tr><tr><td>November</td><td>06</td><td>16*</td><td>20</td><td>30*</td></tr><tr><td>December</td><td>04</td><td>11</td><td>18</td><td>28*</td></tr></table><p>*Delayed release date due to a federal holiday.</p></html>`;
 const fomcCalendar = `<html><h1>Federal Open Market Committee</h1><p>Meeting calendars, statements, and minutes.</p><h3>2026 FOMC Meetings</h3><h4>December</h4><p>8-9*</p><h3>2025 FOMC Meetings</h3><h4>December</h4><p>9-10*</p><h3>2027 FOMC Meetings</h3><h4>January</h4><p>26-27</p><h4>March</h4><p>16-17*</p><h4>October</h4><p>26-27</p><p>Last Update: November 18, 2026</p></html>`;
+const boeCalendar = `<html><h1>Monetary Policy Committee dates for 2026 and 2027</h1><h2>2026 confirmed dates</h2><p>Thursday 17 December | December MPC Summary and minutes</p><h2>2027 confirmed dates</h2><p>Thursday 4 February | February MPC Summary and minutes</p><p>Thursday 17 June | June MPC Summary and minutes</p><p>This page was last updated 21 September 2026</p></html>`;
+const boePolicy = `<html><p>We publish the MPC's decision with the minutes of the meetings at 12 noon on the day of the announcement, which is usually a Thursday.</p></html>`;
+const bocCalendar = `<html><h1>Policy interest rate</h1><h2>Schedule for 2026</h2><table><tr><th>Dates</th><th>Publications</th></tr><tr><td>December 9</td><td>Interest rate announcement</td></tr></table><h2>Schedule for 2027</h2><table><tr><td>January 27</td><td>Interest rate announcement and Monetary Policy Report</td></tr><tr><td>March 3</td><td>Interest rate announcement</td></tr><tr><td>April 28</td><td>Interest rate announcement and Monetary Policy Report</td></tr></table></html>`;
+const bocPolicy = `<html><p>The key policy rate decision is published on a Wednesday at 9:45 Eastern Time.</p></html>`;
+const ecbCalendar = `<html><h1>Schedules for the meetings of the Governing Council and General Council of the ECB and related press conferences</h1><p>25/11/2026</p><p>Governing Council of the ECB: non-monetary policy meeting (in Frankfurt)</p><p>16/12/2026</p><p>Governing Council of the ECB: monetary policy meeting in Frankfurt (Day 1)</p><p>17/12/2026</p><p>Governing Council of the ECB: monetary policy meeting in Frankfurt (Day 2), followed by press conference</p><p>03/02/2027</p><p>Governing Council of the ECB: monetary policy meeting in Frankfurt (Day 1)</p></html>`;
+const rbaCalendar = `<html><h1>Board Meeting Schedules</h1><p>The meeting schedules for the Monetary Policy Board and Payments System Board are below.</p><h2>Board meeting schedules 2026</h2><table><tr><td>December</td><td>7–8 December</td><td></td></tr></table><h2>Board meeting schedules 2027</h2><table><tr><td>February</td><td>8–9 February</td><td>24 February</td></tr></table></html>`;
 
 test('BLS ICS parsing preserves source attribution, distinct timestamps, and schedule-only fields', () => {
   const events = parseBlsIcs(calendar, { retrievedAt: '2026-11-19T12:00:00.000Z' });
@@ -144,6 +150,42 @@ test('Federal Reserve calendar produces explicitly date-only FOMC meeting record
   assert.match(events[0].period_label, /2026-12-08 to 2026-12-09/);
 });
 
+test('BoE confirmed announcement dates resolve the official noon policy using UK DST rules', () => {
+  const events = parseBoeMpcCalendar(boeCalendar, { now: Date.parse('2026-11-20T00:00:00.000Z'), horizonDays: 300 });
+  assert.deepEqual(events.map(event => event.scheduled_date), ['2026-12-17', '2027-02-04', '2027-06-17']);
+  assert.equal(events[0].scheduled_at_utc, '2026-12-17T12:00:00.000Z');
+  assert.equal(events[2].scheduled_at_utc, '2027-06-17T11:00:00.000Z');
+  assert.equal(events[0].scheduled_timezone, 'Europe/London');
+  assert.match(events[0].schedule_note, /12 noon/);
+  assert.throws(() => parseBoeMpcCalendar('<html><h1>Changed page</h1></html>'), /expected confirmed-date schedule/);
+});
+
+test('Bank of Canada schedule only receives the issuer-confirmed 9:45 Eastern time and DST-aware offsets', () => {
+  const events = parseBocRateCalendar(bocCalendar, { policyInput: bocPolicy, now: Date.parse('2026-11-20T00:00:00.000Z'), horizonDays: 400 });
+  assert.deepEqual(events.map(event => event.scheduled_date), ['2026-12-09', '2027-01-27', '2027-03-03', '2027-04-28']);
+  assert.equal(events[0].scheduled_at_utc, '2026-12-09T14:45:00.000Z');
+  assert.equal(events[3].scheduled_at_utc, '2027-04-28T13:45:00.000Z');
+  assert.equal(events[0].scheduled_timezone, 'America/Toronto');
+  assert.throws(() => parseBocRateCalendar(bocCalendar, { policyInput: '<html>schedule page changed</html>' }), /time policy was not confirmed/);
+  assert.throws(() => parseBocRateCalendar(bocCalendar.replace('December 9', 'December 10'), { policyInput: bocPolicy }), /conflicts with the publisher's Wednesday/);
+});
+
+test('ECB and RBA schedules remain date-only and include only monetary board meetings', () => {
+  const ecb = parseEcbCouncilCalendar(ecbCalendar, { now: Date.parse('2026-11-20T00:00:00.000Z'), horizonDays: 500 });
+  assert.deepEqual(ecb.map(event => event.scheduled_date), ['2026-12-16', '2026-12-17', '2027-02-03']);
+  assert.equal(ecb[0].scheduled_at_utc, null);
+  assert.equal(ecb[0].scheduled_timezone, 'Europe/Berlin');
+  assert.equal(ecb[1].date_only, true);
+  assert.match(ecb[1].title, /Day 2/);
+
+  const rba = parseRbaBoardCalendar(rbaCalendar, { now: Date.parse('2026-11-20T00:00:00.000Z'), horizonDays: 500 });
+  assert.deepEqual(rba.map(event => event.scheduled_date), ['2026-12-07', '2027-02-08']);
+  assert.equal(rba[0].scheduled_end_date, '2026-12-08');
+  assert.equal(rba[0].scheduled_at_utc, null);
+  assert.equal(rba[0].scheduled_timezone, 'Australia/Sydney');
+  assert.throws(() => parseRbaBoardCalendar('<html>page changed</html>'), /expected Monetary Policy Board schedule/);
+});
+
 test('CFTC and Federal Reserve fetchers validate official HTML and keep source metadata', async () => {
   const cftc = await fetchCftcCotSchedule(async url => {
     assert.equal(url, CFTC_COT_SCHEDULE_URL);
@@ -161,4 +203,29 @@ test('CFTC and Federal Reserve fetchers validate official HTML and keep source m
   assert.equal(fomc.source_revision, 'November 18, 2026');
   assert.equal(fomc.events[0].source_revision, 'November 18, 2026');
   await assert.rejects(fetchCftcCotSchedule(async () => new Response('<html>blocked</html>', { headers: { 'content-type': 'text/html' } })), /expected publisher schedule text/);
+});
+
+test('four central-bank schedule adapters fetch only official pages and retain source coverage metadata', async () => {
+  const fixtures = new Map([
+    [ECB_COUNCIL_CALENDAR_URL, ecbCalendar], [BOE_MPC_CALENDAR_URL, boeCalendar], [BOE_POLICY_URL, boePolicy],
+    [BOC_RATE_CALENDAR_URL, bocCalendar], [BOC_POLICY_URL, bocPolicy], [RBA_BOARD_CALENDAR_URL, rbaCalendar]
+  ]);
+  const fetchImpl = async url => {
+    assert.ok(fixtures.has(url), `unexpected publisher URL ${url}`);
+    return new Response(fixtures.get(url), { headers: { 'content-type': 'text/html; charset=utf-8', 'last-modified': 'Wed, 18 Nov 2026 12:00:00 GMT' } });
+  };
+  const [ecb, boe, boc, rba] = await Promise.all([
+    fetchEcbCouncilCalendar(fetchImpl), fetchBoeMpcCalendar(fetchImpl), fetchBocRateCalendar(fetchImpl), fetchRbaBoardCalendar(fetchImpl)
+  ]);
+  assert.equal(ecb.publisher_id, 'ECB');
+  assert.equal(ecb.events[0].date_only, true);
+  assert.equal(boe.publisher_id, 'BOE');
+  assert.equal(boe.source_revision, '21 September 2026');
+  assert.equal(boe.events[0].schedule_local_time, '12:00:00');
+  assert.equal(boc.publisher_id, 'BOC');
+  assert.match(boc.timezone_basis, /9:45 Eastern Time/);
+  assert.equal(rba.publisher_id, 'RBA');
+  assert.equal(rba.events[0].date_only, true);
+  assert.ok([ecb, boe, boc, rba].every(feed => feed.status === 'fresh' && feed.event_count === feed.events.length && feed.coverage_notes.length >= 2));
+  await assert.rejects(fetchBoeMpcCalendar(async () => new Response('<html>blocked</html>', { headers: { 'content-type': 'text/html' } })), /release-time policy was not confirmed/);
 });

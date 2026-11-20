@@ -8,6 +8,10 @@ const CALENDAR_ROUTES = [
   '/api/v1/events/eia',
   '/api/v1/events/cftc',
   '/api/v1/events/fomc',
+  '/api/v1/events/ecb',
+  '/api/v1/events/boe',
+  '/api/v1/events/boc',
+  '/api/v1/events/rba',
 ];
 const CALENDAR_STATUSES = new Set(['fresh', 'stale', 'unavailable', 'not-configured']);
 const REQUIRED_CALENDAR_PROVIDERS = new Set([
@@ -15,6 +19,10 @@ const REQUIRED_CALENDAR_PROVIDERS = new Set([
   'eia-wpsr-schedule',
   'cftc-cot-schedule',
   'fomc-calendar',
+  'ecb-council-calendar',
+  'boe-mpc-calendar',
+  'boc-rate-calendar',
+  'rba-monetary-policy-calendar',
 ]);
 
 function normalizedBaseUrl(value) {
@@ -111,7 +119,7 @@ export async function runWorkerSmoke({ baseUrl, frontendOrigin = DEFAULT_FRONTEN
   addResult(results, failures, degraded, {
     name: '/api/v1/providers',
     ok: providersOk,
-    note: providers.error || (providersOk ? 'All four calendar publishers are registered.' : `HTTP ${providers.response?.status ?? 'no response'}; missing ${missingProviders.join(', ') || 'provider registry'}.`),
+    note: providers.error || (providersOk ? 'All eight calendar publishers are registered.' : `HTTP ${providers.response?.status ?? 'no response'}; missing ${missingProviders.join(', ') || 'provider registry'}.`),
   });
 
   const marketData = await requestJson(fetchImpl, base, '/api/v1/market-data/status');

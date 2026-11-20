@@ -5,6 +5,7 @@ import { runWorkerSmoke } from '../scripts/smoke_worker.mjs';
 const expectedGetPaths = [
   '/health', '/api/v1/providers', '/api/v1/market-data/status',
   '/api/v1/events', '/api/v1/events/eia', '/api/v1/events/cftc', '/api/v1/events/fomc',
+  '/api/v1/events/ecb', '/api/v1/events/boe', '/api/v1/events/boc', '/api/v1/events/rba',
 ];
 
 function fakeFetch({ version = '2.1.0', storageConfigured = true, origins = true, calendarStatus = 'fresh', failPath = null, badEventCount = false } = {}) {
@@ -28,6 +29,8 @@ function fakeFetch({ version = '2.1.0', storageConfigured = true, origins = true
       body = { providers: [
         { id: 'bls-calendar' }, { id: 'eia-wpsr-schedule' },
         { id: 'cftc-cot-schedule' }, { id: 'fomc-calendar' },
+        { id: 'ecb-council-calendar' }, { id: 'boe-mpc-calendar' },
+        { id: 'boc-rate-calendar' }, { id: 'rba-monetary-policy-calendar' },
       ] };
     } else if (url.pathname === '/api/v1/market-data/status') {
       body = { data_type: 'exchange_market_data_status', status: 'not-configured', source_provider: null, limitations: ['No license'] };
@@ -58,7 +61,7 @@ test('live Worker smoke accepts current routes and explicitly reports unlicensed
   });
   assert.equal(report.ok, true);
   assert.equal(report.degraded, true);
-  assert.equal(report.results.length, 9);
+  assert.equal(report.results.length, 13);
   assert.ok(report.results.some((result) => result.name === '/api/v1/market-data/status' && result.degraded));
   assert.deepEqual(fetchImpl.calls.filter((call) => call.method === 'GET').map((call) => call.path), expectedGetPaths);
   assert.equal(fetchImpl.calls.filter((call) => call.method === 'OPTIONS').length, 2);

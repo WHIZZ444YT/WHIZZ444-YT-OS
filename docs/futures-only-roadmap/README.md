@@ -31,10 +31,11 @@
 16. [Historical Part 0 route map](PART-0-BASELINE-AUDIT-AND-ROUTE-MAP.md)
 17. [Historical production implementation and site audit — 19 November 2026](26-PRODUCTION-IMPLEMENTATION-AND-SITE-AUDIT-2026-11-19.md)
 18. [Current implementation status and remaining acceptance work — 20 November 2026](27-IMPLEMENTATION-STATUS-AND-REMAINING-WORK-2026-11-20.md)
+19. [Part 4 central-bank calendar expansion report — 20 November 2026](28-PART-4-CENTRAL-BANK-CALENDAR-EXPANSION-2026-11-20.md)
 
 ## Current status — 20 November 2026
 
-Use the [20 November implementation status](27-IMPLEMENTATION-STATUS-AND-REMAINING-WORK-2026-11-20.md) as the current checkpoint. PR #20 is merged; Vercel production is ready on merge commit `a4f66c872743b30599688859130ce7cbbfa0a1a7`, and `/sessions/` returned HTTP 200. The Cloudflare Worker source with the calendar routes is merged, but the active Worker deployment still needs a separate reviewed deployment and route smoke test. The follow-up implementation branch records dated official core-tick evidence for all 15 contract families; these local branch changes are not in production. Full expiry, first-notice, delivery, effective-date and roll coverage remains incomplete. Other external evidence, licensing, credentials and disposable-user QA remain open.
+Use the [Part 4 calendar-expansion report](28-PART-4-CENTRAL-BANK-CALENDAR-EXPANSION-2026-11-20.md) for the latest stage-specific changes and the [20 November implementation status](27-IMPLEMENTATION-STATUS-AND-REMAINING-WORK-2026-11-20.md) for the broader roadmap baseline. PR #22 remains open and unmerged; it now includes the bounded official ECB, Bank of England, Bank of Canada and RBA calendar adapters, alongside earlier Worker smoke and futures-observation groundwork. The new calendar routes are not production-live until the Worker is separately reviewed and deployed, then the live smoke succeeds. The Vercel production site and active Worker are separate release surfaces. Full contract lifecycle, exact video links, licensed feeds, backtest evidence, current prop rules, disposable-user security QA and whole-site visual/accessibility review remain incomplete.
 
 ## Product boundary
 
