@@ -48,6 +48,8 @@ An initial PR-preview route smoke check returned HTTP 200 for `/`, `/contract-sp
 
 A browser review of the deployed `/sessions/` page at 390 CSS pixels found no horizontal document overflow. It also exposed a production runtime error before calendar requests started: the Sessions page appended seconds to profile clocks, while the timezone resolver accepts `HH:MM`. This branch now passes the publisher profile's `HH:MM` values directly and adds a targeted regression check. The production route must be rechecked after this fix is merged and deployed. Full-site visual, mobile, keyboard-flow and screen-reader QA remains open.
 
+The latest PR #24 Preview (commit `a4eddde`) was reviewed in Chrome at 390 CSS pixels: the document stayed within 390 pixels, all 11 reference-window cards rendered, and no page-script errors were observed. The Preview's cross-origin Worker calendar requests returned `Failed to fetch` because its deployment origin is not an approved Worker origin; the page correctly shows the unavailable state. This is not live-feed acceptance. Use the production-origin route after the frontend fix is released, or explicitly authorize a Preview origin before interactive Preview feed testing.
+
 ## Roadmap acceptance status
 
 | Roadmap area | Status | Remaining acceptance work |
