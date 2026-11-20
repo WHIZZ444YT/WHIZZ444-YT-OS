@@ -86,7 +86,7 @@ terminal_built=(ROOT/'dist/ict-futures/index.html').read_text(encoding='utf-8')
 terminal_match=re.search(r'const DATA_BUNDLE = (.*?);\s*const DATA=DATA_BUNDLE;',terminal_built,re.S)
 try: terminal_data=json.loads(terminal_match.group(1)) if terminal_match else {}
 except Exception: terminal_data={}
-verified_video_ids={'ict-2022-model':'ict-2022-ep14','mss':'ict-2022-ep03-mss','fvg':'ict-2022-ep06-fvg','order-block':'ict-2022-ep22-order-block','silver-bullet':'ict-2023-silver-bullet-model'}
+verified_video_ids={'ict-2022-model':'ict-2022-ep14','mss':'ict-2022-ep03-mss','fvg':'ict-2022-ep06-fvg','order-block':'ict-2022-ep22-order-block','silver-bullet':'ict-2023-silver-bullet-model','liquidity':'ict-2025-advanced-liquidity'}
 ok('Part 3 ICT terminal uses the canonical source bundle instead of embedded duplicate data',terminal_template.count('__FUTURES_DATA_BUNDLE__')==1 and 'const DATA_BUNDLE = {' not in terminal_template and len(terminal_data.get('markets',[]))==15 and terminal_data.get('academy',{}).get('conceptCount')==82 and len(terminal_data.get('academy',{}).get('tracks',[]))==10 and {v.get('id') for v in terminal_data.get('academy',{}).get('featuredVideos',[])}==set(verified_video_ids.values()))
 ok('Part 3 risk output identifies the selected reference version, source and effective date','specVersionId' in risk and 'official exchange source' in risk and 'specEffectiveFrom' in risk and bool(terminal_data.get('markets')) and terminal_data['markets'][0].get('specEffectiveFrom') is None)
 

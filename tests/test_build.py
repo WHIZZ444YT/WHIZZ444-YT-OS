@@ -289,7 +289,7 @@ class BuildTests(unittest.TestCase):
         self.assertEqual(len(bundle['academy']['tracks']),10)
         self.assertTrue(all(m['specStatus']=='partial' and isinstance(m['tickSize'],str) and m.get('specEvidence',{}).get('sourceUrl') for m in bundle['markets']))
         videos_by_lesson={c['id']:c.get('verifiedVideoIds',[]) for c in bundle['academy']['concepts']}
-        expected_video_ids={'ict-2022-model':['ict-2022-ep14'],'mss':['ict-2022-ep03-mss'],'fvg':['ict-2022-ep06-fvg'],'order-block':['ict-2022-ep22-order-block'],'silver-bullet':['ict-2023-silver-bullet-model']}
+        expected_video_ids={'ict-2022-model':['ict-2022-ep14'],'mss':['ict-2022-ep03-mss'],'fvg':['ict-2022-ep06-fvg'],'order-block':['ict-2022-ep22-order-block'],'silver-bullet':['ict-2023-silver-bullet-model'],'liquidity':['ict-2025-advanced-liquidity']}
         for lesson_id,video_ids in expected_video_ids.items(): self.assertEqual(videos_by_lesson[lesson_id],video_ids)
         self.assertTrue(all(not ids for lesson_id,ids in videos_by_lesson.items() if lesson_id not in expected_video_ids))
         self.assertIn('c.id===n',template)
@@ -401,10 +401,10 @@ class BuildTests(unittest.TestCase):
         coverage=json.loads((ROOT/'dist/ict-futures/academy/video-coverage.json').read_text(encoding="utf-8"))
         self.assertEqual(coverage['status'],'PARTIAL')
         self.assertEqual(coverage['eligibleCount'],82)
-        expected_covered={'ict-2022-model','mss','fvg','order-block','silver-bullet'}
-        self.assertEqual(coverage['coveredCount'],5)
+        expected_covered={'ict-2022-model','mss','fvg','order-block','silver-bullet','liquidity'}
+        self.assertEqual(coverage['coveredCount'],6)
         self.assertEqual(set(coverage['coveredIds']),expected_covered)
-        self.assertEqual(coverage['missingCount'],77)
+        self.assertEqual(coverage['missingCount'],76)
         self.assertEqual(coverage['entryModelCoverage']['coveredCount'],1)
         self.assertEqual(coverage['entryModelCoverage']['coveredIds'],['ict-2022-model'])
         self.assertEqual(len(coverage['entryModelCoverage']['missingIds']),7)

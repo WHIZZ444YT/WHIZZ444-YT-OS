@@ -3467,6 +3467,30 @@
             "classification": "original-creator",
             "verificationDate": null,
             "linkStatus": "Existing curated official-source record; re-check exact upload before use"
+          },
+          {
+            "resourceId": "ict-2025-advanced-liquidity",
+            "title": "Advanced ICT Liquidity Concepts \\ October 11, 2025",
+            "publisher": "The Inner Circle Trader",
+            "channelName": "The Inner Circle Trader",
+            "channelId": "UCtjxa77NqamhVC8atV85Rog",
+            "videoId": "C_0Jh7HwCUI",
+            "url": "https://www.youtube.com/watch?v=C_0Jh7HwCUI",
+            "language": "en",
+            "sourceClass": "official_ict",
+            "conceptIds": [
+              "liquidity"
+            ],
+            "verificationStatus": "verified",
+            "verifiedAt": "2026-11-20",
+            "verifiedBy": "Codex research audit",
+            "lastLinkCheck": "2026-11-20",
+            "linkStatus": "verified",
+            "embedStatus": "not_checked",
+            "embedPermission": "not_checked",
+            "fallbackLinkStatus": "available",
+            "evidenceUrl": "https://www.youtube.com/watch?v=C_0Jh7HwCUI",
+            "sourceNote": "Official ICT upload title directly names liquidity concepts. Mapped only to the general Liquidity lesson; this does not verify every related liquidity concept, futures-specific rules, or performance evidence."
           }
         ],
         "supplementalResources": [],
