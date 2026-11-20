@@ -2,8 +2,8 @@
   "schemaVersion": 1,
   "status": "PARTIAL",
   "eligibleCount": 82,
-  "coveredCount": 29,
-  "coveragePercent": 35.37,
+  "coveredCount": 30,
+  "coveragePercent": 36.59,
   "coveredIds": [
     "market-structure",
     "swing-high-low",
@@ -33,9 +33,10 @@
     "judas-swing",
     "cisd",
     "market-maker-buy-model",
+    "market-maker-sell-model",
     "ict-2022-model"
   ],
-  "missingCount": 53,
+  "missingCount": 52,
   "missingIds": [
     "choch",
     "liquidity-sweep",
@@ -79,7 +80,6 @@
     "suspension-block",
     "vacuum-block",
     "ny-lunch-reversal",
-    "market-maker-sell-model",
     "liquidity-sweep-mss-model",
     "fvg-continuation-model",
     "ifvg-reversal-model",
@@ -93,14 +93,14 @@
   ],
   "entryModelCoverage": {
     "eligibleCount": 8,
-    "coveredCount": 3,
+    "coveredCount": 4,
     "coveredIds": [
       "unicorn",
       "market-maker-buy-model",
+      "market-maker-sell-model",
       "ict-2022-model"
     ],
     "missingIds": [
-      "market-maker-sell-model",
       "liquidity-sweep-mss-model",
       "fvg-continuation-model",
       "ifvg-reversal-model",
@@ -672,8 +672,8 @@
       "id": "market-maker-sell-model",
       "title": "Market Maker Sell Model (MMSM)",
       "isEntryModel": true,
-      "status": "VIDEO NEEDED",
-      "verifiedVideoCount": 0,
+      "status": "VERIFIED",
+      "verifiedVideoCount": 1,
       "unverifiedCandidateCount": 0
     },
     {

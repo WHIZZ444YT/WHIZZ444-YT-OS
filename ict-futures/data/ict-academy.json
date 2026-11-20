@@ -31148,7 +31148,9 @@
           "type": "Secondary reference"
         }
       ],
-      "verifiedVideoIds": [],
+      "verifiedVideoIds": [
+        "ttrades-cpi-gold-market-maker-sell-model-2024"
+      ],
       "learning": {
         "durationMinutes": 28,
         "evidenceBand": "Supplemental / terminology may vary",
@@ -31534,7 +31536,34 @@
           "resource-community-glossary-turtle-soup-terminology-21",
           "resource-secondary-mmxm-explanation-20"
         ],
-        "videoResources": [],
+        "videoResources": [
+          {
+            "resourceId": "ttrades-cpi-gold-market-maker-sell-model-2024",
+            "title": "CPI Gold Trade Review | ICT Market Maker Sell Model [MMXM]",
+            "publisher": "TTrades",
+            "channelName": "TTrades",
+            "channelId": "UCQwUEVakiYDmNGe7UBza4sQ",
+            "videoId": "0R61Y6Pn74Q",
+            "url": "https://www.youtube.com/watch?v=0R61Y6Pn74Q",
+            "language": "en",
+            "sourceClass": "independent_supplement",
+            "conceptIds": [
+              "market-maker-sell-model"
+            ],
+            "segments": {},
+            "verificationStatus": "verified",
+            "verifiedAt": "2026-11-20",
+            "verifiedBy": "Codex research audit",
+            "lastLinkCheck": "2026-11-20",
+            "linkStatus": "verified",
+            "embedStatus": "not_checked",
+            "embedPermission": "not_checked",
+            "fallbackLinkStatus": "available",
+            "evidenceUrl": "https://www.youtube.com/watch?v=0R61Y6Pn74Q",
+            "summary": "Independent TTrades trade review explicitly labelled Market Maker Sell Model. The publisher describes an XAUUSD gold example using daily bias, an economic-calendar context, draw on liquidity, hourly/5-minute charts, a mitigation block and FVG. It is a single illustrative trade, not a futures-contract example, complete rulebook, or performance evidence.",
+            "sourceNote": "The verified TTrades upload title names ICT Market Maker Sell Model [MMXM], and its description explicitly says this gold trade used the ICT MMXM, in this case a Market Maker Sell Model. Mapped only to the MMSM Entry Model. The example is XAUUSD, not an exchange-listed futures contract; it does not validate the broader narrative, establish a repeatable edge, or substitute for futures backtesting. The publisher discloses promotional/affiliate links."
+          }
+        ],
         "supplementalResources": [
           {
             "name": "Community glossary: Turtle Soup terminology",

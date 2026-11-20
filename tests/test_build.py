@@ -290,7 +290,7 @@ class BuildTests(unittest.TestCase):
         self.assertEqual(len(bundle['academy']['tracks']),10)
         self.assertTrue(all(m['specStatus']=='partial' and isinstance(m['tickSize'],str) and m.get('specEvidence',{}).get('sourceUrl') for m in bundle['markets']))
         videos_by_lesson={c['id']:c.get('verifiedVideoIds',[]) for c in bundle['academy']['concepts']}
-        expected_video_ids={'ict-2022-model':['ict-2022-ep14'],'market-structure':['ttrades-structure-mss-fvg-displacement-2022'],'mss':['ict-2022-ep03-mss','ttrades-structure-mss-fvg-displacement-2022'],'displacement':['ttrades-structure-mss-fvg-displacement-2022'],'fvg':['ict-2022-ep06-fvg','ttrades-structure-mss-fvg-displacement-2022'],'bsl':['ttrades-liquidity-levels-2023'],'ssl':['ttrades-liquidity-levels-2023'],'eqh':['ttrades-liquidity-levels-2023'],'eql':['ttrades-liquidity-levels-2023'],'pdh-pdl':['ttrades-liquidity-levels-2023'],'pwh-pwl':['ttrades-liquidity-levels-2023'],'session-high-low':['ttrades-liquidity-levels-2023'],'order-block':['ict-2022-ep22-order-block'],'silver-bullet':['ict-2023-silver-bullet-model'],'liquidity':['ict-2025-advanced-liquidity'],'market-maker-buy-model':['ict-2024-mmbm-example'],'ote':['ttrades-ote-2023'],'unicorn':['ttrades-unicorn-2023'],'ifvg':['ttrades-ifvg-2023'],'amd-po3':['ttrades-po3-amd-2023'],'cisd':['ttrades-cisd-orderblock-2023'],'swing-high-low':['paul-leroy-fvg-essentials-swing-pivots-2022'],'judas-swing':['ict-judas-swing-2017'],'bos':['ttrades-structure-shift-liquidity-grab-2022'],'breaker-block':['ttrades-breaker-blocks-simplified-2024'],'mitigation-block':['ttrades-mitigation-blocks-simplified-2024'],'dealing-range':['ttrades-choosing-dealing-ranges-2022'],'premium-discount':['ttrades-equilibrium-discount-premium-2025'],'equilibrium':['ttrades-equilibrium-discount-premium-2025']}
+        expected_video_ids={'ict-2022-model':['ict-2022-ep14'],'market-structure':['ttrades-structure-mss-fvg-displacement-2022'],'mss':['ict-2022-ep03-mss','ttrades-structure-mss-fvg-displacement-2022'],'displacement':['ttrades-structure-mss-fvg-displacement-2022'],'fvg':['ict-2022-ep06-fvg','ttrades-structure-mss-fvg-displacement-2022'],'bsl':['ttrades-liquidity-levels-2023'],'ssl':['ttrades-liquidity-levels-2023'],'eqh':['ttrades-liquidity-levels-2023'],'eql':['ttrades-liquidity-levels-2023'],'pdh-pdl':['ttrades-liquidity-levels-2023'],'pwh-pwl':['ttrades-liquidity-levels-2023'],'session-high-low':['ttrades-liquidity-levels-2023'],'order-block':['ict-2022-ep22-order-block'],'silver-bullet':['ict-2023-silver-bullet-model'],'liquidity':['ict-2025-advanced-liquidity'],'market-maker-buy-model':['ict-2024-mmbm-example'],'market-maker-sell-model':['ttrades-cpi-gold-market-maker-sell-model-2024'],'ote':['ttrades-ote-2023'],'unicorn':['ttrades-unicorn-2023'],'ifvg':['ttrades-ifvg-2023'],'amd-po3':['ttrades-po3-amd-2023'],'cisd':['ttrades-cisd-orderblock-2023'],'swing-high-low':['paul-leroy-fvg-essentials-swing-pivots-2022'],'judas-swing':['ict-judas-swing-2017'],'bos':['ttrades-structure-shift-liquidity-grab-2022'],'breaker-block':['ttrades-breaker-blocks-simplified-2024'],'mitigation-block':['ttrades-mitigation-blocks-simplified-2024'],'dealing-range':['ttrades-choosing-dealing-ranges-2022'],'premium-discount':['ttrades-equilibrium-discount-premium-2025'],'equilibrium':['ttrades-equilibrium-discount-premium-2025']}
         for lesson_id,video_ids in expected_video_ids.items(): self.assertEqual(videos_by_lesson[lesson_id],video_ids)
         self.assertTrue(all(not ids for lesson_id,ids in videos_by_lesson.items() if lesson_id not in expected_video_ids))
         self.assertIn('c.id===n',template)
@@ -402,13 +402,13 @@ class BuildTests(unittest.TestCase):
         coverage=json.loads((ROOT/'dist/ict-futures/academy/video-coverage.json').read_text(encoding="utf-8"))
         self.assertEqual(coverage['status'],'PARTIAL')
         self.assertEqual(coverage['eligibleCount'],82)
-        expected_covered={'ict-2022-model','market-structure','mss','displacement','fvg','bsl','ssl','eqh','eql','pdh-pdl','pwh-pwl','session-high-low','order-block','silver-bullet','liquidity','market-maker-buy-model','ote','unicorn','ifvg','amd-po3','cisd','swing-high-low','judas-swing','bos','breaker-block','mitigation-block','dealing-range','premium-discount','equilibrium'}
-        self.assertEqual(coverage['coveredCount'],29)
+        expected_covered={'ict-2022-model','market-structure','mss','displacement','fvg','bsl','ssl','eqh','eql','pdh-pdl','pwh-pwl','session-high-low','order-block','silver-bullet','liquidity','market-maker-buy-model','market-maker-sell-model','ote','unicorn','ifvg','amd-po3','cisd','swing-high-low','judas-swing','bos','breaker-block','mitigation-block','dealing-range','premium-discount','equilibrium'}
+        self.assertEqual(coverage['coveredCount'],30)
         self.assertEqual(set(coverage['coveredIds']),expected_covered)
-        self.assertEqual(coverage['missingCount'],53)
-        self.assertEqual(coverage['entryModelCoverage']['coveredCount'],3)
-        self.assertEqual(coverage['entryModelCoverage']['coveredIds'],['unicorn','market-maker-buy-model','ict-2022-model'])
-        self.assertEqual(len(coverage['entryModelCoverage']['missingIds']),5)
+        self.assertEqual(coverage['missingCount'],52)
+        self.assertEqual(coverage['entryModelCoverage']['coveredCount'],4)
+        self.assertEqual(coverage['entryModelCoverage']['coveredIds'],['unicorn','market-maker-buy-model','market-maker-sell-model','ict-2022-model'])
+        self.assertEqual(len(coverage['entryModelCoverage']['missingIds']),4)
         for lesson_id in expected_covered:
             self.assertIn('VERIFIED LESSON VIDEO',(ROOT/'dist/ict-futures/academy'/f'{lesson_id}.html').read_text(encoding="utf-8"))
         swing_video=next(r for r in json.loads((ROOT/'ict-futures/data/ict-academy.json').read_text(encoding="utf-8"))['concepts'] if r['id']=='swing-high-low')['curriculum']['videoResources'][0]
@@ -478,6 +478,13 @@ class BuildTests(unittest.TestCase):
         self.assertEqual(shared_premium['conceptIds'],['premium-discount','equilibrium'])
         self.assertEqual(shared_equilibrium['segments'],shared_premium['segments'])
         self.assertIn('3:54',concepts['breaker-block']['curriculum']['videoResources'][0]['sourceNote'])
+        mmsm=concepts['market-maker-sell-model']['curriculum']['videoResources'][0]
+        self.assertEqual(mmsm['resourceId'],'ttrades-cpi-gold-market-maker-sell-model-2024')
+        self.assertEqual(mmsm['videoId'],'0R61Y6Pn74Q')
+        self.assertEqual(mmsm['conceptIds'],['market-maker-sell-model'])
+        self.assertEqual(mmsm['sourceClass'],'independent_supplement')
+        self.assertEqual(mmsm['embedPermission'],'not_checked')
+        self.assertIn('XAUUSD',mmsm['summary'])
 
     def test_part2_video_registry_requires_complete_verified_metadata(self):
         def record(concept_ids,segments=None,embed_status='enabled',embed_permission='allowed'):

@@ -1,6 +1,6 @@
 # Part 2 — Academy video mapping updates
 
-**Review date:** 20 November 2026 · **Roadmap state:** Part 2 remains partial · **Change scope:** Item-specific Academy videos; this update adds six more concept mappings from independent publisher TTrades.
+**Review date:** 20 November 2026 · **Roadmap state:** Part 2 remains partial · **Change scope:** Item-specific Academy videos; this update adds six concept mappings and one Entry Model example from independent publisher TTrades.
 
 ## Verified mapping
 
@@ -29,13 +29,14 @@
 - [Mitigation Blocks Simplified - ICT Concepts](https://www.youtube.com/watch?v=bbWPoajy2MY&t=21s) is an independent TTrades lesson mapped only to `mitigation-block`. The linked segment is the publisher's 0:21–2:26 mitigation section; later SMT, MMXM and market examples are outside the mapped segment.
 - [Choosing Dealing Ranges & Displacement Ranges - ICT Concepts](https://www.youtube.com/watch?v=CAuN4tvLInQ&t=20s) is an independent TTrades lesson mapped only to `dealing-range`. The linked 0:20–2:00 chapter ends before the separate Displacement Ranges chapter; it does not establish objective swing anchors.
 - [You Are Using Discount and Premium Wrong! - EQ For Expansions](https://www.youtube.com/watch?v=IPZjNI1B5a0&t=26s) is an independent TTrades lesson about Equilibrium and Premium/Discount. It is shared by the `premium-discount` and `equilibrium` concept pages, with separate direct timestamps for the PDF/framing section (0:26–2:39) and the examples (2:39–19:06). The creator's bias framework is educational framing, not evidence of predictive performance.
+- [CPI Gold Trade Review | ICT Market Maker Sell Model [MMXM]](https://www.youtube.com/watch?v=0R61Y6Pn74Q) is an independent TTrades review whose title and description identify the Market Maker Sell Model. It is mapped only to the `market-maker-sell-model` Entry Model. The publisher describes an XAUUSD gold example, so this link is not a futures-contract demonstration, a complete model rulebook, or performance evidence; embed permission remains unchecked.
 
-For these six mappings, publisher identity, title, description/chapter scope, video ID and direct URLs were checked on 20 November 2026. They are independent educational supplements, not Official ICT material. YouTube embedding permission was not checked; the regular YouTube fallback link is retained. TTrades' descriptions contain promotional/affiliate links, which do not constitute an endorsement by this project.
+For the six concept mappings and the MMSM example, publisher identity, title, description/chapter scope, video ID and direct URLs were checked on 20 November 2026. They are independent educational supplements, not Official ICT material. YouTube embedding permission was not checked; the regular YouTube fallback link is retained. TTrades' descriptions contain promotional/affiliate links, which do not constitute an endorsement by this project.
 
 The MMBM upload is an example, not a complete MMBM rulebook, an independently verified definition, or evidence of strategy performance. The Academy's MMBM definition remains supplemental and convention-sensitive, and the page continues to disclose that no audited performance evidence is available.
 
 ## Coverage and remaining work
 
-The strict generated registry now reports **29/82 lesson pages** and **3/8 Entry Models** with a verified exact-item video. The eight model pages are included within the 82 Academy pages and remain separately tracked for acceptance. The remaining 53 lesson pages and five Entry Model pages still need individually verified mappings. A channel page, search result, or adjacent topic is not counted as item coverage.
+The strict generated registry now reports **30/82 lesson pages** and **4/8 Entry Models** with a verified exact-item video. The eight model pages are included within the 82 Academy pages and remain separately tracked for acceptance. The remaining 52 lesson pages and four Entry Model pages still need individually verified mappings. A channel page, search result, or adjacent topic is not counted as item coverage.
 
 The mapping does not complete Part 2. Review direct-link availability and embed permission separately, keep the source and coverage current, and complete the full Academy's visual, mobile, keyboard and assistive-technology QA.
