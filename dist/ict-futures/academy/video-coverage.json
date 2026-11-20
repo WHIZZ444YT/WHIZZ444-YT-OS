@@ -2,18 +2,19 @@
   "schemaVersion": 1,
   "status": "PARTIAL",
   "eligibleCount": 82,
-  "coveredCount": 7,
-  "coveragePercent": 8.54,
+  "coveredCount": 8,
+  "coveragePercent": 9.76,
   "coveredIds": [
     "mss",
     "liquidity",
     "fvg",
     "order-block",
+    "ote",
     "silver-bullet",
     "market-maker-buy-model",
     "ict-2022-model"
   ],
-  "missingCount": 75,
+  "missingCount": 74,
   "missingIds": [
     "market-structure",
     "swing-high-low",
@@ -47,7 +48,6 @@
     "premium-discount",
     "equilibrium",
     "dealing-range",
-    "ote",
     "fib-extensions",
     "time-anchors",
     "midnight-open",
@@ -400,8 +400,8 @@
       "id": "ote",
       "title": "Optimal Trade Entry (OTE)",
       "isEntryModel": false,
-      "status": "VIDEO NEEDED",
-      "verifiedVideoCount": 0,
+      "status": "VERIFIED",
+      "verifiedVideoCount": 1,
       "unverifiedCandidateCount": 0
     },
     {

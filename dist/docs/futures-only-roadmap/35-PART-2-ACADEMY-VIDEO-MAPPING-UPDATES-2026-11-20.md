@@ -1,0 +1,21 @@
+# Part 2 — Academy video mapping updates
+
+**Review date:** 20 November 2026 · **Roadmap state:** Part 2 remains partial · **Change scope:** One official, item-specific MMBM example and one independent OTE lesson supplement.
+
+## Verified mapping
+
+- [April 08, 2024 NQ Market Maker Buy Model Example](https://www.youtube.com/watch?v=1vsIPazjfGQ) is published by The Inner Circle Trader's verified channel. The upload title names the exact model and the Nasdaq futures example.
+- The video is mapped only to `market-maker-buy-model`. It is not reused as evidence for related liquidity, ICT 2022, or other Entry Model lessons.
+- The registry records the exact video ID, official channel ID, verification date and fallback link. Embed availability and permission remain unchecked; the normal YouTube link remains available.
+
+- [Optimal Trade Entry (OTE) - ICT Concepts](https://www.youtube.com/watch?v=1YRs4Z1lMws) is published by TTrades' verified YouTube channel as an **independent supplement**, not Official ICT. Its description identifies Fibonacci settings, OTE within ranges and a PD-array alignment segment; it also says the video does not cover the New York Killzone.
+- This supplement is mapped only to the `ote` concept lesson, not to the separate `fvg-ote-confluence-model` Entry Model. Its futures relevance is general education listed by the publisher; it does not claim a futures-specific worked example or evidence of performance.
+- The registry records the video ID and channel ID, date, direct fallback, source class and scope caveats. Embed availability and permission remain unchecked.
+
+The MMBM upload is an example, not a complete MMBM rulebook, an independently verified definition, or evidence of strategy performance. The Academy's MMBM definition remains supplemental and convention-sensitive, and the page continues to disclose that no audited performance evidence is available.
+
+## Coverage and remaining work
+
+The strict generated registry now reports **8/82 lesson pages** and **2/8 Entry Models** with a verified exact-item video. The eight model pages are included within the 82 Academy pages and remain separately tracked for acceptance. The remaining 74 lesson pages and six Entry Model pages still need individually verified mappings. A channel page, search result, or adjacent topic is not counted as item coverage.
+
+The mapping does not complete Part 2. Review direct-link availability and embed permission separately, keep the source and coverage current, and complete the full Academy's visual, mobile, keyboard and assistive-technology QA.

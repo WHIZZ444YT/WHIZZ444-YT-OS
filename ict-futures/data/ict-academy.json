@@ -16052,7 +16052,33 @@
           "resource-cme-institute-trade-and-risk-management-12",
           "resource-cftc-customer-education-advisory-13"
         ],
-        "videoResources": [],
+        "videoResources": [
+          {
+            "resourceId": "ttrades-ote-2023",
+            "title": "Optimal Trade Entry (OTE) - ICT Concepts",
+            "publisher": "TTrades",
+            "channelName": "TTrades",
+            "channelId": "UCQwUEVakiYDmNGe7UBza4sQ",
+            "videoId": "1YRs4Z1lMws",
+            "url": "https://www.youtube.com/watch?v=1YRs4Z1lMws",
+            "language": "en",
+            "sourceClass": "independent_supplement",
+            "conceptIds": [
+              "ote"
+            ],
+            "verificationStatus": "verified",
+            "verifiedAt": "2026-11-20",
+            "verifiedBy": "Codex research audit",
+            "lastLinkCheck": "2026-11-20",
+            "linkStatus": "verified",
+            "embedStatus": "not_checked",
+            "embedPermission": "not_checked",
+            "fallbackLinkStatus": "available",
+            "evidenceUrl": "https://www.youtube.com/watch?v=1YRs4Z1lMws",
+            "summary": "Independent TTrades supplement, not Official ICT. The description covers Fibonacci settings, using OTE within ranges, and alignment with PD arrays; it explicitly says the video does not discuss the New York Killzone. Futures are listed among the creator's educational topics. This maps only to the OTE concept lesson and makes no performance claim.",
+            "sourceNote": "The exact-title video is listed by YouTube search as published by the verified TTrades channel. Its description names Optimal Trade Entry, gives an OTE segment at 2:47 and PD-array alignment at 4:08, and includes futures education. It is an independent supplement, not ICT's original teaching; the video itself notes that the New York Killzone is outside its scope."
+          }
+        ],
         "supplementalResources": [],
         "topicDiscoveryUrl": "https://www.youtube.com/results?search_query=Inner%20Circle%20Trader%20official%20Optimal%20Trade%20Entry%20%28OTE%29%20ICT%20futures",
         "contentVersion": 2,
