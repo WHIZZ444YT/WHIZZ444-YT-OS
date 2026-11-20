@@ -3,7 +3,8 @@ import { filterNewsArticles, marketDataStatus, NEWS_SOURCE_REGISTRY, newsRespons
 import { nextProviderCircuitState, providerCircuitIsOpen } from "./provider-http.mjs";
 import { COT_DATASETS, asFiniteNumber, cotResponseEnvelope, cotSourceColumns, normalizeCotRows, validateCotQuery } from "./cot-contracts.mjs";
 import { fetchBlsCalendar, fetchEiaWpsrSchedule } from "./economic-calendar.mjs";
-import { CFTC_COT_SCHEDULE_URL, FOMC_CALENDAR_URL, fetchCftcCotSchedule, fetchFomcCalendar } from "./economic-calendar-extended.mjs";
+import { BEA_RELEASE_SCHEDULE_URL, BEA_RELEASE_DATES_URL, BOC_RATE_CALENDAR_URL, BOE_MPC_CALENDAR_URL, CFTC_COT_SCHEDULE_URL, ECB_COUNCIL_CALENDAR_URL, FOMC_CALENDAR_URL, RBA_BOARD_CALENDAR_URL, fetchBeaReleaseCalendar, fetchBocRateCalendar, fetchBoeMpcCalendar, fetchCftcCotSchedule, fetchEcbCouncilCalendar, fetchFomcCalendar, fetchRbaBoardCalendar } from "./economic-calendar-extended.mjs";
+import { normalizeFuturesObservationBatch, validateFuturesObservationQuery } from "./futures-observations.mjs";
 
 const NEWS_KEY = "snapshot:gdelt:news:v1";
 const NEWS_REFRESH_LOCK_KEY = "lock:gdelt:manual-refresh:v1";
@@ -12,12 +13,31 @@ const BLS_CALENDAR_KEY = "schedule:bls:ics:v1";
 const EIA_SCHEDULE_KEY = "schedule:eia:wpsr:v1";
 const CFTC_SCHEDULE_KEY = "schedule:cftc:cot:v1";
 const FOMC_SCHEDULE_KEY = "schedule:fed:fomc:v1";
+const ECB_SCHEDULE_KEY = "schedule:ecb:council:v1";
+const BOE_SCHEDULE_KEY = "schedule:boe:mpc:v1";
+const BOC_SCHEDULE_KEY = "schedule:boc:policy-rate:v1";
+const RBA_SCHEDULE_KEY = "schedule:rba:monetary-policy-board:v1";
+const BEA_SCHEDULE_KEY = "schedule:bea:release-dates:v1";
 const ALLOWED_BUILDER_MODELS = new Set(["page", "ict-lesson", "research-article", "glossary"]);
 const GDELT_QUERY = {
  label: "Finance futures, macro & commodities",
  query: '("Nasdaq futures" OR "S&P 500 futures" OR "E-mini" OR "equity index futures" OR "gold futures" OR "silver futures" OR COMEX OR "WTI futures" OR "crude oil futures" OR NYMEX OR "Treasury futures" OR "SOFR futures" OR FOMC OR inflation OR CPI OR PCE OR payrolls OR NFP OR GDP OR ISM OR earnings OR OPEC OR commodities OR metals OR energy OR CFTC OR "Commitments of Traders" OR "CME Group" OR "ICE Futures" OR "central bank" OR Bitcoin futures)'
 };
 const CORS_HEADERS = { "Access-Control-Allow-Methods": "GET, POST, OPTIONS", "Access-Control-Allow-Headers": "Content-Type, Authorization", "Vary": "Origin" };
+async function readBoundedRequestText(request,maxBytes){
+ const declared=Number(request.headers.get("Content-Length")||0);
+ if(Number.isFinite(declared)&&declared>maxBytes)throw new RangeError("Request body exceeds the size limit.");
+ if(!request.body)return "";
+ const reader=request.body.getReader(),decoder=new TextDecoder();let text="",bytes=0;
+ try{
+  while(true){
+   const {done,value}=await reader.read();if(done)break;
+   bytes+=value.byteLength;if(bytes>maxBytes){await reader.cancel();throw new RangeError("Request body exceeds the size limit.");}
+   text+=decoder.decode(value,{stream:true});
+  }
+  return text+decoder.decode();
+ }finally{try{reader.releaseLock();}catch{}}
+}
 function supabaseAdminKey(env){
  return env.SUPABASE_SECRET_KEY||env.SUPABASE_SERVICE_ROLE_KEY||"";
 }
@@ -33,7 +53,7 @@ export default {
   const allowed=configuredOrigins.includes("*")?["https://finance-intelligence-os-whizz444yt-7353.vercel.app","https://finance-intelligence-os-alpha.vercel.app"]:configuredOrigins;
   const cors=origin&&(allowed.includes("*")||allowed.includes(origin))?{...CORS_HEADERS,"Access-Control-Allow-Origin":allowed.includes("*")?"*":origin}:CORS_HEADERS;
   if(request.method==="OPTIONS")return new Response(null,{status:204,headers:cors});
-  if(request.method!=="GET"&&!(request.method==="POST"&&url.pathname==="/api/v1/ingest"))return json({error:"Method not allowed"},405,cors);
+  if(request.method!=="GET"&&!(request.method==="POST"&&["/api/v1/ingest","/api/v1/ingest/futures-market-data"].includes(url.pathname)))return json({error:"Method not allowed"},405,cors);
   if(request.method==="POST"&&url.pathname==="/api/v1/ingest"){
    if(!env.INGEST_TOKEN)return json({status:"not-configured",error:"INGEST_TOKEN is not configured on the Worker"},503,cors);
    if(request.headers.get("Authorization")!=="Bearer "+env.INGEST_TOKEN)return json({error:"Unauthorized"},401,cors);
@@ -43,7 +63,41 @@ export default {
    const results=await Promise.all(requested.map(async provider=>({provider,...await ingestEconomicProvider(provider,env,true)})));
    return json({status:results.every(x=>x.status==="fresh")?"fresh":results.some(x=>["fresh","partial"].includes(x.status))?"partial":"unavailable",results},200,cors);
   }
-  if(url.pathname==="/health"||url.pathname==="/api/v1/health")return json({ok:true,service:"finance-intelligence-os-edge",version:"2.1.0",time:new Date().toISOString(),storageConfigured:Boolean(env.SNAPSHOTS),cmsConfigured:Boolean(env.BUILDER_PUBLIC_API_KEY),databaseConfigured:Boolean(env.SUPABASE_URL&&supabaseAdminKey(env)),economicProviders:Object.keys(ECONOMIC_PROVIDER_CONFIG).length,ingestionTokenConfigured:Boolean(env.INGEST_TOKEN)},200,cors);
+  if(request.method==="POST"&&url.pathname==="/api/v1/ingest/futures-market-data"){
+   if(!env.INGEST_TOKEN)return json({status:"not-configured",error:"INGEST_TOKEN is not configured on the Worker"},503,cors);
+   if(request.headers.get("Authorization")!=="Bearer "+env.INGEST_TOKEN)return json({error:"Unauthorized"},401,cors);
+   let raw;try{raw=await readBoundedRequestText(request,1024*1024);}catch(error){if(error instanceof RangeError)return json({error:"Request body exceeds the 1 MiB limit."},413,cors);throw error;}
+   let payload;try{payload=JSON.parse(raw);}catch{return json({error:"Invalid JSON body"},400,cors);}
+   let batch;try{batch=normalizeFuturesObservationBatch(payload);}catch(error){return json({status:"invalid-payload",error:String(error.message||error)},400,cors);}
+   if(!env.SUPABASE_URL||!supabaseAdminKey(env))return json({status:"not-configured",error:"Supabase server-side persistence is not configured."},503,cors);
+   const startedAt=new Date().toISOString();
+   let runId=null,persistedObservations=0;
+   try{
+    const run=await supabaseRequest(env,"ingestion_runs","POST","",{
+     provider:"futures-market-data:"+batch.providerId,dataset_id:"futures_market_observations",status:"running",
+     started_at:startedAt,request_count:1,rows_received:batch.records.length,rows_upserted:0,
+     details:{publicDisplayControl:"provider/venue/root/delay entitlement registry",ingestionCanApproveDisplay:false}
+    },"return=representation");
+    runId=Array.isArray(run)?run[0]?.id:null;
+    if(!runId)throw new Error("Ingestion audit record was not created.");
+    await supabaseRequest(env,"futures_market_observations","POST",
+     "on_conflict=provider_id,exchange_instrument_id,contract_month,observation_type,interval_code,observed_at,source_record_id",
+     batch.records,"resolution=merge-duplicates,return=minimal");
+    persistedObservations=batch.records.length;
+    await supabaseRequest(env,"ingestion_runs","PATCH","id=eq."+encodeURIComponent(runId),{
+     status:"success",completed_at:new Date().toISOString(),rows_received:batch.records.length,
+     rows_upserted:batch.records.length,details:{publicDisplayControl:"provider/venue/root/delay entitlement registry",ingestionCanApproveDisplay:false}
+    },"return=minimal");
+   }catch(error){
+    if(runId)try{await supabaseRequest(env,"ingestion_runs","PATCH","id=eq."+encodeURIComponent(runId),{
+     status:"failed",completed_at:new Date().toISOString(),error_code:"futures_market_observation_ingestion_failed",
+     error_message:String(error.message||error).slice(0,300),details:{rowsReceived:batch.records.length}
+    },"return=minimal");}catch{}
+    return json({status:persistedObservations?"audit-incomplete":"persistence-failed",providerId:batch.providerId,persistedObservations,error:persistedObservations?"Observations were stored, but the ingestion audit could not be finalized.":"Market observations could not be durably stored; check the private ingestion ledger."},502,cors);
+   }
+   return json({status:"persisted",providerId:batch.providerId,persistedObservations:batch.records.length,publicDisplayControl:"provider-entitlement-registry",ingestionCanApproveDisplay:false,ingestionRunId:runId},202,{...cors,"Cache-Control":"no-store"});
+  }
+  if(url.pathname==="/health"||url.pathname==="/api/v1/health")return json({ok:true,service:"finance-intelligence-os-edge",version:"2.2.0",time:new Date().toISOString(),storageConfigured:Boolean(env.SNAPSHOTS),cmsConfigured:Boolean(env.BUILDER_PUBLIC_API_KEY),databaseConfigured:Boolean(env.SUPABASE_URL&&supabaseAdminKey(env)),economicProviders:Object.keys(ECONOMIC_PROVIDER_CONFIG).length,ingestionTokenConfigured:Boolean(env.INGEST_TOKEN)},200,cors);
   if(url.pathname==="/api/v1/providers"){
    const state=env.SNAPSHOTS?await env.SNAPSHOTS.get(PROVIDER_STATE_KEY,"json"):null;
    const macroState=env.SNAPSHOTS?await env.SNAPSHOTS.get("macro:bls:v1","json"):null;
@@ -51,6 +105,11 @@ export default {
    const eiaScheduleState=env.SNAPSHOTS?await env.SNAPSHOTS.get(EIA_SCHEDULE_KEY,"json"):null;
    const cftcScheduleState=env.SNAPSHOTS?await env.SNAPSHOTS.get(CFTC_SCHEDULE_KEY,"json"):null;
    const fomcCalendarState=env.SNAPSHOTS?await env.SNAPSHOTS.get(FOMC_SCHEDULE_KEY,"json"):null;
+   const ecbCalendarState=env.SNAPSHOTS?await env.SNAPSHOTS.get(ECB_SCHEDULE_KEY,"json"):null;
+   const boeCalendarState=env.SNAPSHOTS?await env.SNAPSHOTS.get(BOE_SCHEDULE_KEY,"json"):null;
+   const bocCalendarState=env.SNAPSHOTS?await env.SNAPSHOTS.get(BOC_SCHEDULE_KEY,"json"):null;
+   const rbaCalendarState=env.SNAPSHOTS?await env.SNAPSHOTS.get(RBA_SCHEDULE_KEY,"json"):null;
+   const beaCalendarState=env.SNAPSHOTS?await env.SNAPSHOTS.get(BEA_SCHEDULE_KEY,"json"):null;
    const cotKeys=env.SNAPSHOTS?await env.SNAPSHOTS.list({prefix:"cot:tff:futures-only:v6:",limit:1}):{keys:[]};
    const cotState=env.SNAPSHOTS&&cotKeys.keys?.length?await env.SNAPSHOTS.get(cotKeys.keys[0].name,"json"):null;
    return json({providers:[
@@ -59,6 +118,11 @@ export default {
     {id:"bls-calendar",label:"BLS Online Calendar (official ICS)",access:"official-scheduled-feed-no-key",state:blsCalendarState?{status:blsCalendarState.status,eventCount:blsCalendarState.event_count,retrievedAt:blsCalendarState.retrieved_at,lastError:blsCalendarState.last_error||null}:{status:env.SNAPSHOTS?"available-on-demand":"not-configured"},notes:"Most scheduled releases from the BLS national office; updated by BLS as needed. This is not a complete macro calendar."},
     {id:"cftc-cot-schedule",label:"CFTC COT Release Schedule",access:"official-publisher-schedule-no-key",state:cftcScheduleState?{status:cftcScheduleState.status,eventCount:cftcScheduleState.event_count,retrievedAt:cftcScheduleState.retrieved_at,lastError:cftcScheduleState.last_error||null}:{status:env.SNAPSHOTS?"available-on-demand":"not-configured"},notes:"Publisher-listed COT dates and Eastern release time. CFTC announced a planned semiweekly cadence change; verify the operational schedule."},
     {id:"fomc-calendar",label:"Federal Reserve FOMC Meeting Calendar",access:"official-publisher-schedule-no-key",state:fomcCalendarState?{status:fomcCalendarState.status,eventCount:fomcCalendarState.event_count,retrievedAt:fomcCalendarState.retrieved_at,lastError:fomcCalendarState.last_error||null}:{status:env.SNAPSHOTS?"available-on-demand":"not-configured"},notes:"Publisher meeting dates only; no release time and not a complete macro calendar."},
+    {id:"ecb-council-calendar",label:"European Central Bank Governing Council Calendar",access:"official-publisher-schedule-no-key",state:ecbCalendarState?{status:ecbCalendarState.status,eventCount:ecbCalendarState.event_count,retrievedAt:ecbCalendarState.retrieved_at,lastError:ecbCalendarState.last_error||null}:{status:env.SNAPSHOTS?"available-on-demand":"not-configured"},notes:"Official monetary-policy meeting dates only; no release time is inferred."},
+    {id:"boe-mpc-calendar",label:"Bank of England MPC Announcement Calendar",access:"official-publisher-schedule-no-key",state:boeCalendarState?{status:boeCalendarState.status,eventCount:boeCalendarState.event_count,retrievedAt:boeCalendarState.retrieved_at,lastError:boeCalendarState.last_error||null}:{status:env.SNAPSHOTS?"available-on-demand":"not-configured"},notes:"Confirmed announcement dates; time is included only while the separate official 12 noon policy page confirms it."},
+    {id:"boc-rate-calendar",label:"Bank of Canada Policy Rate Calendar",access:"official-publisher-schedule-no-key",state:bocCalendarState?{status:bocCalendarState.status,eventCount:bocCalendarState.event_count,retrievedAt:bocCalendarState.retrieved_at,lastError:bocCalendarState.last_error||null}:{status:env.SNAPSHOTS?"available-on-demand":"not-configured"},notes:"Fixed rate-announcement dates; time is included only while the separate official 9:45 Eastern policy page confirms it."},
+    {id:"rba-monetary-policy-calendar",label:"Reserve Bank of Australia Board Meeting Schedule",access:"official-publisher-schedule-no-key",state:rbaCalendarState?{status:rbaCalendarState.status,eventCount:rbaCalendarState.event_count,retrievedAt:rbaCalendarState.retrieved_at,lastError:rbaCalendarState.last_error||null}:{status:env.SNAPSHOTS?"available-on-demand":"not-configured"},notes:"Monetary Policy Board meeting date ranges only; no decision release time is inferred."},
+    {id:"bea-release-calendar",label:"BEA Official Release Calendar (JSON)",access:"official-publisher-feed-no-key",state:beaCalendarState?{status:beaCalendarState.status,eventCount:beaCalendarState.event_count,retrievedAt:beaCalendarState.retrieved_at,sourceRevision:beaCalendarState.source_revision,lastError:beaCalendarState.last_error||null}:{status:env.SNAPSHOTS?"available-on-demand":"not-configured"},notes:"Upcoming BEA release categories from the machine-readable publisher feed; dates and UTC times only, not forecasts/actuals or a complete macro calendar."},
     {id:"cftc-pre",label:"CFTC Public Reporting Environment",access:"public-api",state:cotState?{status:cotState.status,dataAsOf:cotState.dataAsOf,retrievedAt:cotState.retrievedAt}:{status:"available-on-demand"}},
     {id:"nyfed-markets",label:"Federal Reserve Bank of New York Markets Data API",access:"public-api-no-key",state:env.SNAPSHOTS?{status:"available-on-demand"}:{status:"not-configured"},notes:"SOFR, EFFR, OBFR and related published reference rates; not live futures prices."},
     {id:"builder-content",label:"Builder.io Content API",access:"public-content-api",state:{status:env.BUILDER_PUBLIC_API_KEY?"configured":"needs-public-space-key"}},
@@ -121,8 +185,77 @@ export default {
    return json(result.snapshot,result.status,{...cors,"Cache-Control":result.status===200?"public, max-age=300, s-maxage=900":"no-store",...(result.retryAfter?{"Retry-After":String(result.retryAfter)}:{})});
   }
 
+  if(url.pathname==="/api/v1/events/ecb"){
+   if(!env.SNAPSHOTS)return json({schema_version:1,data_type:"official_economic_release_schedule",status:"not-configured",provider:"ECB Governing Council monetary policy meeting calendar",publisher:"European Central Bank",publisher_id:"ECB",source_url:ECB_COUNCIL_CALENDAR_URL,schedule_url:ECB_COUNCIL_CALENDAR_URL,source_timezone:"Europe/Berlin",events:[],event_count:0,error:"Calendar snapshot storage is not configured."},503,{...cors,"Cache-Control":"no-store"});
+   const result=await getPublisherSchedule(env,ECB_SCHEDULE_KEY,fetchEcbCouncilCalendar,{provider:"ECB Governing Council monetary policy meeting calendar",publisher:"European Central Bank",publisher_id:"ECB",source_url:ECB_COUNCIL_CALENDAR_URL,schedule_url:ECB_COUNCIL_CALENDAR_URL,source_timezone:"Europe/Berlin",error:"The official ECB calendar could not be retrieved. Check the issuer schedule directly."});
+   return json(result.snapshot,result.status,{...cors,"Cache-Control":result.status===200?"public, max-age=300, s-maxage=900":"no-store",...(result.retryAfter?{"Retry-After":String(result.retryAfter)}:{})});
+  }
+
+  if(url.pathname==="/api/v1/events/boe"){
+   if(!env.SNAPSHOTS)return json({schema_version:1,data_type:"official_economic_release_schedule",status:"not-configured",provider:"Bank of England Monetary Policy Committee announcement calendar",publisher:"Bank of England",publisher_id:"BOE",source_url:BOE_MPC_CALENDAR_URL,schedule_url:BOE_MPC_CALENDAR_URL,source_timezone:"Europe/London",events:[],event_count:0,error:"Calendar snapshot storage is not configured."},503,{...cors,"Cache-Control":"no-store"});
+   const result=await getPublisherSchedule(env,BOE_SCHEDULE_KEY,fetchBoeMpcCalendar,{provider:"Bank of England Monetary Policy Committee announcement calendar",publisher:"Bank of England",publisher_id:"BOE",source_url:BOE_MPC_CALENDAR_URL,schedule_url:BOE_MPC_CALENDAR_URL,source_timezone:"Europe/London",error:"The official Bank of England calendar could not be retrieved. Check the issuer schedule directly."});
+   return json(result.snapshot,result.status,{...cors,"Cache-Control":result.status===200?"public, max-age=300, s-maxage=900":"no-store",...(result.retryAfter?{"Retry-After":String(result.retryAfter)}:{})});
+  }
+
+  if(url.pathname==="/api/v1/events/boc"){
+   if(!env.SNAPSHOTS)return json({schema_version:1,data_type:"official_economic_release_schedule",status:"not-configured",provider:"Bank of Canada policy interest rate announcement schedule",publisher:"Bank of Canada",publisher_id:"BOC",source_url:BOC_RATE_CALENDAR_URL,schedule_url:BOC_RATE_CALENDAR_URL,source_timezone:"America/Toronto",events:[],event_count:0,error:"Calendar snapshot storage is not configured."},503,{...cors,"Cache-Control":"no-store"});
+   const result=await getPublisherSchedule(env,BOC_SCHEDULE_KEY,fetchBocRateCalendar,{provider:"Bank of Canada policy interest rate announcement schedule",publisher:"Bank of Canada",publisher_id:"BOC",source_url:BOC_RATE_CALENDAR_URL,schedule_url:BOC_RATE_CALENDAR_URL,source_timezone:"America/Toronto",error:"The official Bank of Canada schedule could not be retrieved. Check the issuer schedule directly."});
+   return json(result.snapshot,result.status,{...cors,"Cache-Control":result.status===200?"public, max-age=300, s-maxage=900":"no-store",...(result.retryAfter?{"Retry-After":String(result.retryAfter)}:{})});
+  }
+
+  if(url.pathname==="/api/v1/events/rba"){
+   if(!env.SNAPSHOTS)return json({schema_version:1,data_type:"official_economic_release_schedule",status:"not-configured",provider:"Reserve Bank of Australia Monetary Policy Board meeting calendar",publisher:"Reserve Bank of Australia",publisher_id:"RBA",source_url:RBA_BOARD_CALENDAR_URL,schedule_url:RBA_BOARD_CALENDAR_URL,source_timezone:"Australia/Sydney",events:[],event_count:0,error:"Calendar snapshot storage is not configured."},503,{...cors,"Cache-Control":"no-store"});
+   const result=await getPublisherSchedule(env,RBA_SCHEDULE_KEY,fetchRbaBoardCalendar,{provider:"Reserve Bank of Australia Monetary Policy Board meeting calendar",publisher:"Reserve Bank of Australia",publisher_id:"RBA",source_url:RBA_BOARD_CALENDAR_URL,schedule_url:RBA_BOARD_CALENDAR_URL,source_timezone:"Australia/Sydney",error:"The official Reserve Bank of Australia calendar could not be retrieved. Check the issuer schedule directly."});
+   return json(result.snapshot,result.status,{...cors,"Cache-Control":result.status===200?"public, max-age=300, s-maxage=900":"no-store",...(result.retryAfter?{"Retry-After":String(result.retryAfter)}:{})});
+  }
+
+  if(url.pathname==="/api/v1/events/bea"){
+   if(!env.SNAPSHOTS)return json({schema_version:1,data_type:"official_economic_release_schedule",status:"not-configured",provider:"U.S. Bureau of Economic Analysis release calendar",publisher:"U.S. Bureau of Economic Analysis",publisher_id:"BEA",source_url:BEA_RELEASE_SCHEDULE_URL,source_feed_url:BEA_RELEASE_DATES_URL,schedule_url:BEA_RELEASE_SCHEDULE_URL,source_timezone:"UTC",events:[],event_count:0,error:"Calendar snapshot storage is not configured."},503,{...cors,"Cache-Control":"no-store"});
+   const result=await getPublisherSchedule(env,BEA_SCHEDULE_KEY,fetchBeaReleaseCalendar,{provider:"U.S. Bureau of Economic Analysis release calendar",publisher:"U.S. Bureau of Economic Analysis",publisher_id:"BEA",source_url:BEA_RELEASE_SCHEDULE_URL,source_feed_url:BEA_RELEASE_DATES_URL,schedule_url:BEA_RELEASE_SCHEDULE_URL,source_timezone:"UTC",error:"The official BEA release schedule could not be retrieved. Check the issuer schedule directly."});
+   return json(result.snapshot,result.status,{...cors,"Cache-Control":result.status===200?"public, max-age=300, s-maxage=900":"no-store",...(result.retryAfter?{"Retry-After":String(result.retryAfter)}:{})});
+  }
+
   if(url.pathname==="/api/v1/market-data/status"){
    return json(marketDataStatus(),200,{...cors,"Cache-Control":"public, max-age=60, s-maxage=120"});
+  }
+
+  if(url.pathname==="/api/v1/futures-observations"){
+   const validation=validateFuturesObservationQuery(url.searchParams);
+   if(!validation.ok)return json({schema_version:1,data_type:"futures_market_observations",status:"invalid-query",error:{code:validation.code,message:validation.message},observations:[]},400,cors);
+   if(!env.SUPABASE_URL||!supabaseAdminKey(env))return json({schema_version:1,data_type:"futures_market_observations",status:"not-configured",observations:[],access_note:"Server-side database access is not configured."},503,{...cors,"Cache-Control":"no-store"});
+   const entitlementQuery=new URLSearchParams({
+    select:"provider_id,venue,instrument_root,delay_class,rights_reference,reviewed_at,reviewed_by,valid_until,is_active",
+    instrument_root:"eq."+validation.query.root,public_display_status:"eq.public-display-approved",is_active:"eq.true",
+    rights_reference:"not.is.null",reviewed_at:"not.is.null",reviewed_by:"not.is.null",delay_class:"neq.unknown",
+    order:"reviewed_at.desc",limit:"100"
+   });
+   const q=new URLSearchParams({
+    select:"provider_id,venue,instrument_root,contract_month,exchange_instrument_id,observation_type,interval_code,observed_at,data_as_of,retrieved_at,open,high,low,close,volume,open_interest,volume_unit,source_url,delay_class,quality_status",
+    quality_status:"neq.rejected",instrument_root:"eq."+validation.query.root,order:"observed_at.desc",limit:String(validation.query.limit)
+   });
+   if(validation.query.contractMonth)q.set("contract_month","eq."+validation.query.contractMonth);
+   if(validation.query.type)q.set("observation_type","eq."+validation.query.type);
+   if(validation.query.interval)q.set("interval_code","eq."+validation.query.interval);
+   const observedAtFilters=[];
+   if(validation.query.from)observedAtFilters.push("observed_at.gte."+validation.query.from+"T00:00:00.000Z");
+   if(validation.query.to)observedAtFilters.push("observed_at.lte."+validation.query.to+"T23:59:59.999Z");
+   if(observedAtFilters.length)q.set("and","("+observedAtFilters.join(",")+")");
+   try{
+    const entitlementRows=await supabaseRequest(env,"futures_market_data_entitlements","GET",entitlementQuery.toString());
+    const now=Date.now();
+    const entitlements=(Array.isArray(entitlementRows)?entitlementRows:[]).filter(row=>row.is_active===true&&row.public_display_status==="public-display-approved"&&row.delay_class!=="unknown"&&row.rights_reference&&row.reviewed_at&&row.reviewed_by&&(!row.valid_until||Date.parse(row.valid_until)>now));
+    if(!entitlements.length)return json({schema_version:1,data_type:"futures_market_observations",status:"no-approved-data",root:validation.query.root,observations:[],access_note:"No active public-display entitlement is recorded for this futures root."},200,{...cors,"Cache-Control":"public, max-age=30, s-maxage=60"});
+    const providerIds=[...new Set(entitlements.map(row=>String(row.provider_id||"")))].filter(id=>/^[a-z0-9][a-z0-9._-]{1,63}$/.test(id));
+    if(!providerIds.length)return json({schema_version:1,data_type:"futures_market_observations",status:"no-approved-data",root:validation.query.root,observations:[],access_note:"No usable active public-display entitlement is recorded for this futures root."},200,{...cors,"Cache-Control":"public, max-age=30, s-maxage=60"});
+    q.set("provider_id","in.("+providerIds.join(",")+")");
+    const observationRows=await supabaseRequest(env,"futures_market_observations","GET",q.toString());
+    const entitlementByKey=new Map(entitlements.map(row=>[JSON.stringify([row.provider_id,row.venue,row.instrument_root,row.delay_class]),row]));
+    const observations=(Array.isArray(observationRows)?observationRows:[]).filter(row=>entitlementByKey.has(JSON.stringify([row.provider_id,row.venue,row.instrument_root,row.delay_class]))&&row.quality_status!=="rejected").map(row=>{
+     const entitlement=entitlementByKey.get(JSON.stringify([row.provider_id,row.venue,row.instrument_root,row.delay_class]));
+     return{...row,public_display_approved_at:entitlement.reviewed_at};
+    });
+    return json({schema_version:1,data_type:"futures_market_observations",status:observations.length?"available":"no-approved-data",root:validation.query.root,query:validation.query,observations,access_note:"Only observations covered by an active provider, venue, market and delay-class entitlement are returned. Source timestamps and delay labels do not by themselves establish exchange real-time entitlement."},200,{...cors,"Cache-Control":"public, max-age=30, s-maxage=60"});
+   }catch{return json({schema_version:1,data_type:"futures_market_observations",status:"unavailable",root:validation.query.root,observations:[],error:"Approved market-observation storage could not be queried."},502,{...cors,"Cache-Control":"no-store"});}
   }
 
   if(url.pathname==="/api/v1/news"){
@@ -309,7 +442,7 @@ export default {
     return json({status:result.ok?"connected":"provider-error",model,results:Array.isArray(data.results)?data.results:[],error:result.ok?undefined:"Builder API returned "+result.status},result.ok?200:502,{...cors,"Cache-Control":"public, max-age=60, s-maxage=120"});
    }catch{return json({status:"unavailable",model,results:[]},502,cors);}
   }
-  return json({error:"Not found",routes:["/health","/api/v1/health","/api/v1/providers","/api/v1/news?instrument=NQ&topic=macro&limit=...","/api/v1/news/sources","/api/v1/market-data/status","/api/v1/volume-open-interest?report=tff|disaggregated","/api/v1/cot?report=tff|disaggregated","/api/v1/macro","/api/v1/macro/funding","/api/v1/economic/providers","/api/v1/economic/{bea|eia|fred|us_treasury|ecb}","POST /api/v1/ingest","/api/v1/economic/history?provider=...&series_id=...","/api/v1/prediction/polymarket","/api/v1/prediction/kalshi","/api/v1/cms/{model}"]},404,cors);
+  return json({error:"Not found",routes:["/health","/api/v1/health","/api/v1/providers","/api/v1/news?instrument=NQ&topic=macro&limit=...","/api/v1/news/sources","/api/v1/market-data/status","/api/v1/futures-observations?root=NQ&contractMonth=202612&type=daily_volume","POST /api/v1/ingest/futures-market-data","/api/v1/volume-open-interest?report=tff|disaggregated","/api/v1/cot?report=tff|disaggregated","/api/v1/macro","/api/v1/macro/funding","/api/v1/economic/providers","/api/v1/economic/{bea|eia|fred|us_treasury|ecb}","POST /api/v1/ingest","/api/v1/economic/history?provider=...&series_id=...","/api/v1/prediction/polymarket","/api/v1/prediction/kalshi","/api/v1/cms/{model}"]},404,cors);
  },
  async scheduled(controller,env,ctx){ctx.waitUntil(Promise.allSettled([refreshNews(env),scheduledEconomicIngestion(env)]));}
 };

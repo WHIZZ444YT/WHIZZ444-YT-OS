@@ -22,7 +22,8 @@
   {id:"si",name:"Silver",report:"disaggregated",query:"SILVER",exchange:"COMEX"},
   {id:"btc",name:"CME Bitcoin",report:"tff",query:"BITCOIN",exchange:"CME"}
  ];
- let observations=[],selectedContract=contracts[0],selectedName="",selectedCode="",history=[];
+ const roots={nq:"NQ",es:"ES",gc:"GC",cl:"CL","6e":"6E","6b":"6B",ym:"YM",rty:"RTY",dx:"DX",zn:"ZN","6j":"6J","6a":"6A","6c":"6C",si:"SI",btc:"BTC"};
+ let observations=[],selectedContract=contracts[0],selectedName="",selectedCode="",history=[],exchangeRequest=0;
  function message(text,kind="neutral"){$("voiState").textContent=text;$("voiState").className="data-message "+kind;}
  function api(path){if(!API)throw new Error("Finance OS API gateway is not configured.");return fetch(API+path,{headers:{Accept:"application/json"},signal:AbortSignal.timeout(18000),cache:"no-store"}).then(async r=>{if(!r.ok)throw new Error("CFTC gateway returned HTTP "+r.status);return r.json();});}
  function marketSelect(){const s=$("voiMarket");s.innerHTML=contracts.map(c=>'<option value="'+c.id+'">'+esc(c.name)+' · '+c.exchange+'</option>').join("");}
@@ -59,6 +60,7 @@
  }
  async function load(){
   selectedContract=contracts.find(x=>x.id===$("voiMarket").value)||contracts[0];
+  loadAuthorizedExchangeObservations(selectedContract);
   const variant=$("voiVariant").value;
   $("voiReport").textContent=(selectedContract.report==="tff"?"CFTC TFF":"CFTC Disaggregated")+" · "+(variant==="combined"?"Futures and Options Combined":"Futures Only");
   $("voiMarketName").textContent="Loading CFTC market rows…";
@@ -83,6 +85,38 @@
    $("voiLatest").textContent="—";$("voiChange").textContent="—";$("voiRange").textContent="—";
    message(e.message,"bad");
   }
+ }
+ async function loadAuthorizedExchangeObservations(contract){
+  const state=$("exchangeObservationState"),body=$("exchangeObservationRows");
+  if(!state||!body)return;
+  const requestId=++exchangeRequest;
+  const volumeStatus=$("exchangeVolumeAvailability"),volumeNote=$("exchangeVolumeNote");
+  if(volumeStatus)volumeStatus.textContent="Not connected";
+  if(volumeNote)volumeNote.textContent="No approved exchange-volume observations are configured";
+  const root=roots[contract?.id];
+  if(!root){state.textContent="No canonical listed-contract root is mapped for this selection.";state.className="data-message warn";return;}
+  if(!API){state.textContent="Approved exchange observations are unavailable because the data gateway is not configured.";state.className="data-message warn";body.innerHTML='<tr><td colspan="7">No public-display-approved exchange data is available.</td></tr>';return;}
+  state.textContent="Checking public-display-approved observations for "+root+"…";state.className="data-message";
+  body.innerHTML='<tr><td colspan="7">Loading approved observations…</td></tr>';
+  try{
+   const response=await fetch(API+"/api/v1/futures-observations?root="+encodeURIComponent(root)+"&limit=200",{headers:{Accept:"application/json"},signal:AbortSignal.timeout(18000),cache:"no-store"});
+   const data=await response.json().catch(()=>({}));
+   if(requestId!==exchangeRequest)return;
+   if(!response.ok){state.textContent=data.access_note||data.error||"Approved exchange observations are temporarily unavailable.";state.className="data-message warn";body.innerHTML='<tr><td colspan="7">No approved exchange observations could be loaded.</td></tr>';return;}
+   const rows=(Array.isArray(data.observations)?data.observations:[]).filter(row=>["daily_volume","open_interest"].includes(row.observation_type)).sort((a,b)=>String(b.observed_at||"").localeCompare(String(a.observed_at||""))).slice(0,50);
+   const volumeAvailable=rows.some(row=>row.observation_type==="daily_volume");
+   if(volumeStatus)volumeStatus.textContent=volumeAvailable?"Approved history":"Not connected";
+   if(volumeNote)volumeNote.textContent=volumeAvailable?"Public-display-approved daily volume is available; intraday bars are not shown in this table.":"No approved exchange-volume observations are configured.";
+   if(!rows.length){state.textContent="No public-display-approved daily volume or open-interest rows are configured for "+root+". Weekly CFTC positioning below remains a separate dataset.";state.className="data-message warn";body.innerHTML='<tr><td colspan="7">No approved exchange rows for this futures root.</td></tr>';return;}
+   state.textContent=rows.length+" approved exchange observations returned for "+root+". Check each provider delay class and data-as-of value.";state.className="data-message good";
+   body.innerHTML=rows.map(row=>{
+    const value=row.observation_type==="daily_volume"?number(row.volume):number(row.open_interest);
+    const unit=row.observation_type==="daily_volume"?(row.volume_unit||"unit unavailable"):"contracts";
+    let source="Source unavailable";
+    try{const url=new URL(String(row.source_url||""));if(url.protocol==="https:")source='<a href="'+esc(url.href)+'" target="_blank" rel="noopener noreferrer">Open source ↗</a>';}catch{}
+    return '<tr><td>'+esc(row.contract_month||"—")+'</td><td>'+esc(row.observation_type==="daily_volume"?"Daily volume":"Open interest")+'</td><td>'+esc(row.interval_code||"—")+'</td><td>'+esc(row.data_as_of||"—")+'</td><td>'+fmt(value)+(value===null?"":" "+esc(unit))+'</td><td>'+esc(row.delay_class||"unknown")+'</td><td>'+source+'</td></tr>';
+   }).join("");
+  }catch(error){if(requestId!==exchangeRequest)return;state.textContent="Approved exchange data could not be reached. "+String(error?.message||"Check the data gateway.");state.className="data-message warn";body.innerHTML='<tr><td colspan="7">No approved exchange observations were loaded.</td></tr>';}
  }
  marketSelect();
  $("voiMarket").addEventListener("change",load);

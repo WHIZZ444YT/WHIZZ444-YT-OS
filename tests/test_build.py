@@ -228,11 +228,17 @@ class BuildTests(unittest.TestCase):
         self.assertIn('Sessions & catalysts',builder)
         self.assertIn('sessions-page.css',builder)
         self.assertIn('PARTIAL · SOURCED CORE',builder)
-        self.assertIn('NOT SUPPLIED IN REGISTRY',builder)
-        self.assertIn('NOT CONFIGURED',builder)
+        self.assertIn('NOT VERIFIED IN THIS RECORD',builder)
+        self.assertIn('LOOK UP THE SELECTED CONTRACT MONTH',builder)
+        self.assertIn('NO APPROVED POLICY CONFIGURED',builder)
         self.assertIn('Reference set',builder)
         self.assertIn('Settlement / delivery',builder)
         self.assertIn('Roll / continuous-series method',builder)
+        self.assertIn('contractSpecSearch',builder)
+        self.assertIn('contractSpecExchange',builder)
+        self.assertIn('0 / 15 complete',builder)
+        self.assertIn('https://www.cmegroup.com/tools-information/calendars/expiration-calendar.html',builder)
+        self.assertIn('https://www.ice.com/products/194/US-Dollar-Index-Futures/expiry',builder)
         sitemap_urls=next(line for line in builder.splitlines() if 'urls=[' in line)
         self.assertNotIn("'/sessions/',",sitemap_urls)
         shell_css=(ROOT/'assets/site-shell.css').read_text(encoding="utf-8")
@@ -259,7 +265,13 @@ class BuildTests(unittest.TestCase):
         self.assertEqual(contract.count('class="os-contract-spec-card"'),15)
         self.assertIn('PARTIAL · SOURCED CORE',contract)
         self.assertIn('SOURCED · CHECKED 2026-11-20',contract)
-        self.assertIn('NOT SUPPLIED IN REGISTRY',contract)
+        self.assertIn('NOT VERIFIED IN THIS RECORD',contract)
+        self.assertIn('LOOK UP THE SELECTED CONTRACT MONTH',contract)
+        self.assertIn('0 / 15 complete',contract)
+        self.assertIn('contractSpecSearch',contract)
+        self.assertIn('contractSpecExchange',contract)
+        self.assertIn('https://www.cmegroup.com/tools-information/calendars/expiration-calendar.html',contract)
+        self.assertIn('https://www.ice.com/products/194/US-Dollar-Index-Futures/expiry',contract)
         self.assertIn('partial-official-spec-review-2026-11-20',contract)
         self.assertEqual(contract.count('CME micro specification'),13)
         self.assertNotIn('UNVERIFIED IMPORTED REFERENCE',contract)
@@ -276,7 +288,10 @@ class BuildTests(unittest.TestCase):
         self.assertEqual(len(bundle['academy']['concepts']),82)
         self.assertEqual(len(bundle['academy']['tracks']),10)
         self.assertTrue(all(m['specStatus']=='partial' and isinstance(m['tickSize'],str) and m.get('specEvidence',{}).get('sourceUrl') for m in bundle['markets']))
-        self.assertTrue(all(not c.get('verifiedVideoIds') for c in bundle['academy']['concepts']))
+        videos_by_lesson={c['id']:c.get('verifiedVideoIds',[]) for c in bundle['academy']['concepts']}
+        expected_video_ids={'ict-2022-model':['ict-2022-ep14'],'mss':['ict-2022-ep03-mss'],'fvg':['ict-2022-ep06-fvg'],'order-block':['ict-2022-ep22-order-block'],'silver-bullet':['ict-2023-silver-bullet-model'],'liquidity':['ict-2025-advanced-liquidity']}
+        for lesson_id,video_ids in expected_video_ids.items(): self.assertEqual(videos_by_lesson[lesson_id],video_ids)
+        self.assertTrue(all(not ids for lesson_id,ids in videos_by_lesson.items() if lesson_id not in expected_video_ids))
         self.assertIn('c.id===n',template)
     def test_part3_contract_version_is_shown_in_risk_output(self):
         js=(ROOT/'assets/risk-calculator.js').read_text(encoding="utf-8")
@@ -294,7 +309,9 @@ class BuildTests(unittest.TestCase):
         self.assertIn('metric:"open_interest"',worker)
         self.assertIn('status:"not-connected"',worker)
         self.assertIn('/api/v1/volume-open-interest?',voi)
-        self.assertIn('Daily / intraday volume', (ROOT/'scripts/build_site.py').read_text(encoding="utf-8"))
+        self.assertIn('/api/v1/futures-observations',worker)
+        self.assertIn('Authorized exchange observations', (ROOT/'scripts/build_site.py').read_text(encoding="utf-8"))
+        self.assertIn('intraday bars', voi)
     def test_provider_health_checks_are_independent(self):
         js=(ROOT/'assets/data-health.js').read_text(encoding="utf-8")
         self.assertIn('Promise.allSettled',js)
@@ -384,22 +401,36 @@ class BuildTests(unittest.TestCase):
         coverage=json.loads((ROOT/'dist/ict-futures/academy/video-coverage.json').read_text(encoding="utf-8"))
         self.assertEqual(coverage['status'],'PARTIAL')
         self.assertEqual(coverage['eligibleCount'],82)
-        self.assertEqual(coverage['coveredCount'],0)
-        self.assertEqual(coverage['missingCount'],82)
-        self.assertEqual(len(coverage['entryModelCoverage']['missingIds']),8)
+        expected_covered={'ict-2022-model','mss','fvg','order-block','silver-bullet','liquidity'}
+        self.assertEqual(coverage['coveredCount'],6)
+        self.assertEqual(set(coverage['coveredIds']),expected_covered)
+        self.assertEqual(coverage['missingCount'],76)
+        self.assertEqual(coverage['entryModelCoverage']['coveredCount'],1)
+        self.assertEqual(coverage['entryModelCoverage']['coveredIds'],['ict-2022-model'])
+        self.assertEqual(len(coverage['entryModelCoverage']['missingIds']),7)
+        for lesson_id in expected_covered:
+            self.assertIn('VERIFIED LESSON VIDEO',(ROOT/'dist/ict-futures/academy'/f'{lesson_id}.html').read_text(encoding="utf-8"))
+        source_data=json.loads((ROOT/'ict-futures/data/ict-academy.json').read_text(encoding="utf-8"))
+        source_concepts={c['id']:c for c in source_data['concepts']}
+        for lesson_id in ('liquidity-sweep-mss-model','fvg-continuation-model'):
+            c=source_concepts[lesson_id]
+            records=(c.get('curriculum',{}).get('videoResources') or [])+(c.get('learning',{}).get('references',{}).get('officialVideos') or [])
+            self.assertFalse(any('NUdu1n-ML98' in r.get('url','') for r in records))
         self.assertIn('VIDEO NEEDED',(ROOT/'dist/ict-futures/academy/market-structure.html').read_text(encoding="utf-8"))
         academy=(ROOT/'dist/academy/index.html').read_text(encoding="utf-8")
         self.assertIn('VIDEO COVERAGE: PARTIAL',academy)
         self.assertIn('/assets/academy-learning.css',academy)
     def test_part2_video_registry_requires_complete_verified_metadata(self):
-        def record(concept_ids,segments=None):
-            return {'resourceId':'lesson-video-01','title':'Exact lesson upload','channelId':'UC123','channelName':'Example channel','videoId':'abcdefghijk','url':'https://www.youtube.com/watch?v=abcdefghijk','language':'en','sourceClass':'official_ict','conceptIds':concept_ids,'segments':segments or {},'verificationStatus':'verified','verifiedAt':'2026-11-19','verifiedBy':'editor-1','lastLinkCheck':'2026-11-19','linkStatus':'verified','embedStatus':'enabled','embedPermission':'allowed','fallbackLinkStatus':'available'}
+        def record(concept_ids,segments=None,embed_status='enabled',embed_permission='allowed'):
+            return {'resourceId':'lesson-video-01','title':'Exact lesson upload','channelId':'UC123','channelName':'Example channel','videoId':'abcdefghijk','url':'https://www.youtube.com/watch?v=abcdefghijk','language':'en','sourceClass':'official_ict','conceptIds':concept_ids,'segments':segments or {},'verificationStatus':'verified','verifiedAt':'2026-11-19','verifiedBy':'editor-1','lastLinkCheck':'2026-11-19','linkStatus':'verified','embedStatus':embed_status,'embedPermission':embed_permission,'fallbackLinkStatus':'available'}
         single=academy_video_coverage({'concepts':[{'id':'lesson-a','name':'A','curriculum':{'videoResources':[record(['lesson-a'])]}}]})
         shared_missing=academy_video_coverage({'concepts':[{'id':'lesson-a','name':'A','curriculum':{'videoResources':[record(['lesson-a','lesson-b'])]}},{'id':'lesson-b','name':'B','curriculum':{'videoResources':[record(['lesson-a','lesson-b'])]}}]})
         shared_segmented=academy_video_coverage({'concepts':[{'id':lesson,'name':lesson,'curriculum':{'videoResources':[record(['lesson-a','lesson-b'],{'lesson-a':{'startSeconds':10,'endSeconds':35},'lesson-b':{'startSeconds':36,'endSeconds':65}})]}} for lesson in ('lesson-a','lesson-b')]})
+        link_only=academy_video_coverage({'concepts':[{'id':'lesson-a','name':'A','curriculum':{'videoResources':[record(['lesson-a'],embed_status='not_checked',embed_permission='not_checked')]}}]})
         self.assertEqual(single['coveredCount'],1)
         self.assertEqual(shared_missing['coveredCount'],0)
         self.assertEqual(shared_segmented['coveredCount'],2)
+        self.assertEqual(link_only['coveredCount'],1)
     def test_part2_has_ten_prerequisite_tracks_and_preserves_nine_tutorials(self):
         data=json.loads((ROOT/'ict-futures/data/ict-academy.json').read_text(encoding="utf-8"))
         tracks=data['tracks'];tutorials=data['learningProgram']['tutorials']
@@ -610,10 +641,21 @@ class BuildTests(unittest.TestCase):
         self.assertIn('/api/v1/events/eia',worker)
         self.assertIn('/api/v1/events/cftc',worker)
         self.assertIn('/api/v1/events/fomc',worker)
+        self.assertIn('/api/v1/events/ecb',worker)
+        self.assertIn('/api/v1/events/boe',worker)
+        self.assertIn('/api/v1/events/boc',worker)
+        self.assertIn('/api/v1/events/rba',worker)
+        self.assertIn('/api/v1/events/bea',worker)
         self.assertIn('bls-calendar',worker)
         self.assertIn('eia-wpsr-schedule',worker)
         self.assertIn('cftc-cot-schedule',worker)
         self.assertIn('fomc-calendar',worker)
+        self.assertIn('ecb-council-calendar',worker)
+        self.assertIn('boe-mpc-calendar',worker)
+        self.assertIn('boc-rate-calendar',worker)
+        self.assertIn('rba-monetary-policy-calendar',worker)
+        self.assertIn('bea-release-calendar',worker)
+        self.assertIn('/api/v1/events/bea',health)
         self.assertIn('/api/v1/events',health)
         self.assertIn('/api/v1/events/eia',health)
         self.assertIn('/api/v1/events/cftc',health)
@@ -628,7 +670,8 @@ class BuildTests(unittest.TestCase):
 
     def test_part4_sessions_route_has_accessible_live_controls_after_build(self):
         page=(ROOT/'dist/sessions/index.html').read_text(encoding='utf-8')
-        for token in ['id="sessionsTimezone"','id="sessionsRange"','id="sessionsFamily"','id="sessionsLiveState"','aria-live="polite"','Official product hours are not configured','id="sessionsWindowDate"','BLS · EIA · CFTC · FOMC','Verify CFTC COT schedule','Verify FOMC meeting dates']:
+        self.assertIn('official BLS, EIA, CFTC, Federal Reserve, ECB, Bank of England, Bank of Canada, RBA and BEA schedules',page)
+        for token in ['id="sessionsTimezone"','id="sessionsRange"','id="sessionsFamily"','id="sessionsLiveState"','aria-live="polite"','Official product hours are not configured','id="sessionsWindowDate"','BLS · EIA · CFTC · FED · ECB · BOE · BOC · RBA · BEA','Verify CFTC COT schedule','Verify FOMC meeting dates','Verify ECB council dates','Verify Bank of England MPC dates','Verify Bank of Canada dates','Verify RBA board dates','Verify BEA release schedule']:
             self.assertIn(token,page)
         self.assertIn('/assets/sessions-page.css',page)
         self.assertIn('/assets/sessions-page.js',page)

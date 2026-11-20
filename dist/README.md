@@ -25,7 +25,7 @@ A futures-only research and education workspace for exchange-listed futures and 
 - `/news/` — futures-focused GDELT discovery snapshots.
 - `/macro/` — BLS, BEA, EIA, FRED, Treasury and ECB observations with provider-specific freshness and credentials.
 - `/research/positioning/` — CFTC Legacy, TFF and Disaggregated weekly positioning, with futures-only and futures-and-options-combined variants kept separate.
-- `/volume-open-interest/` — CFTC weekly open interest; daily/intraday exchange volume remains explicitly unavailable until a verified licensed feed is connected.
+- `/volume-open-interest/` — CFTC weekly open interest plus a rights-gated display path for approved listed-contract observations; exchange data remains unavailable until an authorized provider, entitlement and ingestion feed are configured.
 - `/strategy-lab/` — deterministic signal-driven futures backtesting.
 - `/risk/` — futures risk calculator with conditional sizing, all-in cost inputs and versioned prop-firm verification registry. Imported tick values remain unverified and no firm program is numerically verified.
 - `/tools/` — compatibility redirect to `/risk/`.
@@ -124,6 +124,8 @@ The previously deployed routes include `/health`, `/api/v1/providers`, `/api/v1/
 - `GET /api/v1/economic/history` provides bounded historical reads from the persisted observation table, with optional series/date filters; the ingestion-run ledger remains private.
 - `economic_observations` is browser-readable under a SELECT-only RLS policy. Browser roles cannot insert, update or delete; all ingestion writes run through the Worker.
 - `POST /api/v1/ingest` accepts a provider or `all` and requires `Authorization: Bearer <INGEST_TOKEN>`. Never use a query-string token.
+- `POST /api/v1/ingest/futures-market-data` accepts up to 500 normalized listed-contract bar, daily-volume or published-OI observations. It uses the same bearer secret, writes a private ingestion-run record and cannot create or change display-rights approval.
+- `GET /api/v1/futures-observations?root=NQ&contractMonth=202612&type=daily_volume` returns only observations covered by an active, unexpired provider/venue/market/delay entitlement with a rights reference. The additive schema migration must be applied before these routes can persist or read rows; no exchange provider or license is configured by this code change.
 - BLS runs on API v1 without a key (25 queries/day); set the optional `BLS_API_KEY` Worker secret to use registered API v2 (500 queries/day). Its daily rate-limit response is cached until UTC midnight, and the Macro page's refresh button can retry after the key is configured.
 - BEA, EIA and FRED require `BEA_API_KEY`, `EIA_API_KEY` and `FRED_API_KEY` Worker secrets respectively. Treasury Fiscal Data and ECB SDMX use public endpoints. Supabase writes additionally require `SUPABASE_URL` and the preferred `SUPABASE_SECRET_KEY` Worker secret (`sb_secret_...`); legacy `SUPABASE_SERVICE_ROLE_KEY` JWTs remain supported for backward compatibility.
 - When a credential is absent or persistence is unavailable, provider and persistence statuses remain separate. Missing observations are never written as zero, and provider API keys are stripped from stored source URLs.
@@ -131,7 +133,7 @@ The previously deployed routes include `/health`, `/api/v1/providers`, `/api/v1/
 ## Data and safety boundaries
 
 - Supabase browser configuration uses only the public publishable key; no service-role key is in this repository.
-- RLS is enabled on all 22 project public tables; user-owned rows are scoped to `auth.uid()`. Historical economic observations are read-only to browser roles; the ingestion-run ledger is private and server-role only.
+- RLS is enabled on project public tables; user-owned rows are scoped to `auth.uid()`. Historical economic and COT observations are read-only to browser roles; the ingestion-run ledger is private and server-role only. The new futures-observation table is read-only to browsers and a restricted RLS predicate checks the separate entitlement register without exposing it.
 - Fifteen imported contract specification rows are explicitly `unverified`; they must be reconciled with exchange documents before being treated as current.
 - CFTC COT is a weekly trader-category report. Local branch code distinguishes Legacy, TFF and Disaggregated families and futures-only versus futures-and-options-combined variants; position date, retrieval time and unknown per-row publication timestamp remain separate. The Volume & OI module uses CFTC weekly open interest only and does not label it as daily exchange volume. CFTC COT is not contract-expiry-specific open interest.
 - Builder CMS content is editorial content, not a source for market prices or issuer release facts.
@@ -193,6 +195,8 @@ See `docs/BUILD-REPORT.md`, `docs/ARCHITECTURE.md`, `docs/IMPLEMENTATION.md`, `d
 - CFTC market-name searches expose the source-native contract-market code and exchange/market label. Users can request an exact code; the UI does not claim that a fuzzy root-symbol match is a reviewed expiry-level crosswalk.
 - COT normalization uses report-specific column mappings; the public API returns compact normalized rows while the cached server-side source snapshot and optional database persistence retain the source fields. Net, weekly change and percent-of-open-interest calculations retain nulls; no missing field becomes zero. The COT page includes weekly category history, table and filtered CSV export.
 - The `/volume-open-interest/` page is limited to weekly CFTC open interest. Daily/intraday exchange volume, intraday OI and expiry-level exchange OI remain unavailable until an authorized provider is configured.
+- New repository groundwork adds canonical observation and entitlement tables, bearer-protected batch ingestion, a private ingestion-run audit and a public read route gated by active, reviewed provider rights. The volume page now has an accessible table for approved daily volume/OI; it remains empty until the migration, an entitled provider/feed and rights review are in place. No live or delayed CME/ICE dataset is connected by this change.
+- Migration `20261120110000_add_futures_market_observations` is new and has not been applied to Supabase. Its RLS policy checks the separate entitlement registry; browser roles cannot read the registry or write either table, and ingestion cannot alter approval state.
 - Additive migration `20261119125044_add_cot_report_observations` defines an indexed, idempotent, RLS read-only-to-browser table. It was applied and verified in the active production database on 19 November 2026. The Worker can persist COT rows only when server-side Supabase credentials are configured; the runtime currently reports database writes as not configured.
 - See [`docs/futures-only-roadmap/21-PART-6-EXECUTION-REPORT-2026-11-19.md`](docs/futures-only-roadmap/21-PART-6-EXECUTION-REPORT-2026-11-19.md) for tested changes and remaining gaps.
 

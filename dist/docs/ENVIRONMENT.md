@@ -13,7 +13,7 @@
 | `BEA_API_KEY` | Cloudflare Worker secret | Registered BEA 36-character UserID for BEA NIPA API requests. |
 | `EIA_API_KEY` | Cloudflare Worker secret | Registered EIA API key for weekly petroleum series. |
 | `FRED_API_KEY` | Cloudflare Worker secret | Registered FRED API key for historical macro series. |
-| `INGEST_TOKEN` | Cloudflare Worker secret | Required bearer token for `POST /api/v1/ingest`; never place it in a URL or browser bundle. |
+| `INGEST_TOKEN` | Cloudflare Worker secret | Required bearer token for `POST /api/v1/ingest` and `POST /api/v1/ingest/futures-market-data`; never place it in a URL or browser bundle. |
 | `PUBLIC_SUPABASE_URL` | browser build config | Project URL only (public identifier). |
 | `PUBLIC_SUPABASE_ANON_KEY` | browser build config | Publishable/anon key only; relies on RLS. |
 | `PUBLIC_FINANCE_OS_API_BASE` | browser build config | Worker public endpoint base URL (`https://finance-intelligence-os-edge.finance-intelligence-os.workers.dev`). |
@@ -23,3 +23,5 @@ Never commit real values to `.env`, JSON, static HTML, Builder content or Git. `
 Set Worker secrets through Cloudflare Workers & Pages → finance-intelligence-os-edge → Settings → Variables and Secrets, or with `wrangler secret put SECRET_NAME`. Configure `SUPABASE_URL`, preferably `SUPABASE_SECRET_KEY` (or the legacy `SUPABASE_SERVICE_ROLE_KEY`), `INGEST_TOKEN`, and the optional registered BLS key plus BEA/EIA/FRED provider keys. Treasury Fiscal Data and ECB public SDMX do not require API keys. Do not put any provider or Supabase secret key in `[vars]`, the browser runtime, a URL query string that is logged, or Git. The Worker removes BEA/EIA/FRED keys from stored `source_url` values.
 
 The current branch's publisher schedule snapshots for BLS ICS, EIA WPSR, CFTC COT release dates and Federal Reserve FOMC meeting dates do not require provider API keys. These public schedules do not provide licensed futures quotes, consensus forecasts or a complete global event calendar. Their Worker routes are not production-live until the reviewed Worker branch is deployed.
+
+The futures-observation ingestion route is server-to-server and accepts normalized listed-contract data only when `INGEST_TOKEN`, `SUPABASE_URL` and a Supabase server secret are configured. Apply the additive `20261120110000_add_futures_market_observations` migration before using it. Each row remains provider-reported; public reads require a separate active provider/venue/market/delay entitlement entry, with review evidence, approver and an unexpired validity window. The ingestion payload cannot create or change that entitlement. This route is storage plumbing, not a data-provider integration or market-data license.
