@@ -2,10 +2,11 @@
   "schemaVersion": 1,
   "status": "PARTIAL",
   "eligibleCount": 82,
-  "coveredCount": 21,
-  "coveragePercent": 25.61,
+  "coveredCount": 22,
+  "coveragePercent": 26.83,
   "coveredIds": [
     "market-structure",
+    "swing-high-low",
     "mss",
     "displacement",
     "liquidity",
@@ -27,9 +28,8 @@
     "market-maker-buy-model",
     "ict-2022-model"
   ],
-  "missingCount": 61,
+  "missingCount": 60,
   "missingIds": [
-    "swing-high-low",
     "bos",
     "choch",
     "liquidity-sweep",
@@ -120,8 +120,8 @@
       "id": "swing-high-low",
       "title": "Swing High & Swing Low",
       "isEntryModel": false,
-      "status": "VIDEO NEEDED",
-      "verifiedVideoCount": 0,
+      "status": "VERIFIED",
+      "verifiedVideoCount": 1,
       "unverifiedCandidateCount": 0
     },
     {

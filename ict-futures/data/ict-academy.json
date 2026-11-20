@@ -1284,7 +1284,40 @@
           "resource-cme-institute-trade-and-risk-management-12",
           "resource-cftc-customer-education-advisory-13"
         ],
-        "videoResources": [],
+        "videoResources": [
+          {
+            "resourceId": "paul-leroy-fvg-essentials-swing-pivots-2022",
+            "title": "ICT’s Fair Value Gap Essentials: Market Structure Shift, Displacement & Liquidity",
+            "publisher": "Paul Le Roy",
+            "channelName": "Paul Le Roy",
+            "channelId": "UCiTVR5zjDDXowLY2L81rAfQ",
+            "videoId": "lI8QH0zAPYc",
+            "url": "https://www.youtube.com/watch?v=lI8QH0zAPYc&t=189s",
+            "language": "en",
+            "sourceClass": "independent_supplement",
+            "conceptIds": [
+              "swing-high-low"
+            ],
+            "segments": {
+              "swing-high-low": {
+                "startSeconds": 189,
+                "endSeconds": 259,
+                "label": "Swing High and Swing Low Patterns"
+              }
+            },
+            "verificationStatus": "verified",
+            "verifiedAt": "2026-11-20",
+            "verifiedBy": "Codex research audit",
+            "lastLinkCheck": "2026-11-20",
+            "linkStatus": "verified",
+            "embedStatus": "not_checked",
+            "embedPermission": "not_checked",
+            "fallbackLinkStatus": "available",
+            "evidenceUrl": "https://www.youtube.com/watch?v=lI8QH0zAPYc",
+            "summary": "Independent Paul Le Roy lesson about ICT concepts, not an Official ICT upload. The description lists a dedicated Swing High and Swing Low Patterns chapter from 3:09 to 4:19. This mapping is limited to the swing-high-low lesson and does not establish a universal pivot rule or strategy performance.",
+            "sourceNote": "The video description identifies the exact chapter title and timestamps. It is a secondary educational explanation of the 2022 ICT mentorship, not source authority for a universal swing definition, futures-specific tested rules, or performance. Embed availability and permission were not checked; the direct YouTube link is the fallback."
+          }
+        ],
         "supplementalResources": [],
         "topicDiscoveryUrl": "https://www.youtube.com/results?search_query=Inner%20Circle%20Trader%20official%20Swing%20High%20%26%20Swing%20Low%20ICT%20futures",
         "contentVersion": 2,
