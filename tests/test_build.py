@@ -645,6 +645,7 @@ class BuildTests(unittest.TestCase):
         self.assertIn('/api/v1/events/boe',worker)
         self.assertIn('/api/v1/events/boc',worker)
         self.assertIn('/api/v1/events/rba',worker)
+        self.assertIn('/api/v1/events/bea',worker)
         self.assertIn('bls-calendar',worker)
         self.assertIn('eia-wpsr-schedule',worker)
         self.assertIn('cftc-cot-schedule',worker)
@@ -653,6 +654,8 @@ class BuildTests(unittest.TestCase):
         self.assertIn('boe-mpc-calendar',worker)
         self.assertIn('boc-rate-calendar',worker)
         self.assertIn('rba-monetary-policy-calendar',worker)
+        self.assertIn('bea-release-calendar',worker)
+        self.assertIn('/api/v1/events/bea',health)
         self.assertIn('/api/v1/events',health)
         self.assertIn('/api/v1/events/eia',health)
         self.assertIn('/api/v1/events/cftc',health)
@@ -667,7 +670,7 @@ class BuildTests(unittest.TestCase):
 
     def test_part4_sessions_route_has_accessible_live_controls_after_build(self):
         page=(ROOT/'dist/sessions/index.html').read_text(encoding='utf-8')
-        for token in ['id="sessionsTimezone"','id="sessionsRange"','id="sessionsFamily"','id="sessionsLiveState"','aria-live="polite"','Official product hours are not configured','id="sessionsWindowDate"','BLS · EIA · CFTC · FED · ECB · BOE · BOC · RBA','Verify CFTC COT schedule','Verify FOMC meeting dates','Verify ECB council dates','Verify Bank of England MPC dates','Verify Bank of Canada dates','Verify RBA board dates']:
+        for token in ['id="sessionsTimezone"','id="sessionsRange"','id="sessionsFamily"','id="sessionsLiveState"','aria-live="polite"','Official product hours are not configured','id="sessionsWindowDate"','BLS · EIA · CFTC · FED · ECB · BOE · BOC · RBA · BEA','Verify CFTC COT schedule','Verify FOMC meeting dates','Verify ECB council dates','Verify Bank of England MPC dates','Verify Bank of Canada dates','Verify RBA board dates','Verify BEA release schedule']:
             self.assertIn(token,page)
         self.assertIn('/assets/sessions-page.css',page)
         self.assertIn('/assets/sessions-page.js',page)

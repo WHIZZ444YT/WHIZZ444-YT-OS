@@ -181,7 +181,7 @@ Use current official exchange schedule/holiday/contract notices as the authority
 - [ ] Holiday and rescheduled-event exceptions are represented.
 - [ ] No forecast/actual values are invented.
 - [ ] Contract-specific event relevance is visible.
-- [x] BLS, EIA exception, CFTC release-date, date-only FOMC and four central-bank schedule adapters have parser, metadata and route-cache tests, including UK/Canada daylight-saving conversion and date-only ECB/RBA ranges.
+- [x] BLS, EIA exception, CFTC, date-only FOMC, four central-bank and BEA machine-readable release-calendar adapters have parser, metadata and route-cache tests, including UK/Canada daylight-saving conversion, date-only ECB/RBA ranges and strict BEA UTC timestamps. See the [20 November BEA update](32-PART-4-BEA-RELEASE-CALENDAR-UPDATE-2026-11-20.md).
 - [ ] Production Worker routes are deployed and smoke-tested; scheduled snapshots remain partial coverage, not a complete global event calendar.
 - [ ] Calendar pages and feeds pass build, link and mobile QA.
 

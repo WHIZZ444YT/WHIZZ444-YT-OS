@@ -193,7 +193,8 @@
         { id: "ECB", path: "/api/v1/events/ecb" },
         { id: "BoE", path: "/api/v1/events/boe" },
         { id: "BoC", path: "/api/v1/events/boc" },
-        { id: "RBA", path: "/api/v1/events/rba" }
+        { id: "RBA", path: "/api/v1/events/rba" },
+        { id: "BEA", path: "/api/v1/events/bea" }
       ];
       const settled = await Promise.allSettled(feeds.map(async feed => {
         const response = await fetch(apiBase + feed.path, { headers: { Accept: "application/json" }, cache: "no-store", signal: AbortSignal.timeout(16000) });
@@ -219,7 +220,7 @@
         return `${feed.id}: ${label} · source time basis ${sourceZone}`;
       });
       $("sessionsRetrievedAt").textContent = `Publisher retrievals: ${retrievals.join(" · ")}`;
-      $("sessionsLiveState").textContent = incomplete ? `${failures.join(" · ") || "At least one publisher snapshot is stale."} Verify every event at its issuer before relying on the schedule.` : "Official BLS, EIA, CFTC, Federal Reserve, ECB, Bank of England, Bank of Canada and RBA schedules are included. ECB, FOMC and RBA entries are date-only; verify issuer revisions. Forecasts and actual values are not supplied.";
+      $("sessionsLiveState").textContent = incomplete ? `${failures.join(" · ") || "At least one publisher snapshot is stale."} Verify every event at its issuer before relying on the schedule.` : "Official BLS, EIA, CFTC, Federal Reserve, ECB, Bank of England, Bank of Canada, RBA and BEA schedules are included. ECB, FOMC and RBA entries are date-only; BEA dates include publisher-supplied UTC times. Verify issuer revisions. Forecasts and actual values are not supplied.";
       $("sessionsLiveState").dataset.tone = incomplete ? "warn" : "";
     } catch (error) {
       snapshot = null; events = [];

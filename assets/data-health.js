@@ -7,6 +7,7 @@
   {id:"news",name:"GDELT News Discovery",path:"/api/v1/news",detail:"Global discovery index; scheduled collection every 30 minutes."},
   {id:"bls",name:"US Bureau of Labor Statistics",path:"/api/v1/macro",detail:"Historical inflation and labour observations; not a real-time market feed."},
   {id:"bls-calendar",name:"Official BLS Release Calendar",path:"/api/v1/events",detail:"Publisher-maintained ICS schedule for most BLS national-office releases; not a complete macro calendar."},
+  {id:"bea-calendar",name:"Official BEA Release Calendar",path:"/api/v1/events/bea",detail:"Machine-readable publisher schedule with upcoming BEA releases; dates and times only, not a complete macro calendar."},
   {id:"eia-calendar",name:"Official EIA WPSR Schedule",path:"/api/v1/events/eia",detail:"Weekly petroleum report schedule and publisher-listed holiday exceptions; not a forecast or inventory feed."},
   {id:"cftc-calendar",name:"Official CFTC COT Schedule",path:"/api/v1/events/cftc",detail:"Publisher-listed COT publication dates; cadence may change and is not exchange intraday volume/open interest."},
   {id:"fomc-calendar",name:"Official Federal Reserve FOMC Calendar",path:"/api/v1/events/fomc",detail:"Publisher meeting dates only; this feed does not supply statement release times."},

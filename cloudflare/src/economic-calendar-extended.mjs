@@ -8,6 +8,8 @@ export const BOE_POLICY_URL = "https://www.bankofengland.co.uk/monetary-policy";
 export const BOC_RATE_CALENDAR_URL = "https://www.bankofcanada.ca/core-functions/monetary-policy/key-interest-rate/";
 export const BOC_POLICY_URL = "https://www.bankofcanada.ca/core-functions/monetary-policy/key-interest-rate/blackout-guidelines/";
 export const RBA_BOARD_CALENDAR_URL = "https://www.rba.gov.au/schedules-events/board-meeting-schedules.html";
+export const BEA_RELEASE_DATES_URL = "https://apps.bea.gov/API/signup/release_dates.json";
+export const BEA_RELEASE_SCHEDULE_URL = "https://www.bea.gov/news/schedule";
 const MAX_SCHEDULE_BYTES = 1024 * 1024;
 const EASTERN = "America/New_York";
 const LONDON = "Europe/London";
@@ -592,4 +594,147 @@ export async function fetchRbaBoardCalendar(fetchImpl = fetch) {
       "This is an additional central-bank source, not complete global macro or exchange calendar coverage."
     ]
   });
+}
+
+const BEA_INSTRUMENT_RELEVANCE = {
+  "Gross Domestic Product": { type: "BEA_GDP_RELEASE", affected: ["ES", "NQ", "ZN"], note: "Editorial macro relevance for U.S. equity-index and Treasury futures; not a market-impact forecast." },
+  "Personal Income and Outlays": { type: "BEA_PERSONAL_INCOME_OUTLAYS_RELEASE", affected: ["ES", "NQ", "ZN", "GC"], note: "Includes BEA personal-consumption and price-index releases; relevance tags are editorial context, not a market-impact forecast." },
+  "U.S. International Trade in Goods and Services": { type: "BEA_INTERNATIONAL_TRADE_RELEASE", affected: ["6E", "6B", "6J", "6A", "6C", "6S", "DX"], note: "Editorial international-trade context for currency futures; not a market-impact forecast." },
+  "U.S. International Transactions": { type: "BEA_INTERNATIONAL_TRANSACTIONS_RELEASE", affected: ["6E", "6B", "6J", "6A", "6C", "6S", "DX"], note: "Editorial international-transactions context for currency futures; not a market-impact forecast." },
+  "U.S. International Investment Position": { type: "BEA_INTERNATIONAL_INVESTMENT_POSITION_RELEASE", affected: ["6E", "6B", "6J", "6A", "6C", "6S", "DX"], note: "Editorial international-investment context for currency futures; not a market-impact forecast." },
+  "U.S. International Transactions and Investment Position": { type: "BEA_INTERNATIONAL_TRANSACTIONS_AND_INVESTMENT_POSITION_RELEASE", affected: ["6E", "6B", "6J", "6A", "6C", "6S", "DX"], note: "Editorial international-transactions context for currency futures; not a market-impact forecast." },
+  "Corporate Profits": { type: "BEA_CORPORATE_PROFITS_RELEASE", affected: ["ES", "NQ"], note: "Editorial U.S. corporate-profits context for equity-index futures; not a market-impact forecast." }
+};
+
+function beaTimestamp(value) {
+  const match = /^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2}):(\d{2})(?:\.(\d{1,9}))?(Z|\+00:00)$/i.exec(String(value || ""));
+  if (!match) return null;
+  const [, yearText, monthText, dayText, hourText, minuteText, secondText] = match;
+  const year = Number(yearText), month = Number(monthText), day = Number(dayText);
+  const hour = Number(hourText), minute = Number(minuteText), second = Number(secondText);
+  const calendarDate = new Date(Date.UTC(year, month - 1, day));
+  if (calendarDate.getUTCFullYear() !== year || calendarDate.getUTCMonth() + 1 !== month || calendarDate.getUTCDate() !== day || hour > 23 || minute > 59 || second > 59) return null;
+  const epochMs = Date.parse(value);
+  return Number.isFinite(epochMs) ? new Date(epochMs).toISOString() : null;
+}
+
+function beaSlug(value) {
+  return String(value).normalize("NFKD").replace(/[^\w-]+/g, "-").replace(/^-+|-+$/g, "").toLowerCase().slice(0, 90) || "release";
+}
+
+export function parseBeaReleaseDates(input, { retrievedAt = new Date().toISOString(), now = Date.now(), horizonDays = 400, maxEvents = 250 } = {}) {
+  let data = input;
+  if (typeof input === "string") {
+    try { data = JSON.parse(input); } catch { throw new Error("BEA release schedule was not valid JSON"); }
+  }
+  if (!data || typeof data !== "object" || Array.isArray(data)) throw new Error("BEA release schedule did not contain an object");
+  const revision = typeof data.file_last_updated === "string" && data.file_last_updated.length <= 64 ? data.file_last_updated : null;
+  const cutoff = now + Math.max(1, Math.min(550, Number(horizonDays) || 400)) * 86400000;
+  const rows = [];
+  let categoryCount = 0;
+  for (const [release, record] of Object.entries(data)) {
+    if (release === "file_last_updated") continue;
+    if (!release.trim() || !record || typeof record !== "object" || Array.isArray(record) || !Array.isArray(record.release_dates)) {
+      throw new Error("BEA release schedule contained an unexpected category record");
+    }
+    categoryCount++;
+    for (const value of record.release_dates) {
+      const timestamp = beaTimestamp(value);
+      if (!timestamp) throw new Error("BEA release schedule contained an invalid UTC release timestamp");
+      const epoch = Date.parse(timestamp);
+      if (epoch < now || epoch > cutoff) continue;
+      const classification = BEA_INSTRUMENT_RELEVANCE[release] || null;
+      const slug = beaSlug(release);
+      rows.push({
+        event_id: `bea:${slug}:${timestamp.replace(/[-:.]/g, "").replace(/Z$/, "z")}`,
+        event_type: classification?.type || "BEA_PUBLISHER_RELEASE",
+        title: release,
+        country: "US",
+        publisher: "U.S. Bureau of Economic Analysis",
+        publisher_id: "BEA",
+        source_url: BEA_RELEASE_SCHEDULE_URL,
+        scheduled_at_utc: timestamp,
+        scheduled_date: timestamp.slice(0, 10),
+        scheduled_timezone: "UTC",
+        timezone_basis: "publisher JSON timestamp with explicit UTC offset",
+        schedule_time_resolution: "exact",
+        published_at_utc: null,
+        actual_release_at_utc: null,
+        retrieved_at_utc: retrievedAt,
+        previous_value: null,
+        forecast_value: null,
+        actual_value: null,
+        unit: null,
+        period_label: "Publisher-listed release date and time; forecast and actual values are not supplied.",
+        affected_instruments: classification?.affected || [],
+        relevance_basis: classification?.note || "No instrument mapping is asserted for this BEA release category.",
+        importance: null,
+        schedule_status: "scheduled",
+        data_class: "official-bea-release-schedule",
+        source_revision: revision,
+        date_only: false,
+        schedule_local_time: timestamp.slice(11, 19),
+        schedule_note: "BEA schedule data can be revised. Verify the publisher schedule before relying on an event."
+      });
+    }
+  }
+  if (!categoryCount) throw new Error("BEA release schedule did not contain any release categories");
+  const unique = [...new Map(rows.map(row => [row.event_id, row])).values()];
+  unique.sort((a, b) => a.scheduled_at_utc.localeCompare(b.scheduled_at_utc) || a.title.localeCompare(b.title));
+  return { events: unique.slice(0, Math.max(1, Math.min(500, Number(maxEvents) || 250))), sourceRevision: revision, categoryCount };
+}
+
+export async function fetchBeaReleaseCalendar(fetchImpl = fetch) {
+  const response = await fetchImpl(BEA_RELEASE_DATES_URL, {
+    headers: { Accept: "application/json", "User-Agent": "FinanceIntelligenceOS/1.3 public research" },
+    signal: AbortSignal.timeout(12000)
+  });
+  if (!response.ok) throw new Error("Official BEA release schedule HTTP " + response.status);
+  const contentType = String(response.headers.get("content-type") || "").toLowerCase();
+  if (contentType && !/(application\/json|text\/json)/.test(contentType)) throw new Error("Official BEA schedule returned an unexpected content type");
+  let text = "";
+  if (response.body?.getReader) {
+    const reader = response.body.getReader(), decoder = new TextDecoder();
+    let bytes = 0;
+    while (true) {
+      const chunk = await reader.read();
+      if (chunk.done) break;
+      bytes += chunk.value.byteLength;
+      if (bytes > MAX_SCHEDULE_BYTES) { await reader.cancel(); throw new Error("Official BEA schedule response too large"); }
+      text += decoder.decode(chunk.value, { stream: true });
+    }
+    text += decoder.decode();
+  } else {
+    text = await response.text();
+    if (new TextEncoder().encode(text).byteLength > MAX_SCHEDULE_BYTES) throw new Error("Official BEA schedule response too large");
+  }
+  const retrievedAt = new Date().toISOString();
+  const parsed = parseBeaReleaseDates(text, { retrievedAt });
+  return {
+    schema_version: 1,
+    data_type: "official_economic_release_schedule",
+    status: "fresh",
+    provider: "U.S. Bureau of Economic Analysis release calendar",
+    publisher: "U.S. Bureau of Economic Analysis",
+    publisher_id: "BEA",
+    source_url: BEA_RELEASE_SCHEDULE_URL,
+    source_feed_url: BEA_RELEASE_DATES_URL,
+    schedule_url: BEA_RELEASE_SCHEDULE_URL,
+    source_timezone: "UTC",
+    timezone_basis: "BEA machine-readable release dates include explicit UTC offsets",
+    frequency: "publisher-updated release schedule",
+    retrieved_at: retrievedAt,
+    data_as_of: null,
+    source_revision: parsed.sourceRevision,
+    source_category_count: parsed.categoryCount,
+    event_count: parsed.events.length,
+    events: parsed.events,
+    coverage_notes: [
+      "This feed uses BEA's machine-readable release-date JSON and includes upcoming categories published by BEA within a 400-day horizon.",
+      "The publisher's release schedule may change; check the official BEA schedule for revisions before relying on an event.",
+      "BEA provides release dates and times only here; forecasts, actual values, and measured release timestamps are not included.",
+      "Instrument relevance tags are editorial context. Unmapped categories remain visible without inferred market relevance.",
+      "BEA coverage is one component of a partial macro calendar, not a complete U.S. or global event calendar."
+    ]
+  };
 }

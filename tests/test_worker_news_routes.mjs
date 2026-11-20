@@ -178,7 +178,8 @@ test('provider registry exposes publisher calendar freshness separately from dat
     'schedule:ecb:council:v1': JSON.stringify({ status: 'fresh', event_count: 3, retrieved_at: retrievedAt }),
     'schedule:boe:mpc:v1': JSON.stringify({ status: 'fresh', event_count: 8, retrieved_at: retrievedAt }),
     'schedule:boc:policy-rate:v1': JSON.stringify({ status: 'fresh', event_count: 8, retrieved_at: retrievedAt }),
-    'schedule:rba:monetary-policy-board:v1': JSON.stringify({ status: 'fresh', event_count: 8, retrieved_at: retrievedAt })
+    'schedule:rba:monetary-policy-board:v1': JSON.stringify({ status: 'fresh', event_count: 8, retrieved_at: retrievedAt }),
+    'schedule:bea:release-dates:v1': JSON.stringify({ status: 'fresh', event_count: 15, retrieved_at: retrievedAt, source_revision: '2026-10-22T12:48:27.656675' })
   });
   const response = await worker.fetch(new Request('https://edge.example/api/v1/providers'), env, context());
   const providers = (await response.json()).providers;
@@ -190,6 +191,7 @@ test('provider registry exposes publisher calendar freshness separately from dat
   const boeCalendar = providers.find(provider => provider.id === 'boe-mpc-calendar');
   const bocCalendar = providers.find(provider => provider.id === 'boc-rate-calendar');
   const rbaCalendar = providers.find(provider => provider.id === 'rba-monetary-policy-calendar');
+  const beaCalendar = providers.find(provider => provider.id === 'bea-release-calendar');
   assert.equal(calendar.state.status, 'fresh');
   assert.equal(calendar.state.eventCount, 12);
   assert.equal(calendar.state.retrievedAt, retrievedAt);
@@ -206,11 +208,14 @@ test('provider registry exposes publisher calendar freshness separately from dat
   assert.equal(bocCalendar.state.eventCount, 8);
   assert.equal(rbaCalendar.state.eventCount, 8);
   assert.match(rbaCalendar.notes, /no decision release time/);
+  assert.equal(beaCalendar.state.eventCount, 15);
+  assert.equal(beaCalendar.state.sourceRevision, '2026-10-22T12:48:27.656675');
+  assert.match(beaCalendar.notes, /machine-readable publisher feed/);
 
   const unconfigured = makeEnv({ __env: { SNAPSHOTS: null } });
   const unavailableResponse = await worker.fetch(new Request('https://edge.example/api/v1/providers'), unconfigured, context());
   const unavailableProviders = (await unavailableResponse.json()).providers;
-  for (const id of ['bls-calendar', 'eia-wpsr-schedule', 'cftc-cot-schedule', 'fomc-calendar', 'ecb-council-calendar', 'boe-mpc-calendar', 'boc-rate-calendar', 'rba-monetary-policy-calendar']) {
+  for (const id of ['bls-calendar', 'eia-wpsr-schedule', 'cftc-cot-schedule', 'fomc-calendar', 'ecb-council-calendar', 'boe-mpc-calendar', 'boc-rate-calendar', 'rba-monetary-policy-calendar', 'bea-release-calendar']) {
     assert.equal(unavailableProviders.find(provider => provider.id === id).state.status, 'not-configured');
   }
 });
@@ -284,6 +289,37 @@ test('central-bank calendar routes are independently source-labelled, cached, an
     }
     assert.equal(requested.length, 6);
     const unconfigured = await worker.fetch(new Request('https://edge.example/api/v1/events/ecb'), makeEnv({ __env: { SNAPSHOTS: null } }), context());
+    assert.equal(unconfigured.status, 503);
+    assert.equal((await unconfigured.json()).status, 'not-configured');
+  } finally { globalThis.fetch = originalFetch; }
+});
+
+test('BEA calendar route fetches and caches the official JSON release schedule', async () => {
+  const originalFetch = globalThis.fetch;
+  const requested = [];
+  globalThis.fetch = async input => {
+    requested.push(String(input));
+    if (String(input) !== 'https://apps.bea.gov/API/signup/release_dates.json') throw new Error('unexpected BEA source');
+    return new Response(JSON.stringify({
+      'Gross Domestic Product': { release_dates: ['2027-01-28T13:30:00+00:00'] },
+      file_last_updated: '2026-10-22T12:48:27.656675'
+    }), { headers: { 'content-type': 'application/json' } });
+  };
+  try {
+    const env = makeEnv();
+    const response = await worker.fetch(new Request('https://edge.example/api/v1/events/bea', { headers: { Origin: 'https://app.example' } }), env, context());
+    assert.equal(response.status, 200);
+    assert.equal(response.headers.get('Access-Control-Allow-Origin'), 'https://app.example');
+    const payload = await response.json();
+    assert.equal(payload.publisher_id, 'BEA');
+    assert.equal(payload.source_feed_url, 'https://apps.bea.gov/API/signup/release_dates.json');
+    assert.equal(payload.source_revision, '2026-10-22T12:48:27.656675');
+    assert.equal(payload.event_count, 1);
+    assert.equal(payload.events[0].scheduled_at_utc, '2027-01-28T13:30:00.000Z');
+    await worker.fetch(new Request('https://edge.example/api/v1/events/bea'), env, context());
+    assert.equal(requested.length, 1);
+
+    const unconfigured = await worker.fetch(new Request('https://edge.example/api/v1/events/bea'), makeEnv({ __env: { SNAPSHOTS: null } }), context());
     assert.equal(unconfigured.status, 503);
     assert.equal((await unconfigured.json()).status, 'not-configured');
   } finally { globalThis.fetch = originalFetch; }

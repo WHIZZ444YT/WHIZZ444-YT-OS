@@ -3,7 +3,7 @@ import { filterNewsArticles, marketDataStatus, NEWS_SOURCE_REGISTRY, newsRespons
 import { nextProviderCircuitState, providerCircuitIsOpen } from "./provider-http.mjs";
 import { COT_DATASETS, asFiniteNumber, cotResponseEnvelope, cotSourceColumns, normalizeCotRows, validateCotQuery } from "./cot-contracts.mjs";
 import { fetchBlsCalendar, fetchEiaWpsrSchedule } from "./economic-calendar.mjs";
-import { BOC_RATE_CALENDAR_URL, BOE_MPC_CALENDAR_URL, CFTC_COT_SCHEDULE_URL, ECB_COUNCIL_CALENDAR_URL, FOMC_CALENDAR_URL, RBA_BOARD_CALENDAR_URL, fetchBocRateCalendar, fetchBoeMpcCalendar, fetchCftcCotSchedule, fetchEcbCouncilCalendar, fetchFomcCalendar, fetchRbaBoardCalendar } from "./economic-calendar-extended.mjs";
+import { BEA_RELEASE_SCHEDULE_URL, BEA_RELEASE_DATES_URL, BOC_RATE_CALENDAR_URL, BOE_MPC_CALENDAR_URL, CFTC_COT_SCHEDULE_URL, ECB_COUNCIL_CALENDAR_URL, FOMC_CALENDAR_URL, RBA_BOARD_CALENDAR_URL, fetchBeaReleaseCalendar, fetchBocRateCalendar, fetchBoeMpcCalendar, fetchCftcCotSchedule, fetchEcbCouncilCalendar, fetchFomcCalendar, fetchRbaBoardCalendar } from "./economic-calendar-extended.mjs";
 import { normalizeFuturesObservationBatch, validateFuturesObservationQuery } from "./futures-observations.mjs";
 
 const NEWS_KEY = "snapshot:gdelt:news:v1";
@@ -17,6 +17,7 @@ const ECB_SCHEDULE_KEY = "schedule:ecb:council:v1";
 const BOE_SCHEDULE_KEY = "schedule:boe:mpc:v1";
 const BOC_SCHEDULE_KEY = "schedule:boc:policy-rate:v1";
 const RBA_SCHEDULE_KEY = "schedule:rba:monetary-policy-board:v1";
+const BEA_SCHEDULE_KEY = "schedule:bea:release-dates:v1";
 const ALLOWED_BUILDER_MODELS = new Set(["page", "ict-lesson", "research-article", "glossary"]);
 const GDELT_QUERY = {
  label: "Finance futures, macro & commodities",
@@ -96,7 +97,7 @@ export default {
    }
    return json({status:"persisted",providerId:batch.providerId,persistedObservations:batch.records.length,publicDisplayControl:"provider-entitlement-registry",ingestionCanApproveDisplay:false,ingestionRunId:runId},202,{...cors,"Cache-Control":"no-store"});
   }
-  if(url.pathname==="/health"||url.pathname==="/api/v1/health")return json({ok:true,service:"finance-intelligence-os-edge",version:"2.1.0",time:new Date().toISOString(),storageConfigured:Boolean(env.SNAPSHOTS),cmsConfigured:Boolean(env.BUILDER_PUBLIC_API_KEY),databaseConfigured:Boolean(env.SUPABASE_URL&&supabaseAdminKey(env)),economicProviders:Object.keys(ECONOMIC_PROVIDER_CONFIG).length,ingestionTokenConfigured:Boolean(env.INGEST_TOKEN)},200,cors);
+  if(url.pathname==="/health"||url.pathname==="/api/v1/health")return json({ok:true,service:"finance-intelligence-os-edge",version:"2.2.0",time:new Date().toISOString(),storageConfigured:Boolean(env.SNAPSHOTS),cmsConfigured:Boolean(env.BUILDER_PUBLIC_API_KEY),databaseConfigured:Boolean(env.SUPABASE_URL&&supabaseAdminKey(env)),economicProviders:Object.keys(ECONOMIC_PROVIDER_CONFIG).length,ingestionTokenConfigured:Boolean(env.INGEST_TOKEN)},200,cors);
   if(url.pathname==="/api/v1/providers"){
    const state=env.SNAPSHOTS?await env.SNAPSHOTS.get(PROVIDER_STATE_KEY,"json"):null;
    const macroState=env.SNAPSHOTS?await env.SNAPSHOTS.get("macro:bls:v1","json"):null;
@@ -108,6 +109,7 @@ export default {
    const boeCalendarState=env.SNAPSHOTS?await env.SNAPSHOTS.get(BOE_SCHEDULE_KEY,"json"):null;
    const bocCalendarState=env.SNAPSHOTS?await env.SNAPSHOTS.get(BOC_SCHEDULE_KEY,"json"):null;
    const rbaCalendarState=env.SNAPSHOTS?await env.SNAPSHOTS.get(RBA_SCHEDULE_KEY,"json"):null;
+   const beaCalendarState=env.SNAPSHOTS?await env.SNAPSHOTS.get(BEA_SCHEDULE_KEY,"json"):null;
    const cotKeys=env.SNAPSHOTS?await env.SNAPSHOTS.list({prefix:"cot:tff:futures-only:v6:",limit:1}):{keys:[]};
    const cotState=env.SNAPSHOTS&&cotKeys.keys?.length?await env.SNAPSHOTS.get(cotKeys.keys[0].name,"json"):null;
    return json({providers:[
@@ -120,6 +122,7 @@ export default {
     {id:"boe-mpc-calendar",label:"Bank of England MPC Announcement Calendar",access:"official-publisher-schedule-no-key",state:boeCalendarState?{status:boeCalendarState.status,eventCount:boeCalendarState.event_count,retrievedAt:boeCalendarState.retrieved_at,lastError:boeCalendarState.last_error||null}:{status:env.SNAPSHOTS?"available-on-demand":"not-configured"},notes:"Confirmed announcement dates; time is included only while the separate official 12 noon policy page confirms it."},
     {id:"boc-rate-calendar",label:"Bank of Canada Policy Rate Calendar",access:"official-publisher-schedule-no-key",state:bocCalendarState?{status:bocCalendarState.status,eventCount:bocCalendarState.event_count,retrievedAt:bocCalendarState.retrieved_at,lastError:bocCalendarState.last_error||null}:{status:env.SNAPSHOTS?"available-on-demand":"not-configured"},notes:"Fixed rate-announcement dates; time is included only while the separate official 9:45 Eastern policy page confirms it."},
     {id:"rba-monetary-policy-calendar",label:"Reserve Bank of Australia Board Meeting Schedule",access:"official-publisher-schedule-no-key",state:rbaCalendarState?{status:rbaCalendarState.status,eventCount:rbaCalendarState.event_count,retrievedAt:rbaCalendarState.retrieved_at,lastError:rbaCalendarState.last_error||null}:{status:env.SNAPSHOTS?"available-on-demand":"not-configured"},notes:"Monetary Policy Board meeting date ranges only; no decision release time is inferred."},
+    {id:"bea-release-calendar",label:"BEA Official Release Calendar (JSON)",access:"official-publisher-feed-no-key",state:beaCalendarState?{status:beaCalendarState.status,eventCount:beaCalendarState.event_count,retrievedAt:beaCalendarState.retrieved_at,sourceRevision:beaCalendarState.source_revision,lastError:beaCalendarState.last_error||null}:{status:env.SNAPSHOTS?"available-on-demand":"not-configured"},notes:"Upcoming BEA release categories from the machine-readable publisher feed; dates and UTC times only, not forecasts/actuals or a complete macro calendar."},
     {id:"cftc-pre",label:"CFTC Public Reporting Environment",access:"public-api",state:cotState?{status:cotState.status,dataAsOf:cotState.dataAsOf,retrievedAt:cotState.retrievedAt}:{status:"available-on-demand"}},
     {id:"nyfed-markets",label:"Federal Reserve Bank of New York Markets Data API",access:"public-api-no-key",state:env.SNAPSHOTS?{status:"available-on-demand"}:{status:"not-configured"},notes:"SOFR, EFFR, OBFR and related published reference rates; not live futures prices."},
     {id:"builder-content",label:"Builder.io Content API",access:"public-content-api",state:{status:env.BUILDER_PUBLIC_API_KEY?"configured":"needs-public-space-key"}},
@@ -203,6 +206,12 @@ export default {
   if(url.pathname==="/api/v1/events/rba"){
    if(!env.SNAPSHOTS)return json({schema_version:1,data_type:"official_economic_release_schedule",status:"not-configured",provider:"Reserve Bank of Australia Monetary Policy Board meeting calendar",publisher:"Reserve Bank of Australia",publisher_id:"RBA",source_url:RBA_BOARD_CALENDAR_URL,schedule_url:RBA_BOARD_CALENDAR_URL,source_timezone:"Australia/Sydney",events:[],event_count:0,error:"Calendar snapshot storage is not configured."},503,{...cors,"Cache-Control":"no-store"});
    const result=await getPublisherSchedule(env,RBA_SCHEDULE_KEY,fetchRbaBoardCalendar,{provider:"Reserve Bank of Australia Monetary Policy Board meeting calendar",publisher:"Reserve Bank of Australia",publisher_id:"RBA",source_url:RBA_BOARD_CALENDAR_URL,schedule_url:RBA_BOARD_CALENDAR_URL,source_timezone:"Australia/Sydney",error:"The official Reserve Bank of Australia calendar could not be retrieved. Check the issuer schedule directly."});
+   return json(result.snapshot,result.status,{...cors,"Cache-Control":result.status===200?"public, max-age=300, s-maxage=900":"no-store",...(result.retryAfter?{"Retry-After":String(result.retryAfter)}:{})});
+  }
+
+  if(url.pathname==="/api/v1/events/bea"){
+   if(!env.SNAPSHOTS)return json({schema_version:1,data_type:"official_economic_release_schedule",status:"not-configured",provider:"U.S. Bureau of Economic Analysis release calendar",publisher:"U.S. Bureau of Economic Analysis",publisher_id:"BEA",source_url:BEA_RELEASE_SCHEDULE_URL,source_feed_url:BEA_RELEASE_DATES_URL,schedule_url:BEA_RELEASE_SCHEDULE_URL,source_timezone:"UTC",events:[],event_count:0,error:"Calendar snapshot storage is not configured."},503,{...cors,"Cache-Control":"no-store"});
+   const result=await getPublisherSchedule(env,BEA_SCHEDULE_KEY,fetchBeaReleaseCalendar,{provider:"U.S. Bureau of Economic Analysis release calendar",publisher:"U.S. Bureau of Economic Analysis",publisher_id:"BEA",source_url:BEA_RELEASE_SCHEDULE_URL,source_feed_url:BEA_RELEASE_DATES_URL,schedule_url:BEA_RELEASE_SCHEDULE_URL,source_timezone:"UTC",error:"The official BEA release schedule could not be retrieved. Check the issuer schedule directly."});
    return json(result.snapshot,result.status,{...cors,"Cache-Control":result.status===200?"public, max-age=300, s-maxage=900":"no-store",...(result.retryAfter?{"Retry-After":String(result.retryAfter)}:{})});
   }
 

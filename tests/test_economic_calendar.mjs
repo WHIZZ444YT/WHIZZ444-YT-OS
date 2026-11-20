@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { BLS_CALENDAR_URL, EIA_WPSR_SCHEDULE_URL, fetchBlsCalendar, fetchEiaWpsrSchedule, parseBlsIcs, parseEiaWpsrSchedule, resolveCalendarWallTime } from '../cloudflare/src/economic-calendar.mjs';
-import { BOC_POLICY_URL, BOC_RATE_CALENDAR_URL, BOE_MPC_CALENDAR_URL, BOE_POLICY_URL, CFTC_COT_SCHEDULE_URL, ECB_COUNCIL_CALENDAR_URL, FOMC_CALENDAR_URL, RBA_BOARD_CALENDAR_URL, fetchBocRateCalendar, fetchBoeMpcCalendar, fetchCftcCotSchedule, fetchEcbCouncilCalendar, fetchFomcCalendar, fetchRbaBoardCalendar, parseBocRateCalendar, parseBoeMpcCalendar, parseCftcCotSchedule, parseEcbCouncilCalendar, parseFomcCalendar, parseRbaBoardCalendar } from '../cloudflare/src/economic-calendar-extended.mjs';
+import { BEA_RELEASE_DATES_URL, BEA_RELEASE_SCHEDULE_URL, BOC_POLICY_URL, BOC_RATE_CALENDAR_URL, BOE_MPC_CALENDAR_URL, BOE_POLICY_URL, CFTC_COT_SCHEDULE_URL, ECB_COUNCIL_CALENDAR_URL, FOMC_CALENDAR_URL, RBA_BOARD_CALENDAR_URL, fetchBeaReleaseCalendar, fetchBocRateCalendar, fetchBoeMpcCalendar, fetchCftcCotSchedule, fetchEcbCouncilCalendar, fetchFomcCalendar, fetchRbaBoardCalendar, parseBeaReleaseDates, parseBocRateCalendar, parseBoeMpcCalendar, parseCftcCotSchedule, parseEcbCouncilCalendar, parseFomcCalendar, parseRbaBoardCalendar } from '../cloudflare/src/economic-calendar-extended.mjs';
 
 const calendar = `BEGIN:VCALENDAR\r\nVERSION:2.0\r\nBEGIN:VEVENT\r\nUID:release-1\r\nDTSTAMP:20261001T120000Z\r\nDTSTART;TZID=America/New_York:20261119T083000\r\nSUMMARY:Consumer Price Index for October\r\nURL:https://www.bls.gov/schedule/news_release/cpi.htm\r\nEND:VEVENT\r\nBEGIN:VEVENT\r\nUID:release-2\r\nDTSTART:20260701T083000\r\nSUMMARY:Employment Situation for June\r\nEND:VEVENT\r\nBEGIN:VEVENT\r\nUID:date-only\r\nDTSTART;VALUE=DATE:20261225\r\nSUMMARY:Publisher date only\r\nEND:VEVENT\r\nBEGIN:VEVENT\r\nUID:cancelled\r\nDTSTART;TZID=America/New_York:20261204T083000\r\nSUMMARY:Cancelled release\r\nSTATUS:CANCELLED\r\nEND:VEVENT\r\nEND:VCALENDAR`;
 const eiaSchedule = `<html><h1>Weekly Petroleum Status Report Schedule</h1><p>The standard release time and day of the week will be at 10:30 a.m. eastern time on Wednesday with the following exceptions. All times are eastern.</p><table><tr><th>Data for the week ending</th><th>Alternate release date</th><th>Release day</th><th>Release time</th><th>Holiday</th></tr><tr><td>January 16, 2026</td><td>January 22, 2026</td><td>Thursday</td><td>12:00 p.m.</td><td>Martin Luther King Jr. Day</td></tr></table></html>`;
@@ -228,4 +228,45 @@ test('four central-bank schedule adapters fetch only official pages and retain s
   assert.equal(rba.events[0].date_only, true);
   assert.ok([ecb, boe, boc, rba].every(feed => feed.status === 'fresh' && feed.event_count === feed.events.length && feed.coverage_notes.length >= 2));
   await assert.rejects(fetchBoeMpcCalendar(async () => new Response('<html>blocked</html>', { headers: { 'content-type': 'text/html' } })), /release-time policy was not confirmed/);
+});
+
+test('BEA JSON schedule parser preserves explicit UTC dates, removes duplicates and labels relevance conservatively', () => {
+  const payload = {
+    'Gross Domestic Product': { release_dates: ['2026-11-25T13:30:00+00:00', '2026-11-25T13:30:00+00:00', '2026-10-29T12:30:00+00:00'] },
+    'Personal Income and Outlays': { release_dates: ['2026-12-23T13:30:00+00:00'] },
+    'Arts and Cultural Production Satellite Account': { release_dates: ['2027-01-15T14:00:00Z'] },
+    'Far Future Release': { release_dates: ['2028-02-01T14:00:00Z'] },
+    file_last_updated: '2026-10-22T12:48:27.656675'
+  };
+  const result = parseBeaReleaseDates(payload, { retrievedAt: '2026-11-20T00:00:00.000Z', now: Date.parse('2026-11-20T00:00:00Z') });
+  assert.equal(result.categoryCount, 4);
+  assert.equal(result.sourceRevision, payload.file_last_updated);
+  assert.equal(result.events.length, 3);
+  const gdp = result.events.find(event => event.title === 'Gross Domestic Product');
+  assert.equal(gdp.scheduled_at_utc, '2026-11-25T13:30:00.000Z');
+  assert.equal(gdp.scheduled_timezone, 'UTC');
+  assert.deepEqual(gdp.affected_instruments, ['ES', 'NQ', 'ZN']);
+  assert.equal(gdp.actual_release_at_utc, null);
+  assert.deepEqual(result.events.find(event => event.title.startsWith('Arts')).affected_instruments, []);
+  assert.equal(result.events[0].publisher_id, 'BEA');
+  assert.throws(() => parseBeaReleaseDates({ 'GDP': { release_dates: ['2026-02-31T12:30:00Z'] } }), /invalid UTC release timestamp/);
+  assert.throws(() => parseBeaReleaseDates({ 'GDP': { release_dates: ['2026-11-25T13:30:00-05:00'] } }), /invalid UTC release timestamp/);
+});
+
+test('BEA release calendar fetch uses only the official bounded JSON feed and records source revisions', async () => {
+  let requestedUrl = '';
+  const fixture = JSON.stringify({ 'Gross Domestic Product': { release_dates: ['2027-01-28T13:30:00+00:00'] }, file_last_updated: '2026-10-22T12:48:27.656675' });
+  const feed = await fetchBeaReleaseCalendar(async (url, options) => {
+    requestedUrl = String(url);
+    assert.match(options.headers.Accept, /application\/json/);
+    return new Response(fixture, { headers: { 'content-type': 'application/json; charset=utf-8' } });
+  });
+  assert.equal(requestedUrl, BEA_RELEASE_DATES_URL);
+  assert.equal(feed.publisher_id, 'BEA');
+  assert.equal(feed.source_url, BEA_RELEASE_SCHEDULE_URL);
+  assert.equal(feed.source_feed_url, BEA_RELEASE_DATES_URL);
+  assert.equal(feed.source_revision, '2026-10-22T12:48:27.656675');
+  assert.equal(feed.events[0].event_id.startsWith('bea:gross-domestic-product:'), true);
+  assert.ok(feed.coverage_notes.some(note => /not a complete/.test(note)));
+  await assert.rejects(fetchBeaReleaseCalendar(async () => new Response('<html>unexpected</html>', { headers: { 'content-type': 'text/html' } })), /unexpected content type/);
 });
