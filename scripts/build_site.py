@@ -196,14 +196,16 @@ def redirect_page(title, target):
     return f'''<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex,follow"><title>{escape(title)}</title><link rel="canonical" href="{safe}"><meta http-equiv="refresh" content="0;url={safe}"></head><body><p>{escape(title)}. <a href="{safe}">Continue</a>.</p><script>location.replace({json_script(absolute)});</script></body></html>'''
 
 
-def contract_value(value):
+def contract_value(value, checked_at=None):
     if value is None or value == '':
         return '<span class="os-unverified-value">Not in source registry</span>'
     if isinstance(value, (int, float)):
         rendered = f'{value:.8g}'
     else:
         rendered = str(value)
-    return f'<strong>{escape(rendered)}</strong><span class="os-unverified-value">UNVERIFIED IMPORTED REFERENCE</span>'
+    marker=(f'<span class="os-sourced-value">SOURCED · CHECKED {escape(str(checked_at))}</span>'
+            if checked_at else '<span class="os-unverified-value">UNVERIFIED IMPORTED REFERENCE</span>')
+    return f'<strong>{escape(rendered)}</strong>{marker}'
 
 
 
@@ -300,32 +302,54 @@ def build():
     build_academy(DIST, academy_data, SITE_URL)
     news = load(ROOT/'data/news-snapshot.json',{})
 
-    # Contract specification and expiry reference. Imported values stay explicitly unverified.
+    # Contract specification and expiry reference. Core tick facts are sourced;
+    # full records remain partial until contract lifecycle details are reconciled.
     contract_cards=[]
     for m in mdata:
-        official=str(m.get('specsUrl') or '')
-        official_link=f'<a class="os-source-link" href="{escape(official, quote=True)}" target="_blank" rel="noopener noreferrer">Official exchange specification ↗</a>' if official.startswith(('https://','http://')) else '<span class="muted">Official specification link not supplied</span>'
+        evidence=m.get('specEvidence') or {}
+        official=str(evidence.get('sourceUrl') or m.get('specsUrl') or '')
+        checked_at=str(evidence.get('checkedAt') or 'not recorded')
+        official_link=f'<a class="os-source-link" href="{escape(official, quote=True)}" target="_blank" rel="noopener noreferrer">{escape(str(evidence.get("publisher") or "Official exchange"))} specifications ↗</a>' if official.startswith(('https://','http://')) else '<span class="muted">Official specification link not supplied</span>'
         specs=[
-            ('Contract unit / reference basis',contract_value(m.get('unit'))),
-            ('Micro alias / reference',contract_value(m.get('micro'))),
-            ('Tick size',contract_value(m.get('tickSize'))),
-            ('Tick value',contract_value(m.get('tickValue'))),
-            ('Point value',contract_value(m.get('pointValue'))),
+            ('Contract unit / reference basis',contract_value(m.get('unit'),checked_at)),
+            ('Micro alias / reference',contract_value(m.get('micro'),checked_at) if m.get('microSpec') else '<span class="os-unverified-value">No micro profile supplied</span>'),
+            ('Tick size',contract_value(m.get('tickSize'),checked_at)),
+            ('Tick value',contract_value(m.get('tickValue'),checked_at)),
+            ('Point value',contract_value(m.get('pointValue'),checked_at)),
             ('Quote convention','<span class="os-unverified-value">NOT SUPPLIED IN REGISTRY</span>'),
             ('Settlement / delivery','<span class="os-unverified-value">NOT SUPPLIED IN REGISTRY</span>'),
             ('Expiry / first notice','<span class="os-unverified-value">NOT SUPPLIED IN REGISTRY</span>'),
             ('Roll / continuous-series method','<span class="os-unverified-value">NOT SUPPLIED IN REGISTRY</span>'),
             ('Reference set',escape(str(m.get('specVersionId') or 'version-not-recorded'))),
-            ('Verified at','<span class="os-unverified-value">NOT VERIFIED</span>'),
+            ('Core facts checked',escape(checked_at)),
             ('Effective date range','<span class="os-unverified-value">NOT SUPPLIED IN REGISTRY</span>'),
         ]
         spec_rows=''.join(f'<div class="os-spec-field"><span>{label}</span>{value}</div>' for label,value in specs)
+        micro=m.get('microSpec') or {}
+        micro_html=''
+        if micro:
+            micro_evidence=micro.get('specEvidence') or {}
+            micro_url=str(micro_evidence.get('sourceUrl') or '')
+            micro_link=(f'<a class="os-source-link" href="{escape(micro_url, quote=True)}" target="_blank" rel="noopener noreferrer">CME micro specification ↗</a>'
+                        if micro_url.startswith(('https://','http://')) else '<span class="muted">Micro specification source not supplied</span>')
+            micro_fields=[
+                ('Micro code',escape(str(micro.get('symbol') or 'not supplied'))),
+                ('Micro contract unit',contract_value(micro.get('unit'),micro_evidence.get('checkedAt'))),
+                ('Micro tick size',contract_value(micro.get('tickSize'),micro_evidence.get('checkedAt'))),
+                ('Micro tick value',contract_value(micro.get('tickValue'),micro_evidence.get('checkedAt'))),
+                ('Micro core facts checked',escape(str(micro_evidence.get('checkedAt') or 'not recorded'))),
+            ]
+            micro_rows=''.join(f'<div class="os-spec-field"><span>{label}</span>{value}</div>' for label,value in micro_fields)
+            micro_html=(f'<section class="os-micro-spec"><h4>Micro contract reference <span class="os-state-chip warn">PARTIAL</span></h4>'
+                        f'<div class="os-spec-grid">{micro_rows}</div>'
+                        f'<div class="os-contract-spec-source">{micro_link}</div></section>')
         contract_cards.append(
-            f'<article id="{escape(str(m.get("id","")))}" class="os-contract-spec-card"><div class="os-contract-spec-head"><div><span class="os-eyebrow">{escape(str(m.get("exchange","Exchange")))} · {escape(str(m.get("tier","")))}</span><h3>{escape(str(m.get("label","Futures family")))}</h3></div><span class="os-state-chip warn">{escape(str(m.get("specStatus","unverified")).upper())}</span></div>'
-            f'<div class="os-spec-grid">{spec_rows}</div><div class="os-contract-spec-source">{official_link}</div></article>'
+            f'<article id="{escape(str(m.get("id","")))}" class="os-contract-spec-card"><div class="os-contract-spec-head"><div><span class="os-eyebrow">{escape(str(m.get("exchange","Exchange")))} · {escape(str(m.get("tier","")))}</span><h3>{escape(str(m.get("label","Futures family")))}</h3></div><span class="os-state-chip warn">PARTIAL · SOURCED CORE</span></div>'
+            f'<p class="os-spec-review-note">Contract unit and outright tick fields were checked against an official source on {escape(checked_at)}. The full lifecycle record is incomplete.</p>'
+            f'<div class="os-spec-grid">{spec_rows}</div><div class="os-contract-spec-source">{official_link}</div>{micro_html}</article>'
         )
-    body=page_intro('Contract reference registry','Contract Specs & Expiry','Imported contract reference values are shown for traceability only. They have not been independently reconciled against the current exchange rulebook in this UI phase. Expiry, first-notice and roll dates are not present in the current registry.')
-    body+='<section class="content-section os-contract-warning"><h2>Verification required before trading</h2><p>Tick size, tick value and point value below are unverified imported references. Contract months, first notice, last trade date and roll schedule are not supplied. Confirm the active contract and current exchange specification before calculating risk or placing any trade.</p></section>'
+    body=page_intro('Contract reference registry','Contract Specs & Expiry','Source-reviewed contract units and outright tick values for the 15 retained futures families. Full contract records remain partial until current expiry, first-notice, delivery and roll details are reconciled.')
+    body+='<section class="content-section os-contract-warning"><h2>Partial source review — not trade-ready</h2><p>Standard contract units and outright tick sizes/values, plus the listed micro profiles, have been checked against official CME Group or ICE Futures U.S. sources. This does not verify a specific expiry, effective date, delivery/first-notice window, trading-calendar exception or roll method. Use the linked exchange source for the exact contract month. Risk estimates remain conditional until the complete record is verified.</p></section>'
     body+='<section class="os-contract-spec-grid">'+''.join(contract_cards)+'</section>'
     body+='<section class="content-section"><h2>Contract lifecycle coverage</h2><p><span class="os-state-chip warn">NOT CONFIGURED</span> No verified expiry calendar, first-notice-date table or automated roll alert is connected. The page does not infer a front month from a continuous chart symbol.</p><a class="text-link" href="/data-health/">Review data and source status →</a></section>'
     write(DIST/'contract-specs/index.html',shell('Contract Specs & Expiry | Futures Intelligence OS','Futures contract reference registry with explicit verification status and expiry-data coverage.',body,'/contract-specs/'))
@@ -639,7 +663,7 @@ def build():
     # Risk & Prop Firms. Keep /tools/ as a compatibility redirect.
     risk_rules=load(ROOT/'data/prop-firm-programs.json',{})
     body=page_intro('Risk preparation','Risk & Prop Firms','Futures position sizing uses versioned contract references, integer tick and micro-dollar arithmetic, all-in estimated costs and user-entered remaining-loss caps. The current contract profiles remain unverified and no prop-firm program rules are verified.')
-    body+='''<section class="content-section"><div class="section-top"><div><h2>Futures position size calculator</h2><p>Use a listed contract family and micro/standard profile, then enter the exact contract code and expiry from your source. Estimates are conditional until the tick values are verified against the applicable exchange contract specification.</p></div><span class="data-pill">CONDITIONAL ESTIMATE · NOT EXECUTION</span></div><div class="os-data-footnote"><b>Unverified contract data:</b> every imported profile currently lacks an exchange verification date and effective period. Check the linked official source, confirm tick value and currency for the exact contract, then interpret the result conditionally. USD-only; no FX conversion, margin or liquidation estimate. Remaining-loss fields are user-entered figures from the applicable account terms and platform; the site does not infer reset timezone or balance/equity basis.</div><div class="calc-grid"><label>Contract family<select id="contract"></select></label><label>Exact contract code<input id="exactContract" type="text" maxlength="32" placeholder="Exact code from your provider" required></label><label>Contract expiry date<input id="expiryDate" type="date" required></label><label>Account balance (USD)<input id="balance" type="text" inputmode="decimal" placeholder="Enter your balance" required></label><label>Risk per trade (%)<input id="riskPct" type="text" inputmode="decimal" placeholder="Enter your limit" required></label><label>Maximum contracts<input id="maxContracts" type="number" min="1" max="10000" step="1" placeholder="Enter a cap" required></label><label>Daily loss remaining (USD, optional)<input id="dailyLossRemaining" type="text" inputmode="decimal" placeholder="Use the current official account figure"></label><label>Maximum drawdown remaining (USD, optional)<input id="drawdownRemaining" type="text" inputmode="decimal" placeholder="Use the current official account figure"></label><label>Stop distance (ticks)<input id="stopTicks" type="number" min="1" max="1000000" step="1" placeholder="Enter stop distance" required></label><label>Target distance (ticks)<input id="targetTicks" type="number" min="1" max="1000000" step="1" placeholder="Enter target distance" required></label><label>Commission + other fees / contract / round turn (USD)<input id="commission" type="text" inputmode="decimal" placeholder="Enter all round-turn fees" required></label><label>Estimated spread (ticks / round turn)<input id="spreadTicks" type="number" min="0" max="1000000" step="1" placeholder="Enter 0 only if appropriate" required></label><label>Estimated slippage (ticks / round turn)<input id="slippageTicks" type="number" min="0" max="1000000" step="1" placeholder="Enter a conservative estimate" required></label><label>Cost source<input id="costSource" type="text" maxlength="160" placeholder="Broker schedule or documented estimate" required></label><label>Cost source date<input id="costAsOf" type="date" required></label><button id="calculateRisk" class="primary-button">Calculate conditional size</button></div><div id="riskResult" class="result-panel" aria-live="polite">Enter exact contract, expiry and cost assumptions to calculate a conditional estimate. Current tick references are unverified.</div><p class="fine-print">Tick value means dollars per exchange tick, not dollars per index point. Round-turn fees should include broker, exchange, clearing, NFA and routing costs. Spread and slippage are estimates supplied by you, not observed fills.</p></section>'''
+    body+='''<section class="content-section"><div class="section-top"><div><h2>Futures position size calculator</h2><p>Use a listed contract family and micro/standard profile, then enter the exact contract code and expiry from your source. Estimates are conditional because the contract records are only partially source-reviewed; lifecycle and effective-date fields remain incomplete.</p></div><span class="data-pill">CONDITIONAL ESTIMATE · NOT EXECUTION</span></div><div class="os-data-footnote"><b>Partial contract source review:</b> core contract units and outright tick sizes/values were checked against linked official exchange pages on 20 November 2026. The records do not yet establish an active expiry, first-notice date, delivery window or effective period. Check the linked source for your exact contract and month before using the estimate. USD-only; no FX conversion, margin or liquidation estimate. Remaining-loss fields are user-entered figures from the applicable account terms and platform; the site does not infer reset timezone or balance/equity basis.</div><div class="calc-grid"><label>Contract family<select id="contract"></select></label><label>Exact contract code<input id="exactContract" type="text" maxlength="32" placeholder="Exact code from your provider" required></label><label>Contract expiry date<input id="expiryDate" type="date" required></label><label>Account balance (USD)<input id="balance" type="text" inputmode="decimal" placeholder="Enter your balance" required></label><label>Risk per trade (%)<input id="riskPct" type="text" inputmode="decimal" placeholder="Enter your limit" required></label><label>Maximum contracts<input id="maxContracts" type="number" min="1" max="10000" step="1" placeholder="Enter a cap" required></label><label>Daily loss remaining (USD, optional)<input id="dailyLossRemaining" type="text" inputmode="decimal" placeholder="Use the current official account figure"></label><label>Maximum drawdown remaining (USD, optional)<input id="drawdownRemaining" type="text" inputmode="decimal" placeholder="Use the current official account figure"></label><label>Stop distance (ticks)<input id="stopTicks" type="number" min="1" max="1000000" step="1" placeholder="Enter stop distance" required></label><label>Target distance (ticks)<input id="targetTicks" type="number" min="1" max="1000000" step="1" placeholder="Enter target distance" required></label><label>Commission + other fees / contract / round turn (USD)<input id="commission" type="text" inputmode="decimal" placeholder="Enter all round-turn fees" required></label><label>Estimated spread (ticks / round turn)<input id="spreadTicks" type="number" min="0" max="1000000" step="1" placeholder="Enter 0 only if appropriate" required></label><label>Estimated slippage (ticks / round turn)<input id="slippageTicks" type="number" min="0" max="1000000" step="1" placeholder="Enter a conservative estimate" required></label><label>Cost source<input id="costSource" type="text" maxlength="160" placeholder="Broker schedule or documented estimate" required></label><label>Cost source date<input id="costAsOf" type="date" required></label><button id="calculateRisk" class="primary-button">Calculate conditional size</button></div><div id="riskResult" class="result-panel" aria-live="polite">Enter exact contract, expiry and cost assumptions to calculate a conditional estimate. Core tick facts are source-checked; the full contract record remains partial.</div><p class="fine-print">Tick value means dollars per exchange tick, not dollars per index point. Round-turn fees should include broker, exchange, clearing, NFA and routing costs. Spread and slippage are estimates supplied by you, not observed fills.</p></section>'''
     unverified_cards=''.join('<article class="os-data-footnote"><b>'+escape(str(x.get('label') or 'Unverified mention'))+' · UNVERIFIED</b><p>'+escape(str(x.get('reason') or 'No official rules verified.'))+'</p><p>Exact firm: NOT VERIFIED · Plan/stage/platform: NOT VERIFIED · Fees, drawdown, contract limits, eligibility and payout: NOT PUBLISHED</p></article>' for x in risk_rules.get('unverifiedMentions',[]))
     body+='<section class="content-section os-prop-firm-panel"><div class="section-top"><div><h2>Prop-firm rule registry</h2><p>Schema version '+escape(str(risk_rules.get('schemaVersion','unknown')))+' · reviewed '+escape(str(risk_rules.get('reviewedAt','not recorded')))+' · verified programs '+str(len(risk_rules.get('records',[])))+'</p></div><span class="os-state-chip warn">NO VERIFIED PROGRAMS</span></div><p>'+escape(str(risk_rules.get('verificationPolicy','Official current terms required.')))+' No numeric rule, fee, eligibility, payout or comparison is shown without an exact current official source.</p>'+unverified_cards+'<p class="os-data-footnote">No login credentials are requested or stored. Private account balances and remaining-loss allowances are entered in this browser only and are not sent to Supabase.</p></section>'
     body+='<section class="content-section"><h2>Personal risk workflow</h2><div class="card-grid">'+card('Journal & watchlists','Review planned and completed trades in your private workspace.','/account/','Private workspace')+card('Pre-session checklist','Prepare a repeatable market plan and evidence checklist.','/ict-futures/#checklist','ICT Futures')+card('Contract verification','Check imported tick references and missing expiry fields.','/contract-specs/','Reference registry')+'</div></section>'

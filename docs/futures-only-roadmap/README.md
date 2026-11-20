@@ -1,7 +1,7 @@
 # Futures-Only Implementation Roadmap
 
 **Repository:** [WHIZZ444YT/WHIZZ444-YT-OS](https://github.com/WHIZZ444YT/WHIZZ444-YT-OS)  
-**Review date:** 19 November 2026  
+**Review date:** 20 November 2026
 **Scope:** This folder contains the implementation contract and dated execution reports for the futures-only market-intelligence and ICT education product. A roadmap document alone does not configure a provider, grant a license or prove a production deployment.
 
 ## Read this first
@@ -29,7 +29,12 @@
 14. [ChatGPT / Claude / GitHub execution protocol](13-CHATGPT-EXECUTION-PROMPTS-AND-HANDOFF.md)
 15. [PDF-to-product traceability map](14-PDF-TO-PRODUCT-TRACEABILITY.md)
 16. [Historical Part 0 route map](PART-0-BASELINE-AUDIT-AND-ROUTE-MAP.md)
-17. [Current production implementation and site audit — 19 November 2026](26-PRODUCTION-IMPLEMENTATION-AND-SITE-AUDIT-2026-11-19.md)
+17. [Historical production implementation and site audit — 19 November 2026](26-PRODUCTION-IMPLEMENTATION-AND-SITE-AUDIT-2026-11-19.md)
+18. [Current implementation status and remaining acceptance work — 20 November 2026](27-IMPLEMENTATION-STATUS-AND-REMAINING-WORK-2026-11-20.md)
+
+## Current status — 20 November 2026
+
+Use the [20 November implementation status](27-IMPLEMENTATION-STATUS-AND-REMAINING-WORK-2026-11-20.md) as the current checkpoint. PR #20 is merged; Vercel production is ready on merge commit `a4f66c872743b30599688859130ce7cbbfa0a1a7`, and `/sessions/` returned HTTP 200. The Cloudflare Worker source with the calendar routes is merged, but the active Worker deployment still needs a separate reviewed deployment and route smoke test. The follow-up implementation branch records dated official core-tick evidence for all 15 contract families; these local branch changes are not in production. Full expiry, first-notice, delivery, effective-date and roll coverage remains incomplete. Other external evidence, licensing, credentials and disposable-user QA remain open.
 
 ## Product boundary
 
@@ -37,7 +42,7 @@ The active product is for exchange-traded futures and futures-specific learning/
 
 Use **ICT** (Inner Circle Trader) consistently for the curriculum terminology. The roadmap preserves and expands the existing product; it does not treat any framework or entry model as a proven edge.
 
-## Current repository snapshot — source and deployment evidence
+## Historical repository snapshot — source and deployment evidence as of 19 November 2026
 
 The main branch source reviewed on 19 November 2026 describes:
 - A static HTML/CSS/JavaScript and JSON product built through the Python site builder.
@@ -48,9 +53,9 @@ The main branch source reviewed on 19 November 2026 describes:
 
 PR #19 was merged as `641347bccf534e169d5956e1cec299d0835ffa91`; Vercel reports the production deployment for that commit as `READY`. The deployment metadata does not by itself prove every route or provider works. The historical route map records an earlier audit and must not be used as a current status report.
 
-## Current implementation status — verified 19 November 2026
+## Historical implementation status — verified 19 November 2026
 
-The dated production implementation and site audit is the current status source; the older Part 0–9 reports below it capture earlier checkpoints from the same day. On this implementation branch:
+The dated report below records what was known on 19 November. It is superseded by the 20 November status linked above where deployment, contract-source or implementation facts have changed. The older Part 0–9 reports capture earlier checkpoints from the same day. On that implementation branch:
 
 - Both additive Supabase migrations are applied to the active project and verified against remote migration history, table columns, RLS, and security/health advisors. Local filenames now match production migration versions `20261119125044` and `20261119125110`.
 - Cloudflare Worker `2.0.0` is deployed with the configured KV binding and 30-minute Cron; query-string redaction is enabled. Runtime verification reports database, CMS and ingestion-token secrets are not configured. The first live COT probe exceeded Cloudflare's CPU limit; the bounded route was deployed at 13:26:40 UTC and the existing live site's no-search COT request then displayed a fresh TFF futures-only snapshot, position date 10 November 2026, with 780 normalized category rows. Other Worker endpoints and Supabase persistence still need their separate smoke tests.
@@ -70,7 +75,7 @@ The dated production implementation and site audit is the current status source;
 - Part 9 still requires real auth, two-user isolation, attachment/export and deletion workflow tests; deletion stays disabled.
 - QA still needs responsive/keyboard and browser error-state review, licensed-data review, current route smoke, and release sign-off. No release tag should be created before the checklist passes.
 
-See the [current implementation and site audit](26-PRODUCTION-IMPLEMENTATION-AND-SITE-AUDIT-2026-11-19.md) for changed files, deployment evidence and the exact next verification steps. The dated Part 0–9 reports above are point-in-time records and are superseded where they conflict with this current report.
+See the [20 November implementation status](27-IMPLEMENTATION-STATUS-AND-REMAINING-WORK-2026-11-20.md) for current deployment evidence, changed files and remaining verification steps. The 19 November audit and Part 0–9 reports are point-in-time records and must not be read as today's release state.
 
 ## Earlier local execution status — before production follow-through
 
@@ -88,7 +93,7 @@ See the [current implementation and site audit](26-PRODUCTION-IMPLEMENTATION-AND
 - Part 9 is **partial**: private-data export pagination, attachment transfer, richer journal fields, offline lesson-progress retry, manual-alert idempotency and an account-deletion workflow are implemented locally. Live RLS policies were inspected and Supabase security advisors returned no lints, but no two-user runtime test, real auth browser flow or attachment upload/download test was run. The additive schema migration and deletion function are not deployed. See the [Part 9 execution report](25-PART-9-EXECUTION-REPORT-2026-11-19.md).
 - Production QA is **not complete**: local build and structural checks are recorded in the Part 9 report, while production migration/function deployment, user-account smoke tests, two-user isolation, final browser/accessibility review and release sign-off remain open. Keep the current preview un-deployed until the migration is applied and deletion endpoint is configured or the account-deletion control is disabled.
 
-### Verified gaps and release dependencies to close
+### Historical gaps and release dependencies recorded on 19 November
 
 - Imported contract fields remain unverified until checked against current official exchange sources; tick specs must not be inferred from the risk plugin.
 - Licensed CME/ICE real-time trades, quotes, order book and public redistribution are not part of the free baseline. CME's June 2026 F&O Website Information update has requirements effective 1 January 2027; any public website path needs current entitlement, approval and terms.
