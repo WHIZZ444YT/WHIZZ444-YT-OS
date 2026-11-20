@@ -2,17 +2,18 @@
   "schemaVersion": 1,
   "status": "PARTIAL",
   "eligibleCount": 82,
-  "coveredCount": 6,
-  "coveragePercent": 7.32,
+  "coveredCount": 7,
+  "coveragePercent": 8.54,
   "coveredIds": [
     "mss",
     "liquidity",
     "fvg",
     "order-block",
     "silver-bullet",
+    "market-maker-buy-model",
     "ict-2022-model"
   ],
-  "missingCount": 76,
+  "missingCount": 75,
   "missingIds": [
     "market-structure",
     "swing-high-low",
@@ -78,7 +79,6 @@
     "suspension-block",
     "vacuum-block",
     "ny-lunch-reversal",
-    "market-maker-buy-model",
     "market-maker-sell-model",
     "liquidity-sweep-mss-model",
     "fvg-continuation-model",
@@ -93,13 +93,13 @@
   ],
   "entryModelCoverage": {
     "eligibleCount": 8,
-    "coveredCount": 1,
+    "coveredCount": 2,
     "coveredIds": [
+      "market-maker-buy-model",
       "ict-2022-model"
     ],
     "missingIds": [
       "unicorn",
-      "market-maker-buy-model",
       "market-maker-sell-model",
       "liquidity-sweep-mss-model",
       "fvg-continuation-model",
@@ -664,8 +664,8 @@
       "id": "market-maker-buy-model",
       "title": "Market Maker Buy Model (MMBM)",
       "isEntryModel": true,
-      "status": "VIDEO NEEDED",
-      "verifiedVideoCount": 0,
+      "status": "VERIFIED",
+      "verifiedVideoCount": 1,
       "unverifiedCandidateCount": 0
     },
     {

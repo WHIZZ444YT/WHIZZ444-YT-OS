@@ -29559,7 +29559,9 @@
           "type": "Secondary reference"
         }
       ],
-      "verifiedVideoIds": [],
+      "verifiedVideoIds": [
+        "ict-2024-mmbm-example"
+      ],
       "learning": {
         "durationMinutes": 28,
         "evidenceBand": "Supplemental / terminology may vary",
@@ -29945,7 +29947,32 @@
           "resource-community-glossary-turtle-soup-terminology-21",
           "resource-secondary-mmxm-explanation-20"
         ],
-        "videoResources": [],
+        "videoResources": [
+          {
+            "resourceId": "ict-2024-mmbm-example",
+            "title": "April 08, 2024 NQ Market Maker Buy Model Example",
+            "publisher": "The Inner Circle Trader",
+            "channelName": "The Inner Circle Trader",
+            "channelId": "UCtjxa77NqamhVC8atV85Rog",
+            "videoId": "1vsIPazjfGQ",
+            "url": "https://www.youtube.com/watch?v=1vsIPazjfGQ",
+            "language": "en",
+            "sourceClass": "official_ict",
+            "conceptIds": [
+              "market-maker-buy-model"
+            ],
+            "verificationStatus": "verified",
+            "verifiedAt": "2026-11-20",
+            "verifiedBy": "Codex research audit",
+            "lastLinkCheck": "2026-11-20",
+            "linkStatus": "verified",
+            "embedStatus": "not_checked",
+            "embedPermission": "not_checked",
+            "fallbackLinkStatus": "available",
+            "evidenceUrl": "https://www.youtube.com/watch?v=1vsIPazjfGQ",
+            "sourceNote": "Official ICT upload title and verified publisher identify this as an NQ Market Maker Buy Model example. It is mapped only to that Entry Model page. The video is an example, not a complete rulebook or performance evidence; the site's model definition remains supplemental and convention-sensitive."
+          }
+        ],
         "supplementalResources": [
           {
             "name": "Community glossary: Turtle Soup terminology",
