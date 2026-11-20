@@ -2,23 +2,14 @@
   "schemaVersion": 1,
   "status": "PARTIAL",
   "eligibleCount": 82,
-  "coveredCount": 6,
-  "coveragePercent": 7.32,
+  "coveredCount": 23,
+  "coveragePercent": 28.05,
   "coveredIds": [
-    "mss",
-    "liquidity",
-    "fvg",
-    "order-block",
-    "silver-bullet",
-    "ict-2022-model"
-  ],
-  "missingCount": 76,
-  "missingIds": [
     "market-structure",
     "swing-high-low",
-    "bos",
-    "choch",
+    "mss",
     "displacement",
+    "liquidity",
     "bsl",
     "ssl",
     "eqh",
@@ -26,13 +17,28 @@
     "pdh-pdl",
     "pwh-pwl",
     "session-high-low",
+    "fvg",
+    "ifvg",
+    "order-block",
+    "unicorn",
+    "ote",
+    "silver-bullet",
+    "amd-po3",
+    "judas-swing",
+    "cisd",
+    "market-maker-buy-model",
+    "ict-2022-model"
+  ],
+  "missingCount": 59,
+  "missingIds": [
+    "bos",
+    "choch",
     "liquidity-sweep",
     "liquidity-run",
     "irl-erl",
     "opposing-liquidity",
     "htf-fvg",
     "ce",
-    "ifvg",
     "bpr",
     "volume-imbalance",
     "fpfvg",
@@ -41,12 +47,10 @@
     "breaker-block",
     "mitigation-block",
     "rejection-block",
-    "unicorn",
     "pd-arrays",
     "premium-discount",
     "equilibrium",
     "dealing-range",
-    "ote",
     "fib-extensions",
     "time-anchors",
     "midnight-open",
@@ -55,8 +59,6 @@
     "weekly-open",
     "killzones",
     "asian-range",
-    "amd-po3",
-    "judas-swing",
     "ipda",
     "smt",
     "weekly-profiles",
@@ -67,7 +69,6 @@
     "sd-projections",
     "ict-macros",
     "midnight-open-vs-day-open",
-    "cisd",
     "mmxm",
     "turtle-soup",
     "propulsion-block",
@@ -78,7 +79,6 @@
     "suspension-block",
     "vacuum-block",
     "ny-lunch-reversal",
-    "market-maker-buy-model",
     "market-maker-sell-model",
     "liquidity-sweep-mss-model",
     "fvg-continuation-model",
@@ -93,13 +93,13 @@
   ],
   "entryModelCoverage": {
     "eligibleCount": 8,
-    "coveredCount": 1,
+    "coveredCount": 3,
     "coveredIds": [
+      "unicorn",
+      "market-maker-buy-model",
       "ict-2022-model"
     ],
     "missingIds": [
-      "unicorn",
-      "market-maker-buy-model",
       "market-maker-sell-model",
       "liquidity-sweep-mss-model",
       "fvg-continuation-model",
@@ -112,16 +112,16 @@
       "id": "market-structure",
       "title": "Market Structure",
       "isEntryModel": false,
-      "status": "VIDEO NEEDED",
-      "verifiedVideoCount": 0,
+      "status": "VERIFIED",
+      "verifiedVideoCount": 1,
       "unverifiedCandidateCount": 3
     },
     {
       "id": "swing-high-low",
       "title": "Swing High & Swing Low",
       "isEntryModel": false,
-      "status": "VIDEO NEEDED",
-      "verifiedVideoCount": 0,
+      "status": "VERIFIED",
+      "verifiedVideoCount": 1,
       "unverifiedCandidateCount": 0
     },
     {
@@ -137,7 +137,7 @@
       "title": "Market Structure Shift (MSS)",
       "isEntryModel": false,
       "status": "VERIFIED",
-      "verifiedVideoCount": 1,
+      "verifiedVideoCount": 2,
       "unverifiedCandidateCount": 0
     },
     {
@@ -152,8 +152,8 @@
       "id": "displacement",
       "title": "Displacement",
       "isEntryModel": false,
-      "status": "VIDEO NEEDED",
-      "verifiedVideoCount": 0,
+      "status": "VERIFIED",
+      "verifiedVideoCount": 1,
       "unverifiedCandidateCount": 3
     },
     {
@@ -168,56 +168,56 @@
       "id": "bsl",
       "title": "Buy-Side Liquidity (BSL)",
       "isEntryModel": false,
-      "status": "VIDEO NEEDED",
-      "verifiedVideoCount": 0,
+      "status": "VERIFIED",
+      "verifiedVideoCount": 1,
       "unverifiedCandidateCount": 0
     },
     {
       "id": "ssl",
       "title": "Sell-Side Liquidity (SSL)",
       "isEntryModel": false,
-      "status": "VIDEO NEEDED",
-      "verifiedVideoCount": 0,
+      "status": "VERIFIED",
+      "verifiedVideoCount": 1,
       "unverifiedCandidateCount": 0
     },
     {
       "id": "eqh",
       "title": "Equal Highs (EQH)",
       "isEntryModel": false,
-      "status": "VIDEO NEEDED",
-      "verifiedVideoCount": 0,
+      "status": "VERIFIED",
+      "verifiedVideoCount": 1,
       "unverifiedCandidateCount": 0
     },
     {
       "id": "eql",
       "title": "Equal Lows (EQL)",
       "isEntryModel": false,
-      "status": "VIDEO NEEDED",
-      "verifiedVideoCount": 0,
+      "status": "VERIFIED",
+      "verifiedVideoCount": 1,
       "unverifiedCandidateCount": 0
     },
     {
       "id": "pdh-pdl",
       "title": "Prior Day High / Low (PDH / PDL)",
       "isEntryModel": false,
-      "status": "VIDEO NEEDED",
-      "verifiedVideoCount": 0,
+      "status": "VERIFIED",
+      "verifiedVideoCount": 1,
       "unverifiedCandidateCount": 0
     },
     {
       "id": "pwh-pwl",
       "title": "Prior Week High / Low (PWH / PWL)",
       "isEntryModel": false,
-      "status": "VIDEO NEEDED",
-      "verifiedVideoCount": 0,
+      "status": "VERIFIED",
+      "verifiedVideoCount": 1,
       "unverifiedCandidateCount": 0
     },
     {
       "id": "session-high-low",
       "title": "Session High / Low",
       "isEntryModel": false,
-      "status": "VIDEO NEEDED",
-      "verifiedVideoCount": 0,
+      "status": "VERIFIED",
+      "verifiedVideoCount": 1,
       "unverifiedCandidateCount": 0
     },
     {
@@ -257,7 +257,7 @@
       "title": "Fair Value Gap (FVG)",
       "isEntryModel": false,
       "status": "VERIFIED",
-      "verifiedVideoCount": 1,
+      "verifiedVideoCount": 2,
       "unverifiedCandidateCount": 0
     },
     {
@@ -280,8 +280,8 @@
       "id": "ifvg",
       "title": "Inversion Fair Value Gap (IFVG)",
       "isEntryModel": false,
-      "status": "VIDEO NEEDED",
-      "verifiedVideoCount": 0,
+      "status": "VERIFIED",
+      "verifiedVideoCount": 1,
       "unverifiedCandidateCount": 0
     },
     {
@@ -360,8 +360,8 @@
       "id": "unicorn",
       "title": "Unicorn Model",
       "isEntryModel": true,
-      "status": "VIDEO NEEDED",
-      "verifiedVideoCount": 0,
+      "status": "VERIFIED",
+      "verifiedVideoCount": 1,
       "unverifiedCandidateCount": 0
     },
     {
@@ -400,8 +400,8 @@
       "id": "ote",
       "title": "Optimal Trade Entry (OTE)",
       "isEntryModel": false,
-      "status": "VIDEO NEEDED",
-      "verifiedVideoCount": 0,
+      "status": "VERIFIED",
+      "verifiedVideoCount": 1,
       "unverifiedCandidateCount": 0
     },
     {
@@ -480,16 +480,16 @@
       "id": "amd-po3",
       "title": "AMD / Power of Three",
       "isEntryModel": false,
-      "status": "VIDEO NEEDED",
-      "verifiedVideoCount": 0,
+      "status": "VERIFIED",
+      "verifiedVideoCount": 1,
       "unverifiedCandidateCount": 0
     },
     {
       "id": "judas-swing",
       "title": "Judas Swing",
       "isEntryModel": false,
-      "status": "VIDEO NEEDED",
-      "verifiedVideoCount": 0,
+      "status": "VERIFIED",
+      "verifiedVideoCount": 1,
       "unverifiedCandidateCount": 0
     },
     {
@@ -576,8 +576,8 @@
       "id": "cisd",
       "title": "Change in State of Delivery (CISD)",
       "isEntryModel": false,
-      "status": "VIDEO NEEDED",
-      "verifiedVideoCount": 0,
+      "status": "VERIFIED",
+      "verifiedVideoCount": 1,
       "unverifiedCandidateCount": 0
     },
     {
@@ -664,8 +664,8 @@
       "id": "market-maker-buy-model",
       "title": "Market Maker Buy Model (MMBM)",
       "isEntryModel": true,
-      "status": "VIDEO NEEDED",
-      "verifiedVideoCount": 0,
+      "status": "VERIFIED",
+      "verifiedVideoCount": 1,
       "unverifiedCandidateCount": 0
     },
     {

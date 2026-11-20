@@ -1,9 +1,24 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { createRequire } from 'node:module';
+import { readFileSync } from 'node:fs';
 
 const require = createRequire(import.meta.url);
 const time = require('../assets/session-time.js');
+
+test('Sessions page passes profile clocks in the HH:MM format required by the time resolver', () => {
+  const page = readFileSync(new URL('../assets/sessions-page.js', import.meta.url), 'utf8');
+  assert.match(page, /formatWindow\(startDate,\s*startTime,\s*"earlier"\)/);
+  assert.match(page, /formatWindow\(endDate,\s*endTime,\s*"later"\)/);
+  assert.match(page, /formatWindow\(date,\s*item\.start_local\s*\|\|\s*item\.start,\s*"earlier"\)/);
+  assert.doesNotMatch(page, /formatWindow\([^\n]*:00/);
+});
+
+test('Session profile clock values resolve as New York wall time', () => {
+  const result = time.resolveWallTime('2026-11-20', '09:30', 'America/New_York');
+  assert.equal(result.status, 'exact');
+  assert.equal(new Date(result.epochMs).toISOString(), '2026-11-20T14:30:00.000Z');
+});
 
 test('spring DST gap is reported instead of silently assigned an offset', () => {
   const value = time.resolveWallTime('2026-03-08', '02:30', 'America/New_York');

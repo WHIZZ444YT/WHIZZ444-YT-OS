@@ -147,8 +147,8 @@
       const wraps = endTime <= startTime;
       const startDate = wraps ? window.ICTSessionTime.addDays(date, -1) : date;
       const endDate = date;
-      const start = formatWindow(startDate, `${startTime}:00`, "earlier");
-      const end = formatWindow(endDate, `${endTime}:00`, "later");
+      const start = formatWindow(startDate, startTime, "earlier");
+      const end = formatWindow(endDate, endTime, "later");
       const active = isCurrentDate && start.instant && end.instant && now >= start.instant.getTime() && now < end.instant.getTime();
       const state = !isCurrentDate ? "Reference date" : active ? "Active reference window" : start.instant && now < start.instant.getTime() ? "Upcoming reference window" : "Reference window passed";
       const card = addClass("article", "sessions-window-card");
@@ -164,7 +164,7 @@
     }
     const points = $("sessionsReferencePoints"); points.replaceChildren();
     for (const item of pageData.referencePoints || []) {
-      const resolved = formatWindow(date, `${item.start_local || item.start}:00`, "earlier");
+      const resolved = formatWindow(date, item.start_local || item.start, "earlier");
       const point = addClass("span", "sessions-reference-point");
       point.append(addClass("b", "", item.display_name || item.name), document.createTextNode(` · ${resolved.local} (${resolved.ny}) · market reference only`)); points.append(point);
     }

@@ -37,6 +37,18 @@ function textLines(input) {
     .split(/\r?\n/).map(line => line.replace(/\s+/g, " ").trim()).filter(Boolean).join("\n");
 }
 
+export function classifyPublisherScheduleFailure(error) {
+  const message = String(error?.message || error || "");
+  const status = /Official schedule HTTP (\d{3})/i.exec(message)?.[1];
+  if (status) return `upstream_http_${status}`;
+  if (/timeout|timed out|aborted|deadline/i.test(message)) return "upstream_timeout";
+  if (/unexpected content type/i.test(message)) return "unexpected_content_type";
+  if (/response too large/i.test(message)) return "response_too_large";
+  if (/release-time policy|decision.*time|publication policy/i.test(message)) return "publisher_policy_changed";
+  if (/did not contain|did not include|no parseable|not parseable|expected .*schedule/i.test(message)) return "publisher_schedule_format_changed";
+  return "upstream_fetch_failed";
+}
+
 function easternParts(epochMs) {
   const parts = new Intl.DateTimeFormat("en-CA", {
     timeZone: EASTERN, year: "numeric", month: "2-digit", day: "2-digit",

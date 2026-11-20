@@ -69,6 +69,12 @@ def _resource_cards(resources, label):
         url = resource.get("url")
         title = resource.get("title") or resource.get("name") or "Reference"
         publisher = resource.get("publisher") or resource.get("type") or "Publisher not recorded"
+        source_class = {
+            "official_ict": "Official ICT",
+            "independent_supplement": "Independent supplement",
+        }.get(resource.get("sourceClass"))
+        if source_class:
+            publisher = str(publisher) + " · " + source_class
         note = resource.get("scope") or resource.get("summary") or ""
         status = resource.get("linkStatus") or resource.get("verificationStatus") or "Link health not rechecked"
         cards.append(

@@ -372,7 +372,8 @@
       "verifiedVideoIds": [
         "ict-2022-ep3",
         "ict-market-efficiency-fvg-mss",
-        "ict-2022-ep22"
+        "ict-2022-ep22",
+        "ttrades-structure-mss-fvg-displacement-2022"
       ],
       "learning": {
         "durationMinutes": 18,
@@ -808,6 +809,56 @@
             "classification": "original-creator",
             "verificationDate": null,
             "linkStatus": "Existing curated official-source record; re-check exact upload before use"
+          },
+          {
+            "resourceId": "ttrades-structure-mss-fvg-displacement-2022",
+            "title": "Intro to Market Structure Shifts, Fair Value Gaps, and Displacement - ICT Concepts",
+            "publisher": "TTrades",
+            "channelName": "TTrades",
+            "channelId": "UCQwUEVakiYDmNGe7UBza4sQ",
+            "videoId": "PePk1V0Q4QQ",
+            "url": "https://www.youtube.com/watch?v=PePk1V0Q4QQ&t=21s",
+            "language": "en",
+            "sourceClass": "independent_supplement",
+            "conceptIds": [
+              "market-structure",
+              "mss",
+              "displacement",
+              "fvg"
+            ],
+            "segments": {
+              "market-structure": {
+                "startSeconds": 21,
+                "endSeconds": 75,
+                "label": "Market structure overview"
+              },
+              "mss": {
+                "startSeconds": 75,
+                "endSeconds": 110,
+                "label": "Market Structure Shift (MSS)"
+              },
+              "displacement": {
+                "startSeconds": 110,
+                "endSeconds": 143,
+                "label": "Displacement"
+              },
+              "fvg": {
+                "startSeconds": 143,
+                "endSeconds": 165,
+                "label": "Fair Value Gap (FVG)"
+              }
+            },
+            "verificationStatus": "verified",
+            "verifiedAt": "2026-11-20",
+            "verifiedBy": "Codex research audit",
+            "lastLinkCheck": "2026-11-20",
+            "linkStatus": "verified",
+            "embedStatus": "not_checked",
+            "embedPermission": "not_checked",
+            "fallbackLinkStatus": "available",
+            "evidenceUrl": "https://www.youtube.com/watch?v=PePk1V0Q4QQ",
+            "summary": "Independent TTrades supplement, not Official ICT. The publisher description identifies this topic at 0:21 and links to a Market structure overview segment. This direct link starts at the lesson-specific segment. It is general concept education, not a futures-specific worked test or performance evidence.",
+            "sourceNote": "The verified TTrades channel upload description lists exact chapter timestamps for market structure (0:21), MSS (1:15), displacement (1:50), and FVG (2:23). Each Academy lesson links to its own reviewed segment. No futures-specific worked example or strategy performance claim is inferred."
           }
         ],
         "supplementalResources": [],
@@ -1233,7 +1284,40 @@
           "resource-cme-institute-trade-and-risk-management-12",
           "resource-cftc-customer-education-advisory-13"
         ],
-        "videoResources": [],
+        "videoResources": [
+          {
+            "resourceId": "paul-leroy-fvg-essentials-swing-pivots-2022",
+            "title": "ICT’s Fair Value Gap Essentials: Market Structure Shift, Displacement & Liquidity",
+            "publisher": "Paul Le Roy",
+            "channelName": "Paul Le Roy",
+            "channelId": "UCiTVR5zjDDXowLY2L81rAfQ",
+            "videoId": "lI8QH0zAPYc",
+            "url": "https://www.youtube.com/watch?v=lI8QH0zAPYc&t=189s",
+            "language": "en",
+            "sourceClass": "independent_supplement",
+            "conceptIds": [
+              "swing-high-low"
+            ],
+            "segments": {
+              "swing-high-low": {
+                "startSeconds": 189,
+                "endSeconds": 259,
+                "label": "Swing High and Swing Low Patterns"
+              }
+            },
+            "verificationStatus": "verified",
+            "verifiedAt": "2026-11-20",
+            "verifiedBy": "Codex research audit",
+            "lastLinkCheck": "2026-11-20",
+            "linkStatus": "verified",
+            "embedStatus": "not_checked",
+            "embedPermission": "not_checked",
+            "fallbackLinkStatus": "available",
+            "evidenceUrl": "https://www.youtube.com/watch?v=lI8QH0zAPYc",
+            "summary": "Independent Paul Le Roy lesson about ICT concepts, not an Official ICT upload. The description lists a dedicated Swing High and Swing Low Patterns chapter from 3:09 to 4:19. This mapping is limited to the swing-high-low lesson and does not establish a universal pivot rule or strategy performance.",
+            "sourceNote": "The video description identifies the exact chapter title and timestamps. It is a secondary educational explanation of the 2022 ICT mentorship, not source authority for a universal swing definition, futures-specific tested rules, or performance. Embed availability and permission were not checked; the direct YouTube link is the fallback."
+          }
+        ],
         "supplementalResources": [],
         "topicDiscoveryUrl": "https://www.youtube.com/results?search_query=Inner%20Circle%20Trader%20official%20Swing%20High%20%26%20Swing%20Low%20ICT%20futures",
         "contentVersion": 2,
@@ -1697,7 +1781,8 @@
       "sourceNote": "The supplied PDF is the source for playbook framing where explicitly marked. Supplemental clarifications are identified as such. These are discovery links, not verified video-to-concept mappings.",
       "referenceLinks": [],
       "verifiedVideoIds": [
-        "ict-2022-ep03-mss"
+        "ict-2022-ep03-mss",
+        "ttrades-structure-mss-fvg-displacement-2022"
       ],
       "learning": {
         "durationMinutes": 22,
@@ -2122,6 +2207,56 @@
             "fallbackLinkStatus": "available",
             "evidenceUrl": "https://www.youtube.com/watch?v=nQfHZ2DEJ8c",
             "sourceNote": "Official ICT upload. Its description explicitly identifies Internal Range Liquidity and Market Structure Shifts. Mapped only to the Market Structure Shift lesson; the recording is not also counted toward other lesson pages without reviewed segments."
+          },
+          {
+            "resourceId": "ttrades-structure-mss-fvg-displacement-2022",
+            "title": "Intro to Market Structure Shifts, Fair Value Gaps, and Displacement - ICT Concepts",
+            "publisher": "TTrades",
+            "channelName": "TTrades",
+            "channelId": "UCQwUEVakiYDmNGe7UBza4sQ",
+            "videoId": "PePk1V0Q4QQ",
+            "url": "https://www.youtube.com/watch?v=PePk1V0Q4QQ&t=75s",
+            "language": "en",
+            "sourceClass": "independent_supplement",
+            "conceptIds": [
+              "market-structure",
+              "mss",
+              "displacement",
+              "fvg"
+            ],
+            "segments": {
+              "market-structure": {
+                "startSeconds": 21,
+                "endSeconds": 75,
+                "label": "Market structure overview"
+              },
+              "mss": {
+                "startSeconds": 75,
+                "endSeconds": 110,
+                "label": "Market Structure Shift (MSS)"
+              },
+              "displacement": {
+                "startSeconds": 110,
+                "endSeconds": 143,
+                "label": "Displacement"
+              },
+              "fvg": {
+                "startSeconds": 143,
+                "endSeconds": 165,
+                "label": "Fair Value Gap (FVG)"
+              }
+            },
+            "verificationStatus": "verified",
+            "verifiedAt": "2026-11-20",
+            "verifiedBy": "Codex research audit",
+            "lastLinkCheck": "2026-11-20",
+            "linkStatus": "verified",
+            "embedStatus": "not_checked",
+            "embedPermission": "not_checked",
+            "fallbackLinkStatus": "available",
+            "evidenceUrl": "https://www.youtube.com/watch?v=PePk1V0Q4QQ",
+            "summary": "Independent TTrades supplement, not Official ICT. The publisher description identifies this topic at 1:15 and links to a Market Structure Shift (MSS) segment. This direct link starts at the lesson-specific segment. It is general concept education, not a futures-specific worked test or performance evidence.",
+            "sourceNote": "The verified TTrades channel upload description lists exact chapter timestamps for market structure (0:21), MSS (1:15), displacement (1:50), and FVG (2:23). Each Academy lesson links to its own reviewed segment. No futures-specific worked example or strategy performance claim is inferred."
           }
         ],
         "supplementalResources": [],
@@ -2586,7 +2721,8 @@
       "verifiedVideoIds": [
         "ict-2022-ep3",
         "ict-market-efficiency-fvg-mss",
-        "ict-2022-ep22"
+        "ict-2022-ep22",
+        "ttrades-structure-mss-fvg-displacement-2022"
       ],
       "learning": {
         "durationMinutes": 22,
@@ -3028,6 +3164,56 @@
             "classification": "original-creator",
             "verificationDate": null,
             "linkStatus": "Existing curated official-source record; re-check exact upload before use"
+          },
+          {
+            "resourceId": "ttrades-structure-mss-fvg-displacement-2022",
+            "title": "Intro to Market Structure Shifts, Fair Value Gaps, and Displacement - ICT Concepts",
+            "publisher": "TTrades",
+            "channelName": "TTrades",
+            "channelId": "UCQwUEVakiYDmNGe7UBza4sQ",
+            "videoId": "PePk1V0Q4QQ",
+            "url": "https://www.youtube.com/watch?v=PePk1V0Q4QQ&t=110s",
+            "language": "en",
+            "sourceClass": "independent_supplement",
+            "conceptIds": [
+              "market-structure",
+              "mss",
+              "displacement",
+              "fvg"
+            ],
+            "segments": {
+              "market-structure": {
+                "startSeconds": 21,
+                "endSeconds": 75,
+                "label": "Market structure overview"
+              },
+              "mss": {
+                "startSeconds": 75,
+                "endSeconds": 110,
+                "label": "Market Structure Shift (MSS)"
+              },
+              "displacement": {
+                "startSeconds": 110,
+                "endSeconds": 143,
+                "label": "Displacement"
+              },
+              "fvg": {
+                "startSeconds": 143,
+                "endSeconds": 165,
+                "label": "Fair Value Gap (FVG)"
+              }
+            },
+            "verificationStatus": "verified",
+            "verifiedAt": "2026-11-20",
+            "verifiedBy": "Codex research audit",
+            "lastLinkCheck": "2026-11-20",
+            "linkStatus": "verified",
+            "embedStatus": "not_checked",
+            "embedPermission": "not_checked",
+            "fallbackLinkStatus": "available",
+            "evidenceUrl": "https://www.youtube.com/watch?v=PePk1V0Q4QQ",
+            "summary": "Independent TTrades supplement, not Official ICT. The publisher description identifies this topic at 1:50 and links to a Displacement segment. This direct link starts at the lesson-specific segment. It is general concept education, not a futures-specific worked test or performance evidence.",
+            "sourceNote": "The verified TTrades channel upload description lists exact chapter timestamps for market structure (0:21), MSS (1:15), displacement (1:50), and FVG (2:23). Each Academy lesson links to its own reviewed segment. No futures-specific worked example or strategy performance claim is inferred."
           }
         ],
         "supplementalResources": [],
@@ -3528,7 +3714,9 @@
       "videoSearch": "https://www.youtube.com/results?search_query=Inner%20Circle%20Trader%20official%20Buy-Side%20Liquidity%20%28BSL%29%20ICT%20futures",
       "sourceNote": "The supplied PDF is the source for playbook framing where explicitly marked. Supplemental clarifications are identified as such. These are discovery links, not verified video-to-concept mappings.",
       "referenceLinks": [],
-      "verifiedVideoIds": [],
+      "verifiedVideoIds": [
+        "ttrades-liquidity-levels-2023"
+      ],
       "learning": {
         "durationMinutes": 18,
         "evidenceBand": "SOURCED · ICT terminology",
@@ -3911,7 +4099,76 @@
           "resource-cme-institute-trade-and-risk-management-12",
           "resource-cftc-customer-education-advisory-13"
         ],
-        "videoResources": [],
+        "videoResources": [
+          {
+            "resourceId": "ttrades-liquidity-levels-2023",
+            "title": "Liquidity: Buyside & Sellside - ICT Concepts",
+            "publisher": "TTrades",
+            "channelName": "TTrades",
+            "channelId": "UCQwUEVakiYDmNGe7UBza4sQ",
+            "videoId": "U8xH2dEgH5A",
+            "url": "https://www.youtube.com/watch?v=U8xH2dEgH5A&t=73s",
+            "language": "en",
+            "sourceClass": "independent_supplement",
+            "conceptIds": [
+              "bsl",
+              "ssl",
+              "eqh",
+              "eql",
+              "pdh-pdl",
+              "pwh-pwl",
+              "session-high-low"
+            ],
+            "segments": {
+              "bsl": {
+                "startSeconds": 73,
+                "endSeconds": 97,
+                "label": "Buy-side and sell-side liquidity"
+              },
+              "ssl": {
+                "startSeconds": 73,
+                "endSeconds": 97,
+                "label": "Buy-side and sell-side liquidity"
+              },
+              "eqh": {
+                "startSeconds": 274,
+                "endSeconds": 311,
+                "label": "Equal and old highs and lows"
+              },
+              "eql": {
+                "startSeconds": 274,
+                "endSeconds": 311,
+                "label": "Equal and old highs and lows"
+              },
+              "pdh-pdl": {
+                "startSeconds": 311,
+                "endSeconds": 382,
+                "label": "Important liquidity levels, including prior day high and low"
+              },
+              "pwh-pwl": {
+                "startSeconds": 311,
+                "endSeconds": 382,
+                "label": "Important liquidity levels, including prior week high and low"
+              },
+              "session-high-low": {
+                "startSeconds": 311,
+                "endSeconds": 382,
+                "label": "Important liquidity levels, including session highs and lows"
+              }
+            },
+            "verificationStatus": "verified",
+            "verifiedAt": "2026-11-20",
+            "verifiedBy": "Codex research audit",
+            "lastLinkCheck": "2026-11-20",
+            "linkStatus": "verified",
+            "embedStatus": "not_checked",
+            "embedPermission": "not_checked",
+            "fallbackLinkStatus": "available",
+            "evidenceUrl": "https://www.youtube.com/watch?v=U8xH2dEgH5A",
+            "summary": "Independent TTrades supplement, not Official ICT. The publisher description directly names this concept; this lesson link starts at the Buy-side and sell-side liquidity chapter (1:13). It is general chart education, not a futures-specific worked test or performance evidence.",
+            "sourceNote": "The verified TTrades channel upload description names Buyside & Sellside, Equal/Old Highs & Lows, PWH/L, PDH/L and Session Highs & Lows, with chapters at 1:13, 4:34 and 5:11. Each concept page links to the relevant chapter. This is an independent general-education supplement; no futures-specific example or performance evidence is claimed."
+          }
+        ],
         "supplementalResources": [],
         "topicDiscoveryUrl": "https://www.youtube.com/results?search_query=Inner%20Circle%20Trader%20official%20Buy-Side%20Liquidity%20%28BSL%29%20ICT%20futures",
         "contentVersion": 2,
@@ -3947,7 +4204,9 @@
       "videoSearch": "https://www.youtube.com/results?search_query=Inner%20Circle%20Trader%20official%20Sell-Side%20Liquidity%20%28SSL%29%20ICT%20futures",
       "sourceNote": "The supplied PDF is the source for playbook framing where explicitly marked. Supplemental clarifications are identified as such. These are discovery links, not verified video-to-concept mappings.",
       "referenceLinks": [],
-      "verifiedVideoIds": [],
+      "verifiedVideoIds": [
+        "ttrades-liquidity-levels-2023"
+      ],
       "learning": {
         "durationMinutes": 18,
         "evidenceBand": "SOURCED · ICT terminology",
@@ -4330,7 +4589,76 @@
           "resource-cme-institute-trade-and-risk-management-12",
           "resource-cftc-customer-education-advisory-13"
         ],
-        "videoResources": [],
+        "videoResources": [
+          {
+            "resourceId": "ttrades-liquidity-levels-2023",
+            "title": "Liquidity: Buyside & Sellside - ICT Concepts",
+            "publisher": "TTrades",
+            "channelName": "TTrades",
+            "channelId": "UCQwUEVakiYDmNGe7UBza4sQ",
+            "videoId": "U8xH2dEgH5A",
+            "url": "https://www.youtube.com/watch?v=U8xH2dEgH5A&t=73s",
+            "language": "en",
+            "sourceClass": "independent_supplement",
+            "conceptIds": [
+              "bsl",
+              "ssl",
+              "eqh",
+              "eql",
+              "pdh-pdl",
+              "pwh-pwl",
+              "session-high-low"
+            ],
+            "segments": {
+              "bsl": {
+                "startSeconds": 73,
+                "endSeconds": 97,
+                "label": "Buy-side and sell-side liquidity"
+              },
+              "ssl": {
+                "startSeconds": 73,
+                "endSeconds": 97,
+                "label": "Buy-side and sell-side liquidity"
+              },
+              "eqh": {
+                "startSeconds": 274,
+                "endSeconds": 311,
+                "label": "Equal and old highs and lows"
+              },
+              "eql": {
+                "startSeconds": 274,
+                "endSeconds": 311,
+                "label": "Equal and old highs and lows"
+              },
+              "pdh-pdl": {
+                "startSeconds": 311,
+                "endSeconds": 382,
+                "label": "Important liquidity levels, including prior day high and low"
+              },
+              "pwh-pwl": {
+                "startSeconds": 311,
+                "endSeconds": 382,
+                "label": "Important liquidity levels, including prior week high and low"
+              },
+              "session-high-low": {
+                "startSeconds": 311,
+                "endSeconds": 382,
+                "label": "Important liquidity levels, including session highs and lows"
+              }
+            },
+            "verificationStatus": "verified",
+            "verifiedAt": "2026-11-20",
+            "verifiedBy": "Codex research audit",
+            "lastLinkCheck": "2026-11-20",
+            "linkStatus": "verified",
+            "embedStatus": "not_checked",
+            "embedPermission": "not_checked",
+            "fallbackLinkStatus": "available",
+            "evidenceUrl": "https://www.youtube.com/watch?v=U8xH2dEgH5A",
+            "summary": "Independent TTrades supplement, not Official ICT. The publisher description directly names this concept; this lesson link starts at the Buy-side and sell-side liquidity chapter (1:13). It is general chart education, not a futures-specific worked test or performance evidence.",
+            "sourceNote": "The verified TTrades channel upload description names Buyside & Sellside, Equal/Old Highs & Lows, PWH/L, PDH/L and Session Highs & Lows, with chapters at 1:13, 4:34 and 5:11. Each concept page links to the relevant chapter. This is an independent general-education supplement; no futures-specific example or performance evidence is claimed."
+          }
+        ],
         "supplementalResources": [],
         "topicDiscoveryUrl": "https://www.youtube.com/results?search_query=Inner%20Circle%20Trader%20official%20Sell-Side%20Liquidity%20%28SSL%29%20ICT%20futures",
         "contentVersion": 2,
@@ -4366,7 +4694,9 @@
       "videoSearch": "https://www.youtube.com/results?search_query=Inner%20Circle%20Trader%20official%20Equal%20Highs%20%28EQH%29%20ICT%20futures",
       "sourceNote": "The supplied PDF is the source for playbook framing where explicitly marked. Supplemental clarifications are identified as such. These are discovery links, not verified video-to-concept mappings.",
       "referenceLinks": [],
-      "verifiedVideoIds": [],
+      "verifiedVideoIds": [
+        "ttrades-liquidity-levels-2023"
+      ],
       "learning": {
         "durationMinutes": 18,
         "evidenceBand": "Supplemental / terminology may vary",
@@ -4751,7 +5081,76 @@
           "resource-cme-institute-trade-and-risk-management-12",
           "resource-cftc-customer-education-advisory-13"
         ],
-        "videoResources": [],
+        "videoResources": [
+          {
+            "resourceId": "ttrades-liquidity-levels-2023",
+            "title": "Liquidity: Buyside & Sellside - ICT Concepts",
+            "publisher": "TTrades",
+            "channelName": "TTrades",
+            "channelId": "UCQwUEVakiYDmNGe7UBza4sQ",
+            "videoId": "U8xH2dEgH5A",
+            "url": "https://www.youtube.com/watch?v=U8xH2dEgH5A&t=274s",
+            "language": "en",
+            "sourceClass": "independent_supplement",
+            "conceptIds": [
+              "bsl",
+              "ssl",
+              "eqh",
+              "eql",
+              "pdh-pdl",
+              "pwh-pwl",
+              "session-high-low"
+            ],
+            "segments": {
+              "bsl": {
+                "startSeconds": 73,
+                "endSeconds": 97,
+                "label": "Buy-side and sell-side liquidity"
+              },
+              "ssl": {
+                "startSeconds": 73,
+                "endSeconds": 97,
+                "label": "Buy-side and sell-side liquidity"
+              },
+              "eqh": {
+                "startSeconds": 274,
+                "endSeconds": 311,
+                "label": "Equal and old highs and lows"
+              },
+              "eql": {
+                "startSeconds": 274,
+                "endSeconds": 311,
+                "label": "Equal and old highs and lows"
+              },
+              "pdh-pdl": {
+                "startSeconds": 311,
+                "endSeconds": 382,
+                "label": "Important liquidity levels, including prior day high and low"
+              },
+              "pwh-pwl": {
+                "startSeconds": 311,
+                "endSeconds": 382,
+                "label": "Important liquidity levels, including prior week high and low"
+              },
+              "session-high-low": {
+                "startSeconds": 311,
+                "endSeconds": 382,
+                "label": "Important liquidity levels, including session highs and lows"
+              }
+            },
+            "verificationStatus": "verified",
+            "verifiedAt": "2026-11-20",
+            "verifiedBy": "Codex research audit",
+            "lastLinkCheck": "2026-11-20",
+            "linkStatus": "verified",
+            "embedStatus": "not_checked",
+            "embedPermission": "not_checked",
+            "fallbackLinkStatus": "available",
+            "evidenceUrl": "https://www.youtube.com/watch?v=U8xH2dEgH5A",
+            "summary": "Independent TTrades supplement, not Official ICT. The publisher description directly names this concept; this lesson link starts at the Equal and old highs and lows chapter (4:34). It is general chart education, not a futures-specific worked test or performance evidence.",
+            "sourceNote": "The verified TTrades channel upload description names Buyside & Sellside, Equal/Old Highs & Lows, PWH/L, PDH/L and Session Highs & Lows, with chapters at 1:13, 4:34 and 5:11. Each concept page links to the relevant chapter. This is an independent general-education supplement; no futures-specific example or performance evidence is claimed."
+          }
+        ],
         "supplementalResources": [],
         "topicDiscoveryUrl": "https://www.youtube.com/results?search_query=Inner%20Circle%20Trader%20official%20Equal%20Highs%20%28EQH%29%20ICT%20futures",
         "contentVersion": 2,
@@ -4786,7 +5185,9 @@
       "videoSearch": "https://www.youtube.com/results?search_query=Inner%20Circle%20Trader%20official%20Equal%20Lows%20%28EQL%29%20ICT%20futures",
       "sourceNote": "The supplied PDF is the source for playbook framing where explicitly marked. Supplemental clarifications are identified as such. These are discovery links, not verified video-to-concept mappings.",
       "referenceLinks": [],
-      "verifiedVideoIds": [],
+      "verifiedVideoIds": [
+        "ttrades-liquidity-levels-2023"
+      ],
       "learning": {
         "durationMinutes": 18,
         "evidenceBand": "Supplemental / terminology may vary",
@@ -5171,7 +5572,76 @@
           "resource-cme-institute-trade-and-risk-management-12",
           "resource-cftc-customer-education-advisory-13"
         ],
-        "videoResources": [],
+        "videoResources": [
+          {
+            "resourceId": "ttrades-liquidity-levels-2023",
+            "title": "Liquidity: Buyside & Sellside - ICT Concepts",
+            "publisher": "TTrades",
+            "channelName": "TTrades",
+            "channelId": "UCQwUEVakiYDmNGe7UBza4sQ",
+            "videoId": "U8xH2dEgH5A",
+            "url": "https://www.youtube.com/watch?v=U8xH2dEgH5A&t=274s",
+            "language": "en",
+            "sourceClass": "independent_supplement",
+            "conceptIds": [
+              "bsl",
+              "ssl",
+              "eqh",
+              "eql",
+              "pdh-pdl",
+              "pwh-pwl",
+              "session-high-low"
+            ],
+            "segments": {
+              "bsl": {
+                "startSeconds": 73,
+                "endSeconds": 97,
+                "label": "Buy-side and sell-side liquidity"
+              },
+              "ssl": {
+                "startSeconds": 73,
+                "endSeconds": 97,
+                "label": "Buy-side and sell-side liquidity"
+              },
+              "eqh": {
+                "startSeconds": 274,
+                "endSeconds": 311,
+                "label": "Equal and old highs and lows"
+              },
+              "eql": {
+                "startSeconds": 274,
+                "endSeconds": 311,
+                "label": "Equal and old highs and lows"
+              },
+              "pdh-pdl": {
+                "startSeconds": 311,
+                "endSeconds": 382,
+                "label": "Important liquidity levels, including prior day high and low"
+              },
+              "pwh-pwl": {
+                "startSeconds": 311,
+                "endSeconds": 382,
+                "label": "Important liquidity levels, including prior week high and low"
+              },
+              "session-high-low": {
+                "startSeconds": 311,
+                "endSeconds": 382,
+                "label": "Important liquidity levels, including session highs and lows"
+              }
+            },
+            "verificationStatus": "verified",
+            "verifiedAt": "2026-11-20",
+            "verifiedBy": "Codex research audit",
+            "lastLinkCheck": "2026-11-20",
+            "linkStatus": "verified",
+            "embedStatus": "not_checked",
+            "embedPermission": "not_checked",
+            "fallbackLinkStatus": "available",
+            "evidenceUrl": "https://www.youtube.com/watch?v=U8xH2dEgH5A",
+            "summary": "Independent TTrades supplement, not Official ICT. The publisher description directly names this concept; this lesson link starts at the Equal and old highs and lows chapter (4:34). It is general chart education, not a futures-specific worked test or performance evidence.",
+            "sourceNote": "The verified TTrades channel upload description names Buyside & Sellside, Equal/Old Highs & Lows, PWH/L, PDH/L and Session Highs & Lows, with chapters at 1:13, 4:34 and 5:11. Each concept page links to the relevant chapter. This is an independent general-education supplement; no futures-specific example or performance evidence is claimed."
+          }
+        ],
         "supplementalResources": [],
         "topicDiscoveryUrl": "https://www.youtube.com/results?search_query=Inner%20Circle%20Trader%20official%20Equal%20Lows%20%28EQL%29%20ICT%20futures",
         "contentVersion": 2,
@@ -5206,7 +5676,9 @@
       "videoSearch": "https://www.youtube.com/results?search_query=Inner%20Circle%20Trader%20official%20Prior%20Day%20High%20/%20Low%20%28PDH%20/%20PDL%29%20ICT%20futures",
       "sourceNote": "The supplied PDF is the source for playbook framing where explicitly marked. Supplemental clarifications are identified as such. These are discovery links, not verified video-to-concept mappings.",
       "referenceLinks": [],
-      "verifiedVideoIds": [],
+      "verifiedVideoIds": [
+        "ttrades-liquidity-levels-2023"
+      ],
       "learning": {
         "durationMinutes": 18,
         "evidenceBand": "SOURCED · session definition matters",
@@ -5593,7 +6065,76 @@
           "resource-cme-institute-trade-and-risk-management-12",
           "resource-cftc-customer-education-advisory-13"
         ],
-        "videoResources": [],
+        "videoResources": [
+          {
+            "resourceId": "ttrades-liquidity-levels-2023",
+            "title": "Liquidity: Buyside & Sellside - ICT Concepts",
+            "publisher": "TTrades",
+            "channelName": "TTrades",
+            "channelId": "UCQwUEVakiYDmNGe7UBza4sQ",
+            "videoId": "U8xH2dEgH5A",
+            "url": "https://www.youtube.com/watch?v=U8xH2dEgH5A&t=311s",
+            "language": "en",
+            "sourceClass": "independent_supplement",
+            "conceptIds": [
+              "bsl",
+              "ssl",
+              "eqh",
+              "eql",
+              "pdh-pdl",
+              "pwh-pwl",
+              "session-high-low"
+            ],
+            "segments": {
+              "bsl": {
+                "startSeconds": 73,
+                "endSeconds": 97,
+                "label": "Buy-side and sell-side liquidity"
+              },
+              "ssl": {
+                "startSeconds": 73,
+                "endSeconds": 97,
+                "label": "Buy-side and sell-side liquidity"
+              },
+              "eqh": {
+                "startSeconds": 274,
+                "endSeconds": 311,
+                "label": "Equal and old highs and lows"
+              },
+              "eql": {
+                "startSeconds": 274,
+                "endSeconds": 311,
+                "label": "Equal and old highs and lows"
+              },
+              "pdh-pdl": {
+                "startSeconds": 311,
+                "endSeconds": 382,
+                "label": "Important liquidity levels, including prior day high and low"
+              },
+              "pwh-pwl": {
+                "startSeconds": 311,
+                "endSeconds": 382,
+                "label": "Important liquidity levels, including prior week high and low"
+              },
+              "session-high-low": {
+                "startSeconds": 311,
+                "endSeconds": 382,
+                "label": "Important liquidity levels, including session highs and lows"
+              }
+            },
+            "verificationStatus": "verified",
+            "verifiedAt": "2026-11-20",
+            "verifiedBy": "Codex research audit",
+            "lastLinkCheck": "2026-11-20",
+            "linkStatus": "verified",
+            "embedStatus": "not_checked",
+            "embedPermission": "not_checked",
+            "fallbackLinkStatus": "available",
+            "evidenceUrl": "https://www.youtube.com/watch?v=U8xH2dEgH5A",
+            "summary": "Independent TTrades supplement, not Official ICT. The publisher description directly names this concept; this lesson link starts at the Important liquidity levels, including prior day high and low chapter (5:11). It is general chart education, not a futures-specific worked test or performance evidence.",
+            "sourceNote": "The verified TTrades channel upload description names Buyside & Sellside, Equal/Old Highs & Lows, PWH/L, PDH/L and Session Highs & Lows, with chapters at 1:13, 4:34 and 5:11. Each concept page links to the relevant chapter. This is an independent general-education supplement; no futures-specific example or performance evidence is claimed."
+          }
+        ],
         "supplementalResources": [],
         "topicDiscoveryUrl": "https://www.youtube.com/results?search_query=Inner%20Circle%20Trader%20official%20Prior%20Day%20High%20/%20Low%20%28PDH%20/%20PDL%29%20ICT%20futures",
         "contentVersion": 2,
@@ -5628,7 +6169,9 @@
       "videoSearch": "https://www.youtube.com/results?search_query=Inner%20Circle%20Trader%20official%20Prior%20Week%20High%20/%20Low%20%28PWH%20/%20PWL%29%20ICT%20futures",
       "sourceNote": "The supplied PDF is the source for playbook framing where explicitly marked. Supplemental clarifications are identified as such. These are discovery links, not verified video-to-concept mappings.",
       "referenceLinks": [],
-      "verifiedVideoIds": [],
+      "verifiedVideoIds": [
+        "ttrades-liquidity-levels-2023"
+      ],
       "learning": {
         "durationMinutes": 18,
         "evidenceBand": "SOURCED",
@@ -6013,7 +6556,76 @@
           "resource-cme-institute-trade-and-risk-management-12",
           "resource-cftc-customer-education-advisory-13"
         ],
-        "videoResources": [],
+        "videoResources": [
+          {
+            "resourceId": "ttrades-liquidity-levels-2023",
+            "title": "Liquidity: Buyside & Sellside - ICT Concepts",
+            "publisher": "TTrades",
+            "channelName": "TTrades",
+            "channelId": "UCQwUEVakiYDmNGe7UBza4sQ",
+            "videoId": "U8xH2dEgH5A",
+            "url": "https://www.youtube.com/watch?v=U8xH2dEgH5A&t=311s",
+            "language": "en",
+            "sourceClass": "independent_supplement",
+            "conceptIds": [
+              "bsl",
+              "ssl",
+              "eqh",
+              "eql",
+              "pdh-pdl",
+              "pwh-pwl",
+              "session-high-low"
+            ],
+            "segments": {
+              "bsl": {
+                "startSeconds": 73,
+                "endSeconds": 97,
+                "label": "Buy-side and sell-side liquidity"
+              },
+              "ssl": {
+                "startSeconds": 73,
+                "endSeconds": 97,
+                "label": "Buy-side and sell-side liquidity"
+              },
+              "eqh": {
+                "startSeconds": 274,
+                "endSeconds": 311,
+                "label": "Equal and old highs and lows"
+              },
+              "eql": {
+                "startSeconds": 274,
+                "endSeconds": 311,
+                "label": "Equal and old highs and lows"
+              },
+              "pdh-pdl": {
+                "startSeconds": 311,
+                "endSeconds": 382,
+                "label": "Important liquidity levels, including prior day high and low"
+              },
+              "pwh-pwl": {
+                "startSeconds": 311,
+                "endSeconds": 382,
+                "label": "Important liquidity levels, including prior week high and low"
+              },
+              "session-high-low": {
+                "startSeconds": 311,
+                "endSeconds": 382,
+                "label": "Important liquidity levels, including session highs and lows"
+              }
+            },
+            "verificationStatus": "verified",
+            "verifiedAt": "2026-11-20",
+            "verifiedBy": "Codex research audit",
+            "lastLinkCheck": "2026-11-20",
+            "linkStatus": "verified",
+            "embedStatus": "not_checked",
+            "embedPermission": "not_checked",
+            "fallbackLinkStatus": "available",
+            "evidenceUrl": "https://www.youtube.com/watch?v=U8xH2dEgH5A",
+            "summary": "Independent TTrades supplement, not Official ICT. The publisher description directly names this concept; this lesson link starts at the Important liquidity levels, including prior week high and low chapter (5:11). It is general chart education, not a futures-specific worked test or performance evidence.",
+            "sourceNote": "The verified TTrades channel upload description names Buyside & Sellside, Equal/Old Highs & Lows, PWH/L, PDH/L and Session Highs & Lows, with chapters at 1:13, 4:34 and 5:11. Each concept page links to the relevant chapter. This is an independent general-education supplement; no futures-specific example or performance evidence is claimed."
+          }
+        ],
         "supplementalResources": [],
         "topicDiscoveryUrl": "https://www.youtube.com/results?search_query=Inner%20Circle%20Trader%20official%20Prior%20Week%20High%20/%20Low%20%28PWH%20/%20PWL%29%20ICT%20futures",
         "contentVersion": 2,
@@ -6048,7 +6660,9 @@
       "videoSearch": "https://www.youtube.com/results?search_query=Inner%20Circle%20Trader%20official%20Session%20High%20/%20Low%20ICT%20futures",
       "sourceNote": "The supplied PDF is the source for playbook framing where explicitly marked. Supplemental clarifications are identified as such. These are discovery links, not verified video-to-concept mappings.",
       "referenceLinks": [],
-      "verifiedVideoIds": [],
+      "verifiedVideoIds": [
+        "ttrades-liquidity-levels-2023"
+      ],
       "learning": {
         "durationMinutes": 18,
         "evidenceBand": "Supplemental / terminology may vary",
@@ -6431,7 +7045,76 @@
           "resource-cme-institute-trade-and-risk-management-12",
           "resource-cftc-customer-education-advisory-13"
         ],
-        "videoResources": [],
+        "videoResources": [
+          {
+            "resourceId": "ttrades-liquidity-levels-2023",
+            "title": "Liquidity: Buyside & Sellside - ICT Concepts",
+            "publisher": "TTrades",
+            "channelName": "TTrades",
+            "channelId": "UCQwUEVakiYDmNGe7UBza4sQ",
+            "videoId": "U8xH2dEgH5A",
+            "url": "https://www.youtube.com/watch?v=U8xH2dEgH5A&t=311s",
+            "language": "en",
+            "sourceClass": "independent_supplement",
+            "conceptIds": [
+              "bsl",
+              "ssl",
+              "eqh",
+              "eql",
+              "pdh-pdl",
+              "pwh-pwl",
+              "session-high-low"
+            ],
+            "segments": {
+              "bsl": {
+                "startSeconds": 73,
+                "endSeconds": 97,
+                "label": "Buy-side and sell-side liquidity"
+              },
+              "ssl": {
+                "startSeconds": 73,
+                "endSeconds": 97,
+                "label": "Buy-side and sell-side liquidity"
+              },
+              "eqh": {
+                "startSeconds": 274,
+                "endSeconds": 311,
+                "label": "Equal and old highs and lows"
+              },
+              "eql": {
+                "startSeconds": 274,
+                "endSeconds": 311,
+                "label": "Equal and old highs and lows"
+              },
+              "pdh-pdl": {
+                "startSeconds": 311,
+                "endSeconds": 382,
+                "label": "Important liquidity levels, including prior day high and low"
+              },
+              "pwh-pwl": {
+                "startSeconds": 311,
+                "endSeconds": 382,
+                "label": "Important liquidity levels, including prior week high and low"
+              },
+              "session-high-low": {
+                "startSeconds": 311,
+                "endSeconds": 382,
+                "label": "Important liquidity levels, including session highs and lows"
+              }
+            },
+            "verificationStatus": "verified",
+            "verifiedAt": "2026-11-20",
+            "verifiedBy": "Codex research audit",
+            "lastLinkCheck": "2026-11-20",
+            "linkStatus": "verified",
+            "embedStatus": "not_checked",
+            "embedPermission": "not_checked",
+            "fallbackLinkStatus": "available",
+            "evidenceUrl": "https://www.youtube.com/watch?v=U8xH2dEgH5A",
+            "summary": "Independent TTrades supplement, not Official ICT. The publisher description directly names this concept; this lesson link starts at the Important liquidity levels, including session highs and lows chapter (5:11). It is general chart education, not a futures-specific worked test or performance evidence.",
+            "sourceNote": "The verified TTrades channel upload description names Buyside & Sellside, Equal/Old Highs & Lows, PWH/L, PDH/L and Session Highs & Lows, with chapters at 1:13, 4:34 and 5:11. Each concept page links to the relevant chapter. This is an independent general-education supplement; no futures-specific example or performance evidence is claimed."
+          }
+        ],
         "supplementalResources": [],
         "topicDiscoveryUrl": "https://www.youtube.com/results?search_query=Inner%20Circle%20Trader%20official%20Session%20High%20/%20Low%20ICT%20futures",
         "contentVersion": 2,
@@ -8208,7 +8891,8 @@
       "sourceNote": "The supplied PDF is the source for playbook framing where explicitly marked. Supplemental clarifications are identified as such. These are discovery links, not verified video-to-concept mappings.",
       "referenceLinks": [],
       "verifiedVideoIds": [
-        "ict-2022-ep06-fvg"
+        "ict-2022-ep06-fvg",
+        "ttrades-structure-mss-fvg-displacement-2022"
       ],
       "learning": {
         "durationMinutes": 22,
@@ -8618,6 +9302,56 @@
             "fallbackLinkStatus": "available",
             "evidenceUrl": "https://www.youtube.com/watch?v=Bkt8B3kLATQ",
             "sourceNote": "Official ICT upload. Its description explicitly identifies a deep dive into Fair Value Gap and Market Structure Shifts. Mapped only to the Fair Value Gap lesson; the recording is not also counted toward other lesson pages without reviewed segments."
+          },
+          {
+            "resourceId": "ttrades-structure-mss-fvg-displacement-2022",
+            "title": "Intro to Market Structure Shifts, Fair Value Gaps, and Displacement - ICT Concepts",
+            "publisher": "TTrades",
+            "channelName": "TTrades",
+            "channelId": "UCQwUEVakiYDmNGe7UBza4sQ",
+            "videoId": "PePk1V0Q4QQ",
+            "url": "https://www.youtube.com/watch?v=PePk1V0Q4QQ&t=143s",
+            "language": "en",
+            "sourceClass": "independent_supplement",
+            "conceptIds": [
+              "market-structure",
+              "mss",
+              "displacement",
+              "fvg"
+            ],
+            "segments": {
+              "market-structure": {
+                "startSeconds": 21,
+                "endSeconds": 75,
+                "label": "Market structure overview"
+              },
+              "mss": {
+                "startSeconds": 75,
+                "endSeconds": 110,
+                "label": "Market Structure Shift (MSS)"
+              },
+              "displacement": {
+                "startSeconds": 110,
+                "endSeconds": 143,
+                "label": "Displacement"
+              },
+              "fvg": {
+                "startSeconds": 143,
+                "endSeconds": 165,
+                "label": "Fair Value Gap (FVG)"
+              }
+            },
+            "verificationStatus": "verified",
+            "verifiedAt": "2026-11-20",
+            "verifiedBy": "Codex research audit",
+            "lastLinkCheck": "2026-11-20",
+            "linkStatus": "verified",
+            "embedStatus": "not_checked",
+            "embedPermission": "not_checked",
+            "fallbackLinkStatus": "available",
+            "evidenceUrl": "https://www.youtube.com/watch?v=PePk1V0Q4QQ",
+            "summary": "Independent TTrades supplement, not Official ICT. The publisher description identifies this topic at 2:23 and links to a Fair Value Gap (FVG) segment. This direct link starts at the lesson-specific segment. It is general concept education, not a futures-specific worked test or performance evidence.",
+            "sourceNote": "The verified TTrades channel upload description lists exact chapter timestamps for market structure (0:21), MSS (1:15), displacement (1:50), and FVG (2:23). Each Academy lesson links to its own reviewed segment. No futures-specific worked example or strategy performance claim is inferred."
           }
         ],
         "supplementalResources": [],
@@ -9880,7 +10614,33 @@
           "resource-cme-institute-trade-and-risk-management-12",
           "resource-cftc-customer-education-advisory-13"
         ],
-        "videoResources": [],
+        "videoResources": [
+          {
+            "resourceId": "ttrades-ifvg-2023",
+            "title": "Inversion Fair Value Gaps (IFVG) - ICT Concepts",
+            "publisher": "TTrades",
+            "channelName": "TTrades",
+            "channelId": "UCQwUEVakiYDmNGe7UBza4sQ",
+            "videoId": "uDJI2AbyyCs",
+            "url": "https://www.youtube.com/watch?v=uDJI2AbyyCs",
+            "language": "en",
+            "sourceClass": "independent_supplement",
+            "conceptIds": [
+              "ifvg"
+            ],
+            "verificationStatus": "verified",
+            "verifiedAt": "2026-11-20",
+            "verifiedBy": "Codex research audit",
+            "lastLinkCheck": "2026-11-20",
+            "linkStatus": "verified",
+            "embedStatus": "not_checked",
+            "embedPermission": "not_checked",
+            "fallbackLinkStatus": "available",
+            "evidenceUrl": "https://www.youtube.com/watch?v=uDJI2AbyyCs",
+            "summary": "Independent TTrades supplement, not Official ICT. The video discusses what inversion fair value gaps are and how they may be used, including examples and a brief re-accumulation / re-distribution context. The publisher lists futures education. This maps only to the IFVG concept lesson, not the separate IFVG Reversal Entry Model, and makes no performance claim.",
+            "sourceNote": "The verified TTrades channel's upload title and description explicitly identify Inversion Fair Value Gaps (IFVG), state the scope as what they are and how they can be used, and list futures education. The description provides three example segments. This is independent supplemental teaching and is not ICT's original material or performance evidence."
+          }
+        ],
         "supplementalResources": [],
         "topicDiscoveryUrl": "https://www.youtube.com/results?search_query=Inner%20Circle%20Trader%20official%20Inversion%20Fair%20Value%20Gap%20%28IFVG%29%20ICT%20futures",
         "contentVersion": 2,
@@ -14006,7 +14766,33 @@
           "resource-cme-institute-trade-and-risk-management-12",
           "resource-cftc-customer-education-advisory-13"
         ],
-        "videoResources": [],
+        "videoResources": [
+          {
+            "resourceId": "ttrades-unicorn-2023",
+            "title": "How to Use the Unicorn Model for Trading Success",
+            "publisher": "TTrades",
+            "channelName": "TTrades",
+            "channelId": "UCQwUEVakiYDmNGe7UBza4sQ",
+            "videoId": "rXMVPUZPw4A",
+            "url": "https://www.youtube.com/watch?v=rXMVPUZPw4A",
+            "language": "en",
+            "sourceClass": "independent_supplement",
+            "conceptIds": [
+              "unicorn"
+            ],
+            "verificationStatus": "verified",
+            "verifiedAt": "2026-11-20",
+            "verifiedBy": "Codex research audit",
+            "lastLinkCheck": "2026-11-20",
+            "linkStatus": "verified",
+            "embedStatus": "not_checked",
+            "embedPermission": "not_checked",
+            "fallbackLinkStatus": "available",
+            "evidenceUrl": "https://www.youtube.com/watch?v=rXMVPUZPw4A",
+            "summary": "Independent TTrades supplement, not Official ICT. The description calls this a basic introduction to the Unicorn entry pattern, identifies it as Breaker Block plus Fair Value Gap, and includes examples. Futures appear among the publisher's educational topics. This maps only to the Unicorn Entry Model and makes no performance claim.",
+            "sourceNote": "The verified TTrades channel's upload description directly names the Unicorn model and its Breaker Block plus Fair Value Gap composition, with a model segment at 2:17 and examples beginning at 2:47. The description includes futures education. This is independent supplemental teaching, not ICT's original material, and does not establish performance."
+          }
+        ],
         "supplementalResources": [],
         "topicDiscoveryUrl": "https://www.youtube.com/results?search_query=Inner%20Circle%20Trader%20official%20Unicorn%20Model%20ICT%20futures",
         "contentVersion": 2,
@@ -16052,7 +16838,33 @@
           "resource-cme-institute-trade-and-risk-management-12",
           "resource-cftc-customer-education-advisory-13"
         ],
-        "videoResources": [],
+        "videoResources": [
+          {
+            "resourceId": "ttrades-ote-2023",
+            "title": "Optimal Trade Entry (OTE) - ICT Concepts",
+            "publisher": "TTrades",
+            "channelName": "TTrades",
+            "channelId": "UCQwUEVakiYDmNGe7UBza4sQ",
+            "videoId": "1YRs4Z1lMws",
+            "url": "https://www.youtube.com/watch?v=1YRs4Z1lMws",
+            "language": "en",
+            "sourceClass": "independent_supplement",
+            "conceptIds": [
+              "ote"
+            ],
+            "verificationStatus": "verified",
+            "verifiedAt": "2026-11-20",
+            "verifiedBy": "Codex research audit",
+            "lastLinkCheck": "2026-11-20",
+            "linkStatus": "verified",
+            "embedStatus": "not_checked",
+            "embedPermission": "not_checked",
+            "fallbackLinkStatus": "available",
+            "evidenceUrl": "https://www.youtube.com/watch?v=1YRs4Z1lMws",
+            "summary": "Independent TTrades supplement, not Official ICT. The description covers Fibonacci settings, using OTE within ranges, and alignment with PD arrays; it explicitly says the video does not discuss the New York Killzone. Futures are listed among the creator's educational topics. This maps only to the OTE concept lesson and makes no performance claim.",
+            "sourceNote": "The exact-title video is listed by YouTube search as published by the verified TTrades channel. Its description names Optimal Trade Entry, gives an OTE segment at 2:47 and PD-array alignment at 4:08, and includes futures education. It is an independent supplement, not ICT's original teaching; the video itself notes that the New York Killzone is outside its scope."
+          }
+        ],
         "supplementalResources": [],
         "topicDiscoveryUrl": "https://www.youtube.com/results?search_query=Inner%20Circle%20Trader%20official%20Optimal%20Trade%20Entry%20%28OTE%29%20ICT%20futures",
         "contentVersion": 2,
@@ -20137,7 +20949,33 @@
           "resource-cme-institute-trade-and-risk-management-12",
           "resource-cftc-customer-education-advisory-13"
         ],
-        "videoResources": [],
+        "videoResources": [
+          {
+            "resourceId": "ttrades-po3-amd-2023",
+            "title": "ICT Power Of 3 - AMD",
+            "publisher": "TTrades",
+            "channelName": "TTrades",
+            "channelId": "UCQwUEVakiYDmNGe7UBza4sQ",
+            "videoId": "TCFvsZeYvV8",
+            "url": "https://www.youtube.com/watch?v=TCFvsZeYvV8",
+            "language": "en",
+            "sourceClass": "independent_supplement",
+            "conceptIds": [
+              "amd-po3"
+            ],
+            "verificationStatus": "verified",
+            "verifiedAt": "2026-11-20",
+            "verifiedBy": "Codex research audit",
+            "lastLinkCheck": "2026-11-20",
+            "linkStatus": "verified",
+            "embedStatus": "not_checked",
+            "embedPermission": "not_checked",
+            "fallbackLinkStatus": "available",
+            "evidenceUrl": "https://www.youtube.com/watch?v=TCFvsZeYvV8",
+            "summary": "Independent TTrades supplement, not Official ICT. The description explicitly covers ICT Power of Three as accumulation, manipulation and distribution (AMD), with identification basics, examples and standard-deviation context. Futures are among the publisher's listed educational topics. It maps only to the AMD / Power of Three lesson and makes no performance claim.",
+            "sourceNote": "The verified TTrades channel's exact-title upload directly names Power of Three and AMD, and its description includes futures education. The timestamps identify AMD at 1:11 and Power of Three at 1:57, followed by entry discussion and chart examples. This is independent supplemental teaching and does not prove performance."
+          }
+        ],
         "supplementalResources": [],
         "topicDiscoveryUrl": "https://www.youtube.com/results?search_query=Inner%20Circle%20Trader%20official%20AMD%20/%20Power%20of%20Three%20ICT%20futures",
         "contentVersion": 2,
@@ -20174,7 +21012,9 @@
       "videoSearch": "https://www.youtube.com/results?search_query=Inner%20Circle%20Trader%20official%20Judas%20Swing%20ICT%20futures",
       "sourceNote": "The supplied PDF is the source for playbook framing where explicitly marked. Supplemental clarifications are identified as such. These are discovery links, not verified video-to-concept mappings.",
       "referenceLinks": [],
-      "verifiedVideoIds": [],
+      "verifiedVideoIds": [
+        "ict-judas-swing-2017"
+      ],
       "learning": {
         "durationMinutes": 28,
         "evidenceBand": "Supplemental / terminology may vary",
@@ -20541,7 +21381,33 @@
           "resource-cme-institute-trade-and-risk-management-12",
           "resource-cftc-customer-education-advisory-13"
         ],
-        "videoResources": [],
+        "videoResources": [
+          {
+            "resourceId": "ict-judas-swing-2017",
+            "title": "ICT Forex - Understanding The ICT Judas Swing",
+            "publisher": "The Inner Circle Trader",
+            "channelName": "The Inner Circle Trader",
+            "channelId": "UCtjxa77NqamhVC8atV85Rog",
+            "videoId": "xJMbva8SjzE",
+            "url": "https://www.youtube.com/watch?v=xJMbva8SjzE",
+            "language": "en",
+            "sourceClass": "official_ict",
+            "conceptIds": [
+              "judas-swing"
+            ],
+            "verificationStatus": "verified",
+            "verifiedAt": "2026-11-20",
+            "verifiedBy": "Codex research audit",
+            "lastLinkCheck": "2026-11-20",
+            "linkStatus": "verified",
+            "embedStatus": "not_checked",
+            "embedPermission": "not_checked",
+            "fallbackLinkStatus": "available",
+            "evidenceUrl": "https://www.youtube.com/watch?v=xJMbva8SjzE",
+            "summary": "Original video published by The Inner Circle Trader's verified channel. Its exact title is about the ICT Judas Swing. This is general ICT education, not a futures-specific strategy test or performance evidence.",
+            "sourceNote": "YouTube identifies The Inner Circle Trader as the verified publisher, and the original upload title directly names Judas Swing. The lesson is mapped only to the matching concept; the video does not establish the Academy's discretionary/session filters or a profitable edge. Embed availability and permission remain unchecked."
+          }
+        ],
         "supplementalResources": [],
         "topicDiscoveryUrl": "https://www.youtube.com/results?search_query=Inner%20Circle%20Trader%20official%20Judas%20Swing%20ICT%20futures",
         "contentVersion": 2,
@@ -25084,7 +25950,33 @@
           "resource-secondary-cisd-explanation-18",
           "resource-community-ict-glossary-not-an-official-ict-source-19"
         ],
-        "videoResources": [],
+        "videoResources": [
+          {
+            "resourceId": "ttrades-cisd-orderblock-2023",
+            "title": "Change In State Of Delivery [CISD] - Orderblock Formation - ICT Concepts",
+            "publisher": "TTrades",
+            "channelName": "TTrades",
+            "channelId": "UCQwUEVakiYDmNGe7UBza4sQ",
+            "videoId": "CHIK5oBRKiw",
+            "url": "https://www.youtube.com/watch?v=CHIK5oBRKiw",
+            "language": "en",
+            "sourceClass": "independent_supplement",
+            "conceptIds": [
+              "cisd"
+            ],
+            "verificationStatus": "verified",
+            "verifiedAt": "2026-11-20",
+            "verifiedBy": "Codex research audit",
+            "lastLinkCheck": "2026-11-20",
+            "linkStatus": "verified",
+            "embedStatus": "not_checked",
+            "embedPermission": "not_checked",
+            "fallbackLinkStatus": "available",
+            "evidenceUrl": "https://www.youtube.com/watch?v=CHIK5oBRKiw",
+            "summary": "Independent TTrades supplement, not Official ICT. The video explicitly teaches CISD with chart examples and a separately defined entry model; its description lists futures education. It maps only to the CISD concept lesson and must not be treated as a Market Structure Shift lesson or a verified futures backtest.",
+            "sourceNote": "The verified TTrades channel's exact-title upload names CISD and order-block formation; its description and video transcript teach the candle-run close definition, examples and an AMD / standard-deviation entry framework. The publisher tags the video for futures education. This is independent supplemental teaching and not performance evidence."
+          }
+        ],
         "supplementalResources": [
           {
             "name": "Secondary CISD explanation",
@@ -29559,7 +30451,9 @@
           "type": "Secondary reference"
         }
       ],
-      "verifiedVideoIds": [],
+      "verifiedVideoIds": [
+        "ict-2024-mmbm-example"
+      ],
       "learning": {
         "durationMinutes": 28,
         "evidenceBand": "Supplemental / terminology may vary",
@@ -29945,7 +30839,32 @@
           "resource-community-glossary-turtle-soup-terminology-21",
           "resource-secondary-mmxm-explanation-20"
         ],
-        "videoResources": [],
+        "videoResources": [
+          {
+            "resourceId": "ict-2024-mmbm-example",
+            "title": "April 08, 2024 NQ Market Maker Buy Model Example",
+            "publisher": "The Inner Circle Trader",
+            "channelName": "The Inner Circle Trader",
+            "channelId": "UCtjxa77NqamhVC8atV85Rog",
+            "videoId": "1vsIPazjfGQ",
+            "url": "https://www.youtube.com/watch?v=1vsIPazjfGQ",
+            "language": "en",
+            "sourceClass": "official_ict",
+            "conceptIds": [
+              "market-maker-buy-model"
+            ],
+            "verificationStatus": "verified",
+            "verifiedAt": "2026-11-20",
+            "verifiedBy": "Codex research audit",
+            "lastLinkCheck": "2026-11-20",
+            "linkStatus": "verified",
+            "embedStatus": "not_checked",
+            "embedPermission": "not_checked",
+            "fallbackLinkStatus": "available",
+            "evidenceUrl": "https://www.youtube.com/watch?v=1vsIPazjfGQ",
+            "sourceNote": "Official ICT upload title and verified publisher identify this as an NQ Market Maker Buy Model example. It is mapped only to that Entry Model page. The video is an example, not a complete rulebook or performance evidence; the site's model definition remains supplemental and convention-sensitive."
+          }
+        ],
         "supplementalResources": [
           {
             "name": "Community glossary: Turtle Soup terminology",

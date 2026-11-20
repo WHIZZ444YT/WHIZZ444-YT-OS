@@ -3,7 +3,7 @@ import { filterNewsArticles, marketDataStatus, NEWS_SOURCE_REGISTRY, newsRespons
 import { nextProviderCircuitState, providerCircuitIsOpen } from "./provider-http.mjs";
 import { COT_DATASETS, asFiniteNumber, cotResponseEnvelope, cotSourceColumns, normalizeCotRows, validateCotQuery } from "./cot-contracts.mjs";
 import { fetchBlsCalendar, fetchEiaWpsrSchedule } from "./economic-calendar.mjs";
-import { BEA_RELEASE_SCHEDULE_URL, BEA_RELEASE_DATES_URL, BOC_RATE_CALENDAR_URL, BOE_MPC_CALENDAR_URL, CFTC_COT_SCHEDULE_URL, ECB_COUNCIL_CALENDAR_URL, FOMC_CALENDAR_URL, RBA_BOARD_CALENDAR_URL, fetchBeaReleaseCalendar, fetchBocRateCalendar, fetchBoeMpcCalendar, fetchCftcCotSchedule, fetchEcbCouncilCalendar, fetchFomcCalendar, fetchRbaBoardCalendar } from "./economic-calendar-extended.mjs";
+import { BEA_RELEASE_SCHEDULE_URL, BEA_RELEASE_DATES_URL, BOC_RATE_CALENDAR_URL, BOE_MPC_CALENDAR_URL, CFTC_COT_SCHEDULE_URL, ECB_COUNCIL_CALENDAR_URL, FOMC_CALENDAR_URL, RBA_BOARD_CALENDAR_URL, classifyPublisherScheduleFailure, fetchBeaReleaseCalendar, fetchBocRateCalendar, fetchBoeMpcCalendar, fetchCftcCotSchedule, fetchEcbCouncilCalendar, fetchFomcCalendar, fetchRbaBoardCalendar } from "./economic-calendar-extended.mjs";
 import { normalizeFuturesObservationBatch, validateFuturesObservationQuery } from "./futures-observations.mjs";
 
 const NEWS_KEY = "snapshot:gdelt:news:v1";
@@ -788,12 +788,14 @@ async function getPublisherSchedule(env,key,loader,metadata){
   snapshot=await loader();
   await env.SNAPSHOTS.put(key,JSON.stringify(snapshot),{expirationTtl:60*60*8});
   return{snapshot,status:200};
- }catch{
+ }catch(error){
+  const errorCode=classifyPublisherScheduleFailure(error);
+  console.warn("publisher_schedule_refresh_failed",{publisher_id:metadata.publisher_id||null,error_code:errorCode});
   const retry_at=new Date(now+5*60*1000).toISOString();
   const hasSnapshot=Boolean(snapshot&&Array.isArray(snapshot.events)&&Number.isFinite(Date.parse(snapshot.retrieved_at||"")));
   const failure=hasSnapshot
-   ?{...snapshot,status:"stale",last_error:`${metadata.provider} refresh failed; showing the last successful publisher snapshot.`,retry_at}
-   :{schema_version:1,data_type:"official_economic_release_schedule",status:"unavailable",...metadata,retrieved_at:null,data_as_of:null,event_count:0,events:[],error:metadata.error,retry_at};
+   ?{...snapshot,status:"stale",last_error:`${metadata.provider} refresh failed; showing the last successful publisher snapshot.`,last_error_code:errorCode,retry_at}
+   :{schema_version:1,data_type:"official_economic_release_schedule",status:"unavailable",...metadata,retrieved_at:null,data_as_of:null,event_count:0,events:[],error:metadata.error,error_code:errorCode,retry_at};
   await env.SNAPSHOTS.put(key,JSON.stringify(failure),{expirationTtl:60*60});
   return{snapshot:failure,status:hasSnapshot?200:502,retryAfter:300};
  }
