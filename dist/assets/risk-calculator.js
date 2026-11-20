@@ -46,14 +46,15 @@ import { calculateFuturesPosition, formatMicros } from "./futures-risk-engine.mj
     slippageTicks:$('slippageTicks').value,maxContracts:$('maxContracts').value,
     dailyLossRemaining:$('dailyLossRemaining').value,drawdownRemaining:$('drawdownRemaining').value
    });
-   const sourceUrl=String(market.specsUrl||'');
+   const sourceUrl=String(spec?.specEvidence?.sourceUrl||market.specEvidence?.sourceUrl||market.specsUrl||'');
    const sourceLink=/^https:\/\/(www\.)?(cmegroup\.com|ice\.com)\//i.test(sourceUrl)
     ?' · <a href="'+escapeHtml(sourceUrl)+'" target="_blank" rel="noopener noreferrer">official exchange source</a>':'';
    const expiryText=new Date(expiry+'T00:00:00Z').toISOString().slice(0,10);
-   const resultStatus=verified?'CONDITIONAL · SPEC RECORD MARKED VERIFIED':'CONDITIONAL ESTIMATE · SPEC UNVERIFIED';
+   const checkedAt=String(spec?.specEvidence?.checkedAt||market.specEvidence?.checkedAt||spec?.specVerifiedAt||market.specVerifiedAt||'not recorded');
+   const resultStatus=verified?'CONDITIONAL · SPEC RECORD MARKED VERIFIED':state==='partial'?'CONDITIONAL ESTIMATE · PARTIAL CORE-SPEC REVIEW · NOT TRADE-READY':'CONDITIONAL ESTIMATE · SPEC UNVERIFIED';
    const remainingBy=result.quantity===result.maxContracts?'Maximum contract cap':(result.constrainedByDailyLoss?'Daily loss allowance':(result.constrainedByDrawdown?'Maximum drawdown remaining':'Per-trade risk percentage'));
    const warning=result.quantity===0
-    ?'<p><b>Zero contracts:</b> One contract exceeds the effective risk allowance or the selected allowance is exhausted. Reduce the stop distance or select a verified supported micro contract; do not raise limits solely to force a position.</p>'
+    ?'<p><b>Zero contracts:</b> One contract exceeds the effective risk allowance or the selected allowance is exhausted. Reduce the stop distance or select a smaller supported contract; do not raise limits solely to force a position.</p>'
     :'<p>Quantity is rounded down to whole contracts and capped at the entered maximum. It uses '+escapeHtml(remainingBy)+' as the binding budget limit.</p>';
    out.innerHTML='<div class="result-grid">'+
     '<div><span class="muted">Contracts</span><b>'+result.quantity+'</b></div>'+
@@ -70,7 +71,7 @@ import { calculateFuturesPosition, formatMicros } from "./futures-risk-engine.mj
     '<div><span class="muted">Estimated net target</span><b>'+formatMicros(result.estimatedNetTargetMicros)+'</b></div>'+
     '<div><span class="muted">Net reward / risk</span><b>'+result.netRewardRisk.toFixed(2)+'R</b></div>'+
     '<div><span class="muted">Tick size / tick value</span><b>'+escapeHtml(tickSize)+' / '+formatMicros(tickValue)+'</b></div></div>'+
-    '<p class="fine-print"><b>'+resultStatus+'</b> · '+escapeHtml(exactContract)+' · expiry '+escapeHtml(expiryText)+' · '+escapeHtml(mode.value==='micro'?'micro':'standard')+' profile · reference set '+escapeHtml(spec?.specVersionId||market.specVersionId||'version-not-recorded')+' · checked '+escapeHtml(spec?.specVerifiedAt||market.specVerifiedAt||'not recorded')+' · effective '+escapeHtml(spec?.specEffectiveFrom||market.specEffectiveFrom||'not recorded')+sourceLink+'. Cost source: '+escapeHtml(costSource)+' · as of '+escapeHtml(costAsOf)+'. The expiry and contract code are user-entered and are not reconciled against an exchange calendar.</p>'+warning+
+    '<p class="fine-print"><b>'+resultStatus+'</b> · '+escapeHtml(exactContract)+' · expiry '+escapeHtml(expiryText)+' · '+escapeHtml(mode.value==='micro'?'micro':'standard')+' profile · reference set '+escapeHtml(spec?.specVersionId||market.specVersionId||'version-not-recorded')+' · core facts checked '+escapeHtml(checkedAt)+' · effective '+escapeHtml(spec?.specEffectiveFrom||market.specEffectiveFrom||'not established')+sourceLink+'. Cost source: '+escapeHtml(costSource)+' · as of '+escapeHtml(costAsOf)+'. The expiry and contract code are user-entered and are not reconciled against an exchange calendar.</p>'+warning+
     '<p class="fine-print">USD arithmetic uses integer micro-dollar amounts and whole ticks. FX conversion, margin, liquidation, correlated exposure, session limits and event risk are not included.</p>';
   }catch(error){renderError(error.message);}
  }

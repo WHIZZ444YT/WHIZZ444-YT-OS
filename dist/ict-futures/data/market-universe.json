@@ -1,6 +1,6 @@
 {
-  "schemaVersion": 2,
-  "generatedAt": "2026-11-08",
+  "schemaVersion": 3,
+  "generatedAt": "2026-11-20",
   "count": 15,
   "markets": [
     {
@@ -76,16 +76,54 @@
         "tickSize": "0.25",
         "tickValue": "0.5",
         "pointValue": "2",
-        "specStatus": "unverified",
-        "specVersionId": "imported-reference-2026-11-08",
-        "specVerifiedAt": null
+        "specStatus": "partial",
+        "specVersionId": "partial-official-spec-review-2026-11-20",
+        "specVerifiedAt": null,
+        "specEvidence": {
+          "sourceStatus": "SOURCED",
+          "checkedAt": "2026-11-20",
+          "publisher": "CME Group",
+          "sourceUrl": "https://www.cmegroup.com/markets/equities/nasdaq/micro-e-mini-nasdaq-100.settlements.html",
+          "checkedScope": [
+            "micro contract unit / multiplier (point value where directly applicable)",
+            "outright minimum tick size",
+            "outright tick value"
+          ],
+          "pendingFields": [
+            "exact active contract-month dates and current expiry calendar",
+            "first-notice and last-delivery dates where applicable",
+            "current effective date/rule revision for each displayed value",
+            "a sourced contract-roll policy and continuous-series adjustment method",
+            "instrument-specific trading-hour breaks and holiday exceptions"
+          ],
+          "note": "Micro product unit and outright tick facts were reconciled to the linked official CME source. This source check does not certify a particular expiry, first-notice date, effective period, or roll rule."
+        }
       },
       "contractRoot": "CME_MINI:NQ1!",
-      "specStatus": "unverified",
-      "specVersionId": "imported-reference-2026-11-08",
+      "specStatus": "partial",
+      "specVersionId": "partial-official-spec-review-2026-11-20",
       "specVerifiedAt": null,
       "specEffectiveFrom": null,
-      "specEffectiveTo": null
+      "specEffectiveTo": null,
+      "specEvidence": {
+        "sourceStatus": "SOURCED",
+        "checkedAt": "2026-11-20",
+        "publisher": "CME Group",
+        "sourceUrl": "https://www.cmegroup.com/markets/equities/nasdaq/e-mini-nasdaq-100.contractSpecs.html",
+        "checkedScope": [
+          "standard contract unit / multiplier (point value where directly applicable)",
+          "outright minimum tick size",
+          "outright tick value"
+        ],
+        "pendingFields": [
+          "exact active contract-month dates and current expiry calendar",
+          "first-notice and last-delivery dates where applicable",
+          "current effective date/rule revision for each displayed value",
+          "a sourced contract-roll policy and continuous-series adjustment method",
+          "instrument-specific trading-hour breaks and holiday exceptions"
+        ],
+        "note": "Core product unit/multiplier and outright tick facts were reconciled to the linked official exchange product specification. This source check does not certify a particular expiry, first-notice date, effective period, or roll rule."
+      }
     },
     {
       "id": "es",
@@ -155,16 +193,54 @@
         "tickSize": "0.25",
         "tickValue": "1.25",
         "pointValue": "5",
-        "specStatus": "unverified",
-        "specVersionId": "imported-reference-2026-11-08",
-        "specVerifiedAt": null
+        "specStatus": "partial",
+        "specVersionId": "partial-official-spec-review-2026-11-20",
+        "specVerifiedAt": null,
+        "specEvidence": {
+          "sourceStatus": "SOURCED",
+          "checkedAt": "2026-11-20",
+          "publisher": "CME Group",
+          "sourceUrl": "https://www.cmegroup.com/markets/equities/sp/micro-e-mini-sandp-500.contractSpecs.html",
+          "checkedScope": [
+            "micro contract unit / multiplier (point value where directly applicable)",
+            "outright minimum tick size",
+            "outright tick value"
+          ],
+          "pendingFields": [
+            "exact active contract-month dates and current expiry calendar",
+            "first-notice and last-delivery dates where applicable",
+            "current effective date/rule revision for each displayed value",
+            "a sourced contract-roll policy and continuous-series adjustment method",
+            "instrument-specific trading-hour breaks and holiday exceptions"
+          ],
+          "note": "Micro product unit and outright tick facts were reconciled to the linked official CME source. This source check does not certify a particular expiry, first-notice date, effective period, or roll rule."
+        }
       },
       "contractRoot": "CME_MINI:ES1!",
-      "specStatus": "unverified",
-      "specVersionId": "imported-reference-2026-11-08",
+      "specStatus": "partial",
+      "specVersionId": "partial-official-spec-review-2026-11-20",
       "specVerifiedAt": null,
       "specEffectiveFrom": null,
-      "specEffectiveTo": null
+      "specEffectiveTo": null,
+      "specEvidence": {
+        "sourceStatus": "SOURCED",
+        "checkedAt": "2026-11-20",
+        "publisher": "CME Group",
+        "sourceUrl": "https://www.cmegroup.com/markets/equities/sp/e-mini-sandp500.contractSpecs.html",
+        "checkedScope": [
+          "standard contract unit / multiplier (point value where directly applicable)",
+          "outright minimum tick size",
+          "outright tick value"
+        ],
+        "pendingFields": [
+          "exact active contract-month dates and current expiry calendar",
+          "first-notice and last-delivery dates where applicable",
+          "current effective date/rule revision for each displayed value",
+          "a sourced contract-roll policy and continuous-series adjustment method",
+          "instrument-specific trading-hour breaks and holiday exceptions"
+        ],
+        "note": "Core product unit/multiplier and outright tick facts were reconciled to the linked official exchange product specification. This source check does not certify a particular expiry, first-notice date, effective period, or roll rule."
+      }
     },
     {
       "id": "gc",
@@ -218,7 +294,7 @@
       "compare": [
         "GC–SI comparison; DX and ZN are macro context, not mechanical signals."
       ],
-      "specsUrl": "https://www.cmegroup.com/markets/metals/precious/gold.contractSpecs.html",
+      "specsUrl": "https://www.cmegroup.com/markets/metals/precious/gold-futures.contractSpecs.html",
       "heat": {
         "Asia": "medium",
         "London": "high",
@@ -235,16 +311,54 @@
         "tickSize": "0.1",
         "tickValue": "1",
         "pointValue": "10",
-        "specStatus": "unverified",
-        "specVersionId": "imported-reference-2026-11-08",
-        "specVerifiedAt": null
+        "specStatus": "partial",
+        "specVersionId": "partial-official-spec-review-2026-11-20",
+        "specVerifiedAt": null,
+        "specEvidence": {
+          "sourceStatus": "SOURCED",
+          "checkedAt": "2026-11-20",
+          "publisher": "CME Group",
+          "sourceUrl": "https://www.cmegroup.com/markets/microsuite/metals",
+          "checkedScope": [
+            "micro contract unit / multiplier (point value where directly applicable)",
+            "outright minimum tick size",
+            "outright tick value"
+          ],
+          "pendingFields": [
+            "exact active contract-month dates and current expiry calendar",
+            "first-notice and last-delivery dates where applicable",
+            "current effective date/rule revision for each displayed value",
+            "a sourced contract-roll policy and continuous-series adjustment method",
+            "instrument-specific trading-hour breaks and holiday exceptions"
+          ],
+          "note": "Micro product unit and outright tick facts were reconciled to the linked official CME source. This source check does not certify a particular expiry, first-notice date, effective period, or roll rule."
+        }
       },
       "contractRoot": "COMEX:GC1!",
-      "specStatus": "unverified",
-      "specVersionId": "imported-reference-2026-11-08",
+      "specStatus": "partial",
+      "specVersionId": "partial-official-spec-review-2026-11-20",
       "specVerifiedAt": null,
       "specEffectiveFrom": null,
-      "specEffectiveTo": null
+      "specEffectiveTo": null,
+      "specEvidence": {
+        "sourceStatus": "SOURCED",
+        "checkedAt": "2026-11-20",
+        "publisher": "CME Group",
+        "sourceUrl": "https://www.cmegroup.com/markets/metals/precious/gold-futures.contractSpecs.html",
+        "checkedScope": [
+          "standard contract unit / multiplier (point value where directly applicable)",
+          "outright minimum tick size",
+          "outright tick value"
+        ],
+        "pendingFields": [
+          "exact active contract-month dates and current expiry calendar",
+          "first-notice and last-delivery dates where applicable",
+          "current effective date/rule revision for each displayed value",
+          "a sourced contract-roll policy and continuous-series adjustment method",
+          "instrument-specific trading-hour breaks and holiday exceptions"
+        ],
+        "note": "Core product unit/multiplier and outright tick facts were reconciled to the linked official exchange product specification. This source check does not certify a particular expiry, first-notice date, effective period, or roll rule."
+      }
     },
     {
       "id": "6e",
@@ -256,7 +370,7 @@
       "tickSize": "0.00005",
       "tickValue": "6.25",
       "pointValue": null,
-      "micro": "M6E · €12,500 · $1.25/tick",
+      "micro": "M6E · 12,500 EUR · $1.25/tick",
       "sessions": [
         "London 02:00–05:00",
         "Forex NY 07:00–10:00",
@@ -295,7 +409,7 @@
       "compare": [
         "6E–6B comparison; DX is a broad dollar context and contains a large EUR weighting."
       ],
-      "specsUrl": "https://www.cmegroup.com/markets/fx/g10/euro-fx.contractSpecs.html",
+      "specsUrl": "https://www.cmegroup.com/markets/fx/g10/euro-fx/specs",
       "heat": {
         "Asia": "low",
         "London": "high",
@@ -309,19 +423,57 @@
       "microSpec": {
         "symbol": "M6E",
         "unit": "€12,500",
-        "tickSize": "0.00005",
+        "tickSize": "0.0001",
         "tickValue": "1.25",
         "pointValue": null,
-        "specStatus": "unverified",
-        "specVersionId": "imported-reference-2026-11-08",
-        "specVerifiedAt": null
+        "specStatus": "partial",
+        "specVersionId": "partial-official-spec-review-2026-11-20",
+        "specVerifiedAt": null,
+        "specEvidence": {
+          "sourceStatus": "SOURCED",
+          "checkedAt": "2026-11-20",
+          "publisher": "CME Group",
+          "sourceUrl": "https://www.cmegroup.com/markets/fx/g10/e-micro-euro/specs",
+          "checkedScope": [
+            "micro contract unit / multiplier (point value where directly applicable)",
+            "outright minimum tick size",
+            "outright tick value"
+          ],
+          "pendingFields": [
+            "exact active contract-month dates and current expiry calendar",
+            "first-notice and last-delivery dates where applicable",
+            "current effective date/rule revision for each displayed value",
+            "a sourced contract-roll policy and continuous-series adjustment method",
+            "instrument-specific trading-hour breaks and holiday exceptions"
+          ],
+          "note": "Micro product unit and outright tick facts were reconciled to the linked official CME source. This source check does not certify a particular expiry, first-notice date, effective period, or roll rule."
+        }
       },
       "contractRoot": "CME:6E1!",
-      "specStatus": "unverified",
-      "specVersionId": "imported-reference-2026-11-08",
+      "specStatus": "partial",
+      "specVersionId": "partial-official-spec-review-2026-11-20",
       "specVerifiedAt": null,
       "specEffectiveFrom": null,
-      "specEffectiveTo": null
+      "specEffectiveTo": null,
+      "specEvidence": {
+        "sourceStatus": "SOURCED",
+        "checkedAt": "2026-11-20",
+        "publisher": "CME Group",
+        "sourceUrl": "https://www.cmegroup.com/markets/fx/g10/euro-fx/specs",
+        "checkedScope": [
+          "standard contract unit / multiplier (point value where directly applicable)",
+          "outright minimum tick size",
+          "outright tick value"
+        ],
+        "pendingFields": [
+          "exact active contract-month dates and current expiry calendar",
+          "first-notice and last-delivery dates where applicable",
+          "current effective date/rule revision for each displayed value",
+          "a sourced contract-roll policy and continuous-series adjustment method",
+          "instrument-specific trading-hour breaks and holiday exceptions"
+        ],
+        "note": "Core product unit/multiplier and outright tick facts were reconciled to the linked official exchange product specification. This source check does not certify a particular expiry, first-notice date, effective period, or roll rule."
+      }
     },
     {
       "id": "6b",
@@ -333,7 +485,7 @@
       "tickSize": "0.0001",
       "tickValue": "6.25",
       "pointValue": null,
-      "micro": "M6B · £6,250 · $0.625/tick",
+      "micro": "M6B · 6,250 GBP · $0.625/tick",
       "sessions": [
         "London 02:00–05:00",
         "London Silver Bullet 03:00–04:00",
@@ -370,7 +522,7 @@
       "compare": [
         "6E–6B divergence; ensure same session and synchronised swings."
       ],
-      "specsUrl": "https://www.cmegroup.com/markets/fx/g10/british-pound/specs.html",
+      "specsUrl": "https://www.cmegroup.com/markets/fx/g10/british-pound/specs",
       "heat": {
         "Asia": "low",
         "London": "high",
@@ -387,16 +539,54 @@
         "tickSize": "0.0001",
         "tickValue": "0.625",
         "pointValue": null,
-        "specStatus": "unverified",
-        "specVersionId": "imported-reference-2026-11-08",
-        "specVerifiedAt": null
+        "specStatus": "partial",
+        "specVersionId": "partial-official-spec-review-2026-11-20",
+        "specVerifiedAt": null,
+        "specEvidence": {
+          "sourceStatus": "SOURCED",
+          "checkedAt": "2026-11-20",
+          "publisher": "CME Group",
+          "sourceUrl": "https://www.cmegroup.com/markets/microsuite/fx",
+          "checkedScope": [
+            "micro contract unit / multiplier (point value where directly applicable)",
+            "outright minimum tick size",
+            "outright tick value"
+          ],
+          "pendingFields": [
+            "exact active contract-month dates and current expiry calendar",
+            "first-notice and last-delivery dates where applicable",
+            "current effective date/rule revision for each displayed value",
+            "a sourced contract-roll policy and continuous-series adjustment method",
+            "instrument-specific trading-hour breaks and holiday exceptions"
+          ],
+          "note": "Micro product unit and outright tick facts were reconciled to the linked official CME source. This source check does not certify a particular expiry, first-notice date, effective period, or roll rule."
+        }
       },
       "contractRoot": "CME:6B1!",
-      "specStatus": "unverified",
-      "specVersionId": "imported-reference-2026-11-08",
+      "specStatus": "partial",
+      "specVersionId": "partial-official-spec-review-2026-11-20",
       "specVerifiedAt": null,
       "specEffectiveFrom": null,
-      "specEffectiveTo": null
+      "specEffectiveTo": null,
+      "specEvidence": {
+        "sourceStatus": "SOURCED",
+        "checkedAt": "2026-11-20",
+        "publisher": "CME Group",
+        "sourceUrl": "https://www.cmegroup.com/markets/fx/g10/british-pound/specs",
+        "checkedScope": [
+          "standard contract unit / multiplier (point value where directly applicable)",
+          "outright minimum tick size",
+          "outright tick value"
+        ],
+        "pendingFields": [
+          "exact active contract-month dates and current expiry calendar",
+          "first-notice and last-delivery dates where applicable",
+          "current effective date/rule revision for each displayed value",
+          "a sourced contract-roll policy and continuous-series adjustment method",
+          "instrument-specific trading-hour breaks and holiday exceptions"
+        ],
+        "note": "Core product unit/multiplier and outright tick facts were reconciled to the linked official exchange product specification. This source check does not certify a particular expiry, first-notice date, effective period, or roll rule."
+      }
     },
     {
       "id": "ym",
@@ -408,7 +598,7 @@
       "tickSize": "1",
       "tickValue": "5",
       "pointValue": "5",
-      "micro": "MYM · $0.50/point",
+      "micro": "MYM · 1.00 index point · $0.50/tick",
       "sessions": [
         "NY AM 08:30–11:00",
         "NY PM 13:30–16:00"
@@ -459,16 +649,54 @@
         "tickSize": "1",
         "tickValue": "0.5",
         "pointValue": "0.5",
-        "specStatus": "unverified",
-        "specVersionId": "imported-reference-2026-11-08",
-        "specVerifiedAt": null
+        "specStatus": "partial",
+        "specVersionId": "partial-official-spec-review-2026-11-20",
+        "specVerifiedAt": null,
+        "specEvidence": {
+          "sourceStatus": "SOURCED",
+          "checkedAt": "2026-11-20",
+          "publisher": "CME Group",
+          "sourceUrl": "https://www.cmegroup.com/markets/equities/sp-500-and-nasdaq-100-futures.html",
+          "checkedScope": [
+            "micro contract unit / multiplier (point value where directly applicable)",
+            "outright minimum tick size",
+            "outright tick value"
+          ],
+          "pendingFields": [
+            "exact active contract-month dates and current expiry calendar",
+            "first-notice and last-delivery dates where applicable",
+            "current effective date/rule revision for each displayed value",
+            "a sourced contract-roll policy and continuous-series adjustment method",
+            "instrument-specific trading-hour breaks and holiday exceptions"
+          ],
+          "note": "Micro product unit and outright tick facts were reconciled to the linked official CME source. This source check does not certify a particular expiry, first-notice date, effective period, or roll rule."
+        }
       },
       "contractRoot": "CBOT_MINI:YM1!",
-      "specStatus": "unverified",
-      "specVersionId": "imported-reference-2026-11-08",
+      "specStatus": "partial",
+      "specVersionId": "partial-official-spec-review-2026-11-20",
       "specVerifiedAt": null,
       "specEffectiveFrom": null,
-      "specEffectiveTo": null
+      "specEffectiveTo": null,
+      "specEvidence": {
+        "sourceStatus": "SOURCED",
+        "checkedAt": "2026-11-20",
+        "publisher": "CME Group",
+        "sourceUrl": "https://www.cmegroup.com/markets/equities/dow-jones/e-mini-dow.contractSpecs.html",
+        "checkedScope": [
+          "standard contract unit / multiplier (point value where directly applicable)",
+          "outright minimum tick size",
+          "outright tick value"
+        ],
+        "pendingFields": [
+          "exact active contract-month dates and current expiry calendar",
+          "first-notice and last-delivery dates where applicable",
+          "current effective date/rule revision for each displayed value",
+          "a sourced contract-roll policy and continuous-series adjustment method",
+          "instrument-specific trading-hour breaks and holiday exceptions"
+        ],
+        "note": "Core product unit/multiplier and outright tick facts were reconciled to the linked official exchange product specification. This source check does not certify a particular expiry, first-notice date, effective period, or roll rule."
+      }
     },
     {
       "id": "rty",
@@ -480,7 +708,7 @@
       "tickSize": "0.1",
       "tickValue": "5",
       "pointValue": "50",
-      "micro": "M2K · $0.50/tick · $5/point",
+      "micro": "M2K · 0.10 point · $0.50/tick · $5/point",
       "sessions": [
         "NY AM 08:30–11:00",
         "NY PM 13:30–16:00"
@@ -529,16 +757,54 @@
         "tickSize": "0.1",
         "tickValue": "0.5",
         "pointValue": "5",
-        "specStatus": "unverified",
-        "specVersionId": "imported-reference-2026-11-08",
-        "specVerifiedAt": null
+        "specStatus": "partial",
+        "specVersionId": "partial-official-spec-review-2026-11-20",
+        "specVerifiedAt": null,
+        "specEvidence": {
+          "sourceStatus": "SOURCED",
+          "checkedAt": "2026-11-20",
+          "publisher": "CME Group",
+          "sourceUrl": "https://www.cmegroup.com/markets/equities/russell/micro-e-mini-russell-2000.html",
+          "checkedScope": [
+            "micro contract unit / multiplier (point value where directly applicable)",
+            "outright minimum tick size",
+            "outright tick value"
+          ],
+          "pendingFields": [
+            "exact active contract-month dates and current expiry calendar",
+            "first-notice and last-delivery dates where applicable",
+            "current effective date/rule revision for each displayed value",
+            "a sourced contract-roll policy and continuous-series adjustment method",
+            "instrument-specific trading-hour breaks and holiday exceptions"
+          ],
+          "note": "Micro product unit and outright tick facts were reconciled to the linked official CME source. This source check does not certify a particular expiry, first-notice date, effective period, or roll rule."
+        }
       },
       "contractRoot": "CME_MINI:RTY1!",
-      "specStatus": "unverified",
-      "specVersionId": "imported-reference-2026-11-08",
+      "specStatus": "partial",
+      "specVersionId": "partial-official-spec-review-2026-11-20",
       "specVerifiedAt": null,
       "specEffectiveFrom": null,
-      "specEffectiveTo": null
+      "specEffectiveTo": null,
+      "specEvidence": {
+        "sourceStatus": "SOURCED",
+        "checkedAt": "2026-11-20",
+        "publisher": "CME Group",
+        "sourceUrl": "https://www.cmegroup.com/markets/equities/russell/e-mini-russell-2000.contractSpecs.html",
+        "checkedScope": [
+          "standard contract unit / multiplier (point value where directly applicable)",
+          "outright minimum tick size",
+          "outright tick value"
+        ],
+        "pendingFields": [
+          "exact active contract-month dates and current expiry calendar",
+          "first-notice and last-delivery dates where applicable",
+          "current effective date/rule revision for each displayed value",
+          "a sourced contract-roll policy and continuous-series adjustment method",
+          "instrument-specific trading-hour breaks and holiday exceptions"
+        ],
+        "note": "Core product unit/multiplier and outright tick facts were reconciled to the linked official exchange product specification. This source check does not certify a particular expiry, first-notice date, effective period, or roll rule."
+      }
     },
     {
       "id": "dx",
@@ -585,7 +851,7 @@
       "compare": [
         "DX–6E is structurally linked through the index basket; DX–Gold is conditional, not fixed."
       ],
-      "specsUrl": "https://www.ice.com/products/194/US-Dollar-Index-USDX-Futures",
+      "specsUrl": "https://www.ice.com/products/194/us-dollar-index-futures",
       "heat": {
         "Asia": "low",
         "London": "high",
@@ -598,11 +864,30 @@
       "riskNote": "Do not translate every DX tick mechanically into an FX or Gold signal. DX is listed on ICE, not CME.",
       "microSpec": null,
       "contractRoot": "ICEUS:DX1!",
-      "specStatus": "unverified",
-      "specVersionId": "imported-reference-2026-11-08",
+      "specStatus": "partial",
+      "specVersionId": "partial-official-spec-review-2026-11-20",
       "specVerifiedAt": null,
       "specEffectiveFrom": null,
-      "specEffectiveTo": null
+      "specEffectiveTo": null,
+      "specEvidence": {
+        "sourceStatus": "SOURCED",
+        "checkedAt": "2026-11-20",
+        "publisher": "ICE Futures U.S.",
+        "sourceUrl": "https://www.ice.com/products/194/us-dollar-index-futures",
+        "checkedScope": [
+          "standard contract unit / multiplier (point value where directly applicable)",
+          "outright minimum tick size",
+          "outright tick value"
+        ],
+        "pendingFields": [
+          "exact active contract-month dates and current expiry calendar",
+          "first-notice and last-delivery dates where applicable",
+          "current effective date/rule revision for each displayed value",
+          "a sourced contract-roll policy and continuous-series adjustment method",
+          "instrument-specific trading-hour breaks and holiday exceptions"
+        ],
+        "note": "Core product unit/multiplier and outright tick facts were reconciled to the linked official exchange product specification. This source check does not certify a particular expiry, first-notice date, effective period, or roll rule."
+      }
     },
     {
       "id": "zn",
@@ -647,7 +932,7 @@
       "compare": [
         "ZN price down generally means yield up; correlation with equities/Gold is not a rule."
       ],
-      "specsUrl": "https://www.cmegroup.com/markets/interest-rates/us-treasury/10-year-us-treasury-note.contractSpecs.html",
+      "specsUrl": "https://www.cmegroup.com/markets/interest-rates/us-treasury/10-year-us-treasury-note/specs",
       "heat": {
         "Asia": "low",
         "London": "medium",
@@ -660,11 +945,30 @@
       "riskNote": "Bond price and yield move inversely, but cross-asset reactions depend on the cause of the yield move.",
       "microSpec": null,
       "contractRoot": "CBOT:ZN1!",
-      "specStatus": "unverified",
-      "specVersionId": "imported-reference-2026-11-08",
+      "specStatus": "partial",
+      "specVersionId": "partial-official-spec-review-2026-11-20",
       "specVerifiedAt": null,
       "specEffectiveFrom": null,
-      "specEffectiveTo": null
+      "specEffectiveTo": null,
+      "specEvidence": {
+        "sourceStatus": "SOURCED",
+        "checkedAt": "2026-11-20",
+        "publisher": "CME Group",
+        "sourceUrl": "https://www.cmegroup.com/markets/interest-rates/us-treasury/10-year-us-treasury-note/specs",
+        "checkedScope": [
+          "standard contract unit / multiplier (point value where directly applicable)",
+          "outright minimum tick size",
+          "outright tick value"
+        ],
+        "pendingFields": [
+          "exact active contract-month dates and current expiry calendar",
+          "first-notice and last-delivery dates where applicable",
+          "current effective date/rule revision for each displayed value",
+          "a sourced contract-roll policy and continuous-series adjustment method",
+          "instrument-specific trading-hour breaks and holiday exceptions"
+        ],
+        "note": "Core product unit/multiplier and outright tick facts were reconciled to the linked official exchange product specification. This source check does not certify a particular expiry, first-notice date, effective period, or roll rule."
+      }
     },
     {
       "id": "cl",
@@ -676,7 +980,7 @@
       "tickSize": "0.01",
       "tickValue": "10",
       "pointValue": "1000",
-      "micro": "MCL · 100 barrels · $1/tick · $100/point",
+      "micro": "MCL · 100 barrels · $1/tick",
       "sessions": [
         "NY AM 08:00–11:00",
         "Primary execution 10:30–14:00 (PDF convention)",
@@ -728,16 +1032,54 @@
         "tickSize": "0.01",
         "tickValue": "1",
         "pointValue": "100",
-        "specStatus": "unverified",
-        "specVersionId": "imported-reference-2026-11-08",
-        "specVerifiedAt": null
+        "specStatus": "partial",
+        "specVersionId": "partial-official-spec-review-2026-11-20",
+        "specVerifiedAt": null,
+        "specEvidence": {
+          "sourceStatus": "SOURCED",
+          "checkedAt": "2026-11-20",
+          "publisher": "CME Group",
+          "sourceUrl": "https://www.cmegroup.com/trading/energy/files/micro-wti-crude-oil-futures-fact-card.pdf",
+          "checkedScope": [
+            "micro contract unit / multiplier (point value where directly applicable)",
+            "outright minimum tick size",
+            "outright tick value"
+          ],
+          "pendingFields": [
+            "exact active contract-month dates and current expiry calendar",
+            "first-notice and last-delivery dates where applicable",
+            "current effective date/rule revision for each displayed value",
+            "a sourced contract-roll policy and continuous-series adjustment method",
+            "instrument-specific trading-hour breaks and holiday exceptions"
+          ],
+          "note": "Micro product unit and outright tick facts were reconciled to the linked official CME source. This source check does not certify a particular expiry, first-notice date, effective period, or roll rule."
+        }
       },
       "contractRoot": "NYMEX:CL1!",
-      "specStatus": "unverified",
-      "specVersionId": "imported-reference-2026-11-08",
+      "specStatus": "partial",
+      "specVersionId": "partial-official-spec-review-2026-11-20",
       "specVerifiedAt": null,
       "specEffectiveFrom": null,
-      "specEffectiveTo": null
+      "specEffectiveTo": null,
+      "specEvidence": {
+        "sourceStatus": "SOURCED",
+        "checkedAt": "2026-11-20",
+        "publisher": "CME Group",
+        "sourceUrl": "https://www.cmegroup.com/markets/energy/crude-oil/light-sweet-crude.contractSpecs.html",
+        "checkedScope": [
+          "standard contract unit / multiplier (point value where directly applicable)",
+          "outright minimum tick size",
+          "outright tick value"
+        ],
+        "pendingFields": [
+          "exact active contract-month dates and current expiry calendar",
+          "first-notice and last-delivery dates where applicable",
+          "current effective date/rule revision for each displayed value",
+          "a sourced contract-roll policy and continuous-series adjustment method",
+          "instrument-specific trading-hour breaks and holiday exceptions"
+        ],
+        "note": "Core product unit/multiplier and outright tick facts were reconciled to the linked official exchange product specification. This source check does not certify a particular expiry, first-notice date, effective period, or roll rule."
+      }
     },
     {
       "id": "6j",
@@ -749,7 +1091,7 @@
       "tickSize": "0.0000005",
       "tickValue": "6.25",
       "pointValue": null,
-      "micro": "Micro availability/specification must be checked with CME",
+      "micro": "MJY · 1,250,000 JPY · $1.25/tick",
       "sessions": [
         "Asian range 20:00–00:00",
         "London 02:00–05:00"
@@ -781,7 +1123,7 @@
       "compare": [
         "6J quoted direction is the inverse of USD/JPY."
       ],
-      "specsUrl": "https://www.cmegroup.com/markets/fx/g10/japanese-yen.contractSpecs.html",
+      "specsUrl": "https://www.cmegroup.com/markets/fx/g10/japanese-yen/specs",
       "heat": {
         "Asia": "medium",
         "London": "medium",
@@ -795,19 +1137,57 @@
       "microSpec": {
         "symbol": "MJY",
         "unit": "¥1,250,000",
-        "tickSize": "0.0000005",
-        "tickValue": "0.625",
+        "tickSize": "0.000001",
+        "tickValue": "1.25",
         "pointValue": null,
-        "specStatus": "unverified",
-        "specVersionId": "imported-reference-2026-11-08",
-        "specVerifiedAt": null
+        "specStatus": "partial",
+        "specVersionId": "partial-official-spec-review-2026-11-20",
+        "specVerifiedAt": null,
+        "specEvidence": {
+          "sourceStatus": "SOURCED",
+          "checkedAt": "2026-11-20",
+          "publisher": "CME Group",
+          "sourceUrl": "https://www.cmegroup.com/markets/fx/g10/micro-jpy-usd/specs",
+          "checkedScope": [
+            "micro contract unit / multiplier (point value where directly applicable)",
+            "outright minimum tick size",
+            "outright tick value"
+          ],
+          "pendingFields": [
+            "exact active contract-month dates and current expiry calendar",
+            "first-notice and last-delivery dates where applicable",
+            "current effective date/rule revision for each displayed value",
+            "a sourced contract-roll policy and continuous-series adjustment method",
+            "instrument-specific trading-hour breaks and holiday exceptions"
+          ],
+          "note": "Micro product unit and outright tick facts were reconciled to the linked official CME source. This source check does not certify a particular expiry, first-notice date, effective period, or roll rule."
+        }
       },
       "contractRoot": "CME:6J1!",
-      "specStatus": "unverified",
-      "specVersionId": "imported-reference-2026-11-08",
+      "specStatus": "partial",
+      "specVersionId": "partial-official-spec-review-2026-11-20",
       "specVerifiedAt": null,
       "specEffectiveFrom": null,
-      "specEffectiveTo": null
+      "specEffectiveTo": null,
+      "specEvidence": {
+        "sourceStatus": "SOURCED",
+        "checkedAt": "2026-11-20",
+        "publisher": "CME Group",
+        "sourceUrl": "https://www.cmegroup.com/markets/fx/g10/japanese-yen/specs",
+        "checkedScope": [
+          "standard contract unit / multiplier (point value where directly applicable)",
+          "outright minimum tick size",
+          "outright tick value"
+        ],
+        "pendingFields": [
+          "exact active contract-month dates and current expiry calendar",
+          "first-notice and last-delivery dates where applicable",
+          "current effective date/rule revision for each displayed value",
+          "a sourced contract-roll policy and continuous-series adjustment method",
+          "instrument-specific trading-hour breaks and holiday exceptions"
+        ],
+        "note": "Core product unit/multiplier and outright tick facts were reconciled to the linked official exchange product specification. This source check does not certify a particular expiry, first-notice date, effective period, or roll rule."
+      }
     },
     {
       "id": "6a",
@@ -819,7 +1199,7 @@
       "tickSize": "0.00005",
       "tickValue": "5",
       "pointValue": null,
-      "micro": "Micro listing/specification must be checked with CME",
+      "micro": "M6A · 10,000 AUD · $1/tick",
       "sessions": [
         "Asian range 20:00–00:00",
         "London 02:00–05:00"
@@ -850,7 +1230,7 @@
       "compare": [
         "Risk sentiment and China data can dominate a technical session template."
       ],
-      "specsUrl": "https://www.cmegroup.com/markets/fx/g10/australian-dollar.contractSpecs.html",
+      "specsUrl": "https://www.cmegroup.com/markets/fx/g10/australian-dollar/specs",
       "heat": {
         "Asia": "medium",
         "London": "medium",
@@ -864,19 +1244,57 @@
       "microSpec": {
         "symbol": "M6A",
         "unit": "A$10,000",
-        "tickSize": "0.00005",
-        "tickValue": "0.5",
+        "tickSize": "0.0001",
+        "tickValue": "1",
         "pointValue": null,
-        "specStatus": "unverified",
-        "specVersionId": "imported-reference-2026-11-08",
-        "specVerifiedAt": null
+        "specStatus": "partial",
+        "specVersionId": "partial-official-spec-review-2026-11-20",
+        "specVerifiedAt": null,
+        "specEvidence": {
+          "sourceStatus": "SOURCED",
+          "checkedAt": "2026-11-20",
+          "publisher": "CME Group",
+          "sourceUrl": "https://www.cmegroup.com/markets/fx/g10/e-micro-australian-dollar/specs",
+          "checkedScope": [
+            "micro contract unit / multiplier (point value where directly applicable)",
+            "outright minimum tick size",
+            "outright tick value"
+          ],
+          "pendingFields": [
+            "exact active contract-month dates and current expiry calendar",
+            "first-notice and last-delivery dates where applicable",
+            "current effective date/rule revision for each displayed value",
+            "a sourced contract-roll policy and continuous-series adjustment method",
+            "instrument-specific trading-hour breaks and holiday exceptions"
+          ],
+          "note": "Micro product unit and outright tick facts were reconciled to the linked official CME source. This source check does not certify a particular expiry, first-notice date, effective period, or roll rule."
+        }
       },
       "contractRoot": "CME:6A1!",
-      "specStatus": "unverified",
-      "specVersionId": "imported-reference-2026-11-08",
+      "specStatus": "partial",
+      "specVersionId": "partial-official-spec-review-2026-11-20",
       "specVerifiedAt": null,
       "specEffectiveFrom": null,
-      "specEffectiveTo": null
+      "specEffectiveTo": null,
+      "specEvidence": {
+        "sourceStatus": "SOURCED",
+        "checkedAt": "2026-11-20",
+        "publisher": "CME Group",
+        "sourceUrl": "https://www.cmegroup.com/markets/fx/g10/australian-dollar/specs",
+        "checkedScope": [
+          "standard contract unit / multiplier (point value where directly applicable)",
+          "outright minimum tick size",
+          "outright tick value"
+        ],
+        "pendingFields": [
+          "exact active contract-month dates and current expiry calendar",
+          "first-notice and last-delivery dates where applicable",
+          "current effective date/rule revision for each displayed value",
+          "a sourced contract-roll policy and continuous-series adjustment method",
+          "instrument-specific trading-hour breaks and holiday exceptions"
+        ],
+        "note": "Core product unit/multiplier and outright tick facts were reconciled to the linked official exchange product specification. This source check does not certify a particular expiry, first-notice date, effective period, or roll rule."
+      }
     },
     {
       "id": "6c",
@@ -888,7 +1306,7 @@
       "tickSize": "0.00005",
       "tickValue": "5",
       "pointValue": null,
-      "micro": "Micro symbol/specification should be verified with CME",
+      "micro": "MCD · 10,000 CAD · $1/tick",
       "sessions": [
         "NY AM 08:30–11:00"
       ],
@@ -918,7 +1336,7 @@
       "compare": [
         "CL comparison is macro context, not a guaranteed SMT divergence."
       ],
-      "specsUrl": "https://www.cmegroup.com/markets/fx/g10/canadian-dollar.contractSpecs.html",
+      "specsUrl": "https://www.cmegroup.com/markets/fx/g10/canadian-dollar/specs",
       "heat": {
         "Asia": "low",
         "London": "low",
@@ -932,19 +1350,57 @@
       "microSpec": {
         "symbol": "MCD",
         "unit": "C$10,000",
-        "tickSize": "0.00005",
-        "tickValue": "0.5",
+        "tickSize": "0.0001",
+        "tickValue": "1",
         "pointValue": null,
-        "specStatus": "unverified",
-        "specVersionId": "imported-reference-2026-11-08",
-        "specVerifiedAt": null
+        "specStatus": "partial",
+        "specVersionId": "partial-official-spec-review-2026-11-20",
+        "specVerifiedAt": null,
+        "specEvidence": {
+          "sourceStatus": "SOURCED",
+          "checkedAt": "2026-11-20",
+          "publisher": "CME Group",
+          "sourceUrl": "https://www.cmegroup.com/markets/microsuite/fx",
+          "checkedScope": [
+            "micro contract unit / multiplier (point value where directly applicable)",
+            "outright minimum tick size",
+            "outright tick value"
+          ],
+          "pendingFields": [
+            "exact active contract-month dates and current expiry calendar",
+            "first-notice and last-delivery dates where applicable",
+            "current effective date/rule revision for each displayed value",
+            "a sourced contract-roll policy and continuous-series adjustment method",
+            "instrument-specific trading-hour breaks and holiday exceptions"
+          ],
+          "note": "Micro product unit and outright tick facts were reconciled to the linked official CME source. This source check does not certify a particular expiry, first-notice date, effective period, or roll rule."
+        }
       },
       "contractRoot": "CME:6C1!",
-      "specStatus": "unverified",
-      "specVersionId": "imported-reference-2026-11-08",
+      "specStatus": "partial",
+      "specVersionId": "partial-official-spec-review-2026-11-20",
       "specVerifiedAt": null,
       "specEffectiveFrom": null,
-      "specEffectiveTo": null
+      "specEffectiveTo": null,
+      "specEvidence": {
+        "sourceStatus": "SOURCED",
+        "checkedAt": "2026-11-20",
+        "publisher": "CME Group",
+        "sourceUrl": "https://www.cmegroup.com/markets/fx/g10/canadian-dollar/specs",
+        "checkedScope": [
+          "standard contract unit / multiplier (point value where directly applicable)",
+          "outright minimum tick size",
+          "outright tick value"
+        ],
+        "pendingFields": [
+          "exact active contract-month dates and current expiry calendar",
+          "first-notice and last-delivery dates where applicable",
+          "current effective date/rule revision for each displayed value",
+          "a sourced contract-roll policy and continuous-series adjustment method",
+          "instrument-specific trading-hour breaks and holiday exceptions"
+        ],
+        "note": "Core product unit/multiplier and outright tick facts were reconciled to the linked official exchange product specification. This source check does not certify a particular expiry, first-notice date, effective period, or roll rule."
+      }
     },
     {
       "id": "si",
@@ -956,7 +1412,7 @@
       "tickSize": "0.005",
       "tickValue": "25",
       "pointValue": "5000",
-      "micro": "SIL · 1,000 oz · $5/tick",
+      "micro": "SIL · 1,000 oz · $10/tick",
       "sessions": [
         "London 02:00–05:00",
         "NY AM 08:30–11:00"
@@ -990,7 +1446,7 @@
       "compare": [
         "GC–SI comparison only; synchronise contract month and session."
       ],
-      "specsUrl": "https://www.cmegroup.com/markets/metals/precious/silver.contractSpecs.html",
+      "specsUrl": "https://www.cmegroup.com/markets/metals/precious/silver.contract.html",
       "heat": {
         "Asia": "low",
         "London": "medium",
@@ -1004,19 +1460,57 @@
       "microSpec": {
         "symbol": "SIL",
         "unit": "1,000 troy oz",
-        "tickSize": "0.005",
-        "tickValue": "5",
+        "tickSize": "0.01",
+        "tickValue": "10",
         "pointValue": "1000",
-        "specStatus": "unverified",
-        "specVersionId": "imported-reference-2026-11-08",
-        "specVerifiedAt": null
+        "specStatus": "partial",
+        "specVersionId": "partial-official-spec-review-2026-11-20",
+        "specVerifiedAt": null,
+        "specEvidence": {
+          "sourceStatus": "SOURCED",
+          "checkedAt": "2026-11-20",
+          "publisher": "CME Group",
+          "sourceUrl": "https://www.cmegroup.com/markets/microsuite/metals",
+          "checkedScope": [
+            "micro contract unit / multiplier (point value where directly applicable)",
+            "outright minimum tick size",
+            "outright tick value"
+          ],
+          "pendingFields": [
+            "exact active contract-month dates and current expiry calendar",
+            "first-notice and last-delivery dates where applicable",
+            "current effective date/rule revision for each displayed value",
+            "a sourced contract-roll policy and continuous-series adjustment method",
+            "instrument-specific trading-hour breaks and holiday exceptions"
+          ],
+          "note": "Micro product unit and outright tick facts were reconciled to the linked official CME source. This source check does not certify a particular expiry, first-notice date, effective period, or roll rule."
+        }
       },
       "contractRoot": "COMEX:SI1!",
-      "specStatus": "unverified",
-      "specVersionId": "imported-reference-2026-11-08",
+      "specStatus": "partial",
+      "specVersionId": "partial-official-spec-review-2026-11-20",
       "specVerifiedAt": null,
       "specEffectiveFrom": null,
-      "specEffectiveTo": null
+      "specEffectiveTo": null,
+      "specEvidence": {
+        "sourceStatus": "SOURCED",
+        "checkedAt": "2026-11-20",
+        "publisher": "CME Group",
+        "sourceUrl": "https://www.cmegroup.com/markets/metals/precious/silver.contract.html",
+        "checkedScope": [
+          "standard contract unit / multiplier (point value where directly applicable)",
+          "outright minimum tick size",
+          "outright tick value"
+        ],
+        "pendingFields": [
+          "exact active contract-month dates and current expiry calendar",
+          "first-notice and last-delivery dates where applicable",
+          "current effective date/rule revision for each displayed value",
+          "a sourced contract-roll policy and continuous-series adjustment method",
+          "instrument-specific trading-hour breaks and holiday exceptions"
+        ],
+        "note": "Core product unit/multiplier and outright tick facts were reconciled to the linked official exchange product specification. This source check does not certify a particular expiry, first-notice date, effective period, or roll rule."
+      }
     },
     {
       "id": "btc",
@@ -1078,16 +1572,54 @@
         "tickSize": "5",
         "tickValue": "0.5",
         "pointValue": "0.1",
-        "specStatus": "unverified",
-        "specVersionId": "imported-reference-2026-11-08",
-        "specVerifiedAt": null
+        "specStatus": "partial",
+        "specVersionId": "partial-official-spec-review-2026-11-20",
+        "specVerifiedAt": null,
+        "specEvidence": {
+          "sourceStatus": "SOURCED",
+          "checkedAt": "2026-11-20",
+          "publisher": "CME Group",
+          "sourceUrl": "https://www.cmegroup.com/markets/cryptocurrencies/bitcoin/micro-bitcoin/specs",
+          "checkedScope": [
+            "micro contract unit / multiplier (point value where directly applicable)",
+            "outright minimum tick size",
+            "outright tick value"
+          ],
+          "pendingFields": [
+            "exact active contract-month dates and current expiry calendar",
+            "first-notice and last-delivery dates where applicable",
+            "current effective date/rule revision for each displayed value",
+            "a sourced contract-roll policy and continuous-series adjustment method",
+            "instrument-specific trading-hour breaks and holiday exceptions"
+          ],
+          "note": "Micro product unit and outright tick facts were reconciled to the linked official CME source. This source check does not certify a particular expiry, first-notice date, effective period, or roll rule."
+        }
       },
       "contractRoot": "CME:BTC1!",
-      "specStatus": "unverified",
-      "specVersionId": "imported-reference-2026-11-08",
+      "specStatus": "partial",
+      "specVersionId": "partial-official-spec-review-2026-11-20",
       "specVerifiedAt": null,
       "specEffectiveFrom": null,
-      "specEffectiveTo": null
+      "specEffectiveTo": null,
+      "specEvidence": {
+        "sourceStatus": "SOURCED",
+        "checkedAt": "2026-11-20",
+        "publisher": "CME Group",
+        "sourceUrl": "https://www.cmegroup.com/markets/cryptocurrencies/bitcoin/bitcoin/specs",
+        "checkedScope": [
+          "standard contract unit / multiplier (point value where directly applicable)",
+          "outright minimum tick size",
+          "outright tick value"
+        ],
+        "pendingFields": [
+          "exact active contract-month dates and current expiry calendar",
+          "first-notice and last-delivery dates where applicable",
+          "current effective date/rule revision for each displayed value",
+          "a sourced contract-roll policy and continuous-series adjustment method",
+          "instrument-specific trading-hour breaks and holiday exceptions"
+        ],
+        "note": "Core product unit/multiplier and outright tick facts were reconciled to the linked official exchange product specification. This source check does not certify a particular expiry, first-notice date, effective period, or roll rule."
+      }
     }
   ]
 }
