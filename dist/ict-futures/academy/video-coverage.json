@@ -2,8 +2,8 @@
   "schemaVersion": 1,
   "status": "PARTIAL",
   "eligibleCount": 82,
-  "coveredCount": 22,
-  "coveragePercent": 26.83,
+  "coveredCount": 23,
+  "coveragePercent": 28.05,
   "coveredIds": [
     "market-structure",
     "swing-high-low",
@@ -24,11 +24,12 @@
     "ote",
     "silver-bullet",
     "amd-po3",
+    "judas-swing",
     "cisd",
     "market-maker-buy-model",
     "ict-2022-model"
   ],
-  "missingCount": 60,
+  "missingCount": 59,
   "missingIds": [
     "bos",
     "choch",
@@ -58,7 +59,6 @@
     "weekly-open",
     "killzones",
     "asian-range",
-    "judas-swing",
     "ipda",
     "smt",
     "weekly-profiles",
@@ -488,8 +488,8 @@
       "id": "judas-swing",
       "title": "Judas Swing",
       "isEntryModel": false,
-      "status": "VIDEO NEEDED",
-      "verifiedVideoCount": 0,
+      "status": "VERIFIED",
+      "verifiedVideoCount": 1,
       "unverifiedCandidateCount": 0
     },
     {

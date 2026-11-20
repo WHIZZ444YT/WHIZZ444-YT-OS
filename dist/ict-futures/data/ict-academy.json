@@ -21012,7 +21012,9 @@
       "videoSearch": "https://www.youtube.com/results?search_query=Inner%20Circle%20Trader%20official%20Judas%20Swing%20ICT%20futures",
       "sourceNote": "The supplied PDF is the source for playbook framing where explicitly marked. Supplemental clarifications are identified as such. These are discovery links, not verified video-to-concept mappings.",
       "referenceLinks": [],
-      "verifiedVideoIds": [],
+      "verifiedVideoIds": [
+        "ict-judas-swing-2017"
+      ],
       "learning": {
         "durationMinutes": 28,
         "evidenceBand": "Supplemental / terminology may vary",
@@ -21379,7 +21381,33 @@
           "resource-cme-institute-trade-and-risk-management-12",
           "resource-cftc-customer-education-advisory-13"
         ],
-        "videoResources": [],
+        "videoResources": [
+          {
+            "resourceId": "ict-judas-swing-2017",
+            "title": "ICT Forex - Understanding The ICT Judas Swing",
+            "publisher": "The Inner Circle Trader",
+            "channelName": "The Inner Circle Trader",
+            "channelId": "UCtjxa77NqamhVC8atV85Rog",
+            "videoId": "xJMbva8SjzE",
+            "url": "https://www.youtube.com/watch?v=xJMbva8SjzE",
+            "language": "en",
+            "sourceClass": "official_ict",
+            "conceptIds": [
+              "judas-swing"
+            ],
+            "verificationStatus": "verified",
+            "verifiedAt": "2026-11-20",
+            "verifiedBy": "Codex research audit",
+            "lastLinkCheck": "2026-11-20",
+            "linkStatus": "verified",
+            "embedStatus": "not_checked",
+            "embedPermission": "not_checked",
+            "fallbackLinkStatus": "available",
+            "evidenceUrl": "https://www.youtube.com/watch?v=xJMbva8SjzE",
+            "summary": "Original video published by The Inner Circle Trader's verified channel. Its exact title is about the ICT Judas Swing. This is general ICT education, not a futures-specific strategy test or performance evidence.",
+            "sourceNote": "YouTube identifies The Inner Circle Trader as the verified publisher, and the original upload title directly names Judas Swing. The lesson is mapped only to the matching concept; the video does not establish the Academy's discretionary/session filters or a profitable edge. Embed availability and permission remain unchecked."
+          }
+        ],
         "supplementalResources": [],
         "topicDiscoveryUrl": "https://www.youtube.com/results?search_query=Inner%20Circle%20Trader%20official%20Judas%20Swing%20ICT%20futures",
         "contentVersion": 2,
