@@ -19678,7 +19678,32 @@
           "resource-cme-institute-trade-and-risk-management-12",
           "resource-cftc-customer-education-advisory-13"
         ],
-        "videoResources": [],
+        "videoResources": [
+          {
+            "resourceId": "ict-2023-silver-bullet-model",
+            "title": "2023 ICT Mentorship - ICT Silver Bullet Time Based Trading Model",
+            "publisher": "The Inner Circle Trader",
+            "channelName": "The Inner Circle Trader",
+            "channelId": "UCtjxa77NqamhVC8atV85Rog",
+            "videoId": "tRq1hyGGtl4",
+            "url": "https://www.youtube.com/watch?v=tRq1hyGGtl4",
+            "language": "en",
+            "sourceClass": "official_ict",
+            "conceptIds": [
+              "silver-bullet"
+            ],
+            "verificationStatus": "verified",
+            "verifiedAt": "2026-11-20",
+            "verifiedBy": "Codex research audit",
+            "lastLinkCheck": "2026-11-20",
+            "linkStatus": "verified",
+            "embedStatus": "not_checked",
+            "embedPermission": "not_checked",
+            "fallbackLinkStatus": "available",
+            "evidenceUrl": "https://www.youtube.com/watch?v=tRq1hyGGtl4",
+            "sourceNote": "Official, verified ICT channel video. Title and source description identify the Silver Bullet time-based trading model. Mapped only to the Silver Bullet lesson; this verifies the learning reference, not strategy performance or an audited edge."
+          }
+        ],
         "supplementalResources": [],
         "topicDiscoveryUrl": "https://www.youtube.com/results?search_query=Inner%20Circle%20Trader%20official%20Silver%20Bullet%20ICT%20futures",
         "contentVersion": 2,

@@ -2,15 +2,16 @@
   "schemaVersion": 1,
   "status": "PARTIAL",
   "eligibleCount": 82,
-  "coveredCount": 4,
-  "coveragePercent": 4.88,
+  "coveredCount": 5,
+  "coveragePercent": 6.1,
   "coveredIds": [
     "mss",
     "fvg",
     "order-block",
+    "silver-bullet",
     "ict-2022-model"
   ],
-  "missingCount": 78,
+  "missingCount": 77,
   "missingIds": [
     "market-structure",
     "swing-high-low",
@@ -54,7 +55,6 @@
     "weekly-open",
     "killzones",
     "asian-range",
-    "silver-bullet",
     "amd-po3",
     "judas-swing",
     "ipda",
@@ -472,8 +472,8 @@
       "id": "silver-bullet",
       "title": "Silver Bullet",
       "isEntryModel": false,
-      "status": "VIDEO NEEDED",
-      "verifiedVideoCount": 0,
+      "status": "VERIFIED",
+      "verifiedVideoCount": 1,
       "unverifiedCandidateCount": 0
     },
     {
