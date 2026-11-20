@@ -7,6 +7,7 @@
     "build": "python3 scripts/build_site.py",
     "validate": "python3 scripts/validate.py",
     "test": "python3 -m unittest discover -s tests -v",
-    "audit:links": "python3 scripts/audit_internal_links.py"
+    "audit:links": "python3 scripts/audit_internal_links.py",
+    "smoke:worker": "node scripts/smoke_worker.mjs"
   }
 }

@@ -10,7 +10,8 @@ This report is the current status checkpoint. The 19 November audit and Part 0�
 
 - GitHub PR [#20](https://github.com/WHIZZ444YT/WHIZZ444-YT-OS/pull/20) was merged at `a4f66c872743b30599688859130ce7cbbfa0a1a7`. Its GitHub quality checks and Vercel check passed.
 - Vercel's production deployment for that merge commit is `READY`; the deployed `/sessions/` route returned HTTP 200. This confirms the static Sessions page is published, not that its event APIs are all live.
-- The repository's calendar-aware Worker source is version 2.1.0, but the active Cloudflare deployment last observed for this review is version 2.0.0. Its deployed source did not include the four calendar routes. The new Worker was not deployed in this work; route and fresh/stale/unavailable runtime checks remain open.
+- The repository's calendar-aware Worker source is version 2.1.0, while a read-only Cloudflare script read still shows deployed source version 2.0.0. The active script has its `SNAPSHOTS` KV binding and Worker Logs enabled; distributed traces are disabled. Attempts to call its public `workers.dev` routes from this execution environment were rejected by the environment's outbound-network guard before reaching the Worker. No live route outcome is inferred from that rejection.
+- This branch adds a credential-free `smoke:worker` command and a manually dispatched GitHub Actions workflow. They check Worker version/KV, CORS, provider registration, market-data status and all four calendar route envelopes. The live smoke remains unrun from a network path that can reach the Worker; Wrangler is not installed in the local checkout.
 - The active Supabase project has the additive migrations through `20261119125110` applied. Real disposable-user signup/session, cross-user RLS, attachment, export/restore and deletion QA has not been performed. Account deletion remains disabled.
 
 ## Work in this update
@@ -31,13 +32,15 @@ The linked CME sources show M6E at 0.0001 per euro and $1.25 per contract, the c
 
 The Contract Specs page now separates source-checked core facts from incomplete lifecycle data, displays the check date and direct official source, and shows standard/micro profile details separately. The risk calculators continue to label results conditional because an incomplete record must not be presented as fully verified. The ICT Futures profile and risk summary display the partial status and check date. No live quote or trading signal has been added.
 
+The Worker smoke command can be run after a reviewed deployment with `npm run smoke:worker -- https://<worker>.<subdomain>.workers.dev`, or from the Actions tab using “Worker live route smoke.” Exit code `2` means routes responded but a provider is stale/unavailable or market data is not configured; it is not a clean release pass. The workflow accepts only HTTPS `workers.dev` origins and requires no API credentials.
+
 An initial PR-preview route smoke check returned HTTP 200 for `/`, `/contract-specs/` and `/ict-futures/`. It was an HTML response check, not an interactive visual review. That inspection found the standalone ICT Futures terminal did not have a keyboard skip link; this branch adds a visible-on-focus “Skip to content” link. Full visual, mobile, keyboard-flow and screen-reader QA remains open.
 
 ## Roadmap acceptance status
 
 | Roadmap area | Status | Remaining acceptance work |
 |---|---|---|
-| PR #20 and Sessions frontend | Merged and published | Deploy the Worker separately after configuration review; test all four event routes and fresh, stale, unavailable and error behavior. Finish visual, keyboard and assistive-technology review. |
+| PR #20 and Sessions frontend | Merged and published | Worker source 2.1.0 is ready in the repository; deployed script is still 2.0.0. Review and deploy the Worker separately, then run the new live smoke workflow over a permitted network path and inspect fresh, stale, unavailable and error behavior. Finish visual, keyboard and assistive-technology review. |
 | UI/UX across the full site | Partial | Review all routes at desktop and mobile sizes, keyboard-only, focus order, screen reader labels, loading/empty/error states and production behavior. |
 | ICT Academy | Blocked on item-level source verification | Verify exact video links for 82 lessons and 8 Entry Models, including correct publisher/video identity, lesson match, link health and timestamps where shared. Verified coverage remains 0/82 and 0/8. |
 | Contract intelligence | Core values sourced; full records partial | For each family, attach current official listing/lifecycle evidence: listing cycle, specific active expiry, last trade, first notice/last delivery where applicable, settlement, trading hours/holiday exceptions, effective/revision date and roll/continuous-series method. Do not mark fully verified before this is complete. |
@@ -62,7 +65,7 @@ Disposable test-user credentials and an approved non-production environment are 
 - Release-version consistency check — passed for the homepage badge and service-worker cache version.
 - `python scripts/validate.py` — passed, 167/167 checks.
 - `python scripts/audit_internal_links.py` — passed; 130 HTML files and 1,384 internal links checked, 0 issues.
-- `node --test tests/*.mjs` — passed, 72/72 tests. Node printed its existing non-failing module-type advisory for `cloudflare/src/index.js`.
+- `node --test tests/*.mjs` — passed, 79/79 tests, including the new Worker-smoke contract tests. Node printed its existing non-failing module-type advisory for `cloudflare/src/index.js`.
 - `git diff --check` — passed; Git emitted only its existing LF-to-CRLF working-copy notices for generated Sessions assets.
 
 Production deployment of this branch, Worker deployment, browser accessibility review, license review and disposable-user tests are separate release gates. This update does not merge or production-deploy the branch.

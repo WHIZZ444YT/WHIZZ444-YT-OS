@@ -21,6 +21,8 @@ jobs:
         run: python3 scripts/build_site.py
       - name: Unit tests
         run: python3 -m unittest discover -s tests -v
+      - name: Node tests
+        run: node --test tests/*.mjs
       - name: Verify release version consistency
         run: |
           python3 - <<'PY'

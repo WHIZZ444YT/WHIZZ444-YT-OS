@@ -1,0 +1,32 @@
+name: Worker live route smoke
+
+on:
+  workflow_dispatch:
+    inputs:
+      worker_url:
+        description: HTTPS base URL of the deployed Finance OS Worker
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+jobs:
+  smoke:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          persist-credentials: false
+      - name: Verify Node runtime
+        run: node --version
+      - name: Validate Worker target
+        env:
+          FINANCE_OS_WORKER_URL: ${{ inputs.worker_url }}
+        run: |
+          node --input-type=module -e "const u=new URL(process.env.FINANCE_OS_WORKER_URL);if(u.protocol!=='https:'||!u.hostname.endsWith('.workers.dev')||u.username||u.password||u.search||u.hash||u.pathname!=='/')process.exit(1)"
+      - name: Check deployed Worker routes
+        env:
+          FINANCE_OS_WORKER_URL: ${{ inputs.worker_url }}
+        run: npm run smoke:worker -- "$FINANCE_OS_WORKER_URL"
