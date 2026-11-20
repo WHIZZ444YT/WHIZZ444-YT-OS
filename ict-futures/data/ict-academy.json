@@ -20215,7 +20215,33 @@
           "resource-cme-institute-trade-and-risk-management-12",
           "resource-cftc-customer-education-advisory-13"
         ],
-        "videoResources": [],
+        "videoResources": [
+          {
+            "resourceId": "ttrades-po3-amd-2023",
+            "title": "ICT Power Of 3 - AMD",
+            "publisher": "TTrades",
+            "channelName": "TTrades",
+            "channelId": "UCQwUEVakiYDmNGe7UBza4sQ",
+            "videoId": "TCFvsZeYvV8",
+            "url": "https://www.youtube.com/watch?v=TCFvsZeYvV8",
+            "language": "en",
+            "sourceClass": "independent_supplement",
+            "conceptIds": [
+              "amd-po3"
+            ],
+            "verificationStatus": "verified",
+            "verifiedAt": "2026-11-20",
+            "verifiedBy": "Codex research audit",
+            "lastLinkCheck": "2026-11-20",
+            "linkStatus": "verified",
+            "embedStatus": "not_checked",
+            "embedPermission": "not_checked",
+            "fallbackLinkStatus": "available",
+            "evidenceUrl": "https://www.youtube.com/watch?v=TCFvsZeYvV8",
+            "summary": "Independent TTrades supplement, not Official ICT. The description explicitly covers ICT Power of Three as accumulation, manipulation and distribution (AMD), with identification basics, examples and standard-deviation context. Futures are among the publisher's listed educational topics. It maps only to the AMD / Power of Three lesson and makes no performance claim.",
+            "sourceNote": "The verified TTrades channel's exact-title upload directly names Power of Three and AMD, and its description includes futures education. The timestamps identify AMD at 1:11 and Power of Three at 1:57, followed by entry discussion and chart examples. This is independent supplemental teaching and does not prove performance."
+          }
+        ],
         "supplementalResources": [],
         "topicDiscoveryUrl": "https://www.youtube.com/results?search_query=Inner%20Circle%20Trader%20official%20AMD%20/%20Power%20of%20Three%20ICT%20futures",
         "contentVersion": 2,
@@ -25162,7 +25188,33 @@
           "resource-secondary-cisd-explanation-18",
           "resource-community-ict-glossary-not-an-official-ict-source-19"
         ],
-        "videoResources": [],
+        "videoResources": [
+          {
+            "resourceId": "ttrades-cisd-orderblock-2023",
+            "title": "Change In State Of Delivery [CISD] - Orderblock Formation - ICT Concepts",
+            "publisher": "TTrades",
+            "channelName": "TTrades",
+            "channelId": "UCQwUEVakiYDmNGe7UBza4sQ",
+            "videoId": "CHIK5oBRKiw",
+            "url": "https://www.youtube.com/watch?v=CHIK5oBRKiw",
+            "language": "en",
+            "sourceClass": "independent_supplement",
+            "conceptIds": [
+              "cisd"
+            ],
+            "verificationStatus": "verified",
+            "verifiedAt": "2026-11-20",
+            "verifiedBy": "Codex research audit",
+            "lastLinkCheck": "2026-11-20",
+            "linkStatus": "verified",
+            "embedStatus": "not_checked",
+            "embedPermission": "not_checked",
+            "fallbackLinkStatus": "available",
+            "evidenceUrl": "https://www.youtube.com/watch?v=CHIK5oBRKiw",
+            "summary": "Independent TTrades supplement, not Official ICT. The video explicitly teaches CISD with chart examples and a separately defined entry model; its description lists futures education. It maps only to the CISD concept lesson and must not be treated as a Market Structure Shift lesson or a verified futures backtest.",
+            "sourceNote": "The verified TTrades channel's exact-title upload names CISD and order-block formation; its description and video transcript teach the candle-run close definition, examples and an AMD / standard-deviation entry framework. The publisher tags the video for futures education. This is independent supplemental teaching and not performance evidence."
+          }
+        ],
         "supplementalResources": [
           {
             "name": "Secondary CISD explanation",

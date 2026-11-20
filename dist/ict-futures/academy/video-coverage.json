@@ -2,8 +2,8 @@
   "schemaVersion": 1,
   "status": "PARTIAL",
   "eligibleCount": 82,
-  "coveredCount": 10,
-  "coveragePercent": 12.2,
+  "coveredCount": 12,
+  "coveragePercent": 14.63,
   "coveredIds": [
     "mss",
     "liquidity",
@@ -13,10 +13,12 @@
     "unicorn",
     "ote",
     "silver-bullet",
+    "amd-po3",
+    "cisd",
     "market-maker-buy-model",
     "ict-2022-model"
   ],
-  "missingCount": 72,
+  "missingCount": 70,
   "missingIds": [
     "market-structure",
     "swing-high-low",
@@ -56,7 +58,6 @@
     "weekly-open",
     "killzones",
     "asian-range",
-    "amd-po3",
     "judas-swing",
     "ipda",
     "smt",
@@ -68,7 +69,6 @@
     "sd-projections",
     "ict-macros",
     "midnight-open-vs-day-open",
-    "cisd",
     "mmxm",
     "turtle-soup",
     "propulsion-block",
@@ -480,8 +480,8 @@
       "id": "amd-po3",
       "title": "AMD / Power of Three",
       "isEntryModel": false,
-      "status": "VIDEO NEEDED",
-      "verifiedVideoCount": 0,
+      "status": "VERIFIED",
+      "verifiedVideoCount": 1,
       "unverifiedCandidateCount": 0
     },
     {
@@ -576,8 +576,8 @@
       "id": "cisd",
       "title": "Change in State of Delivery (CISD)",
       "isEntryModel": false,
-      "status": "VIDEO NEEDED",
-      "verifiedVideoCount": 0,
+      "status": "VERIFIED",
+      "verifiedVideoCount": 1,
       "unverifiedCandidateCount": 0
     },
     {
