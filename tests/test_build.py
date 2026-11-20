@@ -289,7 +289,7 @@ class BuildTests(unittest.TestCase):
         self.assertEqual(len(bundle['academy']['tracks']),10)
         self.assertTrue(all(m['specStatus']=='partial' and isinstance(m['tickSize'],str) and m.get('specEvidence',{}).get('sourceUrl') for m in bundle['markets']))
         videos_by_lesson={c['id']:c.get('verifiedVideoIds',[]) for c in bundle['academy']['concepts']}
-        expected_video_ids={'ict-2022-model':['ict-2022-ep14'],'market-structure':['ttrades-structure-mss-fvg-displacement-2022'],'mss':['ict-2022-ep03-mss','ttrades-structure-mss-fvg-displacement-2022'],'displacement':['ttrades-structure-mss-fvg-displacement-2022'],'fvg':['ict-2022-ep06-fvg','ttrades-structure-mss-fvg-displacement-2022'],'order-block':['ict-2022-ep22-order-block'],'silver-bullet':['ict-2023-silver-bullet-model'],'liquidity':['ict-2025-advanced-liquidity'],'market-maker-buy-model':['ict-2024-mmbm-example'],'ote':['ttrades-ote-2023'],'unicorn':['ttrades-unicorn-2023'],'ifvg':['ttrades-ifvg-2023'],'amd-po3':['ttrades-po3-amd-2023'],'cisd':['ttrades-cisd-orderblock-2023']}
+        expected_video_ids={'ict-2022-model':['ict-2022-ep14'],'market-structure':['ttrades-structure-mss-fvg-displacement-2022'],'mss':['ict-2022-ep03-mss','ttrades-structure-mss-fvg-displacement-2022'],'displacement':['ttrades-structure-mss-fvg-displacement-2022'],'fvg':['ict-2022-ep06-fvg','ttrades-structure-mss-fvg-displacement-2022'],'bsl':['ttrades-liquidity-levels-2023'],'ssl':['ttrades-liquidity-levels-2023'],'eqh':['ttrades-liquidity-levels-2023'],'eql':['ttrades-liquidity-levels-2023'],'pdh-pdl':['ttrades-liquidity-levels-2023'],'pwh-pwl':['ttrades-liquidity-levels-2023'],'session-high-low':['ttrades-liquidity-levels-2023'],'order-block':['ict-2022-ep22-order-block'],'silver-bullet':['ict-2023-silver-bullet-model'],'liquidity':['ict-2025-advanced-liquidity'],'market-maker-buy-model':['ict-2024-mmbm-example'],'ote':['ttrades-ote-2023'],'unicorn':['ttrades-unicorn-2023'],'ifvg':['ttrades-ifvg-2023'],'amd-po3':['ttrades-po3-amd-2023'],'cisd':['ttrades-cisd-orderblock-2023']}
         for lesson_id,video_ids in expected_video_ids.items(): self.assertEqual(videos_by_lesson[lesson_id],video_ids)
         self.assertTrue(all(not ids for lesson_id,ids in videos_by_lesson.items() if lesson_id not in expected_video_ids))
         self.assertIn('c.id===n',template)
@@ -401,10 +401,10 @@ class BuildTests(unittest.TestCase):
         coverage=json.loads((ROOT/'dist/ict-futures/academy/video-coverage.json').read_text(encoding="utf-8"))
         self.assertEqual(coverage['status'],'PARTIAL')
         self.assertEqual(coverage['eligibleCount'],82)
-        expected_covered={'ict-2022-model','market-structure','mss','displacement','fvg','order-block','silver-bullet','liquidity','market-maker-buy-model','ote','unicorn','ifvg','amd-po3','cisd'}
-        self.assertEqual(coverage['coveredCount'],14)
+        expected_covered={'ict-2022-model','market-structure','mss','displacement','fvg','bsl','ssl','eqh','eql','pdh-pdl','pwh-pwl','session-high-low','order-block','silver-bullet','liquidity','market-maker-buy-model','ote','unicorn','ifvg','amd-po3','cisd'}
+        self.assertEqual(coverage['coveredCount'],21)
         self.assertEqual(set(coverage['coveredIds']),expected_covered)
-        self.assertEqual(coverage['missingCount'],68)
+        self.assertEqual(coverage['missingCount'],61)
         self.assertEqual(coverage['entryModelCoverage']['coveredCount'],3)
         self.assertEqual(coverage['entryModelCoverage']['coveredIds'],['unicorn','market-maker-buy-model','ict-2022-model'])
         self.assertEqual(len(coverage['entryModelCoverage']['missingIds']),5)

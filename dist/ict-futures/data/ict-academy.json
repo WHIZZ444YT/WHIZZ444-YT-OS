@@ -3681,7 +3681,9 @@
       "videoSearch": "https://www.youtube.com/results?search_query=Inner%20Circle%20Trader%20official%20Buy-Side%20Liquidity%20%28BSL%29%20ICT%20futures",
       "sourceNote": "The supplied PDF is the source for playbook framing where explicitly marked. Supplemental clarifications are identified as such. These are discovery links, not verified video-to-concept mappings.",
       "referenceLinks": [],
-      "verifiedVideoIds": [],
+      "verifiedVideoIds": [
+        "ttrades-liquidity-levels-2023"
+      ],
       "learning": {
         "durationMinutes": 18,
         "evidenceBand": "SOURCED · ICT terminology",
@@ -4064,7 +4066,76 @@
           "resource-cme-institute-trade-and-risk-management-12",
           "resource-cftc-customer-education-advisory-13"
         ],
-        "videoResources": [],
+        "videoResources": [
+          {
+            "resourceId": "ttrades-liquidity-levels-2023",
+            "title": "Liquidity: Buyside & Sellside - ICT Concepts",
+            "publisher": "TTrades",
+            "channelName": "TTrades",
+            "channelId": "UCQwUEVakiYDmNGe7UBza4sQ",
+            "videoId": "U8xH2dEgH5A",
+            "url": "https://www.youtube.com/watch?v=U8xH2dEgH5A&t=73s",
+            "language": "en",
+            "sourceClass": "independent_supplement",
+            "conceptIds": [
+              "bsl",
+              "ssl",
+              "eqh",
+              "eql",
+              "pdh-pdl",
+              "pwh-pwl",
+              "session-high-low"
+            ],
+            "segments": {
+              "bsl": {
+                "startSeconds": 73,
+                "endSeconds": 97,
+                "label": "Buy-side and sell-side liquidity"
+              },
+              "ssl": {
+                "startSeconds": 73,
+                "endSeconds": 97,
+                "label": "Buy-side and sell-side liquidity"
+              },
+              "eqh": {
+                "startSeconds": 274,
+                "endSeconds": 311,
+                "label": "Equal and old highs and lows"
+              },
+              "eql": {
+                "startSeconds": 274,
+                "endSeconds": 311,
+                "label": "Equal and old highs and lows"
+              },
+              "pdh-pdl": {
+                "startSeconds": 311,
+                "endSeconds": 382,
+                "label": "Important liquidity levels, including prior day high and low"
+              },
+              "pwh-pwl": {
+                "startSeconds": 311,
+                "endSeconds": 382,
+                "label": "Important liquidity levels, including prior week high and low"
+              },
+              "session-high-low": {
+                "startSeconds": 311,
+                "endSeconds": 382,
+                "label": "Important liquidity levels, including session highs and lows"
+              }
+            },
+            "verificationStatus": "verified",
+            "verifiedAt": "2026-11-20",
+            "verifiedBy": "Codex research audit",
+            "lastLinkCheck": "2026-11-20",
+            "linkStatus": "verified",
+            "embedStatus": "not_checked",
+            "embedPermission": "not_checked",
+            "fallbackLinkStatus": "available",
+            "evidenceUrl": "https://www.youtube.com/watch?v=U8xH2dEgH5A",
+            "summary": "Independent TTrades supplement, not Official ICT. The publisher description directly names this concept; this lesson link starts at the Buy-side and sell-side liquidity chapter (1:13). It is general chart education, not a futures-specific worked test or performance evidence.",
+            "sourceNote": "The verified TTrades channel upload description names Buyside & Sellside, Equal/Old Highs & Lows, PWH/L, PDH/L and Session Highs & Lows, with chapters at 1:13, 4:34 and 5:11. Each concept page links to the relevant chapter. This is an independent general-education supplement; no futures-specific example or performance evidence is claimed."
+          }
+        ],
         "supplementalResources": [],
         "topicDiscoveryUrl": "https://www.youtube.com/results?search_query=Inner%20Circle%20Trader%20official%20Buy-Side%20Liquidity%20%28BSL%29%20ICT%20futures",
         "contentVersion": 2,
@@ -4100,7 +4171,9 @@
       "videoSearch": "https://www.youtube.com/results?search_query=Inner%20Circle%20Trader%20official%20Sell-Side%20Liquidity%20%28SSL%29%20ICT%20futures",
       "sourceNote": "The supplied PDF is the source for playbook framing where explicitly marked. Supplemental clarifications are identified as such. These are discovery links, not verified video-to-concept mappings.",
       "referenceLinks": [],
-      "verifiedVideoIds": [],
+      "verifiedVideoIds": [
+        "ttrades-liquidity-levels-2023"
+      ],
       "learning": {
         "durationMinutes": 18,
         "evidenceBand": "SOURCED · ICT terminology",
@@ -4483,7 +4556,76 @@
           "resource-cme-institute-trade-and-risk-management-12",
           "resource-cftc-customer-education-advisory-13"
         ],
-        "videoResources": [],
+        "videoResources": [
+          {
+            "resourceId": "ttrades-liquidity-levels-2023",
+            "title": "Liquidity: Buyside & Sellside - ICT Concepts",
+            "publisher": "TTrades",
+            "channelName": "TTrades",
+            "channelId": "UCQwUEVakiYDmNGe7UBza4sQ",
+            "videoId": "U8xH2dEgH5A",
+            "url": "https://www.youtube.com/watch?v=U8xH2dEgH5A&t=73s",
+            "language": "en",
+            "sourceClass": "independent_supplement",
+            "conceptIds": [
+              "bsl",
+              "ssl",
+              "eqh",
+              "eql",
+              "pdh-pdl",
+              "pwh-pwl",
+              "session-high-low"
+            ],
+            "segments": {
+              "bsl": {
+                "startSeconds": 73,
+                "endSeconds": 97,
+                "label": "Buy-side and sell-side liquidity"
+              },
+              "ssl": {
+                "startSeconds": 73,
+                "endSeconds": 97,
+                "label": "Buy-side and sell-side liquidity"
+              },
+              "eqh": {
+                "startSeconds": 274,
+                "endSeconds": 311,
+                "label": "Equal and old highs and lows"
+              },
+              "eql": {
+                "startSeconds": 274,
+                "endSeconds": 311,
+                "label": "Equal and old highs and lows"
+              },
+              "pdh-pdl": {
+                "startSeconds": 311,
+                "endSeconds": 382,
+                "label": "Important liquidity levels, including prior day high and low"
+              },
+              "pwh-pwl": {
+                "startSeconds": 311,
+                "endSeconds": 382,
+                "label": "Important liquidity levels, including prior week high and low"
+              },
+              "session-high-low": {
+                "startSeconds": 311,
+                "endSeconds": 382,
+                "label": "Important liquidity levels, including session highs and lows"
+              }
+            },
+            "verificationStatus": "verified",
+            "verifiedAt": "2026-11-20",
+            "verifiedBy": "Codex research audit",
+            "lastLinkCheck": "2026-11-20",
+            "linkStatus": "verified",
+            "embedStatus": "not_checked",
+            "embedPermission": "not_checked",
+            "fallbackLinkStatus": "available",
+            "evidenceUrl": "https://www.youtube.com/watch?v=U8xH2dEgH5A",
+            "summary": "Independent TTrades supplement, not Official ICT. The publisher description directly names this concept; this lesson link starts at the Buy-side and sell-side liquidity chapter (1:13). It is general chart education, not a futures-specific worked test or performance evidence.",
+            "sourceNote": "The verified TTrades channel upload description names Buyside & Sellside, Equal/Old Highs & Lows, PWH/L, PDH/L and Session Highs & Lows, with chapters at 1:13, 4:34 and 5:11. Each concept page links to the relevant chapter. This is an independent general-education supplement; no futures-specific example or performance evidence is claimed."
+          }
+        ],
         "supplementalResources": [],
         "topicDiscoveryUrl": "https://www.youtube.com/results?search_query=Inner%20Circle%20Trader%20official%20Sell-Side%20Liquidity%20%28SSL%29%20ICT%20futures",
         "contentVersion": 2,
@@ -4519,7 +4661,9 @@
       "videoSearch": "https://www.youtube.com/results?search_query=Inner%20Circle%20Trader%20official%20Equal%20Highs%20%28EQH%29%20ICT%20futures",
       "sourceNote": "The supplied PDF is the source for playbook framing where explicitly marked. Supplemental clarifications are identified as such. These are discovery links, not verified video-to-concept mappings.",
       "referenceLinks": [],
-      "verifiedVideoIds": [],
+      "verifiedVideoIds": [
+        "ttrades-liquidity-levels-2023"
+      ],
       "learning": {
         "durationMinutes": 18,
         "evidenceBand": "Supplemental / terminology may vary",
@@ -4904,7 +5048,76 @@
           "resource-cme-institute-trade-and-risk-management-12",
           "resource-cftc-customer-education-advisory-13"
         ],
-        "videoResources": [],
+        "videoResources": [
+          {
+            "resourceId": "ttrades-liquidity-levels-2023",
+            "title": "Liquidity: Buyside & Sellside - ICT Concepts",
+            "publisher": "TTrades",
+            "channelName": "TTrades",
+            "channelId": "UCQwUEVakiYDmNGe7UBza4sQ",
+            "videoId": "U8xH2dEgH5A",
+            "url": "https://www.youtube.com/watch?v=U8xH2dEgH5A&t=274s",
+            "language": "en",
+            "sourceClass": "independent_supplement",
+            "conceptIds": [
+              "bsl",
+              "ssl",
+              "eqh",
+              "eql",
+              "pdh-pdl",
+              "pwh-pwl",
+              "session-high-low"
+            ],
+            "segments": {
+              "bsl": {
+                "startSeconds": 73,
+                "endSeconds": 97,
+                "label": "Buy-side and sell-side liquidity"
+              },
+              "ssl": {
+                "startSeconds": 73,
+                "endSeconds": 97,
+                "label": "Buy-side and sell-side liquidity"
+              },
+              "eqh": {
+                "startSeconds": 274,
+                "endSeconds": 311,
+                "label": "Equal and old highs and lows"
+              },
+              "eql": {
+                "startSeconds": 274,
+                "endSeconds": 311,
+                "label": "Equal and old highs and lows"
+              },
+              "pdh-pdl": {
+                "startSeconds": 311,
+                "endSeconds": 382,
+                "label": "Important liquidity levels, including prior day high and low"
+              },
+              "pwh-pwl": {
+                "startSeconds": 311,
+                "endSeconds": 382,
+                "label": "Important liquidity levels, including prior week high and low"
+              },
+              "session-high-low": {
+                "startSeconds": 311,
+                "endSeconds": 382,
+                "label": "Important liquidity levels, including session highs and lows"
+              }
+            },
+            "verificationStatus": "verified",
+            "verifiedAt": "2026-11-20",
+            "verifiedBy": "Codex research audit",
+            "lastLinkCheck": "2026-11-20",
+            "linkStatus": "verified",
+            "embedStatus": "not_checked",
+            "embedPermission": "not_checked",
+            "fallbackLinkStatus": "available",
+            "evidenceUrl": "https://www.youtube.com/watch?v=U8xH2dEgH5A",
+            "summary": "Independent TTrades supplement, not Official ICT. The publisher description directly names this concept; this lesson link starts at the Equal and old highs and lows chapter (4:34). It is general chart education, not a futures-specific worked test or performance evidence.",
+            "sourceNote": "The verified TTrades channel upload description names Buyside & Sellside, Equal/Old Highs & Lows, PWH/L, PDH/L and Session Highs & Lows, with chapters at 1:13, 4:34 and 5:11. Each concept page links to the relevant chapter. This is an independent general-education supplement; no futures-specific example or performance evidence is claimed."
+          }
+        ],
         "supplementalResources": [],
         "topicDiscoveryUrl": "https://www.youtube.com/results?search_query=Inner%20Circle%20Trader%20official%20Equal%20Highs%20%28EQH%29%20ICT%20futures",
         "contentVersion": 2,
@@ -4939,7 +5152,9 @@
       "videoSearch": "https://www.youtube.com/results?search_query=Inner%20Circle%20Trader%20official%20Equal%20Lows%20%28EQL%29%20ICT%20futures",
       "sourceNote": "The supplied PDF is the source for playbook framing where explicitly marked. Supplemental clarifications are identified as such. These are discovery links, not verified video-to-concept mappings.",
       "referenceLinks": [],
-      "verifiedVideoIds": [],
+      "verifiedVideoIds": [
+        "ttrades-liquidity-levels-2023"
+      ],
       "learning": {
         "durationMinutes": 18,
         "evidenceBand": "Supplemental / terminology may vary",
@@ -5324,7 +5539,76 @@
           "resource-cme-institute-trade-and-risk-management-12",
           "resource-cftc-customer-education-advisory-13"
         ],
-        "videoResources": [],
+        "videoResources": [
+          {
+            "resourceId": "ttrades-liquidity-levels-2023",
+            "title": "Liquidity: Buyside & Sellside - ICT Concepts",
+            "publisher": "TTrades",
+            "channelName": "TTrades",
+            "channelId": "UCQwUEVakiYDmNGe7UBza4sQ",
+            "videoId": "U8xH2dEgH5A",
+            "url": "https://www.youtube.com/watch?v=U8xH2dEgH5A&t=274s",
+            "language": "en",
+            "sourceClass": "independent_supplement",
+            "conceptIds": [
+              "bsl",
+              "ssl",
+              "eqh",
+              "eql",
+              "pdh-pdl",
+              "pwh-pwl",
+              "session-high-low"
+            ],
+            "segments": {
+              "bsl": {
+                "startSeconds": 73,
+                "endSeconds": 97,
+                "label": "Buy-side and sell-side liquidity"
+              },
+              "ssl": {
+                "startSeconds": 73,
+                "endSeconds": 97,
+                "label": "Buy-side and sell-side liquidity"
+              },
+              "eqh": {
+                "startSeconds": 274,
+                "endSeconds": 311,
+                "label": "Equal and old highs and lows"
+              },
+              "eql": {
+                "startSeconds": 274,
+                "endSeconds": 311,
+                "label": "Equal and old highs and lows"
+              },
+              "pdh-pdl": {
+                "startSeconds": 311,
+                "endSeconds": 382,
+                "label": "Important liquidity levels, including prior day high and low"
+              },
+              "pwh-pwl": {
+                "startSeconds": 311,
+                "endSeconds": 382,
+                "label": "Important liquidity levels, including prior week high and low"
+              },
+              "session-high-low": {
+                "startSeconds": 311,
+                "endSeconds": 382,
+                "label": "Important liquidity levels, including session highs and lows"
+              }
+            },
+            "verificationStatus": "verified",
+            "verifiedAt": "2026-11-20",
+            "verifiedBy": "Codex research audit",
+            "lastLinkCheck": "2026-11-20",
+            "linkStatus": "verified",
+            "embedStatus": "not_checked",
+            "embedPermission": "not_checked",
+            "fallbackLinkStatus": "available",
+            "evidenceUrl": "https://www.youtube.com/watch?v=U8xH2dEgH5A",
+            "summary": "Independent TTrades supplement, not Official ICT. The publisher description directly names this concept; this lesson link starts at the Equal and old highs and lows chapter (4:34). It is general chart education, not a futures-specific worked test or performance evidence.",
+            "sourceNote": "The verified TTrades channel upload description names Buyside & Sellside, Equal/Old Highs & Lows, PWH/L, PDH/L and Session Highs & Lows, with chapters at 1:13, 4:34 and 5:11. Each concept page links to the relevant chapter. This is an independent general-education supplement; no futures-specific example or performance evidence is claimed."
+          }
+        ],
         "supplementalResources": [],
         "topicDiscoveryUrl": "https://www.youtube.com/results?search_query=Inner%20Circle%20Trader%20official%20Equal%20Lows%20%28EQL%29%20ICT%20futures",
         "contentVersion": 2,
@@ -5359,7 +5643,9 @@
       "videoSearch": "https://www.youtube.com/results?search_query=Inner%20Circle%20Trader%20official%20Prior%20Day%20High%20/%20Low%20%28PDH%20/%20PDL%29%20ICT%20futures",
       "sourceNote": "The supplied PDF is the source for playbook framing where explicitly marked. Supplemental clarifications are identified as such. These are discovery links, not verified video-to-concept mappings.",
       "referenceLinks": [],
-      "verifiedVideoIds": [],
+      "verifiedVideoIds": [
+        "ttrades-liquidity-levels-2023"
+      ],
       "learning": {
         "durationMinutes": 18,
         "evidenceBand": "SOURCED · session definition matters",
@@ -5746,7 +6032,76 @@
           "resource-cme-institute-trade-and-risk-management-12",
           "resource-cftc-customer-education-advisory-13"
         ],
-        "videoResources": [],
+        "videoResources": [
+          {
+            "resourceId": "ttrades-liquidity-levels-2023",
+            "title": "Liquidity: Buyside & Sellside - ICT Concepts",
+            "publisher": "TTrades",
+            "channelName": "TTrades",
+            "channelId": "UCQwUEVakiYDmNGe7UBza4sQ",
+            "videoId": "U8xH2dEgH5A",
+            "url": "https://www.youtube.com/watch?v=U8xH2dEgH5A&t=311s",
+            "language": "en",
+            "sourceClass": "independent_supplement",
+            "conceptIds": [
+              "bsl",
+              "ssl",
+              "eqh",
+              "eql",
+              "pdh-pdl",
+              "pwh-pwl",
+              "session-high-low"
+            ],
+            "segments": {
+              "bsl": {
+                "startSeconds": 73,
+                "endSeconds": 97,
+                "label": "Buy-side and sell-side liquidity"
+              },
+              "ssl": {
+                "startSeconds": 73,
+                "endSeconds": 97,
+                "label": "Buy-side and sell-side liquidity"
+              },
+              "eqh": {
+                "startSeconds": 274,
+                "endSeconds": 311,
+                "label": "Equal and old highs and lows"
+              },
+              "eql": {
+                "startSeconds": 274,
+                "endSeconds": 311,
+                "label": "Equal and old highs and lows"
+              },
+              "pdh-pdl": {
+                "startSeconds": 311,
+                "endSeconds": 382,
+                "label": "Important liquidity levels, including prior day high and low"
+              },
+              "pwh-pwl": {
+                "startSeconds": 311,
+                "endSeconds": 382,
+                "label": "Important liquidity levels, including prior week high and low"
+              },
+              "session-high-low": {
+                "startSeconds": 311,
+                "endSeconds": 382,
+                "label": "Important liquidity levels, including session highs and lows"
+              }
+            },
+            "verificationStatus": "verified",
+            "verifiedAt": "2026-11-20",
+            "verifiedBy": "Codex research audit",
+            "lastLinkCheck": "2026-11-20",
+            "linkStatus": "verified",
+            "embedStatus": "not_checked",
+            "embedPermission": "not_checked",
+            "fallbackLinkStatus": "available",
+            "evidenceUrl": "https://www.youtube.com/watch?v=U8xH2dEgH5A",
+            "summary": "Independent TTrades supplement, not Official ICT. The publisher description directly names this concept; this lesson link starts at the Important liquidity levels, including prior day high and low chapter (5:11). It is general chart education, not a futures-specific worked test or performance evidence.",
+            "sourceNote": "The verified TTrades channel upload description names Buyside & Sellside, Equal/Old Highs & Lows, PWH/L, PDH/L and Session Highs & Lows, with chapters at 1:13, 4:34 and 5:11. Each concept page links to the relevant chapter. This is an independent general-education supplement; no futures-specific example or performance evidence is claimed."
+          }
+        ],
         "supplementalResources": [],
         "topicDiscoveryUrl": "https://www.youtube.com/results?search_query=Inner%20Circle%20Trader%20official%20Prior%20Day%20High%20/%20Low%20%28PDH%20/%20PDL%29%20ICT%20futures",
         "contentVersion": 2,
@@ -5781,7 +6136,9 @@
       "videoSearch": "https://www.youtube.com/results?search_query=Inner%20Circle%20Trader%20official%20Prior%20Week%20High%20/%20Low%20%28PWH%20/%20PWL%29%20ICT%20futures",
       "sourceNote": "The supplied PDF is the source for playbook framing where explicitly marked. Supplemental clarifications are identified as such. These are discovery links, not verified video-to-concept mappings.",
       "referenceLinks": [],
-      "verifiedVideoIds": [],
+      "verifiedVideoIds": [
+        "ttrades-liquidity-levels-2023"
+      ],
       "learning": {
         "durationMinutes": 18,
         "evidenceBand": "SOURCED",
@@ -6166,7 +6523,76 @@
           "resource-cme-institute-trade-and-risk-management-12",
           "resource-cftc-customer-education-advisory-13"
         ],
-        "videoResources": [],
+        "videoResources": [
+          {
+            "resourceId": "ttrades-liquidity-levels-2023",
+            "title": "Liquidity: Buyside & Sellside - ICT Concepts",
+            "publisher": "TTrades",
+            "channelName": "TTrades",
+            "channelId": "UCQwUEVakiYDmNGe7UBza4sQ",
+            "videoId": "U8xH2dEgH5A",
+            "url": "https://www.youtube.com/watch?v=U8xH2dEgH5A&t=311s",
+            "language": "en",
+            "sourceClass": "independent_supplement",
+            "conceptIds": [
+              "bsl",
+              "ssl",
+              "eqh",
+              "eql",
+              "pdh-pdl",
+              "pwh-pwl",
+              "session-high-low"
+            ],
+            "segments": {
+              "bsl": {
+                "startSeconds": 73,
+                "endSeconds": 97,
+                "label": "Buy-side and sell-side liquidity"
+              },
+              "ssl": {
+                "startSeconds": 73,
+                "endSeconds": 97,
+                "label": "Buy-side and sell-side liquidity"
+              },
+              "eqh": {
+                "startSeconds": 274,
+                "endSeconds": 311,
+                "label": "Equal and old highs and lows"
+              },
+              "eql": {
+                "startSeconds": 274,
+                "endSeconds": 311,
+                "label": "Equal and old highs and lows"
+              },
+              "pdh-pdl": {
+                "startSeconds": 311,
+                "endSeconds": 382,
+                "label": "Important liquidity levels, including prior day high and low"
+              },
+              "pwh-pwl": {
+                "startSeconds": 311,
+                "endSeconds": 382,
+                "label": "Important liquidity levels, including prior week high and low"
+              },
+              "session-high-low": {
+                "startSeconds": 311,
+                "endSeconds": 382,
+                "label": "Important liquidity levels, including session highs and lows"
+              }
+            },
+            "verificationStatus": "verified",
+            "verifiedAt": "2026-11-20",
+            "verifiedBy": "Codex research audit",
+            "lastLinkCheck": "2026-11-20",
+            "linkStatus": "verified",
+            "embedStatus": "not_checked",
+            "embedPermission": "not_checked",
+            "fallbackLinkStatus": "available",
+            "evidenceUrl": "https://www.youtube.com/watch?v=U8xH2dEgH5A",
+            "summary": "Independent TTrades supplement, not Official ICT. The publisher description directly names this concept; this lesson link starts at the Important liquidity levels, including prior week high and low chapter (5:11). It is general chart education, not a futures-specific worked test or performance evidence.",
+            "sourceNote": "The verified TTrades channel upload description names Buyside & Sellside, Equal/Old Highs & Lows, PWH/L, PDH/L and Session Highs & Lows, with chapters at 1:13, 4:34 and 5:11. Each concept page links to the relevant chapter. This is an independent general-education supplement; no futures-specific example or performance evidence is claimed."
+          }
+        ],
         "supplementalResources": [],
         "topicDiscoveryUrl": "https://www.youtube.com/results?search_query=Inner%20Circle%20Trader%20official%20Prior%20Week%20High%20/%20Low%20%28PWH%20/%20PWL%29%20ICT%20futures",
         "contentVersion": 2,
@@ -6201,7 +6627,9 @@
       "videoSearch": "https://www.youtube.com/results?search_query=Inner%20Circle%20Trader%20official%20Session%20High%20/%20Low%20ICT%20futures",
       "sourceNote": "The supplied PDF is the source for playbook framing where explicitly marked. Supplemental clarifications are identified as such. These are discovery links, not verified video-to-concept mappings.",
       "referenceLinks": [],
-      "verifiedVideoIds": [],
+      "verifiedVideoIds": [
+        "ttrades-liquidity-levels-2023"
+      ],
       "learning": {
         "durationMinutes": 18,
         "evidenceBand": "Supplemental / terminology may vary",
@@ -6584,7 +7012,76 @@
           "resource-cme-institute-trade-and-risk-management-12",
           "resource-cftc-customer-education-advisory-13"
         ],
-        "videoResources": [],
+        "videoResources": [
+          {
+            "resourceId": "ttrades-liquidity-levels-2023",
+            "title": "Liquidity: Buyside & Sellside - ICT Concepts",
+            "publisher": "TTrades",
+            "channelName": "TTrades",
+            "channelId": "UCQwUEVakiYDmNGe7UBza4sQ",
+            "videoId": "U8xH2dEgH5A",
+            "url": "https://www.youtube.com/watch?v=U8xH2dEgH5A&t=311s",
+            "language": "en",
+            "sourceClass": "independent_supplement",
+            "conceptIds": [
+              "bsl",
+              "ssl",
+              "eqh",
+              "eql",
+              "pdh-pdl",
+              "pwh-pwl",
+              "session-high-low"
+            ],
+            "segments": {
+              "bsl": {
+                "startSeconds": 73,
+                "endSeconds": 97,
+                "label": "Buy-side and sell-side liquidity"
+              },
+              "ssl": {
+                "startSeconds": 73,
+                "endSeconds": 97,
+                "label": "Buy-side and sell-side liquidity"
+              },
+              "eqh": {
+                "startSeconds": 274,
+                "endSeconds": 311,
+                "label": "Equal and old highs and lows"
+              },
+              "eql": {
+                "startSeconds": 274,
+                "endSeconds": 311,
+                "label": "Equal and old highs and lows"
+              },
+              "pdh-pdl": {
+                "startSeconds": 311,
+                "endSeconds": 382,
+                "label": "Important liquidity levels, including prior day high and low"
+              },
+              "pwh-pwl": {
+                "startSeconds": 311,
+                "endSeconds": 382,
+                "label": "Important liquidity levels, including prior week high and low"
+              },
+              "session-high-low": {
+                "startSeconds": 311,
+                "endSeconds": 382,
+                "label": "Important liquidity levels, including session highs and lows"
+              }
+            },
+            "verificationStatus": "verified",
+            "verifiedAt": "2026-11-20",
+            "verifiedBy": "Codex research audit",
+            "lastLinkCheck": "2026-11-20",
+            "linkStatus": "verified",
+            "embedStatus": "not_checked",
+            "embedPermission": "not_checked",
+            "fallbackLinkStatus": "available",
+            "evidenceUrl": "https://www.youtube.com/watch?v=U8xH2dEgH5A",
+            "summary": "Independent TTrades supplement, not Official ICT. The publisher description directly names this concept; this lesson link starts at the Important liquidity levels, including session highs and lows chapter (5:11). It is general chart education, not a futures-specific worked test or performance evidence.",
+            "sourceNote": "The verified TTrades channel upload description names Buyside & Sellside, Equal/Old Highs & Lows, PWH/L, PDH/L and Session Highs & Lows, with chapters at 1:13, 4:34 and 5:11. Each concept page links to the relevant chapter. This is an independent general-education supplement; no futures-specific example or performance evidence is claimed."
+          }
+        ],
         "supplementalResources": [],
         "topicDiscoveryUrl": "https://www.youtube.com/results?search_query=Inner%20Circle%20Trader%20official%20Session%20High%20/%20Low%20ICT%20futures",
         "contentVersion": 2,
