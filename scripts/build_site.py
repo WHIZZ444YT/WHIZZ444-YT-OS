@@ -4,6 +4,7 @@ from __future__ import annotations
 import json, os, shutil, re
 from pathlib import Path
 from html import escape
+from datetime import datetime
 from build_academy import academy_video_coverage, build_academy, verified_lesson_videos
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -208,6 +209,112 @@ def contract_value(value, checked_at=None):
     return f'<strong>{escape(rendered)}</strong>{marker}'
 
 
+def contract_lifecycle_table(product, snapshot_date):
+    rows = sorted(product.get('contractMonths') or [], key=lambda r: (r.get('lastTradeDate') or '9999-99-99', r.get('contractSymbol') or ''))
+    if not rows:
+        return '<section class="os-contract-lifecycle"><h4>Listed contract dates</h4><p class="os-unverified-value">No lifecycle dates are licensed and configured for public display. Use the official source links above to check the exact contract month.</p></section>'
+    shown = rows[:10]
+    def value(raw):
+        return escape(str(raw)) if raw else '<span class="os-date-missing">Not published in this row</span>'
+    body_rows=[]
+    for row in shown:
+        notice=' – '.join(x for x in (row.get('firstNoticeDate'), row.get('lastNoticeDate')) if x)
+        delivery=' – '.join(x for x in (row.get('firstDeliveryDate'), row.get('lastDeliveryDate')) if x)
+        if row.get('finalSettlementDate'):
+            delivery='Final settlement '+str(row['finalSettlementDate'])
+        body_rows.append('<tr>'
+            +'<th scope="row">'+escape(str(row.get('contractSymbol') or 'Unknown'))+' · '+escape(str(row.get('contractMonth') or 'month unavailable'))+'</th>'
+            +'<td>'+value(row.get('lastTradeDate'))+'</td>'
+            +'<td>'+value(notice)+'</td>'
+            +'<td>'+value(delivery)+'</td>'
+            +'<td>'+value(row.get('settlementMethod'))+'</td>'
+            +'</tr>')
+    source_url = str(product.get('contractMonths', [{}])[0].get('sourceUrl') or '')
+    source_link = f'<a class="os-source-link" href="{escape(source_url, quote=True)}" target="_blank" rel="noopener noreferrer">Open publisher source ↗</a>' if source_url.startswith('https://') else ''
+    extra = f' · showing the next {len(shown)} of {len(rows)} listed rows' if len(rows) > len(shown) else f' · {len(rows)} listed rows'
+    return (
+        '<section class="os-contract-lifecycle"><details><summary>Listed contract dates <span class="os-state-chip neutral">DATED SNAPSHOT</span></summary>'
+        +f'<p class="os-lifecycle-snapshot-note">Snapshot date: {escape(str(snapshot_date or "not recorded"))}{extra}. Rows are ordered by last trade date. Blank fields mean the publisher supplied no value in that row; they are not interpreted as “not applicable.”</p>'
+        +'<div class="os-contract-date-table-wrap" tabindex="0" role="region" aria-label="Scrollable listed contract dates">'
+        +'<table class="os-contract-date-table"><thead><tr><th scope="col">Publisher symbol · month</th><th scope="col">Last trade date</th><th scope="col">First–last notice</th><th scope="col">Delivery / final settlement</th><th scope="col">Settlement method</th></tr></thead><tbody>'
+        +''.join(body_rows)+'</tbody></table></div><div class="os-contract-lifecycle-source">'+source_link+'</div></details></section>'
+    )
+
+
+def public_contract_lifecycle_data(source):
+    """Apply a fail-closed rights gate and allowlist the fields sent to the public site."""
+    source = source if isinstance(source, dict) else {}
+    products = source.get('products') if isinstance(source.get('products'), list) else []
+    coverage = source.get('coverage') if isinstance(source.get('coverage'), dict) else {}
+    rights_review_date = source.get('rightsReviewDate')
+    try:
+        valid_review_date = datetime.strptime(str(rights_review_date), '%Y-%m-%d').strftime('%Y-%m-%d') == rights_review_date
+    except (TypeError, ValueError):
+        valid_review_date = False
+    ready = (
+        source.get('rightsStatus') == 'approved-public-display'
+        and valid_review_date
+        and coverage.get('familyCount') == 15
+        and coverage.get('familiesWithCurrentOrFutureRows') == 15
+        and len(products) == 15
+        and len({p.get('marketId') for p in products if isinstance(p, dict)}) == 15
+        and all(isinstance(p, dict) and p.get('contractMonths') for p in products)
+    )
+    if not ready:
+        return {
+            'schemaVersion': 1,
+            'status': 'not-configured',
+            'rightsStatus': 'not-approved',
+            'generatedAt': None,
+            'asOfDate': None,
+            'cmeSourceBusinessDate': None,
+            'sourceFiles': [],
+            'coverage': {'familyCount': 15, 'familiesWithCurrentOrFutureRows': 0, 'contractMonthRows': 0},
+            'limitations': [
+                'No lifecycle rows are published because public display rights are not configured and reviewed.',
+                'Public availability or a free endpoint does not establish permission to republish market information.',
+                'Use linked exchange sources to confirm exact contract-month dates, hours, notices and settlement terms.',
+            ],
+            'products': [],
+        }
+    product_fields = ('marketId', 'label', 'exchange', 'symbols', 'specificationUrl', 'sourceFileDate', 'sourceBusinessDate')
+    row_fields = (
+        'contractSymbol', 'contractMonth', 'productDescription', 'exchange', 'sourceStatusCode',
+        'maturityDate', 'firstTradeDate', 'lastTradeDate', 'firstNoticeDate', 'lastNoticeDate',
+        'firstDeliveryDate', 'lastDeliveryDate', 'finalSettlementDate', 'settlementMethodCode',
+        'settlementMethod', 'sourceBusinessDate', 'sourceFile', 'sourceUrl',
+    )
+    public_products = []
+    for product in products:
+        row_list = product.get('contractMonths') or []
+        public_products.append({
+            **{field: product.get(field) for field in product_fields if field in product},
+            'contractMonths': [
+                {field: row.get(field) for field in row_fields if field in row}
+                for row in row_list if isinstance(row, dict)
+            ],
+        })
+    public_sources = []
+    for item in source.get('sourceFiles') or []:
+        if not isinstance(item, dict):
+            continue
+        public_sources.append({key: item[key] for key in ('exchange', 'exchangeCode', 'file', 'fileDate', 'businessDate', 'rows', 'bytes', 'sha256', 'indexUrl', 'page') if key in item})
+    return {
+        'schemaVersion': 1,
+        'status': 'authorized-snapshot',
+        'rightsStatus': 'approved-public-display',
+        'rightsReviewDate': rights_review_date,
+        'generatedAt': source.get('generatedAt'),
+        'asOfDate': source.get('asOfDate'),
+        'cmeSourceBusinessDate': source.get('cmeSourceBusinessDate'),
+        'sourceFiles': public_sources,
+        'settlementCodeSource': source.get('settlementCodeSource'),
+        'coverage': {key: coverage.get(key) for key in ('familyCount', 'familiesWithCurrentOrFutureRows', 'contractMonthRows')},
+        'limitations': [str(value) for value in (source.get('limitations') or []) if isinstance(value, str)],
+        'products': public_products,
+    }
+
+
 
 def wrap_standalone_shell(path, current_path, kind):
     if not path.exists(): return
@@ -301,6 +408,10 @@ def build():
     academy = academy_data.get('concepts',[])
     build_academy(DIST, academy_data, SITE_URL)
     news = load(ROOT/'data/news-snapshot.json',{})
+    lifecycle_data=public_contract_lifecycle_data(load(ROOT/'data/contract-lifecycle.json',{}))
+    lifecycle_products={x.get('marketId'):x for x in lifecycle_data.get('products',[]) if x.get('marketId')}
+    lifecycle_snapshot_date=lifecycle_data.get('cmeSourceBusinessDate') or lifecycle_data.get('asOfDate') or 'not recorded'
+    write(DIST/'data/contract-lifecycle.json',json.dumps(lifecycle_data,ensure_ascii=False,indent=2)+'\n')
 
     # Contract specification and lifecycle registry. We link to exchange-maintained
     # calendars instead of scraping them or copying unverified, date-sensitive rows.
@@ -338,9 +449,9 @@ def build():
             ('Tick value',contract_value(m.get('tickValue'),checked_at)),
             ('Point value',contract_value(m.get('pointValue'),checked_at)),
             ('Quote convention','<span class="os-unverified-value">NOT VERIFIED IN THIS RECORD</span>'),
-            ('Active month / last trade','<span class="os-unverified-value">LOOK UP THE SELECTED CONTRACT MONTH</span>'),
-            ('Notice / delivery dates','<span class="os-unverified-value">PRODUCT AND MONTH SPECIFIC · NOT TRANSCRIBED</span>'),
-            ('Settlement / delivery','<span class="os-unverified-value">NOT VERIFIED IN THIS RECORD</span>'),
+            ('Active month / last trade','<span class="os-unverified-value">NO LICENSED SNAPSHOT CONFIGURED · CHECK OFFICIAL SOURCE</span>'),
+            ('Notice / delivery dates','<span class="os-unverified-value">PUBLISHER FIELDS SHOWN PER LISTED MONTH; BLANKS ARE NOT INTERPRETED</span>'),
+            ('Settlement / delivery','<span class="os-unverified-value">METHOD IS SHOWN PER ROW; FULL PRODUCT PROCEDURE STILL NEEDS REVIEW</span>'),
             ('Trading hours / exceptions','<span class="os-unverified-value">OFFICIAL EXCHANGE SCHEDULE · NOT TRANSCRIBED</span>'),
             ('Roll / continuous-series method','<span class="os-unverified-value">NO APPROVED POLICY CONFIGURED</span>'),
             ('Reference set',escape(str(m.get('specVersionId') or 'version-not-recorded'))),
@@ -348,8 +459,10 @@ def build():
             ('Effective date / revision','<span class="os-unverified-value">NOT VERIFIED IN THIS RECORD</span>'),
         ]
         spec_rows=''.join(f'<div class="os-spec-field"><span>{label}</span>{value}</div>' for label,value in specs)
-        pending=escape(', '.join(str(x) for x in evidence.get('pendingFields', lifecycle_fields)))
-        pending_note=(f'<details class="os-lifecycle-details"><summary>Lifecycle fields still requiring evidence</summary><p>{pending}</p><p>Use the exact listed month and exchange notice. Calendar conventions are not expiry evidence, and a continuous symbol does not identify an executable contract.</p></details>')
+        pending_items=[str(x) for x in evidence.get('pendingFields', lifecycle_fields)]
+        pending=escape(', '.join(pending_items or lifecycle_fields))
+        pending_note=(f'<details class="os-lifecycle-details"><summary>Full lifecycle sign-off still pending</summary><p>{pending}</p><p>The dated rows below report publisher-listed dates only. They do not establish the cutoff time, effective rule revision, product hours/holiday exceptions or a continuous-series roll policy.</p></details>')
+        month_snapshot=contract_lifecycle_table(lifecycle_products.get(str(m.get('id') or ''),{}),lifecycle_snapshot_date)
         micro=m.get('microSpec') or {}
         micro_html=''
         if micro:
@@ -370,16 +483,18 @@ def build():
                         f'<div class="os-contract-spec-source">{micro_link}</div></section>')
         contract_cards.append(
             f'<article id="{escape(str(m.get("id","")))}" class="os-contract-spec-card" data-family="{escape(str(m.get("id","")), quote=True)}" data-exchange="{escape(exchange, quote=True)}" data-search="{escape((str(m.get("id",""))+" "+str(m.get("label",""))+" "+exchange+" "+str((m.get("microSpec") or {}).get("symbol", ""))).lower(), quote=True)}"><div class="os-contract-spec-head"><div><span class="os-eyebrow">{escape(exchange or "Exchange")} · {escape(str(m.get("tier","")))}</span><h3>{escape(str(m.get("label","Futures family")))}</h3></div><span class="os-state-chip warn">PARTIAL · SOURCED CORE</span></div>'
-            f'<p class="os-spec-review-note">Contract unit and outright tick fields were checked against an official source on {escape(checked_at)}. The full lifecycle record is incomplete.</p>'
-            f'<div class="os-spec-grid">{spec_rows}</div><div class="os-contract-spec-source">{official_link}{calendar_links}</div>{pending_note}{micro_html}</article>'
+            f'<p class="os-spec-review-note">Contract unit and outright tick fields were checked against an official source on {escape(checked_at)}. A dated month-by-month schedule is supplied below; full lifecycle sign-off remains incomplete.</p>'
+            f'<div class="os-spec-grid">{spec_rows}</div><div class="os-contract-spec-source">{official_link}{calendar_links}</div>{month_snapshot}{pending_note}{micro_html}</article>'
         )
-    body=page_intro('Contract reference registry','Contract Specs & Expiry','Search all 15 retained futures families, review the verified core facts and open the current exchange source for the exact contract month. Full contract lifecycle records remain pending.')
-    body+='<section class="content-section os-contract-warning"><h2>Partial source review — not trade-ready</h2><p>Standard contract units and outright tick sizes/values, plus the listed micro profiles, have been checked against official CME Group or ICE Futures U.S. sources. This does not verify a specific expiry, effective date, delivery/first-notice window, trading-calendar exception or roll method. Use the linked exchange source for the exact contract month. Risk estimates remain conditional until the complete record is verified.</p></section>'
+    body=page_intro('Contract reference registry','Contract Specs & Expiry','Search all 15 retained futures families. Review source-linked core facts and official exchange schedules. Contract lifecycle dates remain hidden until public display rights are verified and an authorized snapshot is configured.')
+    body+='<section class="content-section os-contract-warning"><h2>Contract date display is rights-gated</h2><p>No exchange contract-month dates are currently configured for public display. Public availability or a free source does not establish redistribution permission. The registry links to official CME and ICE sources so users can check the exact listed contract. A licensed snapshot may be added only after a human reviewer verifies the public display rights and source scope. Risk estimates remain conditional.</p></section>'
     exchange_options=''.join(f'<option value="{escape(x, quote=True)}">{escape(x)}</option>' for x in sorted({str(m.get("exchange") or "") for m in mdata if m.get("exchange")}))
     body+='<section class="content-section os-contract-controls" aria-label="Filter contract families"><label for="contractSpecSearch">Find a family<input id="contractSpecSearch" type="search" placeholder="Search NQ, Gold, Micro…" autocomplete="off"></label><label for="contractSpecExchange">Exchange<select id="contractSpecExchange"><option value="all">All exchanges</option>'+exchange_options+'</select></label><span id="contractSpecCount" class="sessions-result-count" role="status" aria-live="polite">15 of 15 families</span></section>'
-    body+='<section class="content-section os-contract-coverage"><div><span class="os-eyebrow">LIFECYCLE VERIFICATION</span><strong>0 / 15 complete</strong><p>Core tick facts have dated source evidence. Per-month expiry, delivery/settlement, session exceptions, rule revisions and roll method still need a documented review.</p></div><a class="text-link" href="https://www.cmegroup.com/tools-information/calendars/expiration-calendar.html" target="_blank" rel="noopener noreferrer">CME expiry calendar ↗</a></section>'
+    schedule_coverage=lifecycle_data.get('coverage') or {}
+    schedule_rows=int(schedule_coverage.get('contractMonthRows') or 0)
+    body+=f'<section class="content-section os-contract-coverage"><div><span class="os-eyebrow">LICENSED CONTRACT-MONTH SCHEDULE</span><strong>{int(schedule_coverage.get("familiesWithCurrentOrFutureRows") or 0)} / {int(schedule_coverage.get("familyCount") or 15)} families · {schedule_rows} rows</strong><p>{("Authorized snapshot date: "+escape(str(lifecycle_snapshot_date))+". The snapshot does not refresh automatically. ") if lifecycle_data.get("rightsStatus")=="approved-public-display" else "No schedule rows are configured for public display. The complete roadmap still requires hours, holiday exceptions, effective revisions and roll-policy review."}Full lifecycle sign-off remains 0 / 15 until all required lifecycle fields are reviewed.</p><a class="os-source-link" href="/data/contract-lifecycle.json">View lifecycle-data availability (JSON) ↗</a></div><a class="text-link" href="https://www.cmegroup.com/tools-information/calendars/expiration-calendar.html" target="_blank" rel="noopener noreferrer">CME expiry calendar ↗</a></section>'
     body+='<section class="os-contract-spec-grid">'+''.join(contract_cards)+'</section>'
-    body+='<section class="content-section"><h2>How a lifecycle record becomes verified</h2><ol class="os-lifecycle-steps"><li>Select the exact exchange product and contract month from the official calendar.</li><li>Record last trade date/time, notice and delivery/settlement dates that apply to that product.</li><li>Reconcile product trading hours, breaks, holiday overrides and the current rule revision.</li><li>Document a separate roll policy based on the intended use and permitted volume/open-interest evidence.</li><li>Attach source, as-of date and reviewer; keep the family PARTIAL until every required field is supported.</li></ol><p>The page links to exchange-maintained sources only. It does not scrape, cache or redistribute exchange data and does not infer expiry dates from generic weekday rules.</p><a class="text-link" href="/data-health/">Review data and source status →</a></section>'
+    body+='<section class="content-section"><h2>How a lifecycle record becomes verified</h2><ol class="os-lifecycle-steps"><li>Confirm that the exact source, fields, market and public website display are covered by current written rights.</li><li>Import a dated source snapshot with the private rights manifest kept outside the public repository.</li><li>Review exact contract-month trade, notice, delivery and settlement fields against the permitted official source.</li><li>Reconcile product hours, breaks, holiday overrides, rule revisions and cutoff times.</li><li>Document a separate roll policy and reviewer evidence; keep the family PARTIAL until every required field is supported.</li></ol><p>The site does not scrape exchange pages. Its importer has no network access, requires an owner-approved public-display rights manifest, rejects stale or incomplete inputs and publishes only an allowlisted snapshot. This mechanical check does not independently prove the license or validate the source values. No expiry is inferred from generic weekday rules.</p><a class="text-link" href="/data-health/">Review data and source status →</a></section>'
     body+='<script>(()=>{const search=document.getElementById("contractSpecSearch"),exchange=document.getElementById("contractSpecExchange"),count=document.getElementById("contractSpecCount"),cards=[...document.querySelectorAll(".os-contract-spec-card")];function apply(){const q=(search.value||"").trim().toLowerCase(),x=exchange.value;let visible=0;for(const card of cards){const show=(!q||card.dataset.search.includes(q))&&(x==="all"||card.dataset.exchange===x);card.hidden=!show;if(show)visible++;}count.textContent=`${visible} of ${cards.length} families`; }search.addEventListener("input",apply);exchange.addEventListener("change",apply);})();</script>'
     write(DIST/'contract-specs/index.html',shell('Contract Specs & Expiry | Futures Intelligence OS','Futures contract reference registry with explicit verification status and expiry-data coverage.',body,'/contract-specs/'))
 

@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "status": "not-configured",
+  "rightsStatus": "not-approved",
+  "generatedAt": null,
+  "asOfDate": null,
+  "cmeSourceBusinessDate": null,
+  "rightsReviewDate": null,
+  "sourceFiles": [],
+  "coverage": {
+    "familyCount": 15,
+    "familiesWithCurrentOrFutureRows": 0,
+    "contractMonthRows": 0
+  },
+  "limitations": [
+    "No contract lifecycle dates are stored or displayed until public redistribution rights are reviewed and explicitly approved for the exact source, fields and website.",
+    "Public availability or a free endpoint does not establish a right to republish market information.",
+    "The product page links to official publisher schedules; users must confirm the exact listed month, trading hours, notices and settlement terms at the source.",
+    "No lifecycle dates, cutoff times, holiday exceptions, effective revisions or roll policy are inferred."
+  ],
+  "products": []
+}
