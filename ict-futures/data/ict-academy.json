@@ -14006,7 +14006,33 @@
           "resource-cme-institute-trade-and-risk-management-12",
           "resource-cftc-customer-education-advisory-13"
         ],
-        "videoResources": [],
+        "videoResources": [
+          {
+            "resourceId": "ttrades-unicorn-2023",
+            "title": "How to Use the Unicorn Model for Trading Success",
+            "publisher": "TTrades",
+            "channelName": "TTrades",
+            "channelId": "UCQwUEVakiYDmNGe7UBza4sQ",
+            "videoId": "rXMVPUZPw4A",
+            "url": "https://www.youtube.com/watch?v=rXMVPUZPw4A",
+            "language": "en",
+            "sourceClass": "independent_supplement",
+            "conceptIds": [
+              "unicorn"
+            ],
+            "verificationStatus": "verified",
+            "verifiedAt": "2026-11-20",
+            "verifiedBy": "Codex research audit",
+            "lastLinkCheck": "2026-11-20",
+            "linkStatus": "verified",
+            "embedStatus": "not_checked",
+            "embedPermission": "not_checked",
+            "fallbackLinkStatus": "available",
+            "evidenceUrl": "https://www.youtube.com/watch?v=rXMVPUZPw4A",
+            "summary": "Independent TTrades supplement, not Official ICT. The description calls this a basic introduction to the Unicorn entry pattern, identifies it as Breaker Block plus Fair Value Gap, and includes examples. Futures appear among the publisher's educational topics. This maps only to the Unicorn Entry Model and makes no performance claim.",
+            "sourceNote": "The verified TTrades channel's upload description directly names the Unicorn model and its Breaker Block plus Fair Value Gap composition, with a model segment at 2:17 and examples beginning at 2:47. The description includes futures education. This is independent supplemental teaching, not ICT's original material, and does not establish performance."
+          }
+        ],
         "supplementalResources": [],
         "topicDiscoveryUrl": "https://www.youtube.com/results?search_query=Inner%20Circle%20Trader%20official%20Unicorn%20Model%20ICT%20futures",
         "contentVersion": 2,

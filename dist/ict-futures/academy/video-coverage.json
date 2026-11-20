@@ -2,19 +2,20 @@
   "schemaVersion": 1,
   "status": "PARTIAL",
   "eligibleCount": 82,
-  "coveredCount": 8,
-  "coveragePercent": 9.76,
+  "coveredCount": 9,
+  "coveragePercent": 10.98,
   "coveredIds": [
     "mss",
     "liquidity",
     "fvg",
     "order-block",
+    "unicorn",
     "ote",
     "silver-bullet",
     "market-maker-buy-model",
     "ict-2022-model"
   ],
-  "missingCount": 74,
+  "missingCount": 73,
   "missingIds": [
     "market-structure",
     "swing-high-low",
@@ -43,7 +44,6 @@
     "breaker-block",
     "mitigation-block",
     "rejection-block",
-    "unicorn",
     "pd-arrays",
     "premium-discount",
     "equilibrium",
@@ -93,13 +93,13 @@
   ],
   "entryModelCoverage": {
     "eligibleCount": 8,
-    "coveredCount": 2,
+    "coveredCount": 3,
     "coveredIds": [
+      "unicorn",
       "market-maker-buy-model",
       "ict-2022-model"
     ],
     "missingIds": [
-      "unicorn",
       "market-maker-sell-model",
       "liquidity-sweep-mss-model",
       "fvg-continuation-model",
@@ -360,8 +360,8 @@
       "id": "unicorn",
       "title": "Unicorn Model",
       "isEntryModel": true,
-      "status": "VIDEO NEEDED",
-      "verifiedVideoCount": 0,
+      "status": "VERIFIED",
+      "verifiedVideoCount": 1,
       "unverifiedCandidateCount": 0
     },
     {

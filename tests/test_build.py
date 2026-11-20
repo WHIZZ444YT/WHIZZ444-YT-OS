@@ -289,7 +289,7 @@ class BuildTests(unittest.TestCase):
         self.assertEqual(len(bundle['academy']['tracks']),10)
         self.assertTrue(all(m['specStatus']=='partial' and isinstance(m['tickSize'],str) and m.get('specEvidence',{}).get('sourceUrl') for m in bundle['markets']))
         videos_by_lesson={c['id']:c.get('verifiedVideoIds',[]) for c in bundle['academy']['concepts']}
-        expected_video_ids={'ict-2022-model':['ict-2022-ep14'],'mss':['ict-2022-ep03-mss'],'fvg':['ict-2022-ep06-fvg'],'order-block':['ict-2022-ep22-order-block'],'silver-bullet':['ict-2023-silver-bullet-model'],'liquidity':['ict-2025-advanced-liquidity'],'market-maker-buy-model':['ict-2024-mmbm-example'],'ote':['ttrades-ote-2023']}
+        expected_video_ids={'ict-2022-model':['ict-2022-ep14'],'mss':['ict-2022-ep03-mss'],'fvg':['ict-2022-ep06-fvg'],'order-block':['ict-2022-ep22-order-block'],'silver-bullet':['ict-2023-silver-bullet-model'],'liquidity':['ict-2025-advanced-liquidity'],'market-maker-buy-model':['ict-2024-mmbm-example'],'ote':['ttrades-ote-2023'],'unicorn':['ttrades-unicorn-2023']}
         for lesson_id,video_ids in expected_video_ids.items(): self.assertEqual(videos_by_lesson[lesson_id],video_ids)
         self.assertTrue(all(not ids for lesson_id,ids in videos_by_lesson.items() if lesson_id not in expected_video_ids))
         self.assertIn('c.id===n',template)
@@ -401,19 +401,23 @@ class BuildTests(unittest.TestCase):
         coverage=json.loads((ROOT/'dist/ict-futures/academy/video-coverage.json').read_text(encoding="utf-8"))
         self.assertEqual(coverage['status'],'PARTIAL')
         self.assertEqual(coverage['eligibleCount'],82)
-        expected_covered={'ict-2022-model','mss','fvg','order-block','silver-bullet','liquidity','market-maker-buy-model','ote'}
-        self.assertEqual(coverage['coveredCount'],8)
+        expected_covered={'ict-2022-model','mss','fvg','order-block','silver-bullet','liquidity','market-maker-buy-model','ote','unicorn'}
+        self.assertEqual(coverage['coveredCount'],9)
         self.assertEqual(set(coverage['coveredIds']),expected_covered)
-        self.assertEqual(coverage['missingCount'],74)
-        self.assertEqual(coverage['entryModelCoverage']['coveredCount'],2)
-        self.assertEqual(coverage['entryModelCoverage']['coveredIds'],['market-maker-buy-model','ict-2022-model'])
-        self.assertEqual(len(coverage['entryModelCoverage']['missingIds']),6)
+        self.assertEqual(coverage['missingCount'],73)
+        self.assertEqual(coverage['entryModelCoverage']['coveredCount'],3)
+        self.assertEqual(coverage['entryModelCoverage']['coveredIds'],['unicorn','market-maker-buy-model','ict-2022-model'])
+        self.assertEqual(len(coverage['entryModelCoverage']['missingIds']),5)
         for lesson_id in expected_covered:
             self.assertIn('VERIFIED LESSON VIDEO',(ROOT/'dist/ict-futures/academy'/f'{lesson_id}.html').read_text(encoding="utf-8"))
         ote_html=(ROOT/'dist/ict-futures/academy/ote.html').read_text(encoding="utf-8")
         self.assertIn('TTrades · Independent supplement',ote_html)
         self.assertIn('not Official ICT',ote_html)
         self.assertIn('does not discuss the New York Killzone',ote_html)
+        unicorn_html=(ROOT/'dist/ict-futures/academy/unicorn.html').read_text(encoding="utf-8")
+        self.assertIn('TTrades · Independent supplement',unicorn_html)
+        self.assertIn('not Official ICT',unicorn_html)
+        self.assertIn('Breaker Block plus Fair Value Gap',unicorn_html)
         source_data=json.loads((ROOT/'ict-futures/data/ict-academy.json').read_text(encoding="utf-8"))
         source_concepts={c['id']:c for c in source_data['concepts']}
         for lesson_id in ('liquidity-sweep-mss-model','fvg-continuation-model'):

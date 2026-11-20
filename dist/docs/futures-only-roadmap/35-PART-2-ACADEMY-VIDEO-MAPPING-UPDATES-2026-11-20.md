@@ -12,10 +12,13 @@
 - This supplement is mapped only to the `ote` concept lesson, not to the separate `fvg-ote-confluence-model` Entry Model. Its futures relevance is general education listed by the publisher; it does not claim a futures-specific worked example or evidence of performance.
 - The registry records the video ID and channel ID, date, direct fallback, source class and scope caveats. Embed availability and permission remain unchecked.
 
+- [How to Use the Unicorn Model for Trading Success](https://www.youtube.com/watch?v=rXMVPUZPw4A) is a TTrades independent supplement, not Official ICT. The description defines the Unicorn entry pattern as Breaker Block plus Fair Value Gap and provides model and example segments. The source is mapped only to the `unicorn` Entry Model and is not performance evidence.
+- The registry preserves the creator/channel identity, video ID, exact lesson mapping and direct fallback. Embed availability and permission remain unchecked.
+
 The MMBM upload is an example, not a complete MMBM rulebook, an independently verified definition, or evidence of strategy performance. The Academy's MMBM definition remains supplemental and convention-sensitive, and the page continues to disclose that no audited performance evidence is available.
 
 ## Coverage and remaining work
 
-The strict generated registry now reports **8/82 lesson pages** and **2/8 Entry Models** with a verified exact-item video. The eight model pages are included within the 82 Academy pages and remain separately tracked for acceptance. The remaining 74 lesson pages and six Entry Model pages still need individually verified mappings. A channel page, search result, or adjacent topic is not counted as item coverage.
+The strict generated registry now reports **9/82 lesson pages** and **3/8 Entry Models** with a verified exact-item video. The eight model pages are included within the 82 Academy pages and remain separately tracked for acceptance. The remaining 73 lesson pages and five Entry Model pages still need individually verified mappings. A channel page, search result, or adjacent topic is not counted as item coverage.
 
 The mapping does not complete Part 2. Review direct-link availability and embed permission separately, keep the source and coverage current, and complete the full Academy's visual, mobile, keyboard and assistive-technology QA.
