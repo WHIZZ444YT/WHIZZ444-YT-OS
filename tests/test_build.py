@@ -290,7 +290,7 @@ class BuildTests(unittest.TestCase):
         self.assertEqual(len(bundle['academy']['tracks']),10)
         self.assertTrue(all(m['specStatus']=='partial' and isinstance(m['tickSize'],str) and m.get('specEvidence',{}).get('sourceUrl') for m in bundle['markets']))
         videos_by_lesson={c['id']:c.get('verifiedVideoIds',[]) for c in bundle['academy']['concepts']}
-        expected_video_ids={'ict-2022-model':['ict-2022-ep14'],'market-structure':['ttrades-structure-mss-fvg-displacement-2022'],'mss':['ict-2022-ep03-mss','ttrades-structure-mss-fvg-displacement-2022'],'displacement':['ttrades-structure-mss-fvg-displacement-2022'],'fvg':['ict-2022-ep06-fvg','ttrades-structure-mss-fvg-displacement-2022'],'bsl':['ttrades-liquidity-levels-2023'],'ssl':['ttrades-liquidity-levels-2023'],'eqh':['ttrades-liquidity-levels-2023'],'eql':['ttrades-liquidity-levels-2023'],'pdh-pdl':['ttrades-liquidity-levels-2023'],'pwh-pwl':['ttrades-liquidity-levels-2023'],'session-high-low':['ttrades-liquidity-levels-2023'],'order-block':['ict-2022-ep22-order-block'],'silver-bullet':['ict-2023-silver-bullet-model'],'liquidity':['ict-2025-advanced-liquidity'],'market-maker-buy-model':['ict-2024-mmbm-example'],'ote':['ttrades-ote-2023'],'unicorn':['ttrades-unicorn-2023'],'ifvg':['ttrades-ifvg-2023'],'amd-po3':['ttrades-po3-amd-2023'],'cisd':['ttrades-cisd-orderblock-2023'],'swing-high-low':['paul-leroy-fvg-essentials-swing-pivots-2022'],'judas-swing':['ict-judas-swing-2017']}
+        expected_video_ids={'ict-2022-model':['ict-2022-ep14'],'market-structure':['ttrades-structure-mss-fvg-displacement-2022'],'mss':['ict-2022-ep03-mss','ttrades-structure-mss-fvg-displacement-2022'],'displacement':['ttrades-structure-mss-fvg-displacement-2022'],'fvg':['ict-2022-ep06-fvg','ttrades-structure-mss-fvg-displacement-2022'],'bsl':['ttrades-liquidity-levels-2023'],'ssl':['ttrades-liquidity-levels-2023'],'eqh':['ttrades-liquidity-levels-2023'],'eql':['ttrades-liquidity-levels-2023'],'pdh-pdl':['ttrades-liquidity-levels-2023'],'pwh-pwl':['ttrades-liquidity-levels-2023'],'session-high-low':['ttrades-liquidity-levels-2023'],'order-block':['ict-2022-ep22-order-block'],'silver-bullet':['ict-2023-silver-bullet-model'],'liquidity':['ict-2025-advanced-liquidity'],'liquidity-run':['ict-liquidity-runs-2022'],'ipda':['ict-ipda-data-ranges-2022'],'market-maker-buy-model':['ict-2024-mmbm-example'],'market-maker-sell-model':['ttrades-cpi-gold-market-maker-sell-model-2024'],'ote':['ttrades-ote-2023'],'unicorn':['ttrades-unicorn-2023'],'ifvg':['ttrades-ifvg-2023'],'amd-po3':['ttrades-po3-amd-2023'],'cisd':['ttrades-cisd-orderblock-2023'],'swing-high-low':['paul-leroy-fvg-essentials-swing-pivots-2022'],'judas-swing':['ict-judas-swing-2017'],'bos':['ttrades-structure-shift-liquidity-grab-2022'],'breaker-block':['ttrades-breaker-blocks-simplified-2024'],'mitigation-block':['ttrades-mitigation-blocks-simplified-2024'],'dealing-range':['ttrades-choosing-dealing-ranges-2022'],'premium-discount':['ttrades-equilibrium-discount-premium-2025'],'equilibrium':['ttrades-equilibrium-discount-premium-2025'],'irl-erl':['ttrades-internal-external-liquidity-daily-bias-2024'],'opposing-liquidity':['ttrades-draw-on-liquidity-2023'],'ndog':['ict-ndog-new-day-opening-gap-2023'],'nwog':['ict-nwog-new-week-opening-gap-2023'],'bpr':['ttrades-balanced-price-range-2022'],'liquidity-void':['ict-month-04-liquidity-voids-2022'],'mean-threshold':['ttrades-orderblocks-mean-threshold-2023'],'killzones':['ttrades-killzones-indicator-settings-2023'],'time-anchors':['ttrades-important-time-levels-2024'],'smt':['ttrades-smt-divergence-ict-concepts-2023'],'weekly-profiles':['ttrades-weekly-profile-intraweek-reversal-2026'],'mmxm':['ttrades-mmxm-advanced-lesson-2024'],'pd-arrays':['ict-pd-array-matrix-revealed-2025'],'asian-range':['ict-friday-asian-range-2020'],'volume-imbalance':['ict-daily-volume-imbalance-draw-2024'],'fpfvg':['ict-opening-range-first-presented-fvg-2025'],'rejection-block':['ict-rejection-block-entry-techniques'],'midnight-open':['lumitraders-ny-midnight-open-explained-2026'],'weekly-open':['lumitraders-premarket-plan-weekly-open-2024']}
         for lesson_id,video_ids in expected_video_ids.items(): self.assertEqual(videos_by_lesson[lesson_id],video_ids)
         self.assertTrue(all(not ids for lesson_id,ids in videos_by_lesson.items() if lesson_id not in expected_video_ids))
         self.assertIn('c.id===n',template)
@@ -402,13 +402,13 @@ class BuildTests(unittest.TestCase):
         coverage=json.loads((ROOT/'dist/ict-futures/academy/video-coverage.json').read_text(encoding="utf-8"))
         self.assertEqual(coverage['status'],'PARTIAL')
         self.assertEqual(coverage['eligibleCount'],82)
-        expected_covered={'ict-2022-model','market-structure','mss','displacement','fvg','bsl','ssl','eqh','eql','pdh-pdl','pwh-pwl','session-high-low','order-block','silver-bullet','liquidity','market-maker-buy-model','ote','unicorn','ifvg','amd-po3','cisd','swing-high-low','judas-swing'}
-        self.assertEqual(coverage['coveredCount'],23)
+        expected_covered={'ict-2022-model','market-structure','mss','displacement','fvg','bsl','ssl','eqh','eql','pdh-pdl','pwh-pwl','session-high-low','order-block','silver-bullet','liquidity','market-maker-buy-model','market-maker-sell-model','ote','unicorn','ifvg','amd-po3','cisd','swing-high-low','judas-swing','bos','breaker-block','mitigation-block','dealing-range','premium-discount','equilibrium','irl-erl','opposing-liquidity','ndog','nwog','bpr','liquidity-void','mean-threshold','killzones','time-anchors','smt','weekly-profiles','mmxm','pd-arrays','asian-range','liquidity-run','ipda','volume-imbalance','fpfvg','rejection-block','midnight-open','weekly-open'}
+        self.assertEqual(coverage['coveredCount'],51)
         self.assertEqual(set(coverage['coveredIds']),expected_covered)
-        self.assertEqual(coverage['missingCount'],59)
-        self.assertEqual(coverage['entryModelCoverage']['coveredCount'],3)
-        self.assertEqual(coverage['entryModelCoverage']['coveredIds'],['unicorn','market-maker-buy-model','ict-2022-model'])
-        self.assertEqual(len(coverage['entryModelCoverage']['missingIds']),5)
+        self.assertEqual(coverage['missingCount'],31)
+        self.assertEqual(coverage['entryModelCoverage']['coveredCount'],4)
+        self.assertEqual(coverage['entryModelCoverage']['coveredIds'],['unicorn','market-maker-buy-model','market-maker-sell-model','ict-2022-model'])
+        self.assertEqual(len(coverage['entryModelCoverage']['missingIds']),4)
         for lesson_id in expected_covered:
             self.assertIn('VERIFIED LESSON VIDEO',(ROOT/'dist/ict-futures/academy'/f'{lesson_id}.html').read_text(encoding="utf-8"))
         swing_video=next(r for r in json.loads((ROOT/'ict-futures/data/ict-academy.json').read_text(encoding="utf-8"))['concepts'] if r['id']=='swing-high-low')['curriculum']['videoResources'][0]
@@ -449,6 +449,184 @@ class BuildTests(unittest.TestCase):
         academy=(ROOT/'dist/academy/index.html').read_text(encoding="utf-8")
         self.assertIn('VIDEO COVERAGE: PARTIAL',academy)
         self.assertIn('/assets/academy-learning.css',academy)
+
+    def test_part2_new_independent_video_mappings_keep_exact_scopes_and_segments(self):
+        data=json.loads((ROOT/'ict-futures/data/ict-academy.json').read_text(encoding='utf-8'))
+        concepts={item['id']:item for item in data['concepts']}
+        expected={
+            'bos':('ttrades-structure-shift-liquidity-grab-2022','5rbFskdmEmU',60,470),
+            'breaker-block':('ttrades-breaker-blocks-simplified-2024','75S4vwD4P1U',26,234),
+            'mitigation-block':('ttrades-mitigation-blocks-simplified-2024','bbWPoajy2MY',21,146),
+            'dealing-range':('ttrades-choosing-dealing-ranges-2022','CAuN4tvLInQ',20,120),
+            'premium-discount':('ttrades-equilibrium-discount-premium-2025','IPZjNI1B5a0',26,159),
+            'equilibrium':('ttrades-equilibrium-discount-premium-2025','IPZjNI1B5a0',159,1146),
+        }
+        for concept_id,(resource_id,video_id,start,end) in expected.items():
+            concept=concepts[concept_id]
+            self.assertEqual(concept['verifiedVideoIds'],[resource_id])
+            video=next(v for v in concept['curriculum']['videoResources'] if v['resourceId']==resource_id)
+            self.assertEqual(video['videoId'],video_id)
+            self.assertEqual(video['sourceClass'],'independent_supplement')
+            self.assertEqual(video['verificationStatus'],'verified')
+            self.assertEqual(video['linkStatus'],'verified')
+            self.assertEqual(video['embedPermission'],'not_checked')
+            self.assertEqual(video['segments'][concept_id]['startSeconds'],start)
+            self.assertEqual(video['segments'][concept_id]['endSeconds'],end)
+            self.assertIn(f'&t={start}s',video['url'])
+        shared_premium=concepts['premium-discount']['curriculum']['videoResources'][0]
+        shared_equilibrium=concepts['equilibrium']['curriculum']['videoResources'][0]
+        self.assertEqual(shared_premium['conceptIds'],['premium-discount','equilibrium'])
+        self.assertEqual(shared_equilibrium['segments'],shared_premium['segments'])
+        self.assertIn('3:54',concepts['breaker-block']['curriculum']['videoResources'][0]['sourceNote'])
+        mmsm=concepts['market-maker-sell-model']['curriculum']['videoResources'][0]
+        self.assertEqual(mmsm['resourceId'],'ttrades-cpi-gold-market-maker-sell-model-2024')
+        self.assertEqual(mmsm['videoId'],'0R61Y6Pn74Q')
+        self.assertEqual(mmsm['conceptIds'],['market-maker-sell-model'])
+        self.assertEqual(mmsm['sourceClass'],'independent_supplement')
+        self.assertEqual(mmsm['embedPermission'],'not_checked')
+        self.assertIn('XAUUSD',mmsm['summary'])
+
+    def test_part2_irlerl_dol_ndog_nwog_videos_match_exact_concepts(self):
+        data=json.loads((ROOT/'ict-futures/data/ict-academy.json').read_text(encoding='utf-8'))
+        concepts={item['id']:item for item in data['concepts']}
+        expected={
+            'irl-erl':('ttrades-internal-external-liquidity-daily-bias-2024','5aRB_ZY3474','independent_supplement',120,185,'Internal & External Liquidity'),
+            'opposing-liquidity':('ttrades-draw-on-liquidity-2023','MmvC4rsmmcM','independent_supplement',15,88,'Draw on Liquidity'),
+            'ndog':('ict-ndog-new-day-opening-gap-2023','Sh-bDHWNpsk','official_ict',None,None,None),
+            'nwog':('ict-nwog-new-week-opening-gap-2023','WKKnlIIkBTk','official_ict',None,None,None),
+        }
+        for concept_id,(resource_id,video_id,source_class,start,end,label) in expected.items():
+            concept=concepts[concept_id]
+            self.assertEqual(concept['verifiedVideoIds'],[resource_id])
+            video=next(v for v in concept['curriculum']['videoResources'] if v.get('resourceId')==resource_id)
+            self.assertEqual(video['videoId'],video_id)
+            self.assertEqual(video['sourceClass'],source_class)
+            self.assertEqual(video['conceptIds'],[concept_id])
+            self.assertEqual(video['verificationStatus'],'verified')
+            self.assertEqual(video['linkStatus'],'verified')
+            self.assertEqual(video['embedPermission'],'not_checked')
+            if start is not None:
+                self.assertEqual(video['segments'][concept_id],{'startSeconds':start,'endSeconds':end,'label':label})
+                self.assertIn(f'&t={start}s',video['url'])
+            else:
+                self.assertEqual(video['channelId'],'UCtjxa77NqamhVC8atV85Rog')
+            self.assertIn('VERIFIED LESSON VIDEO',(ROOT/'dist/ict-futures/academy'/f'{concept_id}.html').read_text(encoding='utf-8'))
+
+    def test_part2_bpr_and_liquidity_void_sources_are_exactly_scoped(self):
+        data=json.loads((ROOT/'ict-futures/data/ict-academy.json').read_text(encoding='utf-8'))
+        concepts={item['id']:item for item in data['concepts']}
+        expected={
+            'bpr':('ttrades-balanced-price-range-2022','yOPESX2aWkI','independent_supplement','TTrades'),
+            'liquidity-void':('ict-month-04-liquidity-voids-2022','HTQgH11W37o','official_ict','The Inner Circle Trader'),
+        }
+        for concept_id,(resource_id,video_id,source_class,channel_name) in expected.items():
+            concept=concepts[concept_id]
+            self.assertEqual(concept['verifiedVideoIds'],[resource_id])
+            video=next(v for v in concept['curriculum']['videoResources'] if v.get('resourceId')==resource_id)
+            self.assertEqual(video['videoId'],video_id)
+            self.assertEqual(video['sourceClass'],source_class)
+            self.assertEqual(video['channelName'],channel_name)
+            self.assertEqual(video['conceptIds'],[concept_id])
+            self.assertEqual(video['verificationStatus'],'verified')
+            self.assertEqual(video['embedPermission'],'not_checked')
+            self.assertIn('VERIFIED LESSON VIDEO',(ROOT/'dist/ict-futures/academy'/f'{concept_id}.html').read_text(encoding='utf-8'))
+
+    def test_part2_mean_threshold_maps_only_its_named_orderblock_chapter(self):
+        data=json.loads((ROOT/'ict-futures/data/ict-academy.json').read_text(encoding='utf-8'))
+        concept=next(item for item in data['concepts'] if item['id']=='mean-threshold')
+        resource_id='ttrades-orderblocks-mean-threshold-2023'
+        self.assertEqual(concept['verifiedVideoIds'],[resource_id])
+        video=next(v for v in concept['curriculum']['videoResources'] if v.get('resourceId')==resource_id)
+        self.assertEqual(video['videoId'],'Y8DkNYhq0X0')
+        self.assertEqual(video['sourceClass'],'independent_supplement')
+        self.assertEqual(video['conceptIds'],['mean-threshold'])
+        self.assertEqual(video['segments']['mean-threshold'],{'startSeconds':424,'endSeconds':472,'label':'Mean Threshold'})
+        self.assertIn('&t=424s',video['url'])
+        self.assertEqual(video['embedPermission'],'not_checked')
+        self.assertIn('VERIFIED LESSON VIDEO',(ROOT/'dist/ict-futures/academy/mean-threshold.html').read_text(encoding='utf-8'))
+
+    def test_part2_time_anchors_and_killzones_use_exact_named_material(self):
+        data=json.loads((ROOT/'ict-futures/data/ict-academy.json').read_text(encoding='utf-8'))
+        concepts={item['id']:item for item in data['concepts']}
+        expected={
+            'time-anchors':('ttrades-important-time-levels-2024','4Uz9WuMh4kQ',None,None,None),
+            'killzones':('ttrades-killzones-indicator-settings-2023','MPeeE55rNOw',49,144,'Killzones overview, time zone and markup'),
+            'smt':('ttrades-smt-divergence-ict-concepts-2023','q1NmxUTm4n4',288,431,'Utilization of SMT'),
+        }
+        for concept_id,(resource_id,video_id,start,end,label) in expected.items():
+            concept=concepts[concept_id]
+            self.assertEqual(concept['verifiedVideoIds'],[resource_id])
+            video=next(v for v in concept['curriculum']['videoResources'] if v['resourceId']==resource_id)
+            self.assertEqual(video['videoId'],video_id)
+            self.assertEqual(video['sourceClass'],'independent_supplement')
+            self.assertEqual(video['conceptIds'],[concept_id])
+            self.assertEqual(video['embedPermission'],'not_checked')
+            if start is not None:
+                self.assertEqual(video['segments'][concept_id],{'startSeconds':start,'endSeconds':end,'label':label})
+                self.assertIn(f'&t={start}s',video['url'])
+            self.assertIn('VERIFIED LESSON VIDEO',(ROOT/'dist/ict-futures/academy'/f'{concept_id}.html').read_text(encoding='utf-8'))
+
+    def test_part2_weekly_profile_and_mmxm_videos_match_their_general_concepts(self):
+        data=json.loads((ROOT/'ict-futures/data/ict-academy.json').read_text(encoding='utf-8'))
+        concepts={item['id']:item for item in data['concepts']}
+        expected={
+            'weekly-profiles':('ttrades-weekly-profile-intraweek-reversal-2026','FvOUvQ7odiw','Weekly Profile for Daily Bias - Intraweek Reversal'),
+            'mmxm':('ttrades-mmxm-advanced-lesson-2024','Ibw4saRtYMk','The MMXM Trader | Advanced ICT MMXM Lesson'),
+        }
+        for concept_id,(resource_id,video_id,title) in expected.items():
+            concept=concepts[concept_id]
+            self.assertEqual(concept['verifiedVideoIds'],[resource_id])
+            video=next(v for v in concept['curriculum']['videoResources'] if v['resourceId']==resource_id)
+            self.assertEqual(video['videoId'],video_id)
+            self.assertEqual(video['title'],title)
+            self.assertEqual(video['sourceClass'],'independent_supplement')
+            self.assertEqual(video['conceptIds'],[concept_id])
+            self.assertEqual(video['embedPermission'],'not_checked')
+            self.assertIn('VERIFIED LESSON VIDEO',(ROOT/'dist/ict-futures/academy'/f'{concept_id}.html').read_text(encoding='utf-8'))
+
+    def test_part2_official_video_titles_match_volume_imbalance_fpfvg_and_rejection_block(self):
+        data=json.loads((ROOT/'ict-futures/data/ict-academy.json').read_text(encoding='utf-8'))
+        concepts={item['id']:item for item in data['concepts']}
+        expected={
+            'volume-imbalance':('ict-daily-volume-imbalance-draw-2024','KHxQjsITOLo','The Daily Volume Imbalance Draw - Refer to 2024 Livestream August 20, 2024'),
+            'fpfvg':('ict-opening-range-first-presented-fvg-2025','Zm9Q0NDRxoY','ICT Opening Range Theory \\ 1st Presented FVG Logic'),
+            'rejection-block':('ict-rejection-block-entry-techniques','KOUJApLiWhY','The ICT Rejection block & Various Entry Techniques'),
+            'pd-arrays':('ict-pd-array-matrix-revealed-2025','043OW8trIJE','ICT PD Array Matrix Revealed \\ October 18, 2025'),
+            'asian-range':('ict-friday-asian-range-2020','YYsfAvz0c3o','ICT Forex Lecture: Revisiting The Friday Asian Range'),
+            'liquidity-run':('ict-liquidity-runs-2022','22XkhpJR5eA','ICT Mentorship Core Content - Month 1 - Liquidity Runs'),
+            'ipda':('ict-ipda-data-ranges-2022','LRKtiysz4nA','ICT Mentorship Core Content - Month 05 - Using IPDA Data Ranges'),
+        }
+        for concept_id,(resource_id,video_id,title) in expected.items():
+            concept=concepts[concept_id]
+            self.assertEqual(concept['verifiedVideoIds'],[resource_id])
+            video=next(v for v in concept['curriculum']['videoResources'] if v['resourceId']==resource_id)
+            self.assertEqual(video['videoId'],video_id)
+            self.assertEqual(video['title'],title)
+            self.assertEqual(video['sourceClass'],'official_ict')
+            self.assertEqual(video['channelId'],'UCtjxa77NqamhVC8atV85Rog')
+            self.assertEqual(video['conceptIds'],[concept_id])
+            self.assertEqual(video['linkStatus'],'verified')
+            self.assertEqual(video['embedPermission'],'not_checked')
+            self.assertIn('VERIFIED LESSON VIDEO',(ROOT/'dist/ict-futures/academy'/f'{concept_id}.html').read_text(encoding='utf-8'))
+
+    def test_part2_midnight_and_weekly_open_videos_keep_their_scoped_time_references(self):
+        data=json.loads((ROOT/'ict-futures/data/ict-academy.json').read_text(encoding='utf-8'))
+        concepts={item['id']:item for item in data['concepts']}
+        midnight=next(v for v in concepts['midnight-open']['curriculum']['videoResources'] if v['resourceId']=='lumitraders-ny-midnight-open-explained-2026')
+        self.assertEqual(concepts['midnight-open']['verifiedVideoIds'],[midnight['resourceId']])
+        self.assertEqual(midnight['videoId'],'kMtW9YDj3TU')
+        self.assertEqual(midnight['sourceClass'],'independent_supplement')
+        self.assertEqual(midnight['channelId'],'UChlDYGqtnxuiSo4B2MwvOWw')
+        self.assertIn('exchange trading-day open specification',midnight['summary'])
+        weekly=next(v for v in concepts['weekly-open']['curriculum']['videoResources'] if v['resourceId']=='lumitraders-premarket-plan-weekly-open-2024')
+        self.assertEqual(concepts['weekly-open']['verifiedVideoIds'],[weekly['resourceId']])
+        self.assertEqual(weekly['videoId'],'79AFFRbQkG0')
+        self.assertEqual(weekly['segments']['weekly-open'],{'startSeconds':885,'endSeconds':1030,'label':'Sunday / Weekly Open'})
+        self.assertIn('&t=885s',weekly['url'])
+        self.assertIn('selected futures product',weekly['sourceNote'])
+        for concept_id in ('midnight-open','weekly-open'):
+            self.assertIn('Independent supplement',(ROOT/'dist/ict-futures/academy'/f'{concept_id}.html').read_text(encoding='utf-8'))
+
     def test_part2_video_registry_requires_complete_verified_metadata(self):
         def record(concept_ids,segments=None,embed_status='enabled',embed_permission='allowed'):
             return {'resourceId':'lesson-video-01','title':'Exact lesson upload','channelId':'UC123','channelName':'Example channel','videoId':'abcdefghijk','url':'https://www.youtube.com/watch?v=abcdefghijk','language':'en','sourceClass':'official_ict','conceptIds':concept_ids,'segments':segments or {},'verificationStatus':'verified','verifiedAt':'2026-11-19','verifiedBy':'editor-1','lastLinkCheck':'2026-11-19','linkStatus':'verified','embedStatus':embed_status,'embedPermission':embed_permission,'fallbackLinkStatus':'available'}

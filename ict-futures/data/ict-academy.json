@@ -1353,7 +1353,9 @@
       "videoSearch": "https://www.youtube.com/results?search_query=Inner%20Circle%20Trader%20official%20Break%20of%20Structure%20%28BOS%29%20ICT%20futures",
       "sourceNote": "The supplied PDF is the source for playbook framing where explicitly marked. Supplemental clarifications are identified as such. These are discovery links, not verified video-to-concept mappings.",
       "referenceLinks": [],
-      "verifiedVideoIds": [],
+      "verifiedVideoIds": [
+        "ttrades-structure-shift-liquidity-grab-2022"
+      ],
       "learning": {
         "durationMinutes": 18,
         "evidenceBand": "SOURCED · rule-dependent",
@@ -1743,7 +1745,40 @@
           "resource-cme-institute-trade-and-risk-management-12",
           "resource-cftc-customer-education-advisory-13"
         ],
-        "videoResources": [],
+        "videoResources": [
+          {
+            "resourceId": "ttrades-structure-shift-liquidity-grab-2022",
+            "title": "Structure Shift vs Liquidity Grab - ICT Concepts",
+            "publisher": "TTrades",
+            "channelName": "TTrades",
+            "channelId": "UCQwUEVakiYDmNGe7UBza4sQ",
+            "videoId": "5rbFskdmEmU",
+            "url": "https://www.youtube.com/watch?v=5rbFskdmEmU&t=60s",
+            "language": "en",
+            "sourceClass": "independent_supplement",
+            "conceptIds": [
+              "bos"
+            ],
+            "segments": {
+              "bos": {
+                "startSeconds": 60,
+                "endSeconds": 470,
+                "label": "Break of structure vs liquidity grab walkthrough"
+              }
+            },
+            "verificationStatus": "verified",
+            "verifiedAt": "2026-11-20",
+            "verifiedBy": "Codex research audit",
+            "lastLinkCheck": "2026-11-20",
+            "linkStatus": "verified",
+            "embedStatus": "not_checked",
+            "embedPermission": "not_checked",
+            "fallbackLinkStatus": "available",
+            "evidenceUrl": "https://www.youtube.com/watch?v=5rbFskdmEmU",
+            "summary": "Independent TTrades lesson; its description explicitly contrasts break of structure with a liquidity grab. Mapped only to the BOS concept. It does not define a universal close, swing or displacement threshold and is not futures-specific performance evidence.",
+            "sourceNote": "The verified TTrades upload description names 'Break of structure vs Liquidity Grab' and lists a walkthrough from 1:00 to 7:50. This direct link starts at that walkthrough. Independent education, not Official ICT; no universal BOS threshold or futures performance evidence is inferred."
+          }
+        ],
         "supplementalResources": [],
         "topicDiscoveryUrl": "https://www.youtube.com/results?search_query=Inner%20Circle%20Trader%20official%20Break%20of%20Structure%20%28BOS%29%20ICT%20futures",
         "contentVersion": 2,
@@ -7583,7 +7618,9 @@
       "videoSearch": "https://www.youtube.com/results?search_query=Inner%20Circle%20Trader%20official%20Liquidity%20Run%20/%20Breakout%20Acceptance%20ICT%20futures",
       "sourceNote": "The supplied PDF is the source for playbook framing where explicitly marked. Supplemental clarifications are identified as such. These are discovery links, not verified video-to-concept mappings.",
       "referenceLinks": [],
-      "verifiedVideoIds": [],
+      "verifiedVideoIds": [
+        "ict-liquidity-runs-2022"
+      ],
       "learning": {
         "durationMinutes": 22,
         "evidenceBand": "SOURCED · distinction in playbook",
@@ -7968,7 +8005,34 @@
           "resource-cme-institute-trade-and-risk-management-12",
           "resource-cftc-customer-education-advisory-13"
         ],
-        "videoResources": [],
+        "videoResources": [
+          {
+            "resourceId": "ict-liquidity-runs-2022",
+            "title": "ICT Mentorship Core Content - Month 1 - Liquidity Runs",
+            "publisher": "The Inner Circle Trader",
+            "channelName": "The Inner Circle Trader",
+            "channelId": "UCtjxa77NqamhVC8atV85Rog",
+            "videoId": "22XkhpJR5eA",
+            "url": "https://www.youtube.com/watch?v=22XkhpJR5eA",
+            "language": "en",
+            "sourceClass": "official_ict",
+            "conceptIds": [
+              "liquidity-run"
+            ],
+            "segments": {},
+            "verificationStatus": "verified",
+            "verifiedAt": "2026-11-20",
+            "verifiedBy": "Codex research audit",
+            "lastLinkCheck": "2026-11-20",
+            "linkStatus": "verified",
+            "embedStatus": "not_checked",
+            "embedPermission": "not_checked",
+            "fallbackLinkStatus": "available",
+            "evidenceUrl": "https://www.youtube.com/watch?v=22XkhpJR5eA",
+            "summary": "This original Official ICT lesson explicitly teaches liquidity runs, including high- and low-resistance examples. Mapped only to the liquidity-run glossary page; it is not a complete entry-model rulebook or performance evidence.",
+            "sourceNote": "The verified Official ICT upload title names Liquidity Runs. Its scope supports the named lesson only; it does not verify the separate Liquidity Sweep + MSS Entry Model or demonstrate predictive performance."
+          }
+        ],
         "supplementalResources": [],
         "topicDiscoveryUrl": "https://www.youtube.com/results?search_query=Inner%20Circle%20Trader%20official%20Liquidity%20Run%20/%20Breakout%20Acceptance%20ICT%20futures",
         "contentVersion": 2,
@@ -8006,7 +8070,7 @@
       "sourceNote": "The supplied PDF is the source for playbook framing where explicitly marked. Supplemental clarifications are identified as such. These are discovery links, not verified video-to-concept mappings.",
       "referenceLinks": [],
       "verifiedVideoIds": [
-        "ict-2022-ep3"
+        "ttrades-internal-external-liquidity-daily-bias-2024"
       ],
       "learning": {
         "durationMinutes": 28,
@@ -8422,6 +8486,38 @@
             "classification": "original-creator",
             "verificationDate": null,
             "linkStatus": "Existing curated official-source record; re-check exact upload before use"
+          },
+          {
+            "resourceId": "ttrades-internal-external-liquidity-daily-bias-2024",
+            "title": "$niper | Internal & External Liquidity - ICT Daily Bias",
+            "publisher": "TTrades",
+            "channelName": "TTrades",
+            "channelId": "UCQwUEVakiYDmNGe7UBza4sQ",
+            "videoId": "5aRB_ZY3474",
+            "url": "https://www.youtube.com/watch?v=5aRB_ZY3474&t=120s",
+            "language": "en",
+            "sourceClass": "independent_supplement",
+            "conceptIds": [
+              "irl-erl"
+            ],
+            "segments": {
+              "irl-erl": {
+                "startSeconds": 120,
+                "endSeconds": 185,
+                "label": "Internal & External Liquidity"
+              }
+            },
+            "verificationStatus": "verified",
+            "verifiedAt": "2026-11-20",
+            "verifiedBy": "Codex research audit",
+            "lastLinkCheck": "2026-11-20",
+            "linkStatus": "verified",
+            "embedStatus": "not_checked",
+            "embedPermission": "not_checked",
+            "fallbackLinkStatus": "available",
+            "evidenceUrl": "https://www.youtube.com/watch?v=5aRB_ZY3474",
+            "summary": "An independent TTalks interview segment explicitly titled Internal & External Liquidity. The guest discusses internal FVG and external highs/lows and timeframe alignment; this is a practitioner explanation, not an official rule or futures backtest.",
+            "sourceNote": "The verified TTrades upload description names the Internal & External Liquidity chapter from 2:00 to 3:05 and states that internal references include FVGs while external references include highs/lows. Mapped only to IRL/ERL. This is an interview guest’s method, not Official ICT or performance evidence."
           }
         ],
         "supplementalResources": [],
@@ -8460,7 +8556,9 @@
       "videoSearch": "https://www.youtube.com/results?search_query=Inner%20Circle%20Trader%20official%20Opposing%20Liquidity%20/%20Draw%20on%20Liquidity%20ICT%20futures",
       "sourceNote": "The supplied PDF is the source for playbook framing where explicitly marked. Supplemental clarifications are identified as such. These are discovery links, not verified video-to-concept mappings.",
       "referenceLinks": [],
-      "verifiedVideoIds": [],
+      "verifiedVideoIds": [
+        "ttrades-draw-on-liquidity-2023"
+      ],
       "learning": {
         "durationMinutes": 22,
         "evidenceBand": "SOURCED · framework",
@@ -8851,7 +8949,40 @@
           "resource-cme-institute-trade-and-risk-management-12",
           "resource-cftc-customer-education-advisory-13"
         ],
-        "videoResources": [],
+        "videoResources": [
+          {
+            "resourceId": "ttrades-draw-on-liquidity-2023",
+            "title": "Draw on Liquidity (DOL) - ICT Concepts",
+            "publisher": "TTrades",
+            "channelName": "TTrades",
+            "channelId": "UCQwUEVakiYDmNGe7UBza4sQ",
+            "videoId": "MmvC4rsmmcM",
+            "url": "https://www.youtube.com/watch?v=MmvC4rsmmcM&t=15s",
+            "language": "en",
+            "sourceClass": "independent_supplement",
+            "conceptIds": [
+              "opposing-liquidity"
+            ],
+            "segments": {
+              "opposing-liquidity": {
+                "startSeconds": 15,
+                "endSeconds": 88,
+                "label": "Draw on Liquidity"
+              }
+            },
+            "verificationStatus": "verified",
+            "verifiedAt": "2026-11-20",
+            "verifiedBy": "Codex research audit",
+            "lastLinkCheck": "2026-11-20",
+            "linkStatus": "verified",
+            "embedStatus": "not_checked",
+            "embedPermission": "not_checked",
+            "fallbackLinkStatus": "available",
+            "evidenceUrl": "https://www.youtube.com/watch?v=MmvC4rsmmcM",
+            "summary": "An independent TTrades segment directly titled Draw on Liquidity. It discusses where price may draw; it does not define a universal target hierarchy or establish predictive performance.",
+            "sourceNote": "The verified TTrades description lists a Draw on Liquidity chapter from 0:15 to 1:28, followed by separate examples. Mapped only to Opposing Liquidity / Draw on Liquidity. Independent education, not Official ICT; no strategy edge is inferred."
+          }
+        ],
         "supplementalResources": [],
         "topicDiscoveryUrl": "https://www.youtube.com/results?search_query=Inner%20Circle%20Trader%20official%20Opposing%20Liquidity%20/%20Draw%20on%20Liquidity%20ICT%20futures",
         "contentVersion": 2,
@@ -10675,7 +10806,9 @@
       "videoSearch": "https://www.youtube.com/results?search_query=Inner%20Circle%20Trader%20official%20Balanced%20Price%20Range%20%28BPR%29%20ICT%20futures",
       "sourceNote": "The supplied PDF is the source for playbook framing where explicitly marked. Supplemental clarifications are identified as such. These are discovery links, not verified video-to-concept mappings.",
       "referenceLinks": [],
-      "verifiedVideoIds": [],
+      "verifiedVideoIds": [
+        "ttrades-balanced-price-range-2022"
+      ],
       "learning": {
         "durationMinutes": 28,
         "evidenceBand": "Supplemental / terminology may vary",
@@ -11050,7 +11183,34 @@
           "resource-cme-institute-trade-and-risk-management-12",
           "resource-cftc-customer-education-advisory-13"
         ],
-        "videoResources": [],
+        "videoResources": [
+          {
+            "resourceId": "ttrades-balanced-price-range-2022",
+            "title": "Balance Price Range (BPR) - ICT Concepts",
+            "publisher": "TTrades",
+            "channelName": "TTrades",
+            "channelId": "UCQwUEVakiYDmNGe7UBza4sQ",
+            "videoId": "yOPESX2aWkI",
+            "url": "https://www.youtube.com/watch?v=yOPESX2aWkI",
+            "language": "en",
+            "sourceClass": "independent_supplement",
+            "conceptIds": [
+              "bpr"
+            ],
+            "segments": {},
+            "verificationStatus": "verified",
+            "verifiedAt": "2026-11-20",
+            "verifiedBy": "Codex research audit",
+            "lastLinkCheck": "2026-11-20",
+            "linkStatus": "verified",
+            "embedStatus": "not_checked",
+            "embedPermission": "not_checked",
+            "fallbackLinkStatus": "available",
+            "evidenceUrl": "https://www.youtube.com/watch?v=yOPESX2aWkI",
+            "summary": "An independent TTrades video whose exact title is Balanced Price Range (BPR). It is mapped only to this terminology/concept lesson and is not evidence of a predictive edge.",
+            "sourceNote": "The verified TTrades upload title directly names Balanced Price Range (BPR). Mapped only to BPR; its independent terminology and examples do not establish a universal qualification rule or tested performance."
+          }
+        ],
         "supplementalResources": [],
         "topicDiscoveryUrl": "https://www.youtube.com/results?search_query=Inner%20Circle%20Trader%20official%20Balanced%20Price%20Range%20%28BPR%29%20ICT%20futures",
         "contentVersion": 2,
@@ -11084,7 +11244,9 @@
       "videoSearch": "https://www.youtube.com/results?search_query=Inner%20Circle%20Trader%20official%20Volume%20Imbalance%20ICT%20futures",
       "sourceNote": "The supplied PDF is the source for playbook framing where explicitly marked. Supplemental clarifications are identified as such. These are discovery links, not verified video-to-concept mappings.",
       "referenceLinks": [],
-      "verifiedVideoIds": [],
+      "verifiedVideoIds": [
+        "ict-daily-volume-imbalance-draw-2024"
+      ],
       "learning": {
         "durationMinutes": 28,
         "evidenceBand": "SOURCED · rule definition",
@@ -11455,7 +11617,34 @@
           "resource-cme-institute-trade-and-risk-management-12",
           "resource-cftc-customer-education-advisory-13"
         ],
-        "videoResources": [],
+        "videoResources": [
+          {
+            "resourceId": "ict-daily-volume-imbalance-draw-2024",
+            "title": "The Daily Volume Imbalance Draw - Refer to 2024 Livestream August 20, 2024",
+            "publisher": "The Inner Circle Trader",
+            "channelName": "The Inner Circle Trader",
+            "channelId": "UCtjxa77NqamhVC8atV85Rog",
+            "videoId": "KHxQjsITOLo",
+            "url": "https://www.youtube.com/watch?v=KHxQjsITOLo",
+            "language": "en",
+            "sourceClass": "official_ict",
+            "conceptIds": [
+              "volume-imbalance"
+            ],
+            "segments": {},
+            "verificationStatus": "verified",
+            "verifiedAt": "2026-11-20",
+            "verifiedBy": "Codex research audit",
+            "lastLinkCheck": "2026-11-20",
+            "linkStatus": "verified",
+            "embedStatus": "not_checked",
+            "embedPermission": "not_checked",
+            "fallbackLinkStatus": "available",
+            "evidenceUrl": "https://www.youtube.com/watch?v=KHxQjsITOLo",
+            "summary": "Original Official ICT upload whose exact title names the Daily Volume Imbalance Draw. Use as source context for the glossary lesson; this does not establish a universal marking convention or performance evidence.",
+            "sourceNote": "The verified Official ICT upload title explicitly names the Daily Volume Imbalance Draw. Mapped only to volume-imbalance. The page’s body-gap/wick-overlap rule remains its documented source definition; the video title alone does not verify every implementation detail."
+          }
+        ],
         "supplementalResources": [],
         "topicDiscoveryUrl": "https://www.youtube.com/results?search_query=Inner%20Circle%20Trader%20official%20Volume%20Imbalance%20ICT%20futures",
         "contentVersion": 2,
@@ -11491,7 +11680,9 @@
       "videoSearch": "https://www.youtube.com/results?search_query=Inner%20Circle%20Trader%20official%20First%20Presented%20FVG%20%28FPFVG%29%20ICT%20futures",
       "sourceNote": "The supplied PDF is the source for playbook framing where explicitly marked. Supplemental clarifications are identified as such. These are discovery links, not verified video-to-concept mappings.",
       "referenceLinks": [],
-      "verifiedVideoIds": [],
+      "verifiedVideoIds": [
+        "ict-opening-range-first-presented-fvg-2025"
+      ],
       "learning": {
         "durationMinutes": 28,
         "evidenceBand": "Supplemental / terminology may vary",
@@ -11873,7 +12064,34 @@
           "resource-cme-institute-trade-and-risk-management-12",
           "resource-cftc-customer-education-advisory-13"
         ],
-        "videoResources": [],
+        "videoResources": [
+          {
+            "resourceId": "ict-opening-range-first-presented-fvg-2025",
+            "title": "ICT Opening Range Theory \\ 1st Presented FVG Logic",
+            "publisher": "The Inner Circle Trader",
+            "channelName": "The Inner Circle Trader",
+            "channelId": "UCtjxa77NqamhVC8atV85Rog",
+            "videoId": "Zm9Q0NDRxoY",
+            "url": "https://www.youtube.com/watch?v=Zm9Q0NDRxoY",
+            "language": "en",
+            "sourceClass": "official_ict",
+            "conceptIds": [
+              "fpfvg"
+            ],
+            "segments": {},
+            "verificationStatus": "verified",
+            "verifiedAt": "2026-11-20",
+            "verifiedBy": "Codex research audit",
+            "lastLinkCheck": "2026-11-20",
+            "linkStatus": "verified",
+            "embedStatus": "not_checked",
+            "embedPermission": "not_checked",
+            "fallbackLinkStatus": "available",
+            "evidenceUrl": "https://www.youtube.com/watch?v=Zm9Q0NDRxoY",
+            "summary": "Original Official ICT upload whose exact title names First Presented FVG logic. The page’s qualification rules remain explicit research choices; this link is not a validated probability claim or backtest.",
+            "sourceNote": "The verified Official ICT video title directly names 1st Presented FVG Logic and the upload is from the official ICT channel. Mapped only to fpfvg. The video title does not settle the session, displacement or minimum-size rules defined by this page."
+          }
+        ],
         "supplementalResources": [],
         "topicDiscoveryUrl": "https://www.youtube.com/results?search_query=Inner%20Circle%20Trader%20official%20First%20Presented%20FVG%20%28FPFVG%29%20ICT%20futures",
         "contentVersion": 2,
@@ -11908,7 +12126,9 @@
       "videoSearch": "https://www.youtube.com/results?search_query=Inner%20Circle%20Trader%20official%20Liquidity%20Void%20ICT%20futures",
       "sourceNote": "The supplied PDF is the source for playbook framing where explicitly marked. Supplemental clarifications are identified as such. These are discovery links, not verified video-to-concept mappings.",
       "referenceLinks": [],
-      "verifiedVideoIds": [],
+      "verifiedVideoIds": [
+        "ict-month-04-liquidity-voids-2022"
+      ],
       "learning": {
         "durationMinutes": 28,
         "evidenceBand": "Supplemental / terminology may vary",
@@ -12280,7 +12500,34 @@
           "resource-cme-institute-trade-and-risk-management-12",
           "resource-cftc-customer-education-advisory-13"
         ],
-        "videoResources": [],
+        "videoResources": [
+          {
+            "resourceId": "ict-month-04-liquidity-voids-2022",
+            "title": "ICT Mentorship Core Content - Month 04 - Liquidity Voids",
+            "publisher": "The Inner Circle Trader",
+            "channelName": "The Inner Circle Trader",
+            "channelId": "UCtjxa77NqamhVC8atV85Rog",
+            "videoId": "HTQgH11W37o",
+            "url": "https://www.youtube.com/watch?v=HTQgH11W37o",
+            "language": "en",
+            "sourceClass": "official_ict",
+            "conceptIds": [
+              "liquidity-void"
+            ],
+            "segments": {},
+            "verificationStatus": "verified",
+            "verifiedAt": "2026-11-20",
+            "verifiedBy": "Codex research audit",
+            "lastLinkCheck": "2026-11-20",
+            "linkStatus": "verified",
+            "embedStatus": "not_checked",
+            "embedPermission": "not_checked",
+            "fallbackLinkStatus": "available",
+            "evidenceUrl": "https://www.youtube.com/watch?v=HTQgH11W37o",
+            "summary": "Original Official ICT mentorship video whose exact title is Liquidity Voids. Mapped only to the liquidity-void concept; it does not make a void fill a trading signal or establish performance evidence.",
+            "sourceNote": "The verified Inner Circle Trader upload identifies this as the December 2016 Core Content lecture on Liquidity Voids. Mapped only to this concept. Source identification does not verify a futures-specific rule or performance result."
+          }
+        ],
         "supplementalResources": [],
         "topicDiscoveryUrl": "https://www.youtube.com/results?search_query=Inner%20Circle%20Trader%20official%20Liquidity%20Void%20ICT%20futures",
         "contentVersion": 2,
@@ -12762,7 +13009,9 @@
       "videoSearch": "https://www.youtube.com/results?search_query=Inner%20Circle%20Trader%20official%20Mean%20Threshold%20%28MT%29%20ICT%20futures",
       "sourceNote": "The supplied PDF is the source for playbook framing where explicitly marked. Supplemental clarifications are identified as such. These are discovery links, not verified video-to-concept mappings.",
       "referenceLinks": [],
-      "verifiedVideoIds": [],
+      "verifiedVideoIds": [
+        "ttrades-orderblocks-mean-threshold-2023"
+      ],
       "learning": {
         "durationMinutes": 22,
         "evidenceBand": "Supplemental / terminology may vary",
@@ -13132,7 +13381,40 @@
           "resource-cme-institute-trade-and-risk-management-12",
           "resource-cftc-customer-education-advisory-13"
         ],
-        "videoResources": [],
+        "videoResources": [
+          {
+            "resourceId": "ttrades-orderblocks-mean-threshold-2023",
+            "title": "Orderblocks Simplified - ICT Concepts",
+            "publisher": "TTrades",
+            "channelName": "TTrades",
+            "channelId": "UCQwUEVakiYDmNGe7UBza4sQ",
+            "videoId": "Y8DkNYhq0X0",
+            "url": "https://www.youtube.com/watch?v=Y8DkNYhq0X0&t=424s",
+            "language": "en",
+            "sourceClass": "independent_supplement",
+            "conceptIds": [
+              "mean-threshold"
+            ],
+            "segments": {
+              "mean-threshold": {
+                "startSeconds": 424,
+                "endSeconds": 472,
+                "label": "Mean Threshold"
+              }
+            },
+            "verificationStatus": "verified",
+            "verifiedAt": "2026-11-20",
+            "verifiedBy": "Codex research audit",
+            "lastLinkCheck": "2026-11-20",
+            "linkStatus": "verified",
+            "embedStatus": "not_checked",
+            "embedPermission": "not_checked",
+            "fallbackLinkStatus": "available",
+            "evidenceUrl": "https://www.youtube.com/watch?v=Y8DkNYhq0X0",
+            "summary": "An independent TTrades segment titled Mean Threshold (7:04–7:52) within Orderblocks Simplified. It presents the creator’s order-block convention; this is not a universal ICT rule or performance evidence.",
+            "sourceNote": "The verified TTrades upload description explicitly labels a Mean Threshold chapter from 7:04 to 7:52. Mapped only to the Academy Mean Threshold lesson. The segment is the creator’s order-block convention; do not treat its terminology or any performance implication as universal."
+          }
+        ],
         "supplementalResources": [],
         "topicDiscoveryUrl": "https://www.youtube.com/results?search_query=Inner%20Circle%20Trader%20official%20Mean%20Threshold%20%28MT%29%20ICT%20futures",
         "contentVersion": 2,
@@ -13168,7 +13450,9 @@
       "videoSearch": "https://www.youtube.com/results?search_query=Inner%20Circle%20Trader%20official%20Breaker%20Block%20ICT%20futures",
       "sourceNote": "The supplied PDF is the source for playbook framing where explicitly marked. Supplemental clarifications are identified as such. These are discovery links, not verified video-to-concept mappings.",
       "referenceLinks": [],
-      "verifiedVideoIds": [],
+      "verifiedVideoIds": [
+        "ttrades-breaker-blocks-simplified-2024"
+      ],
       "learning": {
         "durationMinutes": 28,
         "evidenceBand": "Supplemental / terminology may vary",
@@ -13547,7 +13831,40 @@
           "resource-cme-institute-trade-and-risk-management-12",
           "resource-cftc-customer-education-advisory-13"
         ],
-        "videoResources": [],
+        "videoResources": [
+          {
+            "resourceId": "ttrades-breaker-blocks-simplified-2024",
+            "title": "Breaker Blocks Simplified - ICT Concepts",
+            "publisher": "TTrades",
+            "channelName": "TTrades",
+            "channelId": "UCQwUEVakiYDmNGe7UBza4sQ",
+            "videoId": "75S4vwD4P1U",
+            "url": "https://www.youtube.com/watch?v=75S4vwD4P1U&t=26s",
+            "language": "en",
+            "sourceClass": "independent_supplement",
+            "conceptIds": [
+              "breaker-block"
+            ],
+            "segments": {
+              "breaker-block": {
+                "startSeconds": 26,
+                "endSeconds": 234,
+                "label": "Bullish Breaker Block and examples"
+              }
+            },
+            "verificationStatus": "verified",
+            "verifiedAt": "2026-11-20",
+            "verifiedBy": "Codex research audit",
+            "lastLinkCheck": "2026-11-20",
+            "linkStatus": "verified",
+            "embedStatus": "not_checked",
+            "embedPermission": "not_checked",
+            "fallbackLinkStatus": "available",
+            "evidenceUrl": "https://www.youtube.com/watch?v=75S4vwD4P1U",
+            "summary": "Independent TTrades tutorial on breaker blocks. Mapped only to the Breaker Block concept, not the separate Unicorn Entry Model. It does not establish a universal definition or strategy performance.",
+            "sourceNote": "The verified TTrades description identifies bullish breaker-block examples at 0:26 and 2:33, then starts the separate Unicorn topic at 3:54. This direct segment ends before Unicorn. Independent education, not Official ICT; the channel description also contains promotional links."
+          }
+        ],
         "supplementalResources": [],
         "topicDiscoveryUrl": "https://www.youtube.com/results?search_query=Inner%20Circle%20Trader%20official%20Breaker%20Block%20ICT%20futures",
         "contentVersion": 2,
@@ -13582,7 +13899,9 @@
       "videoSearch": "https://www.youtube.com/results?search_query=Inner%20Circle%20Trader%20official%20Mitigation%20Block%20ICT%20futures",
       "sourceNote": "The supplied PDF is the source for playbook framing where explicitly marked. Supplemental clarifications are identified as such. These are discovery links, not verified video-to-concept mappings.",
       "referenceLinks": [],
-      "verifiedVideoIds": [],
+      "verifiedVideoIds": [
+        "ttrades-mitigation-blocks-simplified-2024"
+      ],
       "learning": {
         "durationMinutes": 28,
         "evidenceBand": "Supplemental / terminology may vary",
@@ -13954,7 +14273,40 @@
           "resource-cme-institute-trade-and-risk-management-12",
           "resource-cftc-customer-education-advisory-13"
         ],
-        "videoResources": [],
+        "videoResources": [
+          {
+            "resourceId": "ttrades-mitigation-blocks-simplified-2024",
+            "title": "Mitigation Blocks Simplified - ICT Concepts",
+            "publisher": "TTrades",
+            "channelName": "TTrades",
+            "channelId": "UCQwUEVakiYDmNGe7UBza4sQ",
+            "videoId": "bbWPoajy2MY",
+            "url": "https://www.youtube.com/watch?v=bbWPoajy2MY&t=21s",
+            "language": "en",
+            "sourceClass": "independent_supplement",
+            "conceptIds": [
+              "mitigation-block"
+            ],
+            "segments": {
+              "mitigation-block": {
+                "startSeconds": 21,
+                "endSeconds": 146,
+                "label": "Mitigation reversal"
+              }
+            },
+            "verificationStatus": "verified",
+            "verifiedAt": "2026-11-20",
+            "verifiedBy": "Codex research audit",
+            "lastLinkCheck": "2026-11-20",
+            "linkStatus": "verified",
+            "embedStatus": "not_checked",
+            "embedPermission": "not_checked",
+            "fallbackLinkStatus": "available",
+            "evidenceUrl": "https://www.youtube.com/watch?v=bbWPoajy2MY",
+            "summary": "Independent TTrades lesson about mitigation blocks and their distinction from breaker blocks. This segment is mapped only to the Mitigation Block concept; it is not a futures-specific tested rule set or performance evidence.",
+            "sourceNote": "The verified TTrades description names a Mitigation (reversal) chapter at 0:21 and a separate mitigation-plus-SMT chapter at 2:26. This direct link starts at the first segment only. Independent education, not Official ICT."
+          }
+        ],
         "supplementalResources": [],
         "topicDiscoveryUrl": "https://www.youtube.com/results?search_query=Inner%20Circle%20Trader%20official%20Mitigation%20Block%20ICT%20futures",
         "contentVersion": 2,
@@ -13989,7 +14341,9 @@
       "videoSearch": "https://www.youtube.com/results?search_query=Inner%20Circle%20Trader%20official%20Rejection%20Block%20ICT%20futures",
       "sourceNote": "The supplied PDF is the source for playbook framing where explicitly marked. Supplemental clarifications are identified as such. These are discovery links, not verified video-to-concept mappings.",
       "referenceLinks": [],
-      "verifiedVideoIds": [],
+      "verifiedVideoIds": [
+        "ict-rejection-block-entry-techniques"
+      ],
       "learning": {
         "durationMinutes": 28,
         "evidenceBand": "Supplemental / terminology may vary",
@@ -14361,7 +14715,34 @@
           "resource-cme-institute-trade-and-risk-management-12",
           "resource-cftc-customer-education-advisory-13"
         ],
-        "videoResources": [],
+        "videoResources": [
+          {
+            "resourceId": "ict-rejection-block-entry-techniques",
+            "title": "The ICT Rejection block & Various Entry Techniques",
+            "publisher": "The Inner Circle Trader",
+            "channelName": "The Inner Circle Trader",
+            "channelId": "UCtjxa77NqamhVC8atV85Rog",
+            "videoId": "KOUJApLiWhY",
+            "url": "https://www.youtube.com/watch?v=KOUJApLiWhY",
+            "language": "en",
+            "sourceClass": "official_ict",
+            "conceptIds": [
+              "rejection-block"
+            ],
+            "segments": {},
+            "verificationStatus": "verified",
+            "verifiedAt": "2026-11-20",
+            "verifiedBy": "Codex research audit",
+            "lastLinkCheck": "2026-11-20",
+            "linkStatus": "verified",
+            "embedStatus": "not_checked",
+            "embedPermission": "not_checked",
+            "fallbackLinkStatus": "available",
+            "evidenceUrl": "https://www.youtube.com/watch?v=KOUJApLiWhY",
+            "summary": "Original Official ICT upload whose exact title names Rejection Block. The lesson treats the term as a reference topic and does not remove the page’s caveat that definitions vary or establish performance evidence.",
+            "sourceNote": "The verified Official ICT video title directly names Rejection Block and additional entry techniques. Mapped only to rejection-block; the broad title is not used to infer a universal zone formula or to validate other entry models."
+          }
+        ],
         "supplementalResources": [],
         "topicDiscoveryUrl": "https://www.youtube.com/results?search_query=Inner%20Circle%20Trader%20official%20Rejection%20Block%20ICT%20futures",
         "contentVersion": 2,
@@ -14829,7 +15210,9 @@
       "videoSearch": "https://www.youtube.com/results?search_query=Inner%20Circle%20Trader%20official%20PD%20Arrays%20ICT%20futures",
       "sourceNote": "The supplied PDF is the source for playbook framing where explicitly marked. Supplemental clarifications are identified as such. These are discovery links, not verified video-to-concept mappings.",
       "referenceLinks": [],
-      "verifiedVideoIds": [],
+      "verifiedVideoIds": [
+        "ict-pd-array-matrix-revealed-2025"
+      ],
       "learning": {
         "durationMinutes": 22,
         "evidenceBand": "SOURCED · terminology",
@@ -15211,7 +15594,34 @@
           "resource-cme-institute-trade-and-risk-management-12",
           "resource-cftc-customer-education-advisory-13"
         ],
-        "videoResources": [],
+        "videoResources": [
+          {
+            "resourceId": "ict-pd-array-matrix-revealed-2025",
+            "title": "ICT PD Array Matrix Revealed \\ October 18, 2025",
+            "publisher": "The Inner Circle Trader",
+            "channelName": "The Inner Circle Trader",
+            "channelId": "UCtjxa77NqamhVC8atV85Rog",
+            "videoId": "043OW8trIJE",
+            "url": "https://www.youtube.com/watch?v=043OW8trIJE",
+            "language": "en",
+            "sourceClass": "official_ict",
+            "conceptIds": [
+              "pd-arrays"
+            ],
+            "segments": {},
+            "verificationStatus": "verified",
+            "verifiedAt": "2026-11-20",
+            "verifiedBy": "Codex research audit",
+            "lastLinkCheck": "2026-11-20",
+            "linkStatus": "verified",
+            "embedStatus": "not_checked",
+            "embedPermission": "not_checked",
+            "fallbackLinkStatus": "available",
+            "evidenceUrl": "https://www.youtube.com/watch?v=043OW8trIJE",
+            "summary": "Original Official ICT upload whose exact title identifies the PD Array Matrix. It supplements the general PD Arrays lesson; it does not substantiate each related concept definition or prove a strategy edge.",
+            "sourceNote": "The verified Official ICT upload title directly names the PD Array Matrix. Mapped only to pd-arrays. Its broad framework is not reused as item-specific evidence for FVG, OTE, order-block, or any separate model lessons."
+          }
+        ],
         "supplementalResources": [],
         "topicDiscoveryUrl": "https://www.youtube.com/results?search_query=Inner%20Circle%20Trader%20official%20PD%20Arrays%20ICT%20futures",
         "contentVersion": 2,
@@ -15248,7 +15658,9 @@
       "videoSearch": "https://www.youtube.com/results?search_query=Inner%20Circle%20Trader%20official%20Premium%20%26%20Discount%20ICT%20futures",
       "sourceNote": "The supplied PDF is the source for playbook framing where explicitly marked. Supplemental clarifications are identified as such. These are discovery links, not verified video-to-concept mappings.",
       "referenceLinks": [],
-      "verifiedVideoIds": [],
+      "verifiedVideoIds": [
+        "ttrades-equilibrium-discount-premium-2025"
+      ],
       "learning": {
         "durationMinutes": 18,
         "evidenceBand": "SOURCED / operational range needed",
@@ -15619,7 +16031,46 @@
           "resource-cme-institute-trade-and-risk-management-12",
           "resource-cftc-customer-education-advisory-13"
         ],
-        "videoResources": [],
+        "videoResources": [
+          {
+            "resourceId": "ttrades-equilibrium-discount-premium-2025",
+            "title": "You Are Using Discount and Premium Wrong! - EQ For Expansions",
+            "publisher": "TTrades",
+            "channelName": "TTrades",
+            "channelId": "UCQwUEVakiYDmNGe7UBza4sQ",
+            "videoId": "IPZjNI1B5a0",
+            "url": "https://www.youtube.com/watch?v=IPZjNI1B5a0&t=26s",
+            "language": "en",
+            "sourceClass": "independent_supplement",
+            "conceptIds": [
+              "premium-discount",
+              "equilibrium"
+            ],
+            "segments": {
+              "premium-discount": {
+                "startSeconds": 26,
+                "endSeconds": 159,
+                "label": "Premium, Discount and Equilibrium framing"
+              },
+              "equilibrium": {
+                "startSeconds": 159,
+                "endSeconds": 1146,
+                "label": "Equilibrium examples"
+              }
+            },
+            "verificationStatus": "verified",
+            "verifiedAt": "2026-11-20",
+            "verifiedBy": "Codex research audit",
+            "lastLinkCheck": "2026-11-20",
+            "linkStatus": "verified",
+            "embedStatus": "not_checked",
+            "embedPermission": "not_checked",
+            "fallbackLinkStatus": "available",
+            "evidenceUrl": "https://www.youtube.com/watch?v=IPZjNI1B5a0",
+            "summary": "Independent TTrades video about Equilibrium and Premium/Discount. This direct segment is mapped only to the Premium & Discount concept; it does not prove a predictive edge or a universal dealing-range rule.",
+            "sourceNote": "The verified TTrades description says it covers Equilibrium (Discount & Premium), gives a PDF segment at 0:26 and examples from 2:39 to 19:06. The channel description mentions use for timeframe bias; that is the creator's framing, not evidence of performance. Independent education, not Official ICT; the channel description also contains promotional links."
+          }
+        ],
         "supplementalResources": [],
         "topicDiscoveryUrl": "https://www.youtube.com/results?search_query=Inner%20Circle%20Trader%20official%20Premium%20%26%20Discount%20ICT%20futures",
         "contentVersion": 2,
@@ -15654,7 +16105,9 @@
       "videoSearch": "https://www.youtube.com/results?search_query=Inner%20Circle%20Trader%20official%20Equilibrium%20%28EQ%29%20ICT%20futures",
       "sourceNote": "The supplied PDF is the source for playbook framing where explicitly marked. Supplemental clarifications are identified as such. These are discovery links, not verified video-to-concept mappings.",
       "referenceLinks": [],
-      "verifiedVideoIds": [],
+      "verifiedVideoIds": [
+        "ttrades-equilibrium-discount-premium-2025"
+      ],
       "learning": {
         "durationMinutes": 18,
         "evidenceBand": "SOURCED",
@@ -16018,7 +16471,46 @@
           "resource-cme-institute-trade-and-risk-management-12",
           "resource-cftc-customer-education-advisory-13"
         ],
-        "videoResources": [],
+        "videoResources": [
+          {
+            "resourceId": "ttrades-equilibrium-discount-premium-2025",
+            "title": "You Are Using Discount and Premium Wrong! - EQ For Expansions",
+            "publisher": "TTrades",
+            "channelName": "TTrades",
+            "channelId": "UCQwUEVakiYDmNGe7UBza4sQ",
+            "videoId": "IPZjNI1B5a0",
+            "url": "https://www.youtube.com/watch?v=IPZjNI1B5a0&t=159s",
+            "language": "en",
+            "sourceClass": "independent_supplement",
+            "conceptIds": [
+              "premium-discount",
+              "equilibrium"
+            ],
+            "segments": {
+              "premium-discount": {
+                "startSeconds": 26,
+                "endSeconds": 159,
+                "label": "Premium, Discount and Equilibrium framing"
+              },
+              "equilibrium": {
+                "startSeconds": 159,
+                "endSeconds": 1146,
+                "label": "Equilibrium examples"
+              }
+            },
+            "verificationStatus": "verified",
+            "verifiedAt": "2026-11-20",
+            "verifiedBy": "Codex research audit",
+            "lastLinkCheck": "2026-11-20",
+            "linkStatus": "verified",
+            "embedStatus": "not_checked",
+            "embedPermission": "not_checked",
+            "fallbackLinkStatus": "available",
+            "evidenceUrl": "https://www.youtube.com/watch?v=IPZjNI1B5a0",
+            "summary": "Independent TTrades video about Equilibrium and Premium/Discount. This direct segment is mapped only to the Equilibrium (EQ) concept; it does not prove a predictive edge or a universal dealing-range rule.",
+            "sourceNote": "The verified TTrades description says it covers Equilibrium (Discount & Premium), gives a PDF segment at 0:26 and examples from 2:39 to 19:06. The channel description mentions use for timeframe bias; that is the creator's framing, not evidence of performance. Independent education, not Official ICT; the channel description also contains promotional links."
+          }
+        ],
         "supplementalResources": [],
         "topicDiscoveryUrl": "https://www.youtube.com/results?search_query=Inner%20Circle%20Trader%20official%20Equilibrium%20%28EQ%29%20ICT%20futures",
         "contentVersion": 2,
@@ -16054,7 +16546,9 @@
       "videoSearch": "https://www.youtube.com/results?search_query=Inner%20Circle%20Trader%20official%20Dealing%20Range%20ICT%20futures",
       "sourceNote": "The supplied PDF is the source for playbook framing where explicitly marked. Supplemental clarifications are identified as such. These are discovery links, not verified video-to-concept mappings.",
       "referenceLinks": [],
-      "verifiedVideoIds": [],
+      "verifiedVideoIds": [
+        "ttrades-choosing-dealing-ranges-2022"
+      ],
       "learning": {
         "durationMinutes": 22,
         "evidenceBand": "SOURCED / operational definition",
@@ -16426,7 +16920,40 @@
           "resource-cme-institute-trade-and-risk-management-12",
           "resource-cftc-customer-education-advisory-13"
         ],
-        "videoResources": [],
+        "videoResources": [
+          {
+            "resourceId": "ttrades-choosing-dealing-ranges-2022",
+            "title": "Choosing Dealing Ranges & Displacement Ranges - ICT Concepts",
+            "publisher": "TTrades",
+            "channelName": "TTrades",
+            "channelId": "UCQwUEVakiYDmNGe7UBza4sQ",
+            "videoId": "CAuN4tvLInQ",
+            "url": "https://www.youtube.com/watch?v=CAuN4tvLInQ&t=20s",
+            "language": "en",
+            "sourceClass": "independent_supplement",
+            "conceptIds": [
+              "dealing-range"
+            ],
+            "segments": {
+              "dealing-range": {
+                "startSeconds": 20,
+                "endSeconds": 120,
+                "label": "Dealing Ranges"
+              }
+            },
+            "verificationStatus": "verified",
+            "verifiedAt": "2026-11-20",
+            "verifiedBy": "Codex research audit",
+            "lastLinkCheck": "2026-11-20",
+            "linkStatus": "verified",
+            "embedStatus": "not_checked",
+            "embedPermission": "not_checked",
+            "fallbackLinkStatus": "available",
+            "evidenceUrl": "https://www.youtube.com/watch?v=CAuN4tvLInQ",
+            "summary": "Independent TTrades segment directly named 'Dealing Ranges'. It maps only to the Dealing Range concept and does not determine objective swing anchors or prove a trading edge.",
+            "sourceNote": "The verified TTrades description lists the Dealing Ranges chapter from 0:20 to 2:00, followed by a separate Displacement Ranges chapter. Independent education, not Official ICT."
+          }
+        ],
         "supplementalResources": [],
         "topicDiscoveryUrl": "https://www.youtube.com/results?search_query=Inner%20Circle%20Trader%20official%20Dealing%20Range%20ICT%20futures",
         "contentVersion": 2,
@@ -17298,7 +17825,9 @@
       "videoSearch": "https://www.youtube.com/results?search_query=Inner%20Circle%20Trader%20official%20Time%20Anchors%20ICT%20futures",
       "sourceNote": "The supplied PDF is the source for playbook framing where explicitly marked. Supplemental clarifications are identified as such. These are discovery links, not verified video-to-concept mappings.",
       "referenceLinks": [],
-      "verifiedVideoIds": [],
+      "verifiedVideoIds": [
+        "ttrades-important-time-levels-2024"
+      ],
       "learning": {
         "durationMinutes": 22,
         "evidenceBand": "SOURCED",
@@ -17672,7 +18201,34 @@
           "resource-cme-institute-trade-and-risk-management-12",
           "resource-cftc-customer-education-advisory-13"
         ],
-        "videoResources": [],
+        "videoResources": [
+          {
+            "resourceId": "ttrades-important-time-levels-2024",
+            "title": "Important Time Levels For Trading",
+            "publisher": "TTrades",
+            "channelName": "TTrades",
+            "channelId": "UCQwUEVakiYDmNGe7UBza4sQ",
+            "videoId": "4Uz9WuMh4kQ",
+            "url": "https://www.youtube.com/watch?v=4Uz9WuMh4kQ",
+            "language": "en",
+            "sourceClass": "independent_supplement",
+            "conceptIds": [
+              "time-anchors"
+            ],
+            "segments": {},
+            "verificationStatus": "verified",
+            "verifiedAt": "2026-11-20",
+            "verifiedBy": "Codex research audit",
+            "lastLinkCheck": "2026-11-20",
+            "linkStatus": "verified",
+            "embedStatus": "not_checked",
+            "embedPermission": "not_checked",
+            "fallbackLinkStatus": "available",
+            "evidenceUrl": "https://www.youtube.com/watch?v=4Uz9WuMh4kQ",
+            "summary": "An independent TTrades lesson on daily reference times, including midnight, 8:30, 9:30 and four-hour candle opens. Times are the publisher’s educational convention, not an exchange schedule or performance evidence.",
+            "sourceNote": "The verified TTrades upload title and description identify a lesson about important daily time levels; its transcript discusses midnight, 8:30, 9:30, 10:00 and 14:00 Eastern-time references. Map only to the broad Time Anchors lesson; do not treat these as product-specific exchange hours or a tested edge."
+          }
+        ],
         "supplementalResources": [],
         "topicDiscoveryUrl": "https://www.youtube.com/results?search_query=Inner%20Circle%20Trader%20official%20Time%20Anchors%20ICT%20futures",
         "contentVersion": 2,
@@ -17707,7 +18263,9 @@
       "videoSearch": "https://www.youtube.com/results?search_query=Inner%20Circle%20Trader%20official%20Midnight%20/%20True%20Day%20Open%20ICT%20futures",
       "sourceNote": "The supplied PDF is the source for playbook framing where explicitly marked. Supplemental clarifications are identified as such. These are discovery links, not verified video-to-concept mappings.",
       "referenceLinks": [],
-      "verifiedVideoIds": [],
+      "verifiedVideoIds": [
+        "lumitraders-ny-midnight-open-explained-2026"
+      ],
       "learning": {
         "durationMinutes": 22,
         "evidenceBand": "SOURCED",
@@ -18076,7 +18634,34 @@
           "resource-cme-institute-trade-and-risk-management-12",
           "resource-cftc-customer-education-advisory-13"
         ],
-        "videoResources": [],
+        "videoResources": [
+          {
+            "resourceId": "lumitraders-ny-midnight-open-explained-2026",
+            "title": "ICT NY Midnight Open Explained",
+            "publisher": "LumiTraders",
+            "channelName": "LumiTraders",
+            "channelId": "UChlDYGqtnxuiSo4B2MwvOWw",
+            "videoId": "kMtW9YDj3TU",
+            "url": "https://www.youtube.com/watch?v=kMtW9YDj3TU",
+            "language": "en",
+            "sourceClass": "independent_supplement",
+            "conceptIds": [
+              "midnight-open"
+            ],
+            "segments": {},
+            "verificationStatus": "verified",
+            "verifiedAt": "2026-11-20",
+            "verifiedBy": "Codex research audit",
+            "lastLinkCheck": "2026-11-20",
+            "linkStatus": "verified",
+            "embedStatus": "not_checked",
+            "embedPermission": "not_checked",
+            "fallbackLinkStatus": "available",
+            "evidenceUrl": "https://www.youtube.com/watch?v=kMtW9YDj3TU",
+            "summary": "Independent LumiTraders lesson explicitly about the New York Midnight Open. It is not Official ICT or an exchange trading-day open specification; no trading edge is implied.",
+            "sourceNote": "The verified LumiTraders upload title directly identifies the NY Midnight Open. Mapped only to midnight-open. It supplements the 00:00 America/New_York reference and does not define a product’s exchange trading day or true day open."
+          }
+        ],
         "supplementalResources": [],
         "topicDiscoveryUrl": "https://www.youtube.com/results?search_query=Inner%20Circle%20Trader%20official%20Midnight%20/%20True%20Day%20Open%20ICT%20futures",
         "contentVersion": 2,
@@ -18111,7 +18696,9 @@
       "videoSearch": "https://www.youtube.com/results?search_query=Inner%20Circle%20Trader%20official%20New%20Day%20Opening%20Gap%20%28NDOG%29%20ICT%20futures",
       "sourceNote": "The supplied PDF is the source for playbook framing where explicitly marked. Supplemental clarifications are identified as such. These are discovery links, not verified video-to-concept mappings.",
       "referenceLinks": [],
-      "verifiedVideoIds": [],
+      "verifiedVideoIds": [
+        "ict-ndog-new-day-opening-gap-2023"
+      ],
       "learning": {
         "durationMinutes": 22,
         "evidenceBand": "SOURCED / session definition matters",
@@ -18481,7 +19068,34 @@
           "resource-cme-institute-trade-and-risk-management-12",
           "resource-cftc-customer-education-advisory-13"
         ],
-        "videoResources": [],
+        "videoResources": [
+          {
+            "resourceId": "ict-ndog-new-day-opening-gap-2023",
+            "title": "NDOG - New Day Opening Gap - Part 1",
+            "publisher": "The Inner Circle Trader",
+            "channelName": "The Inner Circle Trader",
+            "channelId": "UCtjxa77NqamhVC8atV85Rog",
+            "videoId": "Sh-bDHWNpsk",
+            "url": "https://www.youtube.com/watch?v=Sh-bDHWNpsk",
+            "language": "en",
+            "sourceClass": "official_ict",
+            "conceptIds": [
+              "ndog"
+            ],
+            "segments": {},
+            "verificationStatus": "verified",
+            "verifiedAt": "2026-11-20",
+            "verifiedBy": "Codex research audit",
+            "lastLinkCheck": "2026-11-20",
+            "linkStatus": "verified",
+            "embedStatus": "not_checked",
+            "embedPermission": "not_checked",
+            "fallbackLinkStatus": "available",
+            "evidenceUrl": "https://www.youtube.com/watch?v=Sh-bDHWNpsk",
+            "summary": "Original Official ICT lesson whose title directly names the New Day Opening Gap. The lesson is educational and does not certify the application’s session conventions or produce performance evidence.",
+            "sourceNote": "The Inner Circle Trader’s verified channel published this upload under the exact NDOG title. Mapped only to the New Day Opening Gap concept. Current chart/session conventions still require the product-specific session rules; video identity does not establish a tested edge."
+          }
+        ],
         "supplementalResources": [],
         "topicDiscoveryUrl": "https://www.youtube.com/results?search_query=Inner%20Circle%20Trader%20official%20New%20Day%20Opening%20Gap%20%28NDOG%29%20ICT%20futures",
         "contentVersion": 2,
@@ -18516,7 +19130,9 @@
       "videoSearch": "https://www.youtube.com/results?search_query=Inner%20Circle%20Trader%20official%20New%20Week%20Opening%20Gap%20%28NWOG%29%20ICT%20futures",
       "sourceNote": "The supplied PDF is the source for playbook framing where explicitly marked. Supplemental clarifications are identified as such. These are discovery links, not verified video-to-concept mappings.",
       "referenceLinks": [],
-      "verifiedVideoIds": [],
+      "verifiedVideoIds": [
+        "ict-nwog-new-week-opening-gap-2023"
+      ],
       "learning": {
         "durationMinutes": 22,
         "evidenceBand": "SOURCED / session definition matters",
@@ -18884,7 +19500,34 @@
           "resource-cme-institute-trade-and-risk-management-12",
           "resource-cftc-customer-education-advisory-13"
         ],
-        "videoResources": [],
+        "videoResources": [
+          {
+            "resourceId": "ict-nwog-new-week-opening-gap-2023",
+            "title": "NWOG - New Week Opening Gap",
+            "publisher": "The Inner Circle Trader",
+            "channelName": "The Inner Circle Trader",
+            "channelId": "UCtjxa77NqamhVC8atV85Rog",
+            "videoId": "WKKnlIIkBTk",
+            "url": "https://www.youtube.com/watch?v=WKKnlIIkBTk",
+            "language": "en",
+            "sourceClass": "official_ict",
+            "conceptIds": [
+              "nwog"
+            ],
+            "segments": {},
+            "verificationStatus": "verified",
+            "verifiedAt": "2026-11-20",
+            "verifiedBy": "Codex research audit",
+            "lastLinkCheck": "2026-11-20",
+            "linkStatus": "verified",
+            "embedStatus": "not_checked",
+            "embedPermission": "not_checked",
+            "fallbackLinkStatus": "available",
+            "evidenceUrl": "https://www.youtube.com/watch?v=WKKnlIIkBTk",
+            "summary": "Original Official ICT lesson whose title directly names the New Week Opening Gap. The lesson is educational and does not certify the application’s session conventions or produce performance evidence.",
+            "sourceNote": "The Inner Circle Trader’s verified channel published this upload under the exact NWOG title. Mapped only to the New Week Opening Gap concept. Current chart/session conventions still require the product-specific session rules; video identity does not establish a tested edge."
+          }
+        ],
         "supplementalResources": [],
         "topicDiscoveryUrl": "https://www.youtube.com/results?search_query=Inner%20Circle%20Trader%20official%20New%20Week%20Opening%20Gap%20%28NWOG%29%20ICT%20futures",
         "contentVersion": 2,
@@ -18918,7 +19561,9 @@
       "videoSearch": "https://www.youtube.com/results?search_query=Inner%20Circle%20Trader%20official%20Weekly%20Open%20ICT%20futures",
       "sourceNote": "The supplied PDF is the source for playbook framing where explicitly marked. Supplemental clarifications are identified as such. These are discovery links, not verified video-to-concept mappings.",
       "referenceLinks": [],
-      "verifiedVideoIds": [],
+      "verifiedVideoIds": [
+        "lumitraders-premarket-plan-weekly-open-2024"
+      ],
       "learning": {
         "durationMinutes": 22,
         "evidenceBand": "SOURCED / product-specific",
@@ -19284,7 +19929,40 @@
           "resource-cme-institute-trade-and-risk-management-12",
           "resource-cftc-customer-education-advisory-13"
         ],
-        "videoResources": [],
+        "videoResources": [
+          {
+            "resourceId": "lumitraders-premarket-plan-weekly-open-2024",
+            "title": "ICT PRE-MARKET PLAN. STEP BY STEP GUIDE",
+            "publisher": "LumiTraders",
+            "channelName": "LumiTraders",
+            "channelId": "UChlDYGqtnxuiSo4B2MwvOWw",
+            "videoId": "79AFFRbQkG0",
+            "url": "https://www.youtube.com/watch?v=79AFFRbQkG0&t=885s",
+            "language": "en",
+            "sourceClass": "independent_supplement",
+            "conceptIds": [
+              "weekly-open"
+            ],
+            "segments": {
+              "weekly-open": {
+                "startSeconds": 885,
+                "endSeconds": 1030,
+                "label": "Sunday / Weekly Open"
+              }
+            },
+            "verificationStatus": "verified",
+            "verifiedAt": "2026-11-20",
+            "verifiedBy": "Codex research audit",
+            "lastLinkCheck": "2026-11-20",
+            "linkStatus": "verified",
+            "embedStatus": "not_checked",
+            "embedPermission": "not_checked",
+            "fallbackLinkStatus": "available",
+            "evidenceUrl": "https://www.youtube.com/watch?v=79AFFRbQkG0",
+            "summary": "Independent LumiTraders lesson with a named Sunday / Weekly Open chapter from 14:45 to 17:10. Product schedules differ; use exchange hours for the selected futures contract.",
+            "sourceNote": "The verified upload description lists a Sunday / Weekly Open chapter at 14:45, followed by Asia and London at 17:10. Mapped only to weekly-open and only to that chapter; it is not a substitute for a selected futures product’s official schedule or a performance study."
+          }
+        ],
         "supplementalResources": [],
         "topicDiscoveryUrl": "https://www.youtube.com/results?search_query=Inner%20Circle%20Trader%20official%20Weekly%20Open%20ICT%20futures",
         "contentVersion": 2,
@@ -19320,7 +19998,9 @@
       "videoSearch": "https://www.youtube.com/results?search_query=Inner%20Circle%20Trader%20official%20ICT%20Killzones%20ICT%20futures",
       "sourceNote": "The supplied PDF is the source for playbook framing where explicitly marked. Supplemental clarifications are identified as such. These are discovery links, not verified video-to-concept mappings.",
       "referenceLinks": [],
-      "verifiedVideoIds": [],
+      "verifiedVideoIds": [
+        "ttrades-killzones-indicator-settings-2023"
+      ],
       "learning": {
         "durationMinutes": 18,
         "evidenceBand": "Supplemental / terminology may vary",
@@ -19689,7 +20369,40 @@
           "resource-cme-institute-trade-and-risk-management-12",
           "resource-cftc-customer-education-advisory-13"
         ],
-        "videoResources": [],
+        "videoResources": [
+          {
+            "resourceId": "ttrades-killzones-indicator-settings-2023",
+            "title": "ICT Killzones & Indicator Settings",
+            "publisher": "TTrades",
+            "channelName": "TTrades",
+            "channelId": "UCQwUEVakiYDmNGe7UBza4sQ",
+            "videoId": "MPeeE55rNOw",
+            "url": "https://www.youtube.com/watch?v=MPeeE55rNOw&t=49s",
+            "language": "en",
+            "sourceClass": "independent_supplement",
+            "conceptIds": [
+              "killzones"
+            ],
+            "segments": {
+              "killzones": {
+                "startSeconds": 49,
+                "endSeconds": 144,
+                "label": "Killzones overview, time zone and markup"
+              }
+            },
+            "verificationStatus": "verified",
+            "verifiedAt": "2026-11-20",
+            "verifiedBy": "Codex research audit",
+            "lastLinkCheck": "2026-11-20",
+            "linkStatus": "verified",
+            "embedStatus": "not_checked",
+            "embedPermission": "not_checked",
+            "fallbackLinkStatus": "available",
+            "evidenceUrl": "https://www.youtube.com/watch?v=MPeeE55rNOw",
+            "summary": "An independent TTrades overview of ICT Killzones, how the creator marks them, and time-zone settings. The chapter is educational and does not replace current contract-specific exchange hours or prove a trading edge.",
+            "sourceNote": "The verified upload description identifies Killzones PDF (0:49), Correct Timezone (1:06), and a second Killzones PDF chapter (1:13) before Practice (2:24). Mapped only to the ICT Killzones lesson. The publisher’s time windows require independent product/DST verification."
+          }
+        ],
         "supplementalResources": [],
         "topicDiscoveryUrl": "https://www.youtube.com/results?search_query=Inner%20Circle%20Trader%20official%20ICT%20Killzones%20ICT%20futures",
         "contentVersion": 2,
@@ -19725,7 +20438,9 @@
       "videoSearch": "https://www.youtube.com/results?search_query=Inner%20Circle%20Trader%20official%20Asian%20Range%20ICT%20futures",
       "sourceNote": "The supplied PDF is the source for playbook framing where explicitly marked. Supplemental clarifications are identified as such. These are discovery links, not verified video-to-concept mappings.",
       "referenceLinks": [],
-      "verifiedVideoIds": [],
+      "verifiedVideoIds": [
+        "ict-friday-asian-range-2020"
+      ],
       "learning": {
         "durationMinutes": 18,
         "evidenceBand": "Supplemental / terminology may vary",
@@ -20101,7 +20816,34 @@
           "resource-cme-institute-trade-and-risk-management-12",
           "resource-cftc-customer-education-advisory-13"
         ],
-        "videoResources": [],
+        "videoResources": [
+          {
+            "resourceId": "ict-friday-asian-range-2020",
+            "title": "ICT Forex Lecture: Revisiting The Friday Asian Range",
+            "publisher": "The Inner Circle Trader",
+            "channelName": "The Inner Circle Trader",
+            "channelId": "UCtjxa77NqamhVC8atV85Rog",
+            "videoId": "YYsfAvz0c3o",
+            "url": "https://www.youtube.com/watch?v=YYsfAvz0c3o",
+            "language": "en",
+            "sourceClass": "official_ict",
+            "conceptIds": [
+              "asian-range"
+            ],
+            "segments": {},
+            "verificationStatus": "verified",
+            "verifiedAt": "2026-11-20",
+            "verifiedBy": "Codex research audit",
+            "lastLinkCheck": "2026-11-20",
+            "linkStatus": "verified",
+            "embedStatus": "not_checked",
+            "embedPermission": "not_checked",
+            "fallbackLinkStatus": "available",
+            "evidenceUrl": "https://www.youtube.com/watch?v=YYsfAvz0c3o",
+            "summary": "Original Official ICT lecture explicitly revisiting the Friday Asian Range. Its scope is one named session example; it does not define every futures product’s Asian hours or holiday schedule.",
+            "sourceNote": "The verified Official ICT upload title directly names the Friday Asian Range. Mapped only to asian-range; use the product’s official exchange schedule for listed-futures session boundaries, DST and holiday exceptions."
+          }
+        ],
         "supplementalResources": [],
         "topicDiscoveryUrl": "https://www.youtube.com/results?search_query=Inner%20Circle%20Trader%20official%20Asian%20Range%20ICT%20futures",
         "contentVersion": 2,
@@ -21443,7 +22185,9 @@
       "videoSearch": "https://www.youtube.com/results?search_query=Inner%20Circle%20Trader%20official%20IPDA%2020/40/60%20Lookback%20ICT%20futures",
       "sourceNote": "The supplied PDF is the source for playbook framing where explicitly marked. Supplemental clarifications are identified as such. These are discovery links, not verified video-to-concept mappings.",
       "referenceLinks": [],
-      "verifiedVideoIds": [],
+      "verifiedVideoIds": [
+        "ict-ipda-data-ranges-2022"
+      ],
       "learning": {
         "durationMinutes": 28,
         "evidenceBand": "Supplemental / terminology may vary",
@@ -21817,7 +22561,34 @@
           "resource-cme-institute-trade-and-risk-management-12",
           "resource-cftc-customer-education-advisory-13"
         ],
-        "videoResources": [],
+        "videoResources": [
+          {
+            "resourceId": "ict-ipda-data-ranges-2022",
+            "title": "ICT Mentorship Core Content - Month 05 - Using IPDA Data Ranges",
+            "publisher": "The Inner Circle Trader",
+            "channelName": "The Inner Circle Trader",
+            "channelId": "UCtjxa77NqamhVC8atV85Rog",
+            "videoId": "LRKtiysz4nA",
+            "url": "https://www.youtube.com/watch?v=LRKtiysz4nA",
+            "language": "en",
+            "sourceClass": "official_ict",
+            "conceptIds": [
+              "ipda"
+            ],
+            "segments": {},
+            "verificationStatus": "verified",
+            "verifiedAt": "2026-11-20",
+            "verifiedBy": "Codex research audit",
+            "lastLinkCheck": "2026-11-20",
+            "linkStatus": "verified",
+            "embedStatus": "not_checked",
+            "embedPermission": "not_checked",
+            "fallbackLinkStatus": "available",
+            "evidenceUrl": "https://www.youtube.com/watch?v=LRKtiysz4nA",
+            "summary": "Original Official ICT lesson explicitly about IPDA data ranges, including the 20/40/60 lookback framework. Mapped only to the IPDA lesson; these are instructional claims, not independently validated market mechanics or trading performance.",
+            "sourceNote": "The verified Official ICT upload title directly names Using IPDA Data Ranges. Mapped only to the IPDA 20/40/60 lesson; the video does not validate the model statistically or establish performance."
+          }
+        ],
         "supplementalResources": [],
         "topicDiscoveryUrl": "https://www.youtube.com/results?search_query=Inner%20Circle%20Trader%20official%20IPDA%2020/40/60%20Lookback%20ICT%20futures",
         "contentVersion": 2,
@@ -21855,7 +22626,9 @@
       "videoSearch": "https://www.youtube.com/results?search_query=Inner%20Circle%20Trader%20official%20SMT%20Divergence%20ICT%20futures",
       "sourceNote": "The supplied PDF is the source for playbook framing where explicitly marked. Supplemental clarifications are identified as such. These are discovery links, not verified video-to-concept mappings.",
       "referenceLinks": [],
-      "verifiedVideoIds": [],
+      "verifiedVideoIds": [
+        "ttrades-smt-divergence-ict-concepts-2023"
+      ],
       "learning": {
         "durationMinutes": 28,
         "evidenceBand": "Supplemental / terminology may vary",
@@ -22226,7 +22999,40 @@
           "resource-cme-institute-trade-and-risk-management-12",
           "resource-cftc-customer-education-advisory-13"
         ],
-        "videoResources": [],
+        "videoResources": [
+          {
+            "resourceId": "ttrades-smt-divergence-ict-concepts-2023",
+            "title": "SMT Divergence - ICT Concepts",
+            "publisher": "TTrades",
+            "channelName": "TTrades",
+            "channelId": "UCQwUEVakiYDmNGe7UBza4sQ",
+            "videoId": "q1NmxUTm4n4",
+            "url": "https://www.youtube.com/watch?v=q1NmxUTm4n4&t=288s",
+            "language": "en",
+            "sourceClass": "independent_supplement",
+            "conceptIds": [
+              "smt"
+            ],
+            "segments": {
+              "smt": {
+                "startSeconds": 288,
+                "endSeconds": 431,
+                "label": "Utilization of SMT"
+              }
+            },
+            "verificationStatus": "verified",
+            "verifiedAt": "2026-11-20",
+            "verifiedBy": "Codex research audit",
+            "lastLinkCheck": "2026-11-20",
+            "linkStatus": "verified",
+            "embedStatus": "not_checked",
+            "embedPermission": "not_checked",
+            "fallbackLinkStatus": "available",
+            "evidenceUrl": "https://www.youtube.com/watch?v=q1NmxUTm4n4",
+            "summary": "An independent TTrades ICT-concepts video with a named Utilization of SMT chapter. It illustrates the creator’s use of divergence as context; it is not Official ICT, a universal correlation rule or futures performance evidence.",
+            "sourceNote": "The verified video title is SMT Divergence - ICT Concepts, and the description lists a Utilization of SMT chapter at 4:48 followed by a separate Which Asset I trade chapter at 7:11. Mapped only to the general SMT lesson; no specific index, FX or metals pairing is implied."
+          }
+        ],
         "supplementalResources": [],
         "topicDiscoveryUrl": "https://www.youtube.com/results?search_query=Inner%20Circle%20Trader%20official%20SMT%20Divergence%20ICT%20futures",
         "contentVersion": 2,
@@ -22262,7 +23068,9 @@
       "videoSearch": "https://www.youtube.com/results?search_query=Inner%20Circle%20Trader%20official%20ICT%20Weekly%20Profiles%20ICT%20futures",
       "sourceNote": "The supplied PDF is the source for playbook framing where explicitly marked. Supplemental clarifications are identified as such. These are discovery links, not verified video-to-concept mappings.",
       "referenceLinks": [],
-      "verifiedVideoIds": [],
+      "verifiedVideoIds": [
+        "ttrades-weekly-profile-intraweek-reversal-2026"
+      ],
       "learning": {
         "durationMinutes": 28,
         "evidenceBand": "Supplemental / terminology may vary",
@@ -22629,7 +23437,34 @@
           "resource-cme-institute-trade-and-risk-management-12",
           "resource-cftc-customer-education-advisory-13"
         ],
-        "videoResources": [],
+        "videoResources": [
+          {
+            "resourceId": "ttrades-weekly-profile-intraweek-reversal-2026",
+            "title": "Weekly Profile for Daily Bias - Intraweek Reversal",
+            "publisher": "TTrades",
+            "channelName": "TTrades",
+            "channelId": "UCQwUEVakiYDmNGe7UBza4sQ",
+            "videoId": "FvOUvQ7odiw",
+            "url": "https://www.youtube.com/watch?v=FvOUvQ7odiw",
+            "language": "en",
+            "sourceClass": "independent_supplement",
+            "conceptIds": [
+              "weekly-profiles"
+            ],
+            "segments": {},
+            "verificationStatus": "verified",
+            "verifiedAt": "2026-11-20",
+            "verifiedBy": "Codex research audit",
+            "lastLinkCheck": "2026-11-20",
+            "linkStatus": "verified",
+            "embedStatus": "not_checked",
+            "embedPermission": "not_checked",
+            "fallbackLinkStatus": "available",
+            "evidenceUrl": "https://www.youtube.com/watch?v=FvOUvQ7odiw",
+            "summary": "An independent TTrades lesson explicitly about the Weekly Profile and its use for daily bias. It is mapped only to weekly-profiles and is not a validated futures trading edge.",
+            "sourceNote": "The verified TTrades upload title and description explicitly identify Weekly Profile for Daily Bias / Intraweek Reversal. Mapped only to the broad Weekly Profiles lesson; individual profile variants and their rules still require separate evidence."
+          }
+        ],
         "supplementalResources": [],
         "topicDiscoveryUrl": "https://www.youtube.com/results?search_query=Inner%20Circle%20Trader%20official%20ICT%20Weekly%20Profiles%20ICT%20futures",
         "contentVersion": 2,
@@ -26038,7 +26873,9 @@
           "type": "Secondary reference"
         }
       ],
-      "verifiedVideoIds": [],
+      "verifiedVideoIds": [
+        "ttrades-mmxm-advanced-lesson-2024"
+      ],
       "learning": {
         "durationMinutes": 28,
         "evidenceBand": "Supplemental / terminology may vary",
@@ -26421,7 +27258,34 @@
           "resource-secondary-mmxm-explanation-20",
           "resource-community-ict-glossary-not-an-official-ict-source-19"
         ],
-        "videoResources": [],
+        "videoResources": [
+          {
+            "resourceId": "ttrades-mmxm-advanced-lesson-2024",
+            "title": "The MMXM Trader | Advanced ICT MMXM Lesson",
+            "publisher": "TTrades",
+            "channelName": "TTrades",
+            "channelId": "UCQwUEVakiYDmNGe7UBza4sQ",
+            "videoId": "Ibw4saRtYMk",
+            "url": "https://www.youtube.com/watch?v=Ibw4saRtYMk",
+            "language": "en",
+            "sourceClass": "independent_supplement",
+            "conceptIds": [
+              "mmxm"
+            ],
+            "segments": {},
+            "verificationStatus": "verified",
+            "verifiedAt": "2026-11-20",
+            "verifiedBy": "Codex research audit",
+            "lastLinkCheck": "2026-11-20",
+            "linkStatus": "verified",
+            "embedStatus": "not_checked",
+            "embedPermission": "not_checked",
+            "fallbackLinkStatus": "available",
+            "evidenceUrl": "https://www.youtube.com/watch?v=Ibw4saRtYMk",
+            "summary": "An independent TTrades-hosted interview/lesson with The MMXM Trader about market-maker models and their range framework. It is mapped only to the general MMXM lesson, not to the separate MMBM or MMSM model pages or any performance claim.",
+            "sourceNote": "The verified TTrades upload title and description identify an advanced MMXM lesson featuring The MMXM Trader and name market-maker buy/sell models and MMXM ranges. Mapped only to the general MMXM concept; it does not substitute for the separate model rulebooks or futures backtest evidence."
+          }
+        ],
         "supplementalResources": [
           {
             "name": "Secondary MMXM explanation",
@@ -30926,7 +31790,9 @@
           "type": "Secondary reference"
         }
       ],
-      "verifiedVideoIds": [],
+      "verifiedVideoIds": [
+        "ttrades-cpi-gold-market-maker-sell-model-2024"
+      ],
       "learning": {
         "durationMinutes": 28,
         "evidenceBand": "Supplemental / terminology may vary",
@@ -31312,7 +32178,34 @@
           "resource-community-glossary-turtle-soup-terminology-21",
           "resource-secondary-mmxm-explanation-20"
         ],
-        "videoResources": [],
+        "videoResources": [
+          {
+            "resourceId": "ttrades-cpi-gold-market-maker-sell-model-2024",
+            "title": "CPI Gold Trade Review | ICT Market Maker Sell Model [MMXM]",
+            "publisher": "TTrades",
+            "channelName": "TTrades",
+            "channelId": "UCQwUEVakiYDmNGe7UBza4sQ",
+            "videoId": "0R61Y6Pn74Q",
+            "url": "https://www.youtube.com/watch?v=0R61Y6Pn74Q",
+            "language": "en",
+            "sourceClass": "independent_supplement",
+            "conceptIds": [
+              "market-maker-sell-model"
+            ],
+            "segments": {},
+            "verificationStatus": "verified",
+            "verifiedAt": "2026-11-20",
+            "verifiedBy": "Codex research audit",
+            "lastLinkCheck": "2026-11-20",
+            "linkStatus": "verified",
+            "embedStatus": "not_checked",
+            "embedPermission": "not_checked",
+            "fallbackLinkStatus": "available",
+            "evidenceUrl": "https://www.youtube.com/watch?v=0R61Y6Pn74Q",
+            "summary": "Independent TTrades trade review explicitly labelled Market Maker Sell Model. The publisher describes an XAUUSD gold example using daily bias, an economic-calendar context, draw on liquidity, hourly/5-minute charts, a mitigation block and FVG. It is a single illustrative trade, not a futures-contract example, complete rulebook, or performance evidence.",
+            "sourceNote": "The verified TTrades upload title names ICT Market Maker Sell Model [MMXM], and its description explicitly says this gold trade used the ICT MMXM, in this case a Market Maker Sell Model. Mapped only to the MMSM Entry Model. The example is XAUUSD, not an exchange-listed futures contract; it does not validate the broader narrative, establish a repeatable edge, or substitute for futures backtesting. The publisher discloses promotional/affiliate links."
+          }
+        ],
         "supplementalResources": [
           {
             "name": "Community glossary: Turtle Soup terminology",
@@ -37931,15 +38824,50 @@
         "verificationStatus": "Supplemental reference; not primary proof of ICT concept definition",
         "checkedBy": "Part 2 source registry normalization",
         "linkHealth": "not-rechecked"
+      },
+      {
+        "id": "ict-liquidity-runs-2022",
+        "title": "ICT Mentorship Core Content - Month 1 - Liquidity Runs",
+        "publisher": "The Inner Circle Trader",
+        "url": "https://www.youtube.com/watch?v=22XkhpJR5eA",
+        "type": "Original ICT video upload",
+        "classification": "original-creator",
+        "scope": "The verified Official ICT upload title names Liquidity Runs. Its scope supports the named lesson only; it does not verify the separate Liquidity Sweep + MSS Entry Model or demonstrate predictive performance.",
+        "language": "en",
+        "conceptIds": [
+          "liquidity-run"
+        ],
+        "verifiedAt": "2026-11-20",
+        "verificationStatus": "Exact title, verified publisher, item-level scope and direct YouTube link reviewed",
+        "checkedBy": "Codex research audit",
+        "linkHealth": "available"
+      },
+      {
+        "id": "ict-ipda-data-ranges-2022",
+        "title": "ICT Mentorship Core Content - Month 05 - Using IPDA Data Ranges",
+        "publisher": "The Inner Circle Trader",
+        "url": "https://www.youtube.com/watch?v=LRKtiysz4nA",
+        "type": "Original ICT video upload",
+        "classification": "original-creator",
+        "scope": "The verified Official ICT upload title directly names Using IPDA Data Ranges. Mapped only to the IPDA 20/40/60 lesson; the video does not validate the model statistically or establish performance.",
+        "language": "en",
+        "conceptIds": [
+          "ipda"
+        ],
+        "verifiedAt": "2026-11-20",
+        "verificationStatus": "Exact title, verified publisher, item-level scope and direct YouTube link reviewed",
+        "checkedBy": "Codex research audit",
+        "linkHealth": "available"
       }
     ],
     "performancePolicy": "No strategy win rate, edge, expectancy, best-model ranking or TESTED label without a reproducible linked test artifact.",
     "contentPolicy": "Examples and diagrams are hypothetical/illustrative unless a chart carries instrument, expiry, timeframe, timezone, session, date, vendor and data-status metadata.",
-    "resourceRegistryCount": 24,
+    "resourceRegistryCount": 26,
     "evidenceAudit": {
       "sourceLabels": "Each lesson has sourceEvidenceLabel; SOURCED indicates a source record exists, not that every claim was re-fetched during this build.",
       "performanceLabels": "Only entry/model concepts carry NO DATA where the reviewed playbook does not establish audited public futures results. No lesson is labelled TESTED by this change.",
       "videoPolicy": "Official channel or playlist URLs are discovery portals. Existing curated exact-upload records retain their titles but must be rechecked; no new lesson is assigned an unverified direct video as an Official ICT citation."
-    }
+    },
+    "verifiedVideoMappingCount": 62
   }
 }
