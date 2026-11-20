@@ -46,11 +46,13 @@ An additive exchange-observation path is now in the repository: it validates bou
 
 An initial PR-preview route smoke check returned HTTP 200 for `/`, `/contract-specs/` and `/ict-futures/`. The updated Sessions route on the latest PR preview also returned HTTP 200 with the expected title and publisher coverage. These were HTML response checks, not interactive visual reviews. Inspection found the standalone ICT Futures terminal did not have a keyboard skip link; this branch adds a visible-on-focus “Skip to content” link. Full visual, mobile, keyboard-flow and screen-reader QA remains open.
 
+A browser review of the deployed `/sessions/` page at 390 CSS pixels found no horizontal document overflow. It also exposed a production runtime error before calendar requests started: the Sessions page appended seconds to profile clocks, while the timezone resolver accepts `HH:MM`. This branch now passes the publisher profile's `HH:MM` values directly and adds a targeted regression check. The production route must be rechecked after this fix is merged and deployed. Full-site visual, mobile, keyboard-flow and screen-reader QA remains open.
+
 ## Roadmap acceptance status
 
 | Roadmap area | Status | Remaining acceptance work |
 |---|---|---|
-| PR #22 and Sessions/calendar frontend | Merged at `c74fa29`; Vercel production is `READY`; Worker 2.2.0 deployed | The Worker smoke confirms valid envelopes for all nine calendar routes, but only six are fresh. BLS, BOE and RBA are unavailable, and licensed market data is not configured. Diagnose those publisher fetch states and obtain any required provider rights before calling data acceptance complete. Finish visual, keyboard and assistive-technology review. |
+| PR #22 and Sessions/calendar frontend | Frontend is deployed; Worker 2.2.0 deployed; startup fix is in PR #24 | Production browser review found a wall-time format exception that prevented the Sessions page from starting its calendar requests. The branch fix has a regression check but needs merge/deployment and a new browser smoke. Worker smoke confirms valid envelopes for all nine routes, with six fresh and BLS, BOE and RBA unavailable; licensed market data is not configured. Review feed failures and finish full visual, keyboard and assistive-technology checks. |
 | UI/UX across the full site | Partial | Review all routes at desktop and mobile sizes, keyboard-only, focus order, screen reader labels, loading/empty/error states and production behavior. |
 | ICT Academy | Partial; PR #24 open | The deployed `main` remains at 6/82 lessons until PR #24 merges. The PR preview has 21/82 lessons and 3/8 Entry Models mapped, with 61 lessons and five models still missing verified item-specific videos. Confirm publisher/video identity, lesson match, link health and timestamps where shared. The eight model pages overlap the 82 lessons and are also tracked as a separate gate. Embed permissions and full visual/mobile/accessibility QA remain open. See the [mapping update](35-PART-2-ACADEMY-VIDEO-MAPPING-UPDATES-2026-11-20.md). |
 | Contract intelligence | Core values source-reviewed; lifecycle display blocked pending rights | Confirm the source's public redistribution permission for this website. Then provide a licensed snapshot, review every family's expiry/notice/delivery/settlement dates, hours, breaks, holiday/early-close exceptions, cutoff times and effective revisions, and define a separate roll policy. The new offline importer rejects stale/incomplete data but cannot prove source rights or values. All 15 families remain partial. |
@@ -73,6 +75,7 @@ Disposable test-user credentials and an approved non-production environment are 
 - `python scripts/build_site.py` — passed; generated 50 resources, 15 futures families and 82 Academy pages. Public contract-lifecycle JSON reports 0 rows until rights approval.
 - `python -m unittest discover -s tests -q` — passed, 64 tests, including nine rights-gated import cases.
 - `node --test tests/*.test.mjs` — passed, 9/9 Worker smoke contract tests.
+- `node --test tests/test_session_time.mjs` — passed, including the Sessions page `HH:MM` call-site regression checks.
 - `python scripts/validate.py` — passed, 181/181 checks.
 - `python scripts/audit_internal_links.py` — passed; 130 HTML files and 1,385 internal links checked, 0 issues.
 - `git diff --check` — passed.
