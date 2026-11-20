@@ -103,6 +103,8 @@ The pre-branch provider snapshot is historical: GDELT timed out, BLS was rate-li
 
 PR #23 is merged and its rights-gated contract lifecycle page is in production; public lifecycle data remains empty pending documented display rights. PR #24 is open; its branch now contains 23/82 lesson video mappings and 3/8 Entry Model mappings. The new swing-pivot and Judas Swing mappings await the next Preview smoke; full interactive accessibility review is still open. Cloudflare Worker 2.2.0 is deployed; its last recorded live smoke found six fresh calendar sources and three unavailable sources (BLS, BOE and RBA), while licensed exchange market data is not configured. See the [current implementation status and remaining acceptance work](docs/futures-only-roadmap/27-IMPLEMENTATION-STATUS-AND-REMAINING-WORK-2026-11-20.md). This is a partial milestone, not completion of the Futures-Only roadmap.
 
+PR #24's latest Worker change adds sanitized, low-detail failure codes for calendar refreshes, but the deployed 2.2.0 Worker does not contain it. Cloudflare Observability recorded BEA and ECB route responses at HTTP 200 and BOE at HTTP 502 on 20 November 2026 at 14:23 UTC; the current Worker discarded the upstream cause. See the [diagnostic report](docs/futures-only-roadmap/36-PART-4-WORKER-SCHEDULE-DIAGNOSTICS-2026-11-20.md).
+
 ### Earlier infrastructure snapshot (10 November 2026; historical)
 
 The following table records the earlier Finance Intelligence OS infrastructure review. It predates the current repository snapshot and must not be used as current Git, deployment, database or credential evidence.

@@ -72,13 +72,18 @@ The repository can represent provider adapters and safe unavailable states, but 
 
 Disposable test-user credentials and an approved non-production environment are required for the Auth/RLS/file/deletion acceptance checks. Official item-by-item video verification and independent out-of-sample backtest evidence also require research inputs and review; links or test results must not be fabricated to close the checklist.
 
+## Latest Worker route observation — 20 November 2026
+
+Cloudflare Observability logged `/api/v1/events/bea` HTTP 200, `/api/v1/events/boe` HTTP 502, and `/api/v1/events/ecb` HTTP 200 at 14:23 UTC. These status codes alone do not establish feed freshness. The 2.2.0 Worker discarded source exceptions; PR #24 now adds sanitized failure codes and log fields, but that branch change has not been deployed to the Worker. See the [Part 4 diagnostic report](36-PART-4-WORKER-SCHEDULE-DIAGNOSTICS-2026-11-20.md).
+
 ## Verification and release record
 
 - `python scripts/build_site.py` — passed; generated 50 resources, 15 futures families and 82 Academy pages. Public contract-lifecycle JSON reports 0 rows until rights approval.
 - `python -m unittest discover -s tests -q` — passed, 64 tests, including nine rights-gated import cases.
 - `node --test tests/*.test.mjs` — passed, 9/9 Worker smoke contract tests.
+- `node --test tests/test_economic_calendar.mjs` — passed, 21/21, including sanitized publisher-failure classification.
 - `node --test tests/test_session_time.mjs` — passed, including the Sessions page `HH:MM` call-site regression checks.
-- `python scripts/validate.py` — passed, 181/181 checks.
+- `python scripts/validate.py` — passed, 183/183 checks.
 - `python scripts/audit_internal_links.py` — passed; 130 HTML files and 1,385 internal links checked, 0 issues.
 - `git diff --check` — passed.
 - Live Worker smoke — route contracts, health, CORS and provider registration passed; six event sources were fresh, while BLS, BOE and RBA were unavailable and market data was not configured. The smoke correctly returned degraded status (exit code 2).
