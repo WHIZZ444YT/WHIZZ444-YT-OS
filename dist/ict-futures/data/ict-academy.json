@@ -1697,10 +1697,7 @@
       "sourceNote": "The supplied PDF is the source for playbook framing where explicitly marked. Supplemental clarifications are identified as such. These are discovery links, not verified video-to-concept mappings.",
       "referenceLinks": [],
       "verifiedVideoIds": [
-        "ict-2022-ep3",
-        "ict-market-efficiency-fvg-mss",
-        "ict-2022-ep14",
-        "ict-2022-ep22"
+        "ict-2022-ep03-mss"
       ],
       "learning": {
         "durationMinutes": 22,
@@ -1766,36 +1763,7 @@
         },
         "sourceCaution": "The playbook describes the concept, but terminology or discretionary thresholds may still vary. Record your chosen operational rule and do not imply audited performance.",
         "references": {
-          "officialVideos": [
-            {
-              "title": "2022 ICT Mentorship Episode 3",
-              "url": "https://www.youtube.com/watch?v=nQfHZ2DEJ8c",
-              "published": "2022-01-26",
-              "summary": "Internal Range Liquidity & Market Structure Shifts.",
-              "sourceNote": "Official ICT channel upload; title and description verified."
-            },
-            {
-              "title": "2022 ICT Mentorship Episode 6 — Market Efficiency Paradigm & Institutional Order Flow",
-              "url": "https://www.youtube.com/watch?v=Bkt8B3kLATQ",
-              "published": "2022-02-04",
-              "summary": "Official ICT mentorship episode covering institutional order flow, Fair Value Gaps and Market Structure Shifts.",
-              "sourceNote": "Official Inner Circle Trader upload; title and description explicitly identify FVG and MSS as deep-dive topics."
-            },
-            {
-              "title": "2022 ICT Mentorship Episode 14",
-              "url": "https://www.youtube.com/watch?v=NUdu1n-ML98",
-              "published": "2022-02-28",
-              "summary": "The official description says the episode records execution of the mentorship model in Nasdaq.",
-              "sourceNote": "Official ICT channel upload; Nasdaq execution context is stated in the video description."
-            },
-            {
-              "title": "2022 ICT Mentorship Episode 22",
-              "url": "https://www.youtube.com/watch?v=QKc_i90chVg",
-              "published": "2022-04-29",
-              "summary": "Tape-reading example covering Market Structure and Order Block.",
-              "sourceNote": "Official ICT channel upload; the video description identifies tape reading, market structure and order block."
-            }
-          ],
+          "officialVideos": [],
           "officialChannel": "https://www.youtube.com/@InnerCircleTrader",
           "officialPlaylists": "https://www.youtube.com/@InnerCircleTrader/playlists",
           "topicDiscovery": "https://www.youtube.com/results?search_query=Inner%20Circle%20Trader%20official%20Market%20Structure%20Shift%20%28MSS%29%20ICT%20futures",
@@ -2132,36 +2100,28 @@
         ],
         "videoResources": [
           {
+            "resourceId": "ict-2022-ep03-mss",
             "title": "2022 ICT Mentorship Episode 3",
             "publisher": "The Inner Circle Trader",
+            "channelName": "The Inner Circle Trader",
+            "channelId": "UCtjxa77NqamhVC8atV85Rog",
+            "videoId": "nQfHZ2DEJ8c",
             "url": "https://www.youtube.com/watch?v=nQfHZ2DEJ8c",
-            "classification": "original-creator",
-            "verificationDate": null,
-            "linkStatus": "Existing curated official-source record; re-check exact upload before use"
-          },
-          {
-            "title": "2022 ICT Mentorship Episode 6 — Market Efficiency Paradigm & Institutional Order Flow",
-            "publisher": "The Inner Circle Trader",
-            "url": "https://www.youtube.com/watch?v=Bkt8B3kLATQ",
-            "classification": "original-creator",
-            "verificationDate": null,
-            "linkStatus": "Existing curated official-source record; re-check exact upload before use"
-          },
-          {
-            "title": "2022 ICT Mentorship Episode 14",
-            "publisher": "The Inner Circle Trader",
-            "url": "https://www.youtube.com/watch?v=NUdu1n-ML98",
-            "classification": "original-creator",
-            "verificationDate": null,
-            "linkStatus": "Existing curated official-source record; re-check exact upload before use"
-          },
-          {
-            "title": "2022 ICT Mentorship Episode 22",
-            "publisher": "The Inner Circle Trader",
-            "url": "https://www.youtube.com/watch?v=QKc_i90chVg",
-            "classification": "original-creator",
-            "verificationDate": null,
-            "linkStatus": "Existing curated official-source record; re-check exact upload before use"
+            "language": "en",
+            "sourceClass": "official_ict",
+            "conceptIds": [
+              "mss"
+            ],
+            "verificationStatus": "verified",
+            "verifiedAt": "2026-11-20",
+            "verifiedBy": "Codex research audit",
+            "lastLinkCheck": "2026-11-20",
+            "linkStatus": "verified",
+            "embedStatus": "not_checked",
+            "embedPermission": "not_checked",
+            "fallbackLinkStatus": "available",
+            "evidenceUrl": "https://www.youtube.com/watch?v=nQfHZ2DEJ8c",
+            "sourceNote": "Official ICT upload. Its description explicitly identifies Internal Range Liquidity and Market Structure Shifts. Mapped only to the Market Structure Shift lesson; the recording is not also counted toward other lesson pages without reviewed segments."
           }
         ],
         "supplementalResources": [],
@@ -8224,7 +8184,7 @@
       "sourceNote": "The supplied PDF is the source for playbook framing where explicitly marked. Supplemental clarifications are identified as such. These are discovery links, not verified video-to-concept mappings.",
       "referenceLinks": [],
       "verifiedVideoIds": [
-        "ict-market-efficiency-fvg-mss"
+        "ict-2022-ep06-fvg"
       ],
       "learning": {
         "durationMinutes": 22,
@@ -8290,15 +8250,7 @@
         },
         "sourceCaution": "The playbook describes the concept, but terminology or discretionary thresholds may still vary. Record your chosen operational rule and do not imply audited performance.",
         "references": {
-          "officialVideos": [
-            {
-              "title": "2022 ICT Mentorship Episode 6 — Market Efficiency Paradigm & Institutional Order Flow",
-              "url": "https://www.youtube.com/watch?v=Bkt8B3kLATQ",
-              "published": "2022-02-04",
-              "summary": "Official ICT mentorship episode covering institutional order flow, Fair Value Gaps and Market Structure Shifts.",
-              "sourceNote": "Official Inner Circle Trader upload; title and description explicitly identify FVG and MSS as deep-dive topics."
-            }
-          ],
+          "officialVideos": [],
           "officialChannel": "https://www.youtube.com/@InnerCircleTrader",
           "officialPlaylists": "https://www.youtube.com/@InnerCircleTrader/playlists",
           "topicDiscovery": "https://www.youtube.com/results?search_query=Inner%20Circle%20Trader%20official%20Fair%20Value%20Gap%20%28FVG%29%20ICT%20futures",
@@ -8620,12 +8572,28 @@
         ],
         "videoResources": [
           {
-            "title": "2022 ICT Mentorship Episode 6 — Market Efficiency Paradigm & Institutional Order Flow",
+            "resourceId": "ict-2022-ep06-fvg",
+            "title": "2022 ICT Mentorship Episode 6",
             "publisher": "The Inner Circle Trader",
+            "channelName": "The Inner Circle Trader",
+            "channelId": "UCtjxa77NqamhVC8atV85Rog",
+            "videoId": "Bkt8B3kLATQ",
             "url": "https://www.youtube.com/watch?v=Bkt8B3kLATQ",
-            "classification": "original-creator",
-            "verificationDate": null,
-            "linkStatus": "Existing curated official-source record; re-check exact upload before use"
+            "language": "en",
+            "sourceClass": "official_ict",
+            "conceptIds": [
+              "fvg"
+            ],
+            "verificationStatus": "verified",
+            "verifiedAt": "2026-11-20",
+            "verifiedBy": "Codex research audit",
+            "lastLinkCheck": "2026-11-20",
+            "linkStatus": "verified",
+            "embedStatus": "not_checked",
+            "embedPermission": "not_checked",
+            "fallbackLinkStatus": "available",
+            "evidenceUrl": "https://www.youtube.com/watch?v=Bkt8B3kLATQ",
+            "sourceNote": "Official ICT upload. Its description explicitly identifies a deep dive into Fair Value Gap and Market Structure Shifts. Mapped only to the Fair Value Gap lesson; the recording is not also counted toward other lesson pages without reviewed segments."
           }
         ],
         "supplementalResources": [],
@@ -11566,7 +11534,7 @@
       "sourceNote": "The supplied PDF is the source for playbook framing where explicitly marked. Supplemental clarifications are identified as such. These are discovery links, not verified video-to-concept mappings.",
       "referenceLinks": [],
       "verifiedVideoIds": [
-        "ict-2022-ep22"
+        "ict-2022-ep22-order-block"
       ],
       "learning": {
         "durationMinutes": 22,
@@ -11632,15 +11600,7 @@
         },
         "sourceCaution": "This term is supplemental or convention-sensitive in the supplied catalogue. Do not treat it as a universal/core ICT definition. Keep source variants separate and do not use it operationally until the exact definition is pinned to a primary source.",
         "references": {
-          "officialVideos": [
-            {
-              "title": "2022 ICT Mentorship Episode 22",
-              "url": "https://www.youtube.com/watch?v=QKc_i90chVg",
-              "published": "2022-04-29",
-              "summary": "Tape-reading example covering Market Structure and Order Block.",
-              "sourceNote": "Official ICT channel upload; the video description identifies tape reading, market structure and order block."
-            }
-          ],
+          "officialVideos": [],
           "officialChannel": "https://www.youtube.com/@InnerCircleTrader",
           "officialPlaylists": "https://www.youtube.com/@InnerCircleTrader/playlists",
           "topicDiscovery": "https://www.youtube.com/results?search_query=Inner%20Circle%20Trader%20official%20Order%20Block%20%28OB%29%20ICT%20futures",
@@ -11961,12 +11921,28 @@
         ],
         "videoResources": [
           {
+            "resourceId": "ict-2022-ep22-order-block",
             "title": "2022 ICT Mentorship Episode 22",
             "publisher": "The Inner Circle Trader",
+            "channelName": "The Inner Circle Trader",
+            "channelId": "UCtjxa77NqamhVC8atV85Rog",
+            "videoId": "QKc_i90chVg",
             "url": "https://www.youtube.com/watch?v=QKc_i90chVg",
-            "classification": "original-creator",
-            "verificationDate": null,
-            "linkStatus": "Existing curated official-source record; re-check exact upload before use"
+            "language": "en",
+            "sourceClass": "official_ict",
+            "conceptIds": [
+              "order-block"
+            ],
+            "verificationStatus": "verified",
+            "verifiedAt": "2026-11-20",
+            "verifiedBy": "Codex research audit",
+            "lastLinkCheck": "2026-11-20",
+            "linkStatus": "verified",
+            "embedStatus": "not_checked",
+            "embedPermission": "not_checked",
+            "fallbackLinkStatus": "available",
+            "evidenceUrl": "https://www.youtube.com/watch?v=QKc_i90chVg",
+            "sourceNote": "Official ICT upload. Its description explicitly identifies Market Structure and Order Block. Mapped only to the Order Block lesson; the recording is not also counted toward other lesson pages without reviewed segments."
           }
         ],
         "supplementalResources": [],
@@ -30492,15 +30468,7 @@
         },
         "sourceCaution": "The playbook describes the concept, but terminology or discretionary thresholds may still vary. Record your chosen operational rule and do not imply audited performance.",
         "references": {
-          "officialVideos": [
-            {
-              "title": "2022 ICT Mentorship Episode 14",
-              "url": "https://www.youtube.com/watch?v=NUdu1n-ML98",
-              "published": "2022-02-28",
-              "summary": "The official description says the episode records execution of the mentorship model in Nasdaq.",
-              "sourceNote": "Official ICT channel upload; Nasdaq execution context is stated in the video description."
-            }
-          ],
+          "officialVideos": [],
           "officialChannel": "https://www.youtube.com/@InnerCircleTrader",
           "officialPlaylists": "https://www.youtube.com/@InnerCircleTrader/playlists",
           "topicDiscovery": "https://www.youtube.com/results?search_query=ICT%202022%20mentorship%20model%20raid%20MSS%20FVG%20lesson",
@@ -30814,12 +30782,28 @@
         ],
         "videoResources": [
           {
+            "resourceId": "ict-2022-ep14",
             "title": "2022 ICT Mentorship Episode 14",
             "publisher": "The Inner Circle Trader",
+            "channelName": "The Inner Circle Trader",
+            "channelId": "UCtjxa77NqamhVC8atV85Rog",
+            "videoId": "NUdu1n-ML98",
             "url": "https://www.youtube.com/watch?v=NUdu1n-ML98",
-            "classification": "original-creator",
-            "verificationDate": null,
-            "linkStatus": "Existing curated official-source record; re-check exact upload before use"
+            "language": "en",
+            "sourceClass": "official_ict",
+            "conceptIds": [
+              "ict-2022-model"
+            ],
+            "verificationStatus": "verified",
+            "verifiedAt": "2026-11-20",
+            "verifiedBy": "Codex research audit",
+            "lastLinkCheck": "2026-11-20",
+            "linkStatus": "verified",
+            "embedStatus": "not_checked",
+            "embedPermission": "not_checked",
+            "fallbackLinkStatus": "available",
+            "evidenceUrl": "https://www.youtube.com/watch?v=NUdu1n-ML98",
+            "sourceNote": "Official ICT upload. Its title, verified channel identity and description identify an execution of the 2022 Mentorship Model in Nasdaq. Mapped only to the ICT 2022 Model lesson; this illustrative example is not performance evidence."
           }
         ],
         "supplementalResources": [],
@@ -30859,9 +30843,7 @@
       "videoSearch": "https://www.youtube.com/results?search_query=ICT%20futures%20liquidity%20sweep%20MSS%20reversal%20model",
       "sourceNote": "Source-derived synthesis of the supplied playbook’s common entry skeleton. Sweep and MSS criteria must be fixed before testing. Performance status: NO DATA — the reviewed playbook does not establish audited public futures performance or a best-model ranking.",
       "referenceLinks": [],
-      "verifiedVideoIds": [
-        "ict-2022-ep14"
-      ],
+      "verifiedVideoIds": [],
       "learning": {
         "durationMinutes": 22,
         "evidenceBand": "SOURCED · playbook synthesis · not an independently validated strategy",
@@ -30926,15 +30908,7 @@
         },
         "sourceCaution": "The playbook describes the concept, but terminology or discretionary thresholds may still vary. Record your chosen operational rule and do not imply audited performance.",
         "references": {
-          "officialVideos": [
-            {
-              "title": "2022 ICT Mentorship Episode 14",
-              "url": "https://www.youtube.com/watch?v=NUdu1n-ML98",
-              "published": "2022-02-28",
-              "summary": "The official description says the episode records execution of the mentorship model in Nasdaq.",
-              "sourceNote": "Official ICT channel upload; Nasdaq execution context is stated in the video description."
-            }
-          ],
+          "officialVideos": [],
           "officialChannel": "https://www.youtube.com/@InnerCircleTrader",
           "officialPlaylists": "https://www.youtube.com/@InnerCircleTrader/playlists",
           "topicDiscovery": "https://www.youtube.com/results?search_query=ICT%20futures%20liquidity%20sweep%20MSS%20reversal%20model",
@@ -31243,16 +31217,7 @@
           "resource-cftc-customer-education-advisory-13",
           "resource-2022-ict-mentorship-episode-14-17"
         ],
-        "videoResources": [
-          {
-            "title": "2022 ICT Mentorship Episode 14",
-            "publisher": "The Inner Circle Trader",
-            "url": "https://www.youtube.com/watch?v=NUdu1n-ML98",
-            "classification": "original-creator",
-            "verificationDate": null,
-            "linkStatus": "Existing curated official-source record; re-check exact upload before use"
-          }
-        ],
+        "videoResources": [],
         "supplementalResources": [],
         "topicDiscoveryUrl": "https://www.youtube.com/results?search_query=ICT%20futures%20liquidity%20sweep%20MSS%20reversal%20model",
         "contentVersion": 2,
@@ -31289,9 +31254,7 @@
       "videoSearch": "https://www.youtube.com/results?search_query=ICT%20Fair%20Value%20Gap%20continuation%20model%20lesson",
       "sourceNote": "A structured supplemental model assembled from common FVG usage. The supplied playbook says an FVG is an entry zone, not a signal, and does not prove that every gap fills. Performance status: NO DATA — the reviewed playbook does not establish audited public futures performance or a best-model ranking.",
       "referenceLinks": [],
-      "verifiedVideoIds": [
-        "ict-2022-ep14"
-      ],
+      "verifiedVideoIds": [],
       "learning": {
         "durationMinutes": 22,
         "evidenceBand": "Supplemental / terminology may vary",
@@ -31356,15 +31319,7 @@
         },
         "sourceCaution": "This term is supplemental or convention-sensitive in the supplied catalogue. Do not treat it as a universal/core ICT definition. Keep source variants separate and do not use it operationally until the exact definition is pinned to a primary source.",
         "references": {
-          "officialVideos": [
-            {
-              "title": "2022 ICT Mentorship Episode 14",
-              "url": "https://www.youtube.com/watch?v=NUdu1n-ML98",
-              "published": "2022-02-28",
-              "summary": "The official description says the episode records execution of the mentorship model in Nasdaq.",
-              "sourceNote": "Official ICT channel upload; Nasdaq execution context is stated in the video description."
-            }
-          ],
+          "officialVideos": [],
           "officialChannel": "https://www.youtube.com/@InnerCircleTrader",
           "officialPlaylists": "https://www.youtube.com/@InnerCircleTrader/playlists",
           "topicDiscovery": "https://www.youtube.com/results?search_query=ICT%20Fair%20Value%20Gap%20continuation%20model%20lesson",
@@ -31671,16 +31626,7 @@
           "resource-cftc-customer-education-advisory-13",
           "resource-2022-ict-mentorship-episode-14-17"
         ],
-        "videoResources": [
-          {
-            "title": "2022 ICT Mentorship Episode 14",
-            "publisher": "The Inner Circle Trader",
-            "url": "https://www.youtube.com/watch?v=NUdu1n-ML98",
-            "classification": "original-creator",
-            "verificationDate": null,
-            "linkStatus": "Existing curated official-source record; re-check exact upload before use"
-          }
-        ],
+        "videoResources": [],
         "supplementalResources": [],
         "topicDiscoveryUrl": "https://www.youtube.com/results?search_query=ICT%20Fair%20Value%20Gap%20continuation%20model%20lesson",
         "contentVersion": 2,

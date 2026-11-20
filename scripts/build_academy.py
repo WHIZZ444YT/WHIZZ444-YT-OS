@@ -133,8 +133,8 @@ def _is_verified_lesson_video(record, lesson_id):
         and dates_valid
         and record.get("verifiedBy")
         and record.get("linkStatus") in ("verified", "embed_disabled")
-        and record.get("embedStatus") in ("enabled", "disabled")
-        and record.get("embedPermission") in ("allowed", "not_allowed")
+        and record.get("embedStatus") in ("enabled", "disabled", "not_checked")
+        and record.get("embedPermission") in ("allowed", "not_allowed", "not_checked")
         and record.get("fallbackLinkStatus") == "available"
     )
 

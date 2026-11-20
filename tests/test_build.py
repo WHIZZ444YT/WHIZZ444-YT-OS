@@ -276,7 +276,10 @@ class BuildTests(unittest.TestCase):
         self.assertEqual(len(bundle['academy']['concepts']),82)
         self.assertEqual(len(bundle['academy']['tracks']),10)
         self.assertTrue(all(m['specStatus']=='partial' and isinstance(m['tickSize'],str) and m.get('specEvidence',{}).get('sourceUrl') for m in bundle['markets']))
-        self.assertTrue(all(not c.get('verifiedVideoIds') for c in bundle['academy']['concepts']))
+        videos_by_lesson={c['id']:c.get('verifiedVideoIds',[]) for c in bundle['academy']['concepts']}
+        expected_video_ids={'ict-2022-model':['ict-2022-ep14'],'mss':['ict-2022-ep03-mss'],'fvg':['ict-2022-ep06-fvg'],'order-block':['ict-2022-ep22-order-block']}
+        for lesson_id,video_ids in expected_video_ids.items(): self.assertEqual(videos_by_lesson[lesson_id],video_ids)
+        self.assertTrue(all(not ids for lesson_id,ids in videos_by_lesson.items() if lesson_id not in expected_video_ids))
         self.assertIn('c.id===n',template)
     def test_part3_contract_version_is_shown_in_risk_output(self):
         js=(ROOT/'assets/risk-calculator.js').read_text(encoding="utf-8")
@@ -386,22 +389,36 @@ class BuildTests(unittest.TestCase):
         coverage=json.loads((ROOT/'dist/ict-futures/academy/video-coverage.json').read_text(encoding="utf-8"))
         self.assertEqual(coverage['status'],'PARTIAL')
         self.assertEqual(coverage['eligibleCount'],82)
-        self.assertEqual(coverage['coveredCount'],0)
-        self.assertEqual(coverage['missingCount'],82)
-        self.assertEqual(len(coverage['entryModelCoverage']['missingIds']),8)
+        expected_covered={'ict-2022-model','mss','fvg','order-block'}
+        self.assertEqual(coverage['coveredCount'],4)
+        self.assertEqual(set(coverage['coveredIds']),expected_covered)
+        self.assertEqual(coverage['missingCount'],78)
+        self.assertEqual(coverage['entryModelCoverage']['coveredCount'],1)
+        self.assertEqual(coverage['entryModelCoverage']['coveredIds'],['ict-2022-model'])
+        self.assertEqual(len(coverage['entryModelCoverage']['missingIds']),7)
+        for lesson_id in expected_covered:
+            self.assertIn('VERIFIED LESSON VIDEO',(ROOT/'dist/ict-futures/academy'/f'{lesson_id}.html').read_text(encoding="utf-8"))
+        source_data=json.loads((ROOT/'ict-futures/data/ict-academy.json').read_text(encoding="utf-8"))
+        source_concepts={c['id']:c for c in source_data['concepts']}
+        for lesson_id in ('liquidity-sweep-mss-model','fvg-continuation-model'):
+            c=source_concepts[lesson_id]
+            records=(c.get('curriculum',{}).get('videoResources') or [])+(c.get('learning',{}).get('references',{}).get('officialVideos') or [])
+            self.assertFalse(any('NUdu1n-ML98' in r.get('url','') for r in records))
         self.assertIn('VIDEO NEEDED',(ROOT/'dist/ict-futures/academy/market-structure.html').read_text(encoding="utf-8"))
         academy=(ROOT/'dist/academy/index.html').read_text(encoding="utf-8")
         self.assertIn('VIDEO COVERAGE: PARTIAL',academy)
         self.assertIn('/assets/academy-learning.css',academy)
     def test_part2_video_registry_requires_complete_verified_metadata(self):
-        def record(concept_ids,segments=None):
-            return {'resourceId':'lesson-video-01','title':'Exact lesson upload','channelId':'UC123','channelName':'Example channel','videoId':'abcdefghijk','url':'https://www.youtube.com/watch?v=abcdefghijk','language':'en','sourceClass':'official_ict','conceptIds':concept_ids,'segments':segments or {},'verificationStatus':'verified','verifiedAt':'2026-11-19','verifiedBy':'editor-1','lastLinkCheck':'2026-11-19','linkStatus':'verified','embedStatus':'enabled','embedPermission':'allowed','fallbackLinkStatus':'available'}
+        def record(concept_ids,segments=None,embed_status='enabled',embed_permission='allowed'):
+            return {'resourceId':'lesson-video-01','title':'Exact lesson upload','channelId':'UC123','channelName':'Example channel','videoId':'abcdefghijk','url':'https://www.youtube.com/watch?v=abcdefghijk','language':'en','sourceClass':'official_ict','conceptIds':concept_ids,'segments':segments or {},'verificationStatus':'verified','verifiedAt':'2026-11-19','verifiedBy':'editor-1','lastLinkCheck':'2026-11-19','linkStatus':'verified','embedStatus':embed_status,'embedPermission':embed_permission,'fallbackLinkStatus':'available'}
         single=academy_video_coverage({'concepts':[{'id':'lesson-a','name':'A','curriculum':{'videoResources':[record(['lesson-a'])]}}]})
         shared_missing=academy_video_coverage({'concepts':[{'id':'lesson-a','name':'A','curriculum':{'videoResources':[record(['lesson-a','lesson-b'])]}},{'id':'lesson-b','name':'B','curriculum':{'videoResources':[record(['lesson-a','lesson-b'])]}}]})
         shared_segmented=academy_video_coverage({'concepts':[{'id':lesson,'name':lesson,'curriculum':{'videoResources':[record(['lesson-a','lesson-b'],{'lesson-a':{'startSeconds':10,'endSeconds':35},'lesson-b':{'startSeconds':36,'endSeconds':65}})]}} for lesson in ('lesson-a','lesson-b')]})
+        link_only=academy_video_coverage({'concepts':[{'id':'lesson-a','name':'A','curriculum':{'videoResources':[record(['lesson-a'],embed_status='not_checked',embed_permission='not_checked')]}}]})
         self.assertEqual(single['coveredCount'],1)
         self.assertEqual(shared_missing['coveredCount'],0)
         self.assertEqual(shared_segmented['coveredCount'],2)
+        self.assertEqual(link_only['coveredCount'],1)
     def test_part2_has_ten_prerequisite_tracks_and_preserves_nine_tutorials(self):
         data=json.loads((ROOT/'ict-futures/data/ict-academy.json').read_text(encoding="utf-8"))
         tracks=data['tracks'];tutorials=data['learningProgram']['tutorials']

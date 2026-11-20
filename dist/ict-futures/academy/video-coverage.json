@@ -2,15 +2,19 @@
   "schemaVersion": 1,
   "status": "PARTIAL",
   "eligibleCount": 82,
-  "coveredCount": 0,
-  "coveragePercent": 0.0,
-  "coveredIds": [],
-  "missingCount": 82,
+  "coveredCount": 4,
+  "coveragePercent": 4.88,
+  "coveredIds": [
+    "mss",
+    "fvg",
+    "order-block",
+    "ict-2022-model"
+  ],
+  "missingCount": 78,
   "missingIds": [
     "market-structure",
     "swing-high-low",
     "bos",
-    "mss",
     "choch",
     "displacement",
     "liquidity",
@@ -25,7 +29,6 @@
     "liquidity-run",
     "irl-erl",
     "opposing-liquidity",
-    "fvg",
     "htf-fvg",
     "ce",
     "ifvg",
@@ -33,7 +36,6 @@
     "volume-imbalance",
     "fpfvg",
     "liquidity-void",
-    "order-block",
     "mean-threshold",
     "breaker-block",
     "mitigation-block",
@@ -78,7 +80,6 @@
     "ny-lunch-reversal",
     "market-maker-buy-model",
     "market-maker-sell-model",
-    "ict-2022-model",
     "liquidity-sweep-mss-model",
     "fvg-continuation-model",
     "ifvg-reversal-model",
@@ -92,13 +93,14 @@
   ],
   "entryModelCoverage": {
     "eligibleCount": 8,
-    "coveredCount": 0,
-    "coveredIds": [],
+    "coveredCount": 1,
+    "coveredIds": [
+      "ict-2022-model"
+    ],
     "missingIds": [
       "unicorn",
       "market-maker-buy-model",
       "market-maker-sell-model",
-      "ict-2022-model",
       "liquidity-sweep-mss-model",
       "fvg-continuation-model",
       "ifvg-reversal-model",
@@ -134,9 +136,9 @@
       "id": "mss",
       "title": "Market Structure Shift (MSS)",
       "isEntryModel": false,
-      "status": "VIDEO NEEDED",
-      "verifiedVideoCount": 0,
-      "unverifiedCandidateCount": 4
+      "status": "VERIFIED",
+      "verifiedVideoCount": 1,
+      "unverifiedCandidateCount": 0
     },
     {
       "id": "choch",
@@ -254,9 +256,9 @@
       "id": "fvg",
       "title": "Fair Value Gap (FVG)",
       "isEntryModel": false,
-      "status": "VIDEO NEEDED",
-      "verifiedVideoCount": 0,
-      "unverifiedCandidateCount": 1
+      "status": "VERIFIED",
+      "verifiedVideoCount": 1,
+      "unverifiedCandidateCount": 0
     },
     {
       "id": "htf-fvg",
@@ -318,9 +320,9 @@
       "id": "order-block",
       "title": "Order Block (OB)",
       "isEntryModel": false,
-      "status": "VIDEO NEEDED",
-      "verifiedVideoCount": 0,
-      "unverifiedCandidateCount": 1
+      "status": "VERIFIED",
+      "verifiedVideoCount": 1,
+      "unverifiedCandidateCount": 0
     },
     {
       "id": "mean-threshold",
@@ -678,9 +680,9 @@
       "id": "ict-2022-model",
       "title": "ICT 2022 Model",
       "isEntryModel": true,
-      "status": "VIDEO NEEDED",
-      "verifiedVideoCount": 0,
-      "unverifiedCandidateCount": 1
+      "status": "VERIFIED",
+      "verifiedVideoCount": 1,
+      "unverifiedCandidateCount": 0
     },
     {
       "id": "liquidity-sweep-mss-model",
@@ -688,7 +690,7 @@
       "isEntryModel": true,
       "status": "VIDEO NEEDED",
       "verifiedVideoCount": 0,
-      "unverifiedCandidateCount": 1
+      "unverifiedCandidateCount": 0
     },
     {
       "id": "fvg-continuation-model",
@@ -696,7 +698,7 @@
       "isEntryModel": true,
       "status": "VIDEO NEEDED",
       "verifiedVideoCount": 0,
-      "unverifiedCandidateCount": 1
+      "unverifiedCandidateCount": 0
     },
     {
       "id": "ifvg-reversal-model",
