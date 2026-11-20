@@ -302,29 +302,54 @@ def build():
     build_academy(DIST, academy_data, SITE_URL)
     news = load(ROOT/'data/news-snapshot.json',{})
 
-    # Contract specification and expiry reference. Core tick facts are sourced;
-    # full records remain partial until contract lifecycle details are reconciled.
+    # Contract specification and lifecycle registry. We link to exchange-maintained
+    # calendars instead of scraping them or copying unverified, date-sensitive rows.
     contract_cards=[]
+    cme_expiry_url='https://www.cmegroup.com/tools-information/calendars/expiration-calendar.html'
+    cme_holiday_url='https://www.cmegroup.com/tools-information/holiday-calendar.html'
+    cme_hours_url='https://www.cmegroup.com/trading-hours.html'
+    ice_dx_expiry_url='https://www.ice.com/products/194/US-Dollar-Index-Futures/expiry'
+    lifecycle_fields=[
+        'Listed contract months and active expiry',
+        'Last trade date and cutoff time',
+        'First notice / last notice dates (where applicable)',
+        'First / last delivery or final settlement dates',
+        'Settlement method and delivery obligations',
+        'Product hours, breaks and holiday exceptions',
+        'Effective date, rule revision and source history',
+        'Roll trigger and continuous-series adjustment policy',
+    ]
     for m in mdata:
         evidence=m.get('specEvidence') or {}
         official=str(evidence.get('sourceUrl') or m.get('specsUrl') or '')
         checked_at=str(evidence.get('checkedAt') or 'not recorded')
         official_link=f'<a class="os-source-link" href="{escape(official, quote=True)}" target="_blank" rel="noopener noreferrer">{escape(str(evidence.get("publisher") or "Official exchange"))} specifications ↗</a>' if official.startswith(('https://','http://')) else '<span class="muted">Official specification link not supplied</span>'
+        exchange=str(m.get('exchange') or '')
+        expiry_url=ice_dx_expiry_url if exchange=='ICE US' else cme_expiry_url
+        expiry_label='ICE DX expiry details' if exchange=='ICE US' else 'CME expiration calendar'
+        calendar_links=(
+            f'<a class="os-source-link" href="{escape(expiry_url, quote=True)}" target="_blank" rel="noopener noreferrer">{expiry_label} ↗</a>'
+            + ('' if exchange=='ICE US' else f'<a class="os-source-link" href="{cme_holiday_url}" target="_blank" rel="noopener noreferrer">CME holiday calendar ↗</a><a class="os-source-link" href="{cme_hours_url}" target="_blank" rel="noopener noreferrer">CME trading hours ↗</a>')
+        )
         specs=[
             ('Contract unit / reference basis',contract_value(m.get('unit'),checked_at)),
             ('Micro alias / reference',contract_value(m.get('micro'),checked_at) if m.get('microSpec') else '<span class="os-unverified-value">No micro profile supplied</span>'),
             ('Tick size',contract_value(m.get('tickSize'),checked_at)),
             ('Tick value',contract_value(m.get('tickValue'),checked_at)),
             ('Point value',contract_value(m.get('pointValue'),checked_at)),
-            ('Quote convention','<span class="os-unverified-value">NOT SUPPLIED IN REGISTRY</span>'),
-            ('Settlement / delivery','<span class="os-unverified-value">NOT SUPPLIED IN REGISTRY</span>'),
-            ('Expiry / first notice','<span class="os-unverified-value">NOT SUPPLIED IN REGISTRY</span>'),
-            ('Roll / continuous-series method','<span class="os-unverified-value">NOT SUPPLIED IN REGISTRY</span>'),
+            ('Quote convention','<span class="os-unverified-value">NOT VERIFIED IN THIS RECORD</span>'),
+            ('Active month / last trade','<span class="os-unverified-value">LOOK UP THE SELECTED CONTRACT MONTH</span>'),
+            ('Notice / delivery dates','<span class="os-unverified-value">PRODUCT AND MONTH SPECIFIC · NOT TRANSCRIBED</span>'),
+            ('Settlement / delivery','<span class="os-unverified-value">NOT VERIFIED IN THIS RECORD</span>'),
+            ('Trading hours / exceptions','<span class="os-unverified-value">OFFICIAL EXCHANGE SCHEDULE · NOT TRANSCRIBED</span>'),
+            ('Roll / continuous-series method','<span class="os-unverified-value">NO APPROVED POLICY CONFIGURED</span>'),
             ('Reference set',escape(str(m.get('specVersionId') or 'version-not-recorded'))),
             ('Core facts checked',escape(checked_at)),
-            ('Effective date range','<span class="os-unverified-value">NOT SUPPLIED IN REGISTRY</span>'),
+            ('Effective date / revision','<span class="os-unverified-value">NOT VERIFIED IN THIS RECORD</span>'),
         ]
         spec_rows=''.join(f'<div class="os-spec-field"><span>{label}</span>{value}</div>' for label,value in specs)
+        pending=escape(', '.join(str(x) for x in evidence.get('pendingFields', lifecycle_fields)))
+        pending_note=(f'<details class="os-lifecycle-details"><summary>Lifecycle fields still requiring evidence</summary><p>{pending}</p><p>Use the exact listed month and exchange notice. Calendar conventions are not expiry evidence, and a continuous symbol does not identify an executable contract.</p></details>')
         micro=m.get('microSpec') or {}
         micro_html=''
         if micro:
@@ -344,14 +369,18 @@ def build():
                         f'<div class="os-spec-grid">{micro_rows}</div>'
                         f'<div class="os-contract-spec-source">{micro_link}</div></section>')
         contract_cards.append(
-            f'<article id="{escape(str(m.get("id","")))}" class="os-contract-spec-card"><div class="os-contract-spec-head"><div><span class="os-eyebrow">{escape(str(m.get("exchange","Exchange")))} · {escape(str(m.get("tier","")))}</span><h3>{escape(str(m.get("label","Futures family")))}</h3></div><span class="os-state-chip warn">PARTIAL · SOURCED CORE</span></div>'
+            f'<article id="{escape(str(m.get("id","")))}" class="os-contract-spec-card" data-family="{escape(str(m.get("id","")), quote=True)}" data-exchange="{escape(exchange, quote=True)}" data-search="{escape((str(m.get("id",""))+" "+str(m.get("label",""))+" "+exchange+" "+str((m.get("microSpec") or {}).get("symbol", ""))).lower(), quote=True)}"><div class="os-contract-spec-head"><div><span class="os-eyebrow">{escape(exchange or "Exchange")} · {escape(str(m.get("tier","")))}</span><h3>{escape(str(m.get("label","Futures family")))}</h3></div><span class="os-state-chip warn">PARTIAL · SOURCED CORE</span></div>'
             f'<p class="os-spec-review-note">Contract unit and outright tick fields were checked against an official source on {escape(checked_at)}. The full lifecycle record is incomplete.</p>'
-            f'<div class="os-spec-grid">{spec_rows}</div><div class="os-contract-spec-source">{official_link}</div>{micro_html}</article>'
+            f'<div class="os-spec-grid">{spec_rows}</div><div class="os-contract-spec-source">{official_link}{calendar_links}</div>{pending_note}{micro_html}</article>'
         )
-    body=page_intro('Contract reference registry','Contract Specs & Expiry','Source-reviewed contract units and outright tick values for the 15 retained futures families. Full contract records remain partial until current expiry, first-notice, delivery and roll details are reconciled.')
+    body=page_intro('Contract reference registry','Contract Specs & Expiry','Search all 15 retained futures families, review the verified core facts and open the current exchange source for the exact contract month. Full contract lifecycle records remain pending.')
     body+='<section class="content-section os-contract-warning"><h2>Partial source review — not trade-ready</h2><p>Standard contract units and outright tick sizes/values, plus the listed micro profiles, have been checked against official CME Group or ICE Futures U.S. sources. This does not verify a specific expiry, effective date, delivery/first-notice window, trading-calendar exception or roll method. Use the linked exchange source for the exact contract month. Risk estimates remain conditional until the complete record is verified.</p></section>'
+    exchange_options=''.join(f'<option value="{escape(x, quote=True)}">{escape(x)}</option>' for x in sorted({str(m.get("exchange") or "") for m in mdata if m.get("exchange")}))
+    body+='<section class="content-section os-contract-controls" aria-label="Filter contract families"><label for="contractSpecSearch">Find a family<input id="contractSpecSearch" type="search" placeholder="Search NQ, Gold, Micro…" autocomplete="off"></label><label for="contractSpecExchange">Exchange<select id="contractSpecExchange"><option value="all">All exchanges</option>'+exchange_options+'</select></label><span id="contractSpecCount" class="sessions-result-count" role="status" aria-live="polite">15 of 15 families</span></section>'
+    body+='<section class="content-section os-contract-coverage"><div><span class="os-eyebrow">LIFECYCLE VERIFICATION</span><strong>0 / 15 complete</strong><p>Core tick facts have dated source evidence. Per-month expiry, delivery/settlement, session exceptions, rule revisions and roll method still need a documented review.</p></div><a class="text-link" href="https://www.cmegroup.com/tools-information/calendars/expiration-calendar.html" target="_blank" rel="noopener noreferrer">CME expiry calendar ↗</a></section>'
     body+='<section class="os-contract-spec-grid">'+''.join(contract_cards)+'</section>'
-    body+='<section class="content-section"><h2>Contract lifecycle coverage</h2><p><span class="os-state-chip warn">NOT CONFIGURED</span> No verified expiry calendar, first-notice-date table or automated roll alert is connected. The page does not infer a front month from a continuous chart symbol.</p><a class="text-link" href="/data-health/">Review data and source status →</a></section>'
+    body+='<section class="content-section"><h2>How a lifecycle record becomes verified</h2><ol class="os-lifecycle-steps"><li>Select the exact exchange product and contract month from the official calendar.</li><li>Record last trade date/time, notice and delivery/settlement dates that apply to that product.</li><li>Reconcile product trading hours, breaks, holiday overrides and the current rule revision.</li><li>Document a separate roll policy based on the intended use and permitted volume/open-interest evidence.</li><li>Attach source, as-of date and reviewer; keep the family PARTIAL until every required field is supported.</li></ol><p>The page links to exchange-maintained sources only. It does not scrape, cache or redistribute exchange data and does not infer expiry dates from generic weekday rules.</p><a class="text-link" href="/data-health/">Review data and source status →</a></section>'
+    body+='<script>(()=>{const search=document.getElementById("contractSpecSearch"),exchange=document.getElementById("contractSpecExchange"),count=document.getElementById("contractSpecCount"),cards=[...document.querySelectorAll(".os-contract-spec-card")];function apply(){const q=(search.value||"").trim().toLowerCase(),x=exchange.value;let visible=0;for(const card of cards){const show=(!q||card.dataset.search.includes(q))&&(x==="all"||card.dataset.exchange===x);card.hidden=!show;if(show)visible++;}count.textContent=`${visible} of ${cards.length} families`; }search.addEventListener("input",apply);exchange.addEventListener("change",apply);})();</script>'
     write(DIST/'contract-specs/index.html',shell('Contract Specs & Expiry | Futures Intelligence OS','Futures contract reference registry with explicit verification status and expiry-data coverage.',body,'/contract-specs/'))
 
     # Session references are conventions; official publisher schedules are fetched through the edge gateway at runtime.
