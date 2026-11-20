@@ -31,6 +31,8 @@ The linked CME sources show M6E at 0.0001 per euro and $1.25 per contract, the c
 
 The Contract Specs page now separates source-checked core facts from incomplete lifecycle data, displays the check date and direct official source, and shows standard/micro profile details separately. The risk calculators continue to label results conditional because an incomplete record must not be presented as fully verified. The ICT Futures profile and risk summary display the partial status and check date. No live quote or trading signal has been added.
 
+An initial PR-preview route smoke check returned HTTP 200 for `/`, `/contract-specs/` and `/ict-futures/`. It was an HTML response check, not an interactive visual review. That inspection found the standalone ICT Futures terminal did not have a keyboard skip link; this branch adds a visible-on-focus “Skip to content” link. Full visual, mobile, keyboard-flow and screen-reader QA remains open.
+
 ## Roadmap acceptance status
 
 | Roadmap area | Status | Remaining acceptance work |
@@ -59,8 +61,8 @@ Disposable test-user credentials and an approved non-production environment are 
 - `python -m unittest discover -s tests -v` — passed, 55 tests.
 - Release-version consistency check — passed for the homepage badge and service-worker cache version.
 - `python scripts/validate.py` — passed, 167/167 checks.
-- `python scripts/audit_internal_links.py` — passed; 130 HTML files and 1,383 internal links checked, 0 issues.
+- `python scripts/audit_internal_links.py` — passed; 130 HTML files and 1,384 internal links checked, 0 issues.
 - `node --test tests/*.mjs` — passed, 72/72 tests. Node printed its existing non-failing module-type advisory for `cloudflare/src/index.js`.
-- `git diff --check` — rerun after this report edit; final result is recorded in the PR summary.
+- `git diff --check` — passed; Git emitted only its existing LF-to-CRLF working-copy notices for generated Sessions assets.
 
 Production deployment of this branch, Worker deployment, browser accessibility review, license review and disposable-user tests are separate release gates. This update does not merge or production-deploy the branch.
