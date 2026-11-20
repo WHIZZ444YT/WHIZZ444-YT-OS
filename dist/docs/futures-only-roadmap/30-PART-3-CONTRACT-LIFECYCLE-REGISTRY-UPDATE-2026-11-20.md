@@ -29,7 +29,7 @@ This UI pass does not finish the full contract-specification requirement and doe
 - `python scripts/build_site.py` — passed; generated 50 resources, 15 futures families and 82 Academy pages.
 - `python scripts/validate.py` — passed, 172/172 checks.
 - `python -m unittest discover -s tests -v` — passed, 55 tests.
-- `node --test tests/*.mjs` — passed, 95 tests.
+- `node --test tests/*.mjs` — passed, 97 tests, including behavior checks for searching by micro symbol and filtering the ICE family.
 - `python scripts/audit_internal_links.py` — passed; 130 HTML files and 1,384 links checked, 0 issues.
 - `git diff --check` — passed; Git reported only existing working-copy line-ending notices for generated assets.
 - Visual/mobile/assistive-technology QA — still open.
