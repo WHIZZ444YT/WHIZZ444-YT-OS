@@ -1,107 +1,754 @@
-Y™Áäx-ÆÈ‹j◊ù¢Îi∫⁄+äßj[hëÈ‹¢ÈÌ◊è<Ÿ:-jZ.∂õ≠ñ)ﬁ≥Vñ◊˜'B≤&W6ˆ«fT6∆VÊF%v∆≈Fñ÷R“g&ˆ“"‚ˆV6ˆÊˆ÷ñ2÷6∆VÊF"Ê÷ß2#∞†¶Wá˜'B6ˆÁ7B4eD5Ù4ıEı44ÑTETƒUıU$¬“&áGG3¢Ú˜wwrÊ6gF2Êv˜bÙ÷&∂WE&W˜'G2Ù6ˆ÷÷óF÷VÁG6ˆeG&FW'2ı&V∆V6U66ÜVGV∆RˆñÊFWÇÊáF“#∞¶Wá˜'B6ˆÁ7BdÙ‘5Ù4ƒT‰D%ıU$¬“&áGG3¢Ú˜wwrÊfVFW&«&W6W'fRÊv˜bˆ÷ˆÊWF'óˆ∆ñ7íˆfˆ÷66∆VÊF'2ÊáF“#∞¶Wá˜'B6ˆÁ7BT4%Ù4ıT‰4î≈Ù4ƒT‰D%ıU$¬“&áGG3¢Ú˜wwrÊV6"ÊWW&˜ÊWR˜&W72ˆ6∆VÊF'2ˆ÷v6v2ˆáF÷¬ˆñÊFWÇÊV‚ÊáF÷¬#∞¶Wá˜'B6ˆÁ7B$ÙUÙ’5Ù4ƒT‰D%ıU$¬“&áGG3¢Ú˜wwrÊ&Ê∂ˆfVÊv∆ÊBÊ6ÚÁV≤ˆ÷ˆÊWF'í◊ˆ∆ñ7í˜W6ˆ÷ñÊr÷◊2÷FFW2#∞¶Wá˜'B6ˆÁ7B$ÙUıÙƒî5ïıU$¬“&áGG3¢Ú˜wwrÊ&Ê∂ˆfVÊv∆ÊBÊ6ÚÁV≤ˆ÷ˆÊWF'í◊ˆ∆ñ7í#∞¶Wá˜'B6ˆÁ7B$Ù5ı$DUÙ4ƒT‰D%ıU$¬“&áGG3¢Ú˜wwrÊ&Ê∂ˆf6ÊFÊ6ˆ6˜&R÷gVÊ7FñˆÁ2ˆ÷ˆÊWF'í◊ˆ∆ñ7íˆ∂Wí÷ñÁFW&W7B◊&FRÚ#∞¶Wá˜'B6ˆÁ7B$Ù5ıÙƒî5ïıU$¬“&áGG3¢Ú˜wwrÊ&Ê∂ˆf6ÊFÊ6ˆ6˜&R÷gVÊ7FñˆÁ2ˆ÷ˆÊWF'í◊ˆ∆ñ7íˆ∂Wí÷ñÁFW&W7B◊&FRˆ&∆6∂˜WB÷wVñFV∆ñÊW2Ú#∞¶Wá˜'B6ˆÁ7B$$Ù$Ù$EÙ4ƒT‰D%ıU$¬“&áGG3¢Ú˜wwrÁ&&Êv˜bÊR˜66ÜVGV∆W2÷WfVÁG2ˆ&ˆ&B÷÷VWFñÊr◊66ÜVGV∆W2ÊáF÷¬#∞¶Wá˜'B6ˆÁ7B$Tı$TƒT4UÙDDU5ıU$¬“&áGG3¢Úˆ2Ê&VÊv˜bÙí˜6ñvÁW˜&V∆V6UˆFFW2Êß6ˆ‚#∞¶Wá˜'B6ˆÁ7B$Tı$TƒT4Uı44ÑTETƒUıU$¬“&áGG3¢Ú˜wwrÊ&VÊv˜bˆÊWw2˜66ÜVGV∆R#∞¶6ˆÁ7B‘Öı44ÑTETƒUÙ%ïDU2“#B¢#C∞¶6ˆÁ7BT5DU$‚“$÷W&ñ6ÙÊWuıñ˜&≤#∞¶6ˆÁ7BƒÙ‰DÙ‚“$WW&˜RÙ∆ˆÊFˆ‚#∞¶6ˆÁ7Be$‰¥eU%B“$WW&˜RÙ&W&∆ñ‚#∞¶6ˆÁ7BDı$ÙÂDÚ“$÷W&ñ6ıF˜&ˆÁFÚ#∞¶6ˆÁ7B5îD‰Uí“$W7G&∆ñı7ñFÊWí#∞¶6ˆÁ7B‘ÙÂDÖ2“≤¶ÁV'ì¢¬fV''V'ì¢"¬÷&6É¢2¬&ñ√¢B¬÷ì¢R¬ßVÊS¢b¬ßV«ì¢r¬VwW7C¢Ç¬6WFV÷&W#¢í¬ˆ7Fˆ&W#¢¬Ê˜fV÷&W#¢¬FV6V÷&W#¢"”∞†¶gVÊ7Fñˆ‚6fT6ˆFUˆñÁBáf«VRí∞¢&WGW&‚ÁV÷&W"Êó4ñÁFVvW"áf«VRíbbf«VR„“bbf«VR√“Éfffbbbáf«VR„“ÜCÉbbf«VR√“ÜFffbê¢Ú7G&ñÊrÊg&ˆ‘6ˆFUˆñÁBáf«VRí¢%«TdddB#∞ß–†¶gVÊ7Fñˆ‚FWáD∆ñÊW2ÜñÁWBí∞¢&WGW&‚7G&ñÊrÜñÁWB«¬""ê¢Á&W∆6RÇÛ«67&óE∆%µ„Â“£Âµ«5≈5“£Û≈¬˜67&óC‚ˆví¬""ê¢Á&W∆6RÇÛ«7Gñ∆U∆%µ„Â“£Âµ«5≈5“£Û≈¬˜7Gñ∆S‚ˆví¬""ê¢Á&W∆6RÇÛ¬ÉÛ¶'%∆%µ„Â“ß≈¬ÛÚÉÛß∆Fóg∆∆ó∆Ö≥”e◊«G'«FG«Fá«6V7FñˆÁ∆'Fñ6∆W«V«∆ˆ¬ï∆%µ„Â“¢ì‚ˆví¬%∆‚"ê¢Á&W∆6RÇÛ≈µ„Â“£‚ˆr¬""ê¢Á&W∆6RÇÚfÊ'7∑¬b3c∑¬b7Ñ≤ˆví¬""ê¢Á&W∆6RÇÚf«7VÛ≤ˆví¬.(	Ç"íÁ&W∆6RÇÚg'7VÛ≤ˆví¬.(	í"ê¢Á&W∆6RÇÚfÊF6É≤ˆví¬.(	2"íÁ&W∆6RÇÚf÷F6É≤ˆví¬.(	B"ê¢Á&W∆6RÇÚf◊≤ˆví¬"b"íÁ&W∆6RÇÚgV˜C≤ˆví¬r"ríÁ&W∆6RÇÚb33ì∑¬f˜3≤ˆví¬"r"ê¢Á&W∆6RÇÚf«C≤ˆví¬#¬"íÁ&W∆6RÇÚfwC≤ˆví¬#‚"ê¢Á&W∆6RÇÚb2Ö∆B≤ì≤ˆr¬ÖÚ¬6ˆFRí”‚6fT6ˆFUˆñÁBÑÁV÷&W"Ü6ˆFRííê¢Á&W∆6RÇÚb7ÇÖ≥”ñ÷e“≤ì≤ˆví¬ÖÚ¬6ˆFRí”‚6fT6ˆFUˆñÁBá'6TñÁBÜ6ˆFR¬bííê¢Á7∆óBÇı«#ı∆‚ÚíÊ÷Ü∆ñÊR”‚∆ñÊRÁ&W∆6RÇı«2≤ˆr¬""íÁG&ñ“ÇííÊfñ«FW"Ñ&ˆˆ∆V‚íÊ¶ˆñ‚Ç%∆‚"ì∞ß–†¶Wá˜'BgVÊ7Fñˆ‚6∆76ñgïV&∆ó6ÜW%66ÜVGV∆Tfñ«W&RÜW'&˜"í∞¢6ˆÁ7B÷W76vR“7G&ñÊrÜW'&˜#ÚÊ÷W76vR«¬W'&˜"«¬""ì∞¢6ˆÁ7B7FGW2“ÚÉÛ§ˆffñ6ñ¬66ÜVGV∆Wƒ$≈26∆VÊF"íÖEEÖ∆G≥7“íˆíÊWÜV2Ü÷W76vRìÚÂ≥”∞¢ñbá7FGW2í&WGW&‚W7G&V’ˆáGGÚG∑7FGW7÷∞¢ñbÇ˜Fñ÷V˜WG«Fñ÷VB˜WG∆&˜'FVG∆FVF∆ñÊRˆíÁFW7BÜ÷W76vRíí&WGW&‚'W7G&V’˜Fñ÷V˜WB#∞¢ñbÇ˜VÊWáV7FVB6ˆÁFVÁBGóRˆíÁFW7BÜ÷W76vRíí&WGW&‚'VÊWáV7FVEˆ6ˆÁFVÁE˜GóR#∞¢ñbÇ˜&W7ˆÁ6RFˆÚ∆&vRˆíÁFW7BÜ÷W76vRíí&WGW&‚'&W7ˆÁ6U˜Fˆıˆ∆&vR#∞¢ñbÇ˜&V∆V6R◊Fñ÷Rˆ∆ñ7ó∆FV6ó6ñˆ‚‚ßFñ÷W«V&∆ñ6Fñˆ‚ˆ∆ñ7íˆíÁFW7BÜ÷W76vRíí&WGW&‚'V&∆ó6ÜW%˜ˆ∆ñ7ïˆ6ÜÊvVB#∞¢ñbÇˆFñBÊ˜B6ˆÁFñÁ∆FñBÊ˜BñÊ6«VFW∆ÊÚ'6V&∆W∆Ê˜B'6V&∆W∆WáV7FVB‚ß66ÜVGV∆RˆíÁFW7BÜ÷W76vRíí&WGW&‚'V&∆ó6ÜW%˜66ÜVGV∆Uˆf˜&÷Eˆ6ÜÊvVB#∞¢&WGW&‚'W7G&V’ˆfWF6Öˆfñ∆VB#∞ß–†¶gVÊ7Fñˆ‚V7FW&Â'G2ÜWˆ6Ñ◊2í∞¢6ˆÁ7B'G2“ÊWrñÁF¬‰FFUFñ÷Tf˜&÷BÇ&V‚‘4"¬∞¢Fñ÷U¶ˆÊS¢T5DU$‚¬ñV#¢&ÁV÷W&ñ2"¬÷ˆÁFÉ¢#"÷FñvóB"¬Fì¢#"÷FñvóB"¿¢Ü˜W#¢#"÷FñvóB"¬÷ñÁWFS¢#"÷FñvóB"¬6V6ˆÊC¢#"÷FñvóB"¬Ü˜W$7ñ6∆S¢&É#2 ¢“íÊf˜&÷EFı'G2ÜÊWrFFRÜWˆ6Ñ◊2íì∞¢&WGW&‚ˆ&¶V7BÊg&ˆ‘VÁG&ñW2á'G2Êfñ«FW"ÜóFV“”‚óFV“ÁGóR”“&∆óFW&¬"íÊ÷ÜóFV“”‚∂óFV“ÁGóR¬ÁV÷&W"ÜóFV“Áf«VRï“íì∞ß–†¶gVÊ7Fñˆ‚FFT∂Wíá'G2í∞¢&WGW&‚7G&ñÊrá'G2ÁñV"íÁE7F'BÉB¬#"í≤"“"≤7G&ñÊrá'G2Ê÷ˆÁFÇíÁE7F'BÉ"¬#"í≤"“"≤7G&ñÊrá'G2ÊFííÁE7F'BÉ"¬#"ì∞ß–†¶gVÊ7Fñˆ‚FFT˜&FñÊ¬Ü∂Wíí∞¢6ˆÁ7B÷F6Ç“ı‚Ö∆G≥G“í“Ö∆G≥'“í“Ö∆G≥'“íBÚÊWÜV2Ö7G&ñÊrÜ∂Wí«¬""íì∞¢ñbÇ÷F6Çí&WGW&‚Ê„∞¢&WGW&‚FFRÂUD2ÑÁV÷&W"Ü÷F6Ö≥“í¬ÁV÷&W"Ü÷F6Ö≥%“í“¬ÁV÷&W"Ü÷F6Ö≥5“íì∞ß–†¶gVÊ7Fñˆ‚f∆ñDFFRáñV"¬÷ˆÁFÇ¬Fíí∞¢6ˆÁ7BFFR“ÊWrFFRÑFFRÂUD2áñV"¬÷ˆÁFÇ“¬Fííì∞¢&WGW&‚FFRÊvWEUD4gV∆≈ñV"Çí””“ñV"bbFFRÊvWEUD4÷ˆÁFÇÇí≤””“÷ˆÁFÇbbFFRÊvWEUD4FFRÇí””“Fì∞ß–†¶gVÊ7Fñˆ‚6∆◊Ü˜&ó¶ˆ‚ÜÊ˜r¬Fó2¬÷Üñ◊V“í∞¢&WGW&‚Ê˜r≤÷FÇÊ÷ÇÉ¬÷FÇÊ÷ñ‚Ü÷Üñ◊V“¬ÁV÷&W"ÜFó2í«¬ìíí¢ÉcC∞ß–†¶gVÊ7Fñˆ‚6∆◊6˜VÁBáf«VR¬f∆∆&6≤¬÷Üñ◊V“í∞¢&WGW&‚÷FÇÊ÷ÇÉ¬÷FÇÊ÷ñ‚Ü÷Üñ◊V“¬ÁV÷&W"áf«VRí«¬f∆∆&6≤íì∞ß–†¶gVÊ7Fñˆ‚fñÊE&Wfó6ñˆ‚áFWáB¬∆7D÷ˆFñfñVBí∞¢&WGW&‚FWáBÊ÷F6ÇÇÙ∆7BWFFS•«2¢Ö¥’•’∂◊•“µ«2µ∆G≥√'“≈«2≥#∆G≥'“íˆíìÚÂ≥“«¬∆7D÷ˆFñfñVB«¬ÁV∆√∞ß–†¶gVÊ7Fñˆ‚fñÊEvU&Wfó6ñˆ‚áFWáB¬∆7D÷ˆFñfñVBí∞¢&WGW&‚FWáBÊ÷F6ÇÇıFÜó2vRv2∆7BWFFVE«2≤Ö∆G≥√'’«2µ¥’•’∂◊•“µ«2≥#∆G≥'“íˆíìÚÂ≥“«¬∆7D÷ˆFñfñVB«¬ÁV∆√∞ß–†¶gVÊ7Fñˆ‚WÜ7E66ÜVGV∆TWfVÁBá≤ñB¬GóR¬FóF∆R¬6˜VÁG'í¬V&∆ó6ÜW"¬V&∆ó6ÜW$ñB¬W&¬¬FFR¬Fñ÷R¬Fñ÷W¶ˆÊR¬&WG&ñWfVDB¬&Wfó6ñˆ‚¬ffV7FVB¬&V∆WfÊ6R¬Ê˜FR“í∞¢6ˆÁ7B'G2“≤ñV#¢ÁV÷&W"ÜFFRÁ6∆ñ6RÉ¬Bíí¬÷ˆÁFÉ¢ÁV÷&W"ÜFFRÁ6∆ñ6RÉR¬ríí¬Fì¢ÁV÷&W"ÜFFRÁ6∆ñ6RÉÇ¬íí”∞¢6ˆÁ7B&W6ˆ«fVB“&W6ˆ«fT6∆VÊF%v∆≈Fñ÷Rá'G2¬Fñ÷R¬Fñ÷W¶ˆÊRì∞¢ñbá&W6ˆ«fVBÁ7FGW2”“&WÜ7B"íFá&˜rÊWrW'&˜"ÜG∑V&∆ó6ÜW'“&V∆V6RFñ÷R6˜V∆BÊ˜B&R&W6ˆ«fVB6fV«íÇG∑&W6ˆ«fVBÁ7FGW7“íÊì∞¢&WGW&‚∞¢WfVÁEˆñC¢G∂ñG”¢G∂FFW÷¬WfVÁE˜GóS¢GóR¬FóF∆R¬6˜VÁG'í¬V&∆ó6ÜW"¬V&∆ó6ÜW%ˆñC¢V&∆ó6ÜW$ñB¿¢6˜W&6U˜W&√¢W&¬¬66ÜVGV∆VEˆE˜WF3¢ÊWrFFRá&W6ˆ«fVBÊWˆ6Ñ◊2íÁFÙï4ı7G&ñÊrÇí¬66ÜVGV∆VEˆFFS¢FFR¿¢66ÜVGV∆VE˜Fñ÷W¶ˆÊS¢Fñ÷W¶ˆÊR¬Fñ÷W¶ˆÊUˆ&6ó3¢'6˜W&6R÷6∆VÊF"◊ˆ∆ñ7í"¬66ÜVGV∆U˜Fñ÷U˜&W6ˆ«WFñˆ„¢&WÜ7B"¿¢V&∆ó6ÜVEˆE˜WF3¢ÁV∆¬¬7GV≈˜&V∆V6UˆE˜WF3¢ÁV∆¬¬&WG&ñWfVEˆE˜WF3¢&WG&ñWfVDB¿¢&Wfñ˜W5˜f«VS¢ÁV∆¬¬f˜&V67E˜f«VS¢ÁV∆¬¬7GV≈˜f«VS¢ÁV∆¬¬VÊóC¢ÁV∆¬¿¢W&ñˆEˆ∆&V√¢ÁV∆¬¬ffV7FVEˆñÁ7G'V÷VÁG3¢ffV7FVB¬&V∆WfÊ6Uˆ&6ó3¢&V∆WfÊ6R¬ñ◊˜'FÊ6S¢ÁV∆¬¿¢66ÜVGV∆U˜7FGW3¢'66ÜVGV∆VB"¬FFˆ6∆73¢&ˆffñ6ñ¬÷6VÁG&¬÷&Ê≤◊66ÜVGV∆R"¬6˜W&6U˜&Wfó6ñˆ„¢&Wfó6ñˆ‚¿¢FFUˆˆÊ«ì¢f«6R¬66ÜVGV∆Uˆ∆ˆ6≈˜Fñ÷S¢Fñ÷R¬66ÜVGV∆UˆÊ˜FS¢Ê˜FP¢”∞ß–†¶gVÊ7Fñˆ‚FFTˆÊ«ï66ÜVGV∆TWfVÁBá≤ñB¬GóR¬FóF∆R¬6˜VÁG'í¬V&∆ó6ÜW"¬V&∆ó6ÜW$ñB¬W&¬¬FFR¬VÊDFFR“ÁV∆¬¬Fñ÷W¶ˆÊR¬&WG&ñWfVDB¬&Wfó6ñˆ‚¬ffV7FVB¬&V∆WfÊ6R¬Ê˜FR“í∞¢&WGW&‚∞¢WfVÁEˆñC¢G∂ñG”¢G∂FFW÷¬WfVÁE˜GóS¢GóR¬FóF∆R¬6˜VÁG'í¬V&∆ó6ÜW"¬V&∆ó6ÜW%ˆñC¢V&∆ó6ÜW$ñB¿¢6˜W&6U˜W&√¢W&¬¬66ÜVGV∆VEˆE˜WF3¢ÁV∆¬¬66ÜVGV∆VEˆFFS¢FFR¬66ÜVGV∆VEˆVÊEˆFFS¢VÊDFFR¿¢66ÜVGV∆VE˜Fñ÷W¶ˆÊS¢Fñ÷W¶ˆÊR¬Fñ÷W¶ˆÊUˆ&6ó3¢'V&∆ó6ÜW"÷6∆VÊF"÷FFR"¬66ÜVGV∆U˜Fñ÷U˜&W6ˆ«WFñˆ„¢&FFR÷ˆÊ«í"¿¢V&∆ó6ÜVEˆE˜WF3¢ÁV∆¬¬7GV≈˜&V∆V6UˆE˜WF3¢ÁV∆¬¬&WG&ñWfVEˆE˜WF3¢&WG&ñWfVDB¿¢&Wfñ˜W5˜f«VS¢ÁV∆¬¬f˜&V67E˜f«VS¢ÁV∆¬¬7GV≈˜f«VS¢ÁV∆¬¬VÊóC¢ÁV∆¬¿¢W&ñˆEˆ∆&V√¢VÊDFFRbbVÊDFFR”“FFRÚV&∆ó6ÜW"÷∆ó7FVB÷VWFñÊrFFW3¢G∂FFW“FÚG∂VÊDFFW÷¢%V&∆ó6ÜW"÷∆ó7FVB÷VWFñÊrFFS≤ÊÚ&V∆V6RFñ÷Ró27W∆ñVB‚"¿¢ffV7FVEˆñÁ7G'V÷VÁG3¢ffV7FVB¬&V∆WfÊ6Uˆ&6ó3¢&V∆WfÊ6R¬ñ◊˜'FÊ6S¢ÁV∆¬¿¢66ÜVGV∆U˜7FGW3¢'66ÜVGV∆VB"¬FFˆ6∆73¢&ˆffñ6ñ¬÷6VÁG&¬÷&Ê≤÷÷VWFñÊr÷6∆VÊF""¬6˜W&6U˜&Wfó6ñˆ„¢&Wfó6ñˆ‚¿¢FFUˆˆÊ«ì¢G'VR¬66ÜVGV∆Uˆ∆ˆ6≈˜Fñ÷S¢ÁV∆¬¬66ÜVGV∆UˆÊ˜FS¢Ê˜FP¢”∞ß–†¶gVÊ7Fñˆ‚fñÊ∆ó¶VDWfVÁG2ÜWfVÁG2¬÷ÑWfVÁG2í∞¢6ˆÁ7BVÊóVR“≤‚‚ÊÊWr÷ÜWfVÁG2Ê÷ÜWfVÁB”‚∂WfVÁBÊWfVÁEˆñB¬WfVÁE“ííÁf«VW2Çï”∞¢VÊóVRÁ6˜'BÇÜ¬"í”‚ÜÁ66ÜVGV∆VEˆE˜WF2«¬Á66ÜVGV∆VEˆFFRíÊ∆ˆ6∆T6ˆ◊&RÜ"Á66ÜVGV∆VEˆE˜WF2«¬"Á66ÜVGV∆VEˆFFRíì∞¢&WGW&‚VÊóVRÁ6∆ñ6RÉ¬6∆◊6˜VÁBÜ÷ÑWfVÁG2¬C¬Éíì∞ß–†¶Wá˜'BgVÊ7Fñˆ‚'6T6gF46˜E66ÜVGV∆RÜñÁWB¬≤&WG&ñWfVDB“ÊWrFFRÇíÁFÙï4ı7G&ñÊrÇí¬Ê˜r“FFRÊÊ˜rÇí¬Ü˜&ó¶ˆ‰Fó2“ì¬÷ÑWfVÁG2“C¬∆7D÷ˆFñfñVB“ÁV∆¬““∑“í∞¢6ˆÁ7BFWáB“FWáD∆ñÊW2ÜñÁWBì∞¢ñbÇÙ6ˆ÷÷óF÷VÁG2ˆbG&FW'2&W˜'G2&R&V∆V6VBˆíÁFW7BáFWáBí«¬ÙV7FW&‚Fñ÷RˆíÁFW7BáFWáBí«¬ı&V∆V6R66ÜVGV∆RˆíÁFW7BáFWáBíí∞¢Fá&˜rÊWrW'&˜"Ç$4eD2&V∆V6R66ÜVGV∆RvRFñBÊ˜B6ˆÁFñ‚óG2WáV7FVBV&∆ó6ÜW"66ÜVGV∆RFWáB"ì∞¢–¢6ˆÁ7B6V7FñˆÁ2“≤‚‚ÁFWáBÊ÷F6Ñ∆¬ÇÚÉÛ•Á≈∆‚íÉ#∆G≥'“ï«2µ&V∆V6R66ÜVGV∆U«2•∆‚ˆvíï”∞¢ñbÇ6V7FñˆÁ2Ê∆VÊwFÇíFá&˜rÊWrW'&˜"Ç$4eD2&V∆V6R66ÜVGV∆RFñBÊ˜BñÊ6«VFRñV"F&∆R"ì∞¢6ˆÁ7BÊ˜tFFR“V7FW&Â'G2ÜÊ˜rì∞¢6ˆÁ7BÊ˜tFí“FFT˜&FñÊ¬ÜFFT∂WíÜÊ˜tFFRíì∞¢6ˆÁ7BVÁFñ¬“6∆◊Ü˜&ó¶ˆ‚ÜÊ˜r¬Ü˜&ó¶ˆ‰Fó2¬Éì∞¢6ˆÁ7BWfVÁG2“µ”∞¢f˜"Ü∆WBñÊFWÇ“≤ñÊFWÇ¬6V7FñˆÁ2Ê∆VÊwFÉ≤ñÊFWÇ≤≤í∞¢6ˆÁ7BÜVFñÊr“6V7FñˆÁ5∂ñÊFWÖ”∞¢6ˆÁ7BñV"“ÁV÷&W"ÜÜVFñÊu≥“ì∞¢6ˆÁ7B7F'B“ÜVFñÊrÊñÊFWÇ≤ÜVFñÊu≥“Ê∆VÊwFÉ∞¢6ˆÁ7BVÊB“6V7FñˆÁ5∂ñÊFWÇ≤”ÚÊñÊFWÇÛÚFWáBÊ∆VÊwFÉ∞¢6ˆÁ7B&˜w2“FWáBÁ6∆ñ6Rá7F'B¬VÊBíÁ7∆óBÇ%∆‚"ì∞¢∆WB÷ˆÁFÇ“ÁV∆√∞¢f˜"Ü6ˆÁ7B&u&˜rˆb&˜w2í∞¢∆WB&˜r“&u&˜s∞¢6ˆÁ7B÷ˆÁFÑ÷F6Ç“ıÂ«2¢Ñ¶ÁV'óƒfV''V'óƒ÷&6áƒ&ñ«ƒ÷óƒßVÊWƒßV«óƒVwW7G≈6WFV÷&W'ƒˆ7Fˆ&W'ƒÊ˜fV÷&W'ƒFV6V÷&W"íÉÛ•«2•«≈«2ß≈«2∑¬BíÇ‚¢íBˆíÊWÜV2á&˜rì∞¢ñbÜ÷ˆÁFÑ÷F6Çí∞¢÷ˆÁFÇ“‘ÙÂDÖ5∂÷ˆÁFÑ÷F6Ö≥“ÁFÙ∆˜vW$66RÇï”∞¢&˜r“÷ˆÁFÑ÷F6Ö≥%”∞¢–¢ñbÇ÷ˆÁFÇí6ˆÁFñÁVS∞¢6ˆÁ7BFïFˆ∂VÁ2“&˜rÁ7∆óBÇı∑≈«5“≤ÚíÊfñ«FW"Ñ&ˆˆ∆V‚ì∞¢f˜"Ü6ˆÁ7BFˆ∂V‚ˆbFïFˆ∂VÁ2í∞¢6ˆÁ7BFî÷F6Ç“ı‚Ö∆G≥√'“íÖ¬¢ìÚBÚÊWÜV2áFˆ∂V‚ì∞¢ñbÇFî÷F6Çí6ˆÁFñÁVS∞¢6ˆÁ7BFí“ÁV÷&W"ÜFî÷F6Ö≥“ì∞¢ñbÇf∆ñDFFRáñV"¬÷ˆÁFÇ¬Fííí6ˆÁFñÁVS∞¢6ˆÁ7BFFR“≤ñV"¬÷ˆÁFÇ¬Fí”∞¢6ˆÁ7B66ÜVGV∆VDFFR“FFT∂WíÜFFRì∞¢6ˆÁ7B&V∆V6R“&W6ˆ«fT6∆VÊF%v∆≈Fñ÷RÜFFR¬#S£3£"¬T5DU$‚ì∞¢6ˆÁ7B˜&FñÊ¬“FFT˜&FñÊ¬á66ÜVGV∆VDFFRì∞¢ñbÜ˜&FñÊ¬¬Ê˜tFí«¬&V∆V6RÊWˆ6Ñ◊2«¬&V∆V6RÊWˆ6Ñ◊2¬Ê˜r«¬&V∆V6RÊWˆ6Ñ◊2‚VÁFñ¬í6ˆÁFñÁVS∞¢WfVÁG2ÁW6Çá∞¢WfVÁEˆñC¢&6gF3¶6˜C¢"≤66ÜVGV∆VDFFR¿¢WfVÁE˜GóS¢$4eD5Ù4ıEıT$ƒî4DîÙ‚"¿¢FóF∆S¢$6ˆ÷÷óF÷VÁG2ˆbG&FW'2Ñ4ıBíV&∆ñ6Fñˆ‚"¿¢6˜VÁG'ì¢%U2"¿¢V&∆ó6ÜW#¢$6ˆ÷÷ˆFóGígWGW&W2G&FñÊr6ˆ÷÷ó76ñˆ‚"¿¢V&∆ó6ÜW%ˆñC¢$4eD2"¿¢6˜W&6U˜W&√¢4eD5Ù4ıEı44ÑTETƒUıU$¬¿¢66ÜVGV∆VEˆE˜WF3¢ÊWrFFRá&V∆V6RÊWˆ6Ñ◊2íÁFÙï4ı7G&ñÊrÇí¿¢66ÜVGV∆VEˆFFS¢66ÜVGV∆VDFFR¿¢66ÜVGV∆VE˜Fñ÷W¶ˆÊS¢T5DU$‚¿¢Fñ÷W¶ˆÊUˆ&6ó3¢'V&∆ó6ÜW"◊66ÜVGV∆R÷V7FW&‚◊Fñ÷R"¿¢66ÜVGV∆U˜Fñ÷U˜&W6ˆ«WFñˆ„¢&WÜ7B"¿¢V&∆ó6ÜVEˆE˜WF3¢ÁV∆¬¿¢7GV≈˜&V∆V6UˆE˜WF3¢ÁV∆¬¿¢&WG&ñWfVEˆE˜WF3¢&WG&ñWfVDB¿¢&Wfñ˜W5˜f«VS¢ÁV∆¬¿¢f˜&V67E˜f«VS¢ÁV∆¬¿¢7GV≈˜f«VS¢ÁV∆¬¿¢VÊóC¢ÁV∆¬¿¢W&ñˆEˆ∆&V√¢%V&∆ó6ÜW"÷∆ó7FVB4ıB&V∆V6RFFS≤&W˜'B6˜fW&vRf&ñW2'í6W&ñW2‚"¿¢ffV7FVEˆñÁ7G'V÷VÁG3¢µ“¿¢&V∆WfÊ6Uˆ&6ó3¢&ˆffñ6ñ¬gWGW&W2◊˜6óFñˆÊñÊrV&∆ñ6Fñˆ„≤ñÁ7G'V÷VÁBfñ∆&ñ∆óGíó2FWFW&÷ñÊVB'íFÜR4eD2&W˜'B"¿¢ñ◊˜'FÊ6S¢ÁV∆¬¿¢66ÜVGV∆U˜7FGW3¢'66ÜVGV∆VB"¿¢FFˆ6∆73¢&ˆffñ6ñ¬◊&V∆V6R◊66ÜVGV∆R"¿¢6˜W&6U˜&Wfó6ñˆ„¢∆7D÷ˆFñfñVB¿¢FFUˆˆÊ«ì¢f«6R¿¢66ÜVGV∆Uˆ∆ˆ6≈˜Fñ÷S¢#S£3£"¿¢66ÜVGV∆UˆÊ˜FS¢Fî÷F6Ö≥%–¢Ú%FÜRV&∆ó6ÜW"÷&∑2FÜó2FFR2FV∆ñVBf˜"fVFW&¬Üˆ∆ñFí‚ ¢¢%FÜR4eD2∆ó7G2FÜó2&V∆V6RFFRÊB7FFW2&W˜'G2&R&V∆V6VBB3£3Ê“‚V7FW&„≤fW&ñgíÁí∆FW"6FVÊ6R6ÜÊvRBFÜRó77VW"‚ ¢“ì∞¢–¢–¢–¢6ˆÁ7BVÊóVR“≤‚‚ÊÊWr÷ÜWfVÁG2Ê÷ÜWfVÁB”‚∂WfVÁBÊWfVÁEˆñB¬WfVÁE“ííÁf«VW2Çï”∞¢VÊóVRÁ6˜'BÇÜ¬"í”‚Á66ÜVGV∆VEˆE˜WF2Ê∆ˆ6∆T6ˆ◊&RÜ"Á66ÜVGV∆VEˆE˜WF2íì∞¢&WGW&‚VÊóVRÁ6∆ñ6RÉ¬6∆◊6˜VÁBÜ÷ÑWfVÁG2¬C¬Éíì∞ß–†¶Wá˜'BgVÊ7Fñˆ‚'6Tfˆ÷46∆VÊF"ÜñÁWB¬≤&WG&ñWfVDB“ÊWrFFRÇíÁFÙï4ı7G&ñÊrÇí¬Ê˜r“FFRÊÊ˜rÇí¬Ü˜&ó¶ˆ‰Fó2“s3¬÷ÑWfVÁG2“C¬∆7D÷ˆFñfñVB“ÁV∆¬““∑“í∞¢6ˆÁ7BFWáB“FWáD∆ñÊW2ÜñÁWBì∞¢ñbÇÙ÷VWFñÊr6∆VÊF'2¬7FFV÷VÁG2¬ÊB÷ñÁWFW2ˆíÁFW7BáFWáBí«¬ÙdÙ‘2÷VWFñÊw2ˆíÁFW7BáFWáBíí∞¢Fá&˜rÊWrW'&˜"Ç$fVFW&¬&W6W'fR6∆VÊF"vRFñBÊ˜B6ˆÁFñ‚óG2WáV7FVB÷VWFñÊr66ÜVGV∆RFWáB"ì∞¢–¢6ˆÁ7B6V7FñˆÁ2“≤‚‚ÁFWáBÊ÷F6Ñ∆¬ÇÚÉÛ•Á≈∆‚íÉ#∆G≥'“ï«2¥dÙ‘2÷VWFñÊw5«2•∆‚ˆvíï”∞¢ñbÇ6V7FñˆÁ2Ê∆VÊwFÇíFá&˜rÊWrW'&˜"Ç$fVFW&¬&W6W'fR6∆VÊF"FñBÊ˜BñÊ6«VFRñV"6V7FñˆÁ2"ì∞¢6ˆÁ7BÊ˜u'G2“V7FW&Â'G2ÜÊ˜rì∞¢6ˆÁ7BFˆFî˜&FñÊ¬“FFT˜&FñÊ¬ÜFFT∂WíÜÊ˜u'G2íì∞¢6ˆÁ7BVÁFñ¬“6∆◊Ü˜&ó¶ˆ‚ÜÊ˜r¬Ü˜&ó¶ˆ‰Fó2¬s3ì∞¢6ˆÁ7BWfVÁG2“µ”∞¢f˜"Ü∆WB6V7Fñˆ‰ñÊFWÇ“≤6V7Fñˆ‰ñÊFWÇ¬6V7FñˆÁ2Ê∆VÊwFÉ≤6V7Fñˆ‰ñÊFWÇ≤≤í∞¢6ˆÁ7BÜVFñÊr“6V7FñˆÁ5∑6V7Fñˆ‰ñÊFWÖ”∞¢6ˆÁ7BñV"“ÁV÷&W"ÜÜVFñÊu≥“ì∞¢6ˆÁ7B7F'B“ÜVFñÊrÊñÊFWÇ≤ÜVFñÊu≥“Ê∆VÊwFÉ∞¢6ˆÁ7BVÊB“6V7FñˆÁ5∑6V7Fñˆ‰ñÊFWÇ≤”ÚÊñÊFWÇÛÚFWáBÊ∆VÊwFÉ∞¢6ˆÁ7B6V7Fñˆ‚“FWáBÁ6∆ñ6Rá7F'B¬VÊBì∞¢6ˆÁ7B÷ˆÁFÖ&˜w2“≤‚‚Á6V7Fñˆ‚Ê÷F6Ñ∆¬ÇÚÉÛ•Á≈∆‚íÑ¶ÁV'óƒfV''V'óƒ÷&6áƒ&ñ«ƒ÷óƒßVÊWƒßV«óƒVwW7G≈6WFV÷&W'ƒˆ7Fˆ&W'ƒÊ˜fV÷&W'ƒFV6V÷&W"ï«2•∆‚ˆvíï”∞¢f˜"Ü∆WBñÊFWÇ“≤ñÊFWÇ¬÷ˆÁFÖ&˜w2Ê∆VÊwFÉ≤ñÊFWÇ≤≤í∞¢6ˆÁ7B&˜r“÷ˆÁFÖ&˜w5∂ñÊFWÖ”∞¢6ˆÁ7B÷ˆÁFÇ“‘ÙÂDÖ5∑&˜u≥“ÁFÙ∆˜vW$66RÇï”∞¢6ˆÁ7B&˜u7F'B“&˜rÊñÊFWÇ≤&˜u≥“Ê∆VÊwFÉ∞¢6ˆÁ7B&˜tVÊB“÷ˆÁFÖ&˜w5∂ñÊFWÇ≤”ÚÊñÊFWÇÛÚ6V7Fñˆ‚Ê∆VÊwFÉ∞¢6ˆÁ7B÷VWFñÊr“ıÂ«2¢Ö∆G≥√'“ï«2•≤ﬁ(	5’«2¢Ö∆G≥√'“íÖ¬¢ìı«2¢Bˆ“ÊWÜV2á6V7Fñˆ‚Á6∆ñ6Rá&˜u7F'B¬&˜tVÊBíì∞¢ñbÇ÷VWFñÊrí6ˆÁFñÁVS∞¢6ˆÁ7Bfó'7DFí“ÁV÷&W"Ü÷VWFñÊu≥“ì∞¢6ˆÁ7B∆7DFí“ÁV÷&W"Ü÷VWFñÊu≥%“ì∞¢ñbÇf∆ñDFFRáñV"¬÷ˆÁFÇ¬fó'7DFíí«¬f∆ñDFFRáñV"¬÷ˆÁFÇ¬∆7DFííí6ˆÁFñÁVS∞¢6ˆÁ7B66ÜVGV∆VDFFR“FFT∂Wíá≤ñV"¬÷ˆÁFÇ¬Fì¢fó'7DFí“ì∞¢6ˆÁ7B˜&FñÊ¬“FFT˜&FñÊ¬á66ÜVGV∆VDFFRì∞¢6ˆÁ7B÷ñFFí“˜&FñÊ¬≤"¢3c∞¢ñbÜ˜&FñÊ¬¬FˆFî˜&FñÊ¬«¬÷ñFFí¬Ê˜r«¬÷ñFFí‚VÁFñ¬í6ˆÁFñÁVS∞¢6ˆÁ7B&ÊvRﬁ|ÛkhëÈÏ∂ªßq´^uY]\›[ŸYöYYà€›\òŸKõ\›[ŸYöYYJN¬àô]\õà€›\òŸQ[ùô[‹J¬à€›\òŸK]ô[ùÀõ›öY\éàëP–à€›ô\õö[ô»€›[ò⁄[[€ô]\ûH€XﬁHYY][ô»ÿ[[ô\àãXõ\⁄\éàë]\õ‹X[àŸ[ùò[ò[ö»ãXõ\⁄\íYàëP–àãàÿ⁄Y[U\õàP–ó–”’Sê“S––SSëTó’Tì[Y^õ€ôNàîêSí—ïTï[Y^õ€ôPò\⁄\ŒàõYY][ô»ÿÿ][€à]\õ‹K–ô\õ[é»]K[€õHXõ\⁄\àÿ⁄Y[Hãàúô\]Y[òﬁNàúXõ\⁄\ã[\›YYY][ô»]\Œ»\]YûHP–àãà€›ô\òYŸSõ›\Œà¬àê€€ùZ[ú»€›ô\õö[ô»€›[ò⁄[[€ô]\ûK\€XﬁHYY][ô»^\»€õN»õ»ô[X\ŸH[YH\»›\YY[ôŸ[ô\ò[€õ€ã[[€ô]\ûHYY][ô‹»\ôH^€YYàãàïHP–àÿ[àô]ö\ŸH]»Xõ\⁄Yÿ⁄Y[Kàô\öYûHH\‹›Y\àôYõ‹ôHô[Z[ô»€àH]Kàãàï\»\»[àY][€ò[Ÿ[ùò[Xò[ö»€›\òŸKõ›€€\]H€ÿò[XX‹õ»‹à^⁄[ôŸHÿ[[ô\à€›ô\òYŸKàÇàBàJN¬üBÇô^‹ù\ﬁ[ò»ù[ò›[€àô]⁄õŸS\–ÿ[[ô\äô]⁄[\Hô]⁄
-H¬à€€ú›‹ÿ⁄Y[K€XﬁWHH]ÿZ]õ€Z\ŸKò[
-Ÿô]⁄[
-ô]⁄[\ì—W”T◊––SSëTó’Tì
-Kô]⁄[
-ô]⁄[\ì—W‘”P÷W’Tì
-WJN¬à€€ú›ô]ö\⁄[€àHö[ôYŸTô]ö\⁄[€ä^[ô\ ÿ⁄Y[Kö[
-Kÿ⁄Y[Kõ\›[ŸYöYY
-N¬à€€ú›€XﬁU^H^[ô\ €XﬁKö[
-N¬àYà
-K‹Xõ\⁄HTÀú»X⁄\⁄[€à⁄]HZ[ù]\»ŸàHYY][ô‹»]Làõ€€à€àH^HŸàH[õõ›[òŸ[Y[ù⁄Kù\›
-€XﬁU^
-JH¬àõ›»ô]»\úõ‹äêò[ö»Ÿà[ô€[ôô[X\ŸK][YH€XﬁHÿ\»õ›€€ôö\õYYûHHŸôöX⁄X[\‹›Y\àYŸHäN¬àBà€€ú›]ô[ù»H\úŸPõŸS\–ÿ[[ô\äÿ⁄Y[Kö[»ô]öY]ôY]àÿ⁄Y[Kúô]öY]ôY]\›[ŸYöYYàô]ö\⁄[€àJN¬àô]\õà€›\òŸQ[ùô[‹J¬à€›\òŸNà»ããúÿ⁄Y[Kô]ö\⁄[€àK]ô[ùÀõ›öY\éàêò[ö»Ÿà[ô€[ô[€ô]\ûH€XﬁH€€[Z]YH[õõ›[òŸ[Y[ùÿ[[ô\àãXõ\⁄\éàêò[ö»Ÿà[ô€[ôãXõ\⁄\íYàêì—Hãàÿ⁄Y[U\õàì—W”T◊––SSëTó’Tì[Y^õ€ôNà”ë”ã[Y^õ€ôPò\⁄\ŒàúXõ\⁄\à›]\»Làõ€€à€à[õõ›[òŸ[Y[ù^N»PSêH]\õ‹K”€ô€à€€ùô\ú⁄[€àãàúô\]Y[òﬁNàúXõ\⁄\ãX€€ôö\õYY[õõ›[òŸ[Y[ù]\Œ»\]YûHò[ö»Ÿà[ô€[ôãà€›ô\òYŸSõ›\Œà¬àïH[õõ›[òŸ[Y[ùÿ[[ô\à[ôŸ\\ò]H[€ô]\ûK\€XﬁHYŸH\ôH⁄X⁄ŸYŸŸ]\é»H]\à›]\»H\›X[Làõ€€àXõXÿ][€à€XﬁKàãàìYY][ô»]\»‹àô[X\ŸH€XﬁHX^HôHô]ö\ŸYàô\öYûHH\‹›Y\àÿ[[ô\à[ô[õõ›[òŸ[Y[ùYŸHôYõ‹ôHô[Z[ô»€àH]Kàãàï\»\»[àY][€ò[Ÿ[ùò[Xò[ö»€›\òŸKõ›€€\]H€ÿò[XX‹õ»‹à^⁄[ôŸHÿ[[ô\à€›ô\òYŸKàÇàBàJN¬üBÇô^‹ù\ﬁ[ò»ù[ò›[€àô]⁄õÿ‘ò]Pÿ[[ô\äô]⁄[\Hô]⁄
-H¬à€€ú›‹ÿ⁄Y[K€XﬁWHH]ÿZ]õ€Z\ŸKò[
-Ÿô]⁄[
-ô]⁄[\ì–◊‘êUW––SSëTó’Tì
-Kô]⁄[
-ô]⁄[\ì–◊‘”P÷W’Tì
-WJN¬à€€ú›]ô[ù»H\úŸPõÿ‘ò]Pÿ[[ô\äÿ⁄Y[Kö[»€XﬁR[ú]à€XﬁKö[ô]öY]ôY]àÿ⁄Y[Kúô]öY]ôY]\›[ŸYöYYàÿ⁄Y[Kõ\›[ŸYöYYJN¬àô]\õà€›\òŸQ[ùô[‹J¬à€›\òŸNàÿ⁄Y[K]ô[ùÀõ›öY\éàêò[ö»Ÿàÿ[òYH€XﬁH[ù\ô\›ò]H[õõ›[òŸ[Y[ùÿ⁄Y[HãXõ\⁄\éàêò[ö»Ÿàÿ[òYHãXõ\⁄\íYàêì–»ãàÿ⁄Y[U\õàì–◊‘êUW––SSëTó’Tì[Y^õ€ôNà‘ì”ïÀ[Y^õ€ôPò\⁄\Œàö\‹›Y\à›]\»NçHX\›\õà[YN»PSêH[Y\öXÿK’‹õ€ù»€€ùô\ú⁄[€àãàúô\]Y[òﬁNàúXõ\⁄\ã[\›YZY⁄ö^Yò]KX[õõ›[òŸ[Y[ù]\»\àYX\é»\]YûHò[ö»Ÿàÿ[òYHãà€›ô\òYŸSõ›\Œà¬àïHò]KY]Hÿ⁄Y[H[ôŸ\\ò]HŸôöX⁄X[õX⁄€›]Y›ZY[[ô\»YŸH\ôH⁄X⁄ŸYŸŸ]\é»H]\à›]\»HX⁄\⁄[€à\»Xõ\⁄Y]NçHX\›\õà[YKàãàëX\›\õà[YH\»ô\€€ôY⁄][Y\öXÿK’‹õ€ù»€»›[ô\ôŸ^[Y⁄ŸôúŸ]»õ€›»Hÿ[[ô\à]Kàãàï\»\»[àY][€ò[Ÿ[ùò[Xò[ö»€›\òŸKõ›€€\]H€ÿò[XX‹õ»‹à^⁄[ôŸHÿ[[ô\à€›ô\òYŸKàÇàBàJN¬üBÇô^‹ù\ﬁ[ò»ù[ò›[€àô]⁄òòPõÿ\ôÿ[[ô\äô]⁄[\Hô]⁄
-H¬à€€ú›€›\òŸHH]ÿZ]ô]⁄[
-ô]⁄[\êêW–ì–Të––SSëTó’Tì
-N¬à€€ú›]ô[ù»H\úŸTòòPõÿ\ôÿ[[ô\ä€›\òŸKö[»ô]öY]ôY]à€›\òŸKúô]öY]ôY]\›[ŸYöYYà€›\òŸKõ\›[ŸYöYYJN¬àô]\õà€›\òŸQ[ùô[‹J¬à€›\òŸK]ô[ùÀõ›öY\éàîô\Ÿ\ùôHò[ö»Ÿà]\›ò[XH[€ô]\ûH€XﬁHõÿ\ôYY][ô»ÿ[[ô\àãXõ\⁄\éàîô\Ÿ\ùôHò[ö»Ÿà]\›ò[XHãXõ\⁄\íYàîêêHãàÿ⁄Y[U\õàêêW–ì–Të––SSëTó’Tì[Y^õ€ôNà÷QëVK[Y^õ€ôPò\⁄\ŒàõYY][ô»ÿÿ][€à]\›ò[XK‘ﬁYô^N»]K[€õHXõ\⁄\àÿ⁄Y[Hãàúô\]Y[òﬁNàúXõ\⁄\ã[\›Yõÿ\ôYY][ô»]Hò[ôŸ\Œ»\]YûHêêHãà€›ô\òYŸSõ›\Œà¬àì€õH[€ô]\ûH€XﬁHõÿ\ô]Hò[ôŸ\»\ôH[ò€YY»HYŸHŸ\»õ››\HHX⁄\⁄[€àô[X\ŸH[YH[ôõ»[YH\»[ôô\úôYàãàìYY][ô»]Hò[ôŸ\»X^HôHô]ö\ŸYàô\öYûHH\‹›Y\àÿ[[ô\àôYõ‹ôHô[Z[ô»€àH]Kàãàï\»\»[àY][€ò[Ÿ[ùò[Xò[ö»€›\òŸKõ›€€\]H€ÿò[XX‹õ»‹à^⁄[ôŸHÿ[[ô\à€›ô\òYŸKàÇàBàJN¬üBÇò€€ú›ëPW“Sî’ïSQSï‘ëSUêSê—HH¬àë‹õ‹‹»€Y\›X»õŸX›éà»\NàêëPW——‘ëSPT—HãYôôX›Yà»ëT»ãìîHãñìàóKõ›NàëY]‹öX[XX‹õ»ô[]ò[òŸHõ‹àKîÀà\]Z]KZ[ô^[ôôX\›\ûHù]\ô\Œ»õ›HX\öŸ]Z[\X›õ‹ôXÿ\›ààKàî\ú€€ò[[ò€€YH[ô›]^\»éà»\NàêëPW‘Tî””êS“Sê””QW”’UVT◊‘ëSPT—HãYôôX›Yà»ëT»ãìîHãñìàãë–»óKõ›Nàí[ò€Y\»ëPH\ú€€ò[X€€ú›[\[€à[ôöXŸKZ[ô^ô[X\Ÿ\Œ»ô[]ò[òŸHY‹»\ôHY]‹öX[€€ù^õ›HX\öŸ]Z[\X›õ‹ôXÿ\›ààKàïKîÀà[ù\õò][€ò[òYH[à€€Ÿ»[ôŸ\ùöXŸ\»éà»\NàêëPW“SïTìêUS”êS’êQW‘ëSPT—HãYôôX›Yà»çëHãçêàãçíàãçêHãçê»ãçî»ãëóKõ›NàëY]‹öX[[ù\õò][€ò[]òYH€€ù^õ‹à›\úô[òﬁHù]\ô\Œ»õ›HX\öŸ]Z[\X›õ‹ôXÿ\›ààKàïKîÀà[ù\õò][€ò[ò[úÿX›[€ú»éà»\NàêëPW“SïTìêUS”êS’êSî–P’S”î◊‘ëSPT—HãYôôX›Yà»çëHãçêàãçíàãçêHãçê»ãçî»ãëóKõ›NàëY]‹öX[[ù\õò][€ò[]ò[úÿX›[€ú»€€ù^õ‹à›\úô[òﬁHù]\ô\Œ»õ›HX\öŸ]Z[\X›õ‹ôXÿ\›ààKàïKîÀà[ù\õò][€ò[[ùô\›Y[ù‹⁄][€àéà»\NàêëPW“SïTìêUS”êS“SïëT’QSï‘‘“US”ó‘ëSPT—HãYôôX›Yà»çëHãçêàãçíàãçêHãçê»ãçî»ãëóKõ›NàëY]‹öX[[ù\õò][€ò[Z[ùô\›Y[ù€€ù^õ‹à›\úô[òﬁHù]\ô\Œ»õ›HX\öŸ]Z[\X›õ‹ôXÿ\›ààKàïKîÀà[ù\õò][€ò[ò[úÿX›[€ú»[ô[ùô\›Y[ù‹⁄][€àéà»\NàêëPW“SïTìêUS”êS’êSî–P’S”î◊–Së“SïëT’QSï‘‘“US”ó‘ëSPT—HãYôôX›Yà»çëHãçêàãçíàãçêHãçê»ãçî»ãëóKõ›NàëY]‹öX[[ù\õò][€ò[]ò[úÿX›[€ú»€€ù^õ‹à›\úô[òﬁHù]\ô\Œ»õ›HX\öŸ]Z[\X›õ‹ôXÿ\›ààKàê€‹ú‹ò]HõŸö]»éà»\NàêëPW–”‘î‘êUW‘ì—íU◊‘ëSPT—HãYôôX›Yà»ëT»ãìîHóKõ›NàëY]‹öX[KîÀà€‹ú‹ò]K\õŸö]»€€ù^õ‹à\]Z]KZ[ô^ù]\ô\Œ»õ›HX\öŸ]Z[\X›õ‹ôXÿ\›ààBüN¬Çôù[ò›[€àôXU[Y\›[\
-ò[YJH¬à€€ú›X]⁄H◊äÕJKJÃüJKJÃüJU
-ÃüJNäÃüJNäÃüJJŒóäÃK_JJO ü
-Ãå
-I⁄Kô^X ›ö[ô ò[YHàäJN¬àYà
-[X]⁄
-Hô]\õàù[¬à€€ú›ÀYX\ï^[€ù^^U^›\ï^Z[ù]U^ŸX€€ô^HHX]⁄¬à€€ú›YX\àHù[Xô\äYX\ï^
-K[€ùHù[Xô\ä[€ù^
-K^HHù[Xô\ä^U^
-N¬à€€ú››\àHù[Xô\ä›\ï^
-KZ[ù]HHù[Xô\äZ[ù]U^
-KŸX€€ôHù[Xô\äŸX€€ô^
-N¬à€€ú›ÿ[[ô\ë]HHô]»]J]KïU YX\ã[€ùHK^JJN¬àYà
-ÿ[[ô\ë]KôŸ]U—ù[YX\ä
-HOOHYX\àÿ[[ô\ë]KôŸ]U”[€ù
+import { resolveCalendarWallTime } from "./economic-calendar.mjs";
 
-H
-»HOOH[€ùÿ[[ô\ë]KôŸ]U—]J
-HOOH^H›\ààå»Z[ù]HàNHŸX€€ôàNJHô]\õàù[¬à€€ú›\ÿ⁄\»H]Kú\úŸJò[YJN¬àô]\õàù[Xô\ãö\—ö[ö]J\ÿ⁄\ H»ô]»]J\ÿ⁄\ Kù“T”‘›ö[ô 
-Hàù[¬üBÇôù[ò›[€àôXT€Y ò[YJH¬àô]\õà›ö[ô ò[YJKõõ‹õX[^ôJìëí—äKúô\XŸJ÷◊óÀWJÀŸÀãHäKúô\XŸJ◊ãJﬂJ…ŸÀàäKù”›Ÿ\êÿ\ŸJ
-Kú€XŸJL
-Húô[X\ŸHé¬üBÇô^‹ùù[ò›[€à\úŸPôXTô[X\ŸQ]\ [ú]»ô]öY]ôY]Hô]»]J
-Kù“T”‘›ö[ô 
-Kõ›»H]Kõõ› 
-K‹ö^õ€ë^\»HX^]ô[ù»HçLHHﬂJH¬à]]HH[ú]¬àYà
-\[Ÿà[ú]OOHú›ö[ô»äH¬àûH»]HHî””ãú\úŸJ[ú]
-N»Hÿ]⁄»õ›»ô]»\úõ‹äêëPHô[X\ŸHÿ⁄Y[Hÿ\»õ›ò[Yî””àäN»BàBàYà
-Y]H\[Ÿà]HOOHõÿöôX›à\úò^Kö\–\úò^J]JJHõ›»ô]»\úõ‹äêëPHô[X\ŸHÿ⁄Y[HYõ›€€ùZ[à[àÿöôX›äN¬à€€ú›ô]ö\⁄[€àH\[Ÿà]Kôö[W€\››\]YOOHú›ö[ô»à	âà]Kôö[W€\››\]Yõ[ô›Hç»]Kôö[W€\››\]Yàù[¬à€€ú››]ŸôàHõ›»
-»X]õX^
-KX]õZ[äMLù[Xô\ä‹ö^õ€ë^\ H
-JH
-àç¬à€€ú›õ›‹»H◊N¬à]ÿ]Y€‹ûP€›[ùH¬àõ‹à
-€€ú›‹ô[X\ŸKôX€‹ôHŸàÿöôX›ô[ùöY\ ]JJH¬àYà
-ô[X\ŸHOOHôö[W€\››\]YäH€€ù[ùYN¬àYà
-\ô[X\ŸKùö[J
-H\ôX€‹ô\[ŸàôX€‹ôOOHõÿöôX›à\úò^Kö\–\úò^JôX€‹ô
-HP\úò^Kö\–\úò^JôX€‹ôúô[X\ŸWŸ]\ JH¬àõ›»ô]»\úõ‹äêëPHô[X\ŸHÿ⁄Y[H€€ùZ[ôY[à[ô^X›Yÿ]Y€‹ûHôX€‹ôäN¬àBàÿ]Y€‹ûP€›[ù
- Œ¬àõ‹à
-€€ú›ò[YHŸàôX€‹ôúô[X\ŸWŸ]\ H¬à€€ú›[Y\›[\HôXU[Y\›[\
-ò[YJN¬àYà
-][Y\›[\
-Hõ›»ô]»\úõ‹äêëPHô[X\ŸHÿ⁄Y[H€€ùZ[ôY[à[ùò[YU»ô[X\ŸH[Y\›[\äN¬à€€ú›\ÿ⁄H]Kú\úŸJ[Y\›[\
-N¬àYà
-\ÿ⁄õ›»\ÿ⁄à›]ŸôäH€€ù[ùYN¬à€€ú›€\‹⁄YöXÿ][€àHëPW“Sî’ïSQSï‘ëSUêSê—V‹ô[X\ŸWHù[¬à€€ú›€Y»HôXT€Y ô[X\ŸJN¬àõ›‹Àú\⁄
-¬à]ô[ù⁄YàôXNâ‹€YﬂNâ›[Y\›[\úô\XŸJ÷ÀNãóKŸÀàäKúô\XŸJ÷âÀûàä_Xà]ô[ù›\Nà€\‹⁄YöXÿ][€èÀù\HêëPW‘PìT“Tó‘ëSPT—Hãà]Nàô[X\ŸKà€›[ùûNàïT»ãàXõ\⁄\éàïKîÀàù\ôX]HŸàX€€õ€ZX»[ò[\⁄\»ãàXõ\⁄\ó⁄YàêëPHãà€›\òŸW›\õàëPW‘ëSPT—W‘–“QSW’Tìàÿ⁄Y[Yÿ]›]Œà[Y\›[\àÿ⁄Y[YŸ]Nà[Y\›[\ú€XŸJL
-Kàÿ⁄Y[Y›[Y^õ€ôNàïU»ãà[Y^õ€ôWÿò\⁄\ŒàúXõ\⁄\àî””à[Y\›[\⁄]^X⁄]U»ŸôúŸ]ãàÿ⁄Y[W›[YW‹ô\€€][€éàô^X›ãàXõ\⁄Yÿ]›]Œàù[àX›X[‹ô[X\ŸWÿ]›]Œàù[àô]öY]ôYÿ]›]Œàô]öY]ôY]àô]ö[›\◊›ò[YNàù[àõ‹ôXÿ\››ò[YNàù[àX›X[›ò[YNàù[à[ö]àù[à\ö[Ÿ€Xô[àîXõ\⁄\ã[\›Yô[X\ŸH]H[ô[YN»õ‹ôXÿ\›[ôX›X[ò[Y\»\ôHõ››\YYàãàYôôX›Y⁄[ú›ù[Y[ùŒà€\‹⁄YöXÿ][€èÀòYôôX›Y◊Kàô[]ò[òŸWÿò\⁄\Œà€\‹⁄YöXÿ][€èÀõõ›Hìõ»[ú›ù[Y[ùX\[ô»\»\‹Ÿ\ùYõ‹à\»ëPHô[X\ŸHÿ]Y€‹ûKàãà[\‹ù[òŸNàù[àÿ⁄Y[W‹›]\Œàúÿ⁄Y[Yãà]Wÿ€\‹ŒàõŸôöX⁄X[XôXK\ô[X\ŸK\ÿ⁄Y[Hãà€›\òŸW‹ô]ö\⁄[€éàô]ö\⁄[€ãà]W€€õNàò[ŸKàÿ⁄Y[W€ÿÿ[›[YNà[Y\›[\ú€XŸJLKNJKàÿ⁄Y[W€õ›NàêëPHÿ⁄Y[H]Hÿ[àôHô]ö\ŸYàô\öYûHHXõ\⁄\àÿ⁄Y[HôYõ‹ôHô[Z[ô»€à[à]ô[ùàÇàJN¬àBàBàYà
-Xÿ]Y€‹ûP€›[ù
-Hõ›»ô]»\úõ‹äêëPHô[X\ŸHÿ⁄Y[HYõ›€€ùZ[à[ûHô[X\ŸHÿ]Y€‹öY\»äN¬à€€ú›[ö\]YHHÀããõô]»X\
-õ›‹ÀõX\
-õ›»Oà‹õ›Àô]ô[ù⁄Yõ›◊JJKùò[Y\ 
-WN¬à[ö\]YKú€‹ù
+export const CFTC_COT_SCHEDULE_URL = "https://www.cftc.gov/MarketReports/CommitmentsofTraders/ReleaseSchedule/index.htm";
+export const FOMC_CALENDAR_URL = "https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm";
+export const ECB_COUNCIL_CALENDAR_URL = "https://www.ecb.europa.eu/press/calendars/mgcgc/html/index.en.html";
+export const BOE_MPC_CALENDAR_URL = "https://www.bankofengland.co.uk/monetary-policy/upcoming-mpc-dates";
+export const BOE_POLICY_URL = "https://www.bankofengland.co.uk/monetary-policy";
+export const BOC_RATE_CALENDAR_URL = "https://www.bankofcanada.ca/core-functions/monetary-policy/key-interest-rate/";
+export const BOC_POLICY_URL = "https://www.bankofcanada.ca/core-functions/monetary-policy/key-interest-rate/blackout-guidelines/";
+export const RBA_BOARD_CALENDAR_URL = "https://www.rba.gov.au/schedules-events/board-meeting-schedules.html";
+export const BEA_RELEASE_DATES_URL = "https://apps.bea.gov/API/signup/release_dates.json";
+export const BEA_RELEASE_SCHEDULE_URL = "https://www.bea.gov/news/schedule";
+const MAX_SCHEDULE_BYTES = 1024 * 1024;
+const EASTERN = "America/New_York";
+const LONDON = "Europe/London";
+const FRANKFURT = "Europe/Berlin";
+const TORONTO = "America/Toronto";
+const SYDNEY = "Australia/Sydney";
+const MONTHS = { january: 1, february: 2, march: 3, april: 4, may: 5, june: 6, july: 7, august: 8, september: 9, october: 10, november: 11, december: 12 };
 
-KäHOàKúÿ⁄Y[Yÿ]›]Àõÿÿ[P€€\\ôJãúÿ⁄Y[Yÿ]›] HKù]Kõÿÿ[P€€\\ôJãù]JJN¬àô]\õà»]ô[ùŒà[ö\]YKú€XŸJX]õX^
-KX]õZ[äLù[Xô\äX^]ô[ù HçL
-JJK€›\òŸTô]ö\⁄[€éàô]ö\⁄[€ãÿ]Y€‹ûP€›[ùN¬üBÇô^‹ù\ﬁ[ò»ù[ò›[€àô]⁄ôXTô[X\ŸPÿ[[ô\äô]⁄[\Hô]⁄
-H¬à€€ú›ô\‹€úŸHH]ÿZ]ô]⁄[\
-ëPW‘ëSPT—W—UT◊’Tì¬àXY\úŒà»XÿŸ\àò\Xÿ][€ã⁄ú€€àãï\Ÿ\ãPYŸ[ùéàëö[ò[òŸR[ù[YŸ[òŸS‘ÀÃKå»XõX»ô\ŸX\ò⁄àKà⁄Y€ò[àXõ‹ù⁄Y€ò[ù[Y[›]
-Lå
-BàJN¬àYà
-\ô\‹€úŸKõ⁄ Hõ›»ô]»\úõ‹äìŸôöX⁄X[ëPHô[X\ŸHÿ⁄Y[Hà
-»ô\‹€úŸKú›]\ N¬à€€ú›€€ù[ù\HH›ö[ô ô\‹€úŸKöXY\úÀôŸ]
-ò€€ù[ù]\HäHàäKù”›Ÿ\êÿ\ŸJ
-N¬àYà
-€€ù[ù\H	âàK \Xÿ][€ó⁄ú€€ü^⁄ú€€äKÀù\›
-€€ù[ù\JJHõ›»ô]»\úõ‹äìŸôöX⁄X[ëPHÿ⁄Y[Hô]\õôY[à[ô^X›Y€€ù[ù\HäN¬à]^Hàé¬àYà
-ô\‹€úŸKòõŸOÀôŸ]ôXY\äH¬à€€ú›ôXY\àHô\‹€úŸKòõŸKôŸ]ôXY\ä
-KX€Ÿ\àHô]»^X€Ÿ\ä
-N¬à]û]\»H¬à⁄[H
-ùYJH¬à€€ú›⁄[ö»H]ÿZ]ôXY\ãúôXY
+function safeCodePoint(value) {
+  return Number.isInteger(value) && value >= 0 && value <= 0x10ffff && !(value >= 0xd800 && value <= 0xdfff)
+    ? String.fromCodePoint(value) : "\uFFFD";
+}
 
-N¬àYà
-⁄[öÀô€ôJHúôXZŒ¬àû]\»
-œH⁄[öÀùò[YKòû]S[ô›¬àYà
-û]\»àPV‘–“QSW–ñUT H»]ÿZ]ôXY\ãòÿ[òŸ[
+function textLines(input) {
+  return String(input || "")
+    .replace(/<script\b[^>]*>[\s\S]*?<\/script>/gi, " ")
+    .replace(/<style\b[^>]*>[\s\S]*?<\/style>/gi, " ")
+    .replace(/<(?:br\b[^>]*|\/?(?:p|div|li|h[1-6]|tr|td|th|section|article|ul|ol)\b[^>]*)>/gi, "\n")
+    .replace(/<[^>]*>/g, " ")
+    .replace(/&nbsp;|&#160;|&#xA0;/gi, " ")
+    .replace(/&lsquo;/gi, "‚Äò").replace(/&rsquo;/gi, "‚Äô")
+    .replace(/&ndash;/gi, "‚Äì").replace(/&mdash;/gi, "‚Äî")
+    .replace(/&amp;/gi, "&").replace(/&quot;/gi, '"').replace(/&#39;|&apos;/gi, "'")
+    .replace(/&lt;/gi, "<").replace(/&gt;/gi, ">")
+    .replace(/&#(\d+);/g, (_, code) => safeCodePoint(Number(code)))
+    .replace(/&#x([0-9a-f]+);/gi, (_, code) => safeCodePoint(parseInt(code, 16)))
+    .split(/\r?\n/).map(line => line.replace(/\s+/g, " ").trim()).filter(Boolean).join("\n");
+}
 
-N»õ›»ô]»\úõ‹äìŸôöX⁄X[ëPHÿ⁄Y[Hô\‹€úŸH€»\ôŸHäN»Bà^
-œHX€Ÿ\ãôX€ŸJ⁄[öÀùò[YK»›ôX[NàùYHJN¬àBà^
-œHX€Ÿ\ãôX€ŸJ
-N¬àH[ŸH¬à^H]ÿZ]ô\‹€úŸKù^
+export function classifyPublisherScheduleFailure(error) {
+  const message = String(error?.message || error || "");
+  const status = /(?:Official schedule|BLS calendar) HTTP (\d{3})/i.exec(message)?.[1];
+  if (status) return `upstream_http_${status}`;
+  if (/timeout|timed out|aborted|deadline/i.test(message)) return "upstream_timeout";
+  if (/unexpected content type/i.test(message)) return "unexpected_content_type";
+  if (/response too large/i.test(message)) return "response_too_large";
+  if (/release-time policy|decision.*time|publication policy/i.test(message)) return "publisher_policy_changed";
+  if (/did not contain|did not include|no parseable|not parseable|expected .*schedule/i.test(message)) return "publisher_schedule_format_changed";
+  return "upstream_fetch_failed";
+}
 
-N¬àYà
-ô]»^[ò€Ÿ\ä
-Kô[ò€ŸJ^
-Kòû]S[ô›àPV‘–“QSW–ñUT Hõ›»ô]»\úõ‹äìŸôöX⁄X[ëPHÿ⁄Y[Hô\‹€úŸH€»\ôŸHäN¬àBà€€ú›ô]öY]ôY]Hô]»]J
-Kù“T”‘›ö[ô 
-N¬à€€ú›\úŸYH\úŸPôXTô[X\ŸQ]\ ^»ô]öY]ôY]JN¬àô]\õà¬àÿ⁄[XW›ô\ú⁄[€éàKà]W›\NàõŸôöX⁄X[ŸX€€õ€ZX◊‹ô[X\ŸW‹ÿ⁄Y[Hãà›]\Œàôúô\⁄ãàõ›öY\éàïKîÀàù\ôX]HŸàX€€õ€ZX»[ò[\⁄\»ô[X\ŸHÿ[[ô\àãàXõ\⁄\éàïKîÀàù\ôX]HŸàX€€õ€ZX»[ò[\⁄\»ãàXõ\⁄\ó⁄YàêëPHãà€›\òŸW›\õàëPW‘ëSPT—W‘–“QSW’Tìà€›\òŸWŸôYY›\õàëPW‘ëSPT—W—UT◊’Tìàÿ⁄Y[W›\õàëPW‘ëSPT—W‘–“QSW’Tìà€›\òŸW›[Y^õ€ôNàïU»ãà[Y^õ€ôWÿò\⁄\ŒàêëPHXX⁄[ôK\ôXYXõHô[X\ŸH]\»[ò€YH^X⁄]U»ŸôúŸ]»ãàúô\]Y[òﬁNàúXõ\⁄\ã]\]Yô[X\ŸHÿ⁄Y[Hãàô]öY]ôYÿ]àô]öY]ôY]à]Wÿ\◊€Ÿéàù[à€›\òŸW‹ô]ö\⁄[€éà\úŸYú€›\òŸTô]ö\⁄[€ãà€›\òŸWÿÿ]Y€‹ûWÿ€›[ùà\úŸYòÿ]Y€‹ûP€›[ùà]ô[ùÿ€›[ùà\úŸYô]ô[ùÀõ[ô›à]ô[ùŒà\úŸYô]ô[ùÀà€›ô\òYŸW€õ›\Œà¬àï\»ôYY\Ÿ\»ëPI‹»XX⁄[ôK\ôXYXõHô[X\ŸKY]Hî””à[ô[ò€Y\»\€€Z[ô»ÿ]Y€‹öY\»Xõ\⁄YûHëPH⁄][àHY^H‹ö^õ€ãàãàïHXõ\⁄\â‹»ô[X\ŸHÿ⁄Y[HX^H⁄[ôŸN»⁄X⁄»HŸôöX⁄X[ëPHÿ⁄Y[Hõ‹àô]ö\⁄[€ú»ôYõ‹ôHô[Z[ô»€à[à]ô[ùàãàêëPHõ›öY\»ô[X\ŸH]\»[ô[Y\»€õH\ôN»õ‹ôXÿ\›ÀX›X[ò[Y\À[ôYX\›\ôYô[X\ŸH[Y\›[\»\ôHõ›[ò€YYàãàí[ú›ù[Y[ùô[]ò[òŸHY‹»\ôHY]‹öX[€€ù^à[õX\Yÿ]Y€‹öY\»ô[XZ[àö\⁄XõH⁄]›][ôô\úôYX\öŸ]ô[]ò[òŸKàãàêëPH€›ô\òYŸH\»€ôH€€\€ô[ùŸàH\ùX[XX‹õ»ÿ[[ô\ãõ›H€€\]HKîÀà‹à€ÿò[]ô[ùÿ[[ô\ãàÇàBàN¬üB
+function easternParts(epochMs) {
+  const parts = new Intl.DateTimeFormat("en-CA", {
+    timeZone: EASTERN, year: "numeric", month: "2-digit", day: "2-digit",
+    hour: "2-digit", minute: "2-digit", second: "2-digit", hourCycle: "h23"
+  }).formatToParts(new Date(epochMs));
+  return Object.fromEntries(parts.filter(item => item.type !== "literal").map(item => [item.type, Number(item.value)]));
+}
+
+function dateKey(parts) {
+  return String(parts.year).padStart(4, "0") + "-" + String(parts.month).padStart(2, "0") + "-" + String(parts.day).padStart(2, "0");
+}
+
+function dateOrdinal(key) {
+  const match = /^(\d{4})-(\d{2})-(\d{2})$/.exec(String(key || ""));
+  if (!match) return NaN;
+  return Date.UTC(Number(match[1]), Number(match[2]) - 1, Number(match[3]));
+}
+
+function validDate(year, month, day) {
+  const date = new Date(Date.UTC(year, month - 1, day));
+  return date.getUTCFullYear() === year && date.getUTCMonth() + 1 === month && date.getUTCDate() === day;
+}
+
+function clampHorizon(now, days, maximum) {
+  return now + Math.max(1, Math.min(maximum, Number(days) || 90)) * 86400000;
+}
+
+function clampCount(value, fallback, maximum) {
+  return Math.max(0, Math.min(maximum, Number(value) || fallback));
+}
+
+function findRevision(text, lastModified) {
+  return text.match(/Last Update:\s*([A-Z][a-z]+\s+\d{1,2},\s+20\d{2})/i)?.[1] || lastModified || null;
+}
+
+function findPageRevision(text, lastModified) {
+  return text.match(/This page was last updated\s+(\d{1,2}\s+[A-Z][a-z]+\s+20\d{2})/i)?.[1] || lastModified || null;
+}
+
+function exactScheduleEvent({ id, type, title, country, publisher, publisherId, url, date, time, timezone, retrievedAt, revision, affected, relevance, note }) {
+  const parts = { year: Number(date.slice(0, 4)), month: Number(date.slice(5, 7)), day: Number(date.slice(8, 10)) };
+  const resolved = resolveCalendarWallTime(parts, time, timezone);
+  if (resolved.status !== "exact") throw new Error(`${publisher} release time could not be resolved safely (${resolved.status}).`);
+  return {
+    event_id: `${id}:${date}`, event_type: type, title, country, publisher, publisher_id: publisherId,
+    source_url: url, scheduled_at_utc: new Date(resolved.epochMs).toISOString(), scheduled_date: date,
+    scheduled_timezone: timezone, timezone_basis: "source-calendar-policy", schedule_time_resolution: "exact",
+    published_at_utc: null, actual_release_at_utc: null, retrieved_at_utc: retrievedAt,
+    previous_value: null, forecast_value: null, actual_value: null, unit: null,
+    period_label: null, affected_instruments: affected, relevance_basis: relevance, importance: null,
+    schedule_status: "scheduled", data_class: "official-central-bank-schedule", source_revision: revision,
+    date_only: false, schedule_local_time: time, schedule_note: note
+  };
+}
+
+function dateOnlyScheduleEvent({ id, type, title, country, publisher, publisherId, url, date, endDate = null, timezone, retrievedAt, revision, affected, relevance, note }) {
+  return {
+    event_id: `${id}:${date}`, event_type: type, title, country, publisher, publisher_id: publisherId,
+    source_url: url, scheduled_at_utc: null, scheduled_date: date, scheduled_end_date: endDate,
+    scheduled_timezone: timezone, timezone_basis: "publisher-calendar-date", schedule_time_resolution: "date-only",
+    published_at_utc: null, actual_release_at_utc: null, retrieved_at_utc: retrievedAt,
+    previous_value: null, forecast_value: null, actual_value: null, unit: null,
+    period_label: endDate && endDate !== date ? `Publisher-listed meeting dates: ${date} to ${endDate}` : "Publisher-listed meeting date; no release time is supplied.",
+    affected_instruments: affected, relevance_basis: relevance, importance: null,
+    schedule_status: "scheduled", data_class: "official-central-bank-meeting-calendar", source_revision: revision,
+    date_only: true, schedule_local_time: null, schedule_note: note
+  };
+}
+
+function finalizedEvents(events, maxEvents) {
+  const unique = [...new Map(events.map(event => [event.event_id, event])).values()];
+  unique.sort((a, b) => (a.scheduled_at_utc || a.scheduled_date).localeCompare(b.scheduled_at_utc || b.scheduled_date));
+  return unique.slice(0, clampCount(maxEvents, 40, 80));
+}
+
+export function parseCftcCotSchedule(input, { retrievedAt = new Date().toISOString(), now = Date.now(), horizonDays = 90, maxEvents = 40, lastModified = null } = {}) {
+  const text = textLines(input);
+  if (!/Commitments of Traders reports are released/i.test(text) || !/Eastern time/i.test(text) || !/Release Schedule/i.test(text)) {
+    throw new Error("CFTC release schedule page did not contain its expected publisher schedule text");
+  }
+  const sections = [...text.matchAll(/(?:^|\n)(20\d{2})\s+Release Schedule\s*\n/gi)];
+  if (!sections.length) throw new Error("CFTC release schedule did not include a year table");
+  const nowDate = easternParts(now);
+  const nowDay = dateOrdinal(dateKey(nowDate));
+  const until = clampHorizon(now, horizonDays, 180);
+  const events = [];
+  for (let index = 0; index < sections.length; index++) {
+    const heading = sections[index];
+    const year = Number(heading[1]);
+    const start = heading.index + heading[0].length;
+    const end = sections[index + 1]?.index ?? text.length;
+    const rows = text.slice(start, end).split("\n");
+    let month = null;
+    for (const rawRow of rows) {
+      let row = rawRow;
+      const monthMatch = /^\s*(January|February|March|April|May|June|July|August|September|October|November|December)(?:\s*\|\s*|\s+|$)(.*)$/i.exec(row);
+      if (monthMatch) {
+        month = MONTHS[monthMatch[1].toLowerCase()];
+        row = monthMatch[2];
+      }
+      if (!month) continue;
+      const dayTokens = row.split(/[|\s]+/).filter(Boolean);
+      for (const token of dayTokens) {
+        const dayMatch = /^(\d{1,2})(\*)?$/.exec(token);
+        if (!dayMatch) continue;
+        const day = Number(dayMatch[1]);
+        if (!validDate(year, month, day)) continue;
+        const date = { year, month, day };
+        const scheduledDate = dateKey(date);
+        const release = resolveCalendarWallTime(date, "15:30:00", EASTERN);
+        const ordinal = dateOrdinal(scheduledDate);
+        if (ordinal < nowDay || !release.epochMs || release.epochMs < now || release.epochMs > until) continue;
+        events.push({
+          event_id: "cftc:cot:" + scheduledDate,
+          event_type: "CFTC_COT_PUBLICATION",
+          title: "Commitments of Traders (COT) publication",
+          country: "US",
+          publisher: "Commodity Futures Trading Commission",
+          publisher_id: "CFTC",
+          source_url: CFTC_COT_SCHEDULE_URL,
+          scheduled_at_utc: new Date(release.epochMs).toISOString(),
+          scheduled_date: scheduledDate,
+          scheduled_timezone: EASTERN,
+          timezone_basis: "publisher-schedule-eastern-time",
+          schedule_time_resolution: "exact",
+          published_at_utc: null,
+          actual_release_at_utc: null,
+          retrieved_at_utc: retrievedAt,
+          previous_value: null,
+          forecast_value: null,
+          actual_value: null,
+          unit: null,
+          period_label: "Publisher-listed COT release date; report coverage varies by series.",
+          affected_instruments: [],
+          relevance_basis: "official futures-positioning publication; instrument availability is determined by the CFTC report",
+          importance: null,
+          schedule_status: "scheduled",
+          data_class: "official-release-schedule",
+          source_revision: lastModified,
+          date_only: false,
+          schedule_local_time: "15:30:00",
+          schedule_note: dayMatch[2]
+            ? "The publisher marks this date as delayed for a federal holiday."
+            : "The CFTC lists this release date and states reports are released at 3:30 p.m. Eastern; verify any later cadence change at the issuer."
+        });
+      }
+    }
+  }
+  const unique = [...new Map(events.map(event => [event.event_id, event])).values()];
+  unique.sort((a, b) => a.scheduled_at_utc.localeCompare(b.scheduled_at_utc));
+  return unique.slice(0, clampCount(maxEvents, 40, 80));
+}
+
+export function parseFomcCalendar(input, { retrievedAt = new Date().toISOString(), now = Date.now(), horizonDays = 730, maxEvents = 40, lastModified = null } = {}) {
+  const text = textLines(input);
+  if (!/Meeting calendars, statements, and minutes/i.test(text) || !/FOMC Meetings/i.test(text)) {
+    throw new Error("Federal Reserve calendar page did not contain its expected meeting schedule text");
+  }
+  const sections = [...text.matchAll(/(?:^|\n)(20\d{2})\s+FOMC Meetings\s*\n/gi)];
+  if (!sections.length) throw new Error("Federal Reserve calendar did not include year sections");
+  const nowParts = easternParts(now);
+  const todayOrdinal = dateOrdinal(dateKey(nowParts));
+  const until = clampHorizon(now, horizonDays, 730);
+  const events = [];
+  for (let sectionIndex = 0; sectionIndex < sections.length; sectionIndex++) {
+    const heading = sections[sectionIndex];
+    const year = Number(heading[1]);
+    const start = heading.index + heading[0].length;
+    const end = sections[sectionIndex + 1]?.index ?? text.length;
+    const section = text.slice(start, end);
+    const monthRows = [...section.matchAll(/(?:^|\n)(January|February|March|April|May|June|July|August|September|October|November|December)\s*\n/gi)];
+    for (let index = 0; index < monthRows.length; index++) {
+      const row = monthRows[index];
+      const month = MONTHS[row[1].toLowerCase()];
+      const rowStart = row.index + row[0].length;
+      const rowEnd = monthRows[index + 1]?.index ?? section.length;
+      const meeting = /^\s*(\d{1,2})\s*[-‚Äì]\s*(\d{1,2})(\*)?\s*$/m.exec(section.slice(rowStart, rowEnd));
+      if (!meeting) continue;
+      const firstDay = Number(meeting[1]);
+      const lastDay = Number(meeting[2]);
+      if (!validDate(year, month, firstDay) || !validDate(year, month, lastDay)) continue;
+      const scheduledDate = dateKey({ year, month, day: firstDay });
+      const ordinal = dateOrdinal(scheduledDate);
+      const midday = ordinal + 12 * 3600000;
+      if (ordinal < todayOrdinal || midday < now || midday > until) continue;
+      const range = meeting[1] + "-" + meeting[2];
+      const projectionNote = meeting[3] ? " The publisher marks this meeting as associated with a Summary of Economic Projections." : "";
+      events.push({
+        event_id: "fomc:meeting:" + scheduledDate,
+        event_type: "FOMC_MEETING",
+        title: "Federal Open Market Committee meeting (" + range + ")",
+        country: "US",
+        publisher: "Board of Governors of the Federal Reserve System",
+        publisher_id: "FED",
+        source_url: FOMC_CALENDAR_URL,
+        scheduled_at_utc: null,
+        scheduled_date: scheduledDate,
+        scheduled_end_date: dateKey({ year, month, day: lastDay }),
+        scheduled_timezone: null,
+        timezone_basis: "publisher-calendar-date",
+        schedule_time_resolution: "date-only",
+        published_at_utc: null,
+        actual_release_at_utc: null,
+        retrieved_at_utc: retrievedAt,
+        previous_value: null,
+        forecast_value: null,
+        actual_value: null,
+        unit: null,
+        period_label: "Scheduled meeting dates: " + scheduledDate + " to " + dateKey({ year, month, day: lastDay }),
+        affected_instruments: ["ZN", "DX", "NQ", "ES", "GC", "6E"],
+        relevance_basis: "editorial rates-related futures context; not a market-impact forecast",
+        importance: null,
+        schedule_status: "scheduled",
+        data_class: "official-meeting-calendar-date",
+        source_revision: lastModified,
+        date_only: true,
+        schedule_note: "The Federal Reserve publishes this meeting date range without a release time in the calendar." + projectionNote + " Verify the issuer for schedule revisions."
+      });
+    }
+  }
+  const unique = [...new Map(events.map(event => [event.event_id, event])).values()];
+  unique.sort((a, b) => a.scheduled_date.localeCompare(b.scheduled_date));
+  return unique.slice(0, clampCount(maxEvents, 40, 80));
+}
+
+function centralBankEventParts({ id, type, title, country, publisher, publisherId, url, date, time, timezone, retrievedAt, revision, affected, relevance, note }) {
+  return { id, type, title, country, publisher, publisherId, url, date, time, timezone, retrievedAt, revision, affected, relevance, note };
+}
+
+export function parseBoeMpcCalendar(input, { retrievedAt = new Date().toISOString(), now = Date.now(), horizonDays = 730, maxEvents = 40, lastModified = null } = {}) {
+  const text = textLines(input);
+  if (!/Monetary Policy Committee dates for 20\d{2} and 20\d{2}/i.test(text) || !/confirmed dates/i.test(text) || !/MPC Summary and minutes/i.test(text)) {
+    throw new Error("Bank of England MPC calendar did not contain its expected confirmed-date schedule");
+  }
+  const sections = [...text.matchAll(/(?:^|\n)(20\d{2}) confirmed dates\s*\n/gi)];
+  if (!sections.length) throw new Error("Bank of England MPC calendar did not include confirmed year sections");
+  const events = [];
+  let recognized = 0;
+  const cutoff = clampHorizon(now, horizonDays, 730);
+  for (let index = 0; index < sections.length; index++) {
+    const year = Number(sections[index][1]);
+    const start = sections[index].index + sections[index][0].length;
+    const end = sections[index + 1]?.index ?? text.length;
+    for (const row of text.slice(start, end).split("\n")) {
+      const match = /^(?:Monday|Tuesday|Wednesday|Thursday|Friday|Saturday|Sunday)\s+(\d{1,2})\s+(January|February|March|April|May|June|July|August|September|October|November|December)\b/i.exec(row);
+      if (!match) continue;
+      const month = MONTHS[match[2].toLowerCase()];
+      const date = dateKey({ year, month, day: Number(match[1]) });
+      if (!validDate(year, month, Number(match[1]))) continue;
+      recognized++;
+      const event = exactScheduleEvent(centralBankEventParts({
+        id: "boe:mpc", type: "BOE_MPC_ANNOUNCEMENT", title: "Bank of England Monetary Policy Committee announcement",
+        country: "GB", publisher: "Bank of England", publisherId: "BOE", url: BOE_MPC_CALENDAR_URL,
+        date, time: "12:00:00", timezone: LONDON, retrievedAt, revision: lastModified,
+        affected: ["6B", "6E", "ZN"], relevance: "editorial UK monetary-policy context for currency and rates futures; not a market-impact forecast",
+        note: "The Bank lists this confirmed announcement date. The Bank's monetary-policy page states decisions are published at 12 noon on announcement day; timezone conversion follows Europe/London. Verify the issuer for revisions."
+      }));
+      const at = Date.parse(event.scheduled_at_utc);
+      if (at >= now && at <= cutoff) events.push(event);
+    }
+  }
+  if (!recognized) throw new Error("Bank of England MPC calendar did not contain any parseable announcement dates");
+  return finalizedEvents(events, maxEvents);
+}
+
+export function parseBocRateCalendar(input, { policyInput, retrievedAt = new Date().toISOString(), now = Date.now(), horizonDays = 730, maxEvents = 40, lastModified = null } = {}) {
+  const text = textLines(input);
+  const policyText = textLines(policyInput);
+  if (!/Policy interest rate/i.test(text) || !/Schedule for 20\d{2}/i.test(text) || !/Interest rate announcement/i.test(text)) {
+    throw new Error("Bank of Canada page did not contain its expected policy-rate schedule");
+  }
+  if (!/key policy rate decision is published on a Wednesday at 9:45 Eastern Time/i.test(policyText)) {
+    throw new Error("Bank of Canada release-time policy was not confirmed by the official issuer page");
+  }
+  const sections = [...text.matchAll(/(?:^|\n)Schedule for (20\d{2})\s*\n/gi)];
+  if (!sections.length) throw new Error("Bank of Canada policy-rate calendar did not include year sections");
+  const events = [];
+  let recognized = 0;
+  const cutoff = clampHorizon(now, horizonDays, 730);
+  for (let index = 0; index < sections.length; index++) {
+    const year = Number(sections[index][1]);
+    const start = sections[index].index + sections[index][0].length;
+    const end = sections[index + 1]?.index ?? text.length;
+    const rows = text.slice(start, end).split("\n");
+    for (let rowIndex = 0; rowIndex < rows.length; rowIndex++) {
+      const row = rows[rowIndex];
+      const match = /^\s*(January|February|March|April|May|June|July|August|September|October|November|December)\s+(\d{1,2})\b/i.exec(row);
+      if (!match || !/Interest rate announcement/i.test(rows.slice(rowIndex, rowIndex + 4).join(" "))) continue;
+      const month = MONTHS[match[1].toLowerCase()];
+      const day = Number(match[2]);
+      if (!validDate(year, month, day)) continue;
+      if (new Date(Date.UTC(year, month - 1, day)).getUTCDay() !== 3) {
+        throw new Error("Bank of Canada announcement date conflicts with the publisher's Wednesday 9:45 Eastern-time policy");
+      }
+      recognized++;
+      const date = dateKey({ year, month, day });
+      const event = exactScheduleEvent(centralBankEventParts({
+        id: "boc:policy-rate", type: "BOC_POLICY_RATE_ANNOUNCEMENT", title: "Bank of Canada policy interest rate announcement",
+        country: "CA", publisher: "Bank of Canada", publisherId: "BOC", url: BOC_RATE_CALENDAR_URL,
+        date, time: "09:45:00", timezone: TORONTO, retrievedAt, revision: lastModified,
+        affected: ["6C", "ZN"], relevance: "editorial Canadian monetary-policy context for currency and rates futures; not a market-impact forecast",
+        note: "The Bank's official blackout-guidelines page states the policy decision is published at 9:45 Eastern Time on a Wednesday. Timezone conversion follows America/Toronto. Verify the issuer for revisions."
+      }));
+      const at = Date.parse(event.scheduled_at_utc);
+      if (at >= now && at <= cutoff) events.push(event);
+    }
+  }
+  if (!recognized) throw new Error("Bank of Canada policy-rate calendar did not contain any parseable announcement dates");
+  return finalizedEvents(events, maxEvents);
+}
+
+export function parseEcbCouncilCalendar(input, { retrievedAt = new Date().toISOString(), now = Date.now(), horizonDays = 730, maxEvents = 40, lastModified = null } = {}) {
+  const text = textLines(input);
+  if (!/Schedules for the meetings of the Governing Council and General Council of the ECB/i.test(text)) {
+    throw new Error("ECB calendar did not contain its expected Governing Council schedule");
+  }
+  const lines = text.split("\n");
+  const events = [];
+  let recognized = 0;
+  const cutoff = clampHorizon(now, horizonDays, 730);
+  for (let index = 0; index < lines.length - 1; index++) {
+    const match = /^(\d{2})\/(\d{2})\/(20\d{2})$/.exec(lines[index]);
+    if (!match) continue;
+    const day = Number(match[1]);
+    const month = Number(match[2]);
+    const year = Number(match[3]);
+    const description = lines[index + 1] || "";
+    if (!validDate(year, month, day) || !/Governing Council of the ECB: monetary policy meeting/i.test(description)) continue;
+    recognized++;
+    const date = dateKey({ year, month, day });
+    const ordinal = dateOrdinal(date);
+    if (ordinal + 12 * 3600000 < now || ordinal > cutoff) continue;
+    events.push(dateOnlyScheduleEvent({
+      id: "ecb:governing-council", type: "ECB_MONETARY_POLICY_MEETING", title: `ECB Governing Council monetary policy meeting${description.match(/\(Day [12]\)/i)?.[0] ? ` ${description.match(/\(Day [12]\)/i)[0]}` : ""}`,
+      country: "EU", publisher: "European Central Bank", publisherId: "ECB", url: ECB_COUNCIL_CALENDAR_URL,
+      date, timezone: FRANKFURT, retrievedAt, revision: lastModified,
+      affected: ["6E", "6B", "ZN"], relevance: "editorial euro-area monetary-policy context for currency and rates futures; not a market-impact forecast",
+      note: `The ECB lists this Governing Council meeting date without a release time.${/followed by press conference/i.test(description) ? " A press conference is listed after the meeting on this date, but no time is supplied." : ""} A meeting date does not establish the decision or press-conference time; verify the issuer for revisions.`
+    }));
+  }
+  if (!recognized) throw new Error("ECB calendar did not contain any parseable monetary-policy meeting dates");
+  return finalizedEvents(events, maxEvents);
+}
+
+export function parseRbaBoardCalendar(input, { retrievedAt = new Date().toISOString(), now = Date.now(), horizonDays = 730, maxEvents = 40, lastModified = null } = {}) {
+  const text = textLines(input);
+  if (!/Board Meeting Schedules/i.test(text) || !/Monetary Policy Board/i.test(text)) {
+    throw new Error("Reserve Bank of Australia page did not contain its expected Monetary Policy Board schedule");
+  }
+  const sections = [...text.matchAll(/(?:^|\n)Board meeting schedules (20\d{2})\s*\n/gi)];
+  if (!sections.length) throw new Error("Reserve Bank of Australia calendar did not include year sections");
+  const events = [];
+  let recognized = 0;
+  const cutoff = clampHorizon(now, horizonDays, 730);
+  for (let index = 0; index < sections.length; index++) {
+    const year = Number(sections[index][1]);
+    const start = sections[index].index + sections[index][0].length;
+    const end = sections[index + 1]?.index ?? text.length;
+    for (const row of text.slice(start, end).split("\n")) {
+      const match = /^(\d{1,2})\s*[‚Äì-]\s*(\d{1,2})\s+(January|February|March|April|May|June|July|August|September|October|November|December)\b/i.exec(row);
+      if (!match) continue;
+      const startMonth = MONTHS[match[3].toLowerCase()];
+      const firstDay = Number(match[1]);
+      const lastDay = Number(match[2]);
+      const endMonth = MONTHS[match[3].toLowerCase()];
+      if (startMonth !== endMonth || !validDate(year, startMonth, firstDay) || !validDate(year, endMonth, lastDay) || lastDay < firstDay) continue;
+      const date = dateKey({ year, month: startMonth, day: firstDay });
+      const endDate = dateKey({ year, month: endMonth, day: lastDay });
+      recognized++;
+      if (dateOrdinal(endDate) + 12 * 3600000 < now || dateOrdinal(date) > cutoff) continue;
+      events.push(dateOnlyScheduleEvent({
+        id: "rba:monetary-policy-board", type: "RBA_MONETARY_POLICY_BOARD_MEETING", title: "Reserve Bank of Australia Monetary Policy Board meeting",
+        country: "AU", publisher: "Reserve Bank of Australia", publisherId: "RBA", url: RBA_BOARD_CALENDAR_URL,
+        date, endDate, timezone: SYDNEY, retrievedAt, revision: lastModified,
+        affected: ["6A", "6B"], relevance: "editorial Australian monetary-policy context for currency futures; not a market-impact forecast",
+        note: "The RBA lists this board meeting date range but does not provide a decision release time here. No time is inferred; verify the issuer for revisions."
+      }));
+    }
+  }
+  if (!recognized) throw new Error("Reserve Bank of Australia calendar did not contain any parseable Monetary Policy Board ranges");
+  return finalizedEvents(events, maxEvents);
+}
+
+async function fetchHtml(fetchImpl, url) {
+  const response = await fetchImpl(url, {
+    headers: { Accept: "text/html", "User-Agent": "FinanceIntelligenceOS/1.3 public research" },
+    signal: AbortSignal.timeout(12000)
+  });
+  if (!response.ok) throw new Error("Official schedule HTTP " + response.status);
+  const contentType = String(response.headers.get("content-type") || "").toLowerCase();
+  if (contentType && !/text\/html/.test(contentType)) throw new Error("Official schedule returned an unexpected content type");
+  let html = "";
+  if (response.body?.getReader) {
+    const reader = response.body.getReader();
+    const decoder = new TextDecoder();
+    let total = 0;
+    while (true) {
+      const chunk = await reader.read();
+      if (chunk.done) break;
+      total += chunk.value.byteLength;
+      if (total > MAX_SCHEDULE_BYTES) {
+        await reader.cancel();
+        throw new Error("Official schedule response too large");
+      }
+      html += decoder.decode(chunk.value, { stream: true });
+    }
+    html += decoder.decode();
+  } else {
+    html = await response.text();
+    if (new TextEncoder().encode(html).byteLength > MAX_SCHEDULE_BYTES) throw new Error("Official schedule response too large");
+  }
+  return { html, retrievedAt: new Date().toISOString(), lastModified: response.headers.get("last-modified") || null };
+}
+
+export async function fetchCftcCotSchedule(fetchImpl = fetch) {
+  const source = await fetchHtml(fetchImpl, CFTC_COT_SCHEDULE_URL);
+  const events = parseCftcCotSchedule(source.html, { retrievedAt: source.retrievedAt, lastModified: source.lastModified });
+  return {
+    schema_version: 1,
+    data_type: "official_economic_release_schedule",
+    status: "fresh",
+    provider: "CFTC Commitments of Traders Release Schedule",
+    publisher: "Commodity Futures Trading Commission",
+    publisher_id: "CFTC",
+    source_url: CFTC_COT_SCHEDULE_URL,
+    schedule_url: CFTC_COT_SCHEDULE_URL,
+    source_timezone: EASTERN,
+    timezone_basis: "CFTC states report release times are Eastern Time",
+    frequency: "publisher-listed release dates; cadence may be updated by CFTC",
+    retrieved_at: source.retrievedAt,
+    data_as_of: null,
+    source_revision: source.lastModified,
+    event_count: events.length,
+    events,
+    coverage_notes: [
+      "The dated CFTC schedule is authoritative for listed publication dates and time; report contents are series-specific.",
+      "CFTC announced a planned move to twice-weekly publication by the end of 2026; confirm operational cadence from the current publisher schedule.",
+      "COT is delayed positioning data, not exchange intraday volume or open interest."
+    ]
+  };
+}
+
+export async function fetchFomcCalendar(fetchImpl = fetch) {
+  const source = await fetchHtml(fetchImpl, FOMC_CALENDAR_URL);
+  const visibleText = textLines(source.html);
+  const revision = findRevision(visibleText, source.lastModified);
+  const events = parseFomcCalendar(source.html, { retrievedAt: source.retrievedAt, lastModified: revision });
+  return {
+    schema_version: 1,
+    data_type: "official_economic_release_schedule",
+    status: "fresh",
+    provider: "Federal Reserve FOMC meeting calendar",
+    publisher: "Board of Governors of the Federal Reserve System",
+    publisher_id: "FED",
+    source_url: FOMC_CALENDAR_URL,
+    schedule_url: FOMC_CALENDAR_URL,
+    source_timezone: null,
+    timezone_basis: "Publisher calendar dates are displayed without a release time",
+    frequency: "annual meeting schedule; updated by publisher",
+    retrieved_at: source.retrievedAt,
+    data_as_of: null,
+    source_revision: revision,
+    event_count: events.length,
+    events,
+    coverage_notes: [
+      "This feed contains FOMC meeting dates, not statement times or a complete U.S. or global macro calendar.",
+      "Federal Reserve meeting dates may be tentative or change; verify the issuer calendar before the meeting.",
+      "Instrument relevance tags are editorial context, not a policy or price-impact forecast."
+    ]
+  };
+}
+
+function sourceEnvelope({ source, events, provider, publisher, publisherId, scheduleUrl, timezone, timezoneBasis, frequency, coverageNotes }) {
+  return {
+    schema_version: 1,
+    data_type: "official_economic_release_schedule",
+    status: "fresh",
+    provider,
+    publisher,
+    publisher_id: publisherId,
+    source_url: scheduleUrl,
+    schedule_url: scheduleUrl,
+    source_timezone: timezone,
+    timezone_basis: timezoneBasis,
+    frequency,
+    retrieved_at: source.retrievedAt,
+    data_as_of: null,
+    source_revision: source.revision || source.lastModified || null,
+    event_count: events.length,
+    events,
+    coverage_notes: coverageNotes
+  };
+}
+
+export async function fetchEcbCouncilCalendar(fetchImpl = fetch) {
+  const source = await fetchHtml(fetchImpl, ECB_COUNCIL_CALENDAR_URL);
+  const events = parseEcbCouncilCalendar(source.html, { retrievedAt: source.retrievedAt, lastModified: source.lastModified });
+  return sourceEnvelope({
+    source, events, provider: "ECB Governing Council monetary policy meeting calendar", publisher: "European Central Bank", publisherId: "ECB",
+    scheduleUrl: ECB_COUNCIL_CALENDAR_URL, timezone: FRANKFURT, timezoneBasis: "meeting location Europe/Berlin; date-only publisher schedule",
+    frequency: "publisher-listed meeting dates; updated by ECB",
+    coverageNotes: [
+      "Contains Governing Council monetary-policy meeting days only; no release time is supplied and general/non-monetary meetings are excluded.",
+      "The ECB can revise its published schedule. Verify the issuer before relying on a date.",
+      "This is an additional central-bank source, not complete global macro or exchange calendar coverage."
+    ]
+  });
+}
+
+export async function fetchBoeMpcCalendar(fetchImpl = fetch) {
+  const [schedule, policy] = await Promise.all([fetchHtml(fetchImpl, BOE_MPC_CALENDAR_URL), fetchHtml(fetchImpl, BOE_POLICY_URL)]);
+  const revision = findPageRevision(textLines(schedule.html), schedule.lastModified);
+  const policyText = textLines(policy.html);
+  if (!/publish the MPC.s decision with the minutes of the meetings at 12 noon on the day of the announcement/i.test(policyText)) {
+    throw new Error("Bank of England release-time policy was not confirmed by the official issuer page");
+  }
+  const events = parseBoeMpcCalendar(schedule.html, { retrievedAt: schedule.retrievedAt, lastModified: revision });
+  return sourceEnvelope({
+    source: { ...schedule, revision }, events, provider: "Bank of England Monetary Policy Committee announcement calendar", publisher: "Bank of England", publisherId: "BOE",
+    scheduleUrl: BOE_MPC_CALENDAR_URL, timezone: LONDON, timezoneBasis: "publisher states 12 noon on announcement day; IANA Europe/London conversion",
+    frequency: "publisher-confirmed announcement dates; updated by Bank of England",
+    coverageNotes: [
+      "The announcement calendar and separate monetary-policy page are checked together; the latter states the usual 12 noon publication policy.",
+      "Meeting dates or release policy may be revised. Verify the issuer calendar and announcement page before relying on a date.",
+      "This is an additional central-bank source, not complete global macro or exchange calendar coverage."
+    ]
+  });
+}
+
+export async function fetchBocRateCalendar(fetchImpl = fetch) {
+  const [schedule, policy] = await Promise.all([fetchHtml(fetchImpl, BOC_RATE_CALENDAR_URL), fetchHtml(fetchImpl, BOC_POLICY_URL)]);
+  const events = parseBocRateCalendar(schedule.html, { policyInput: policy.html, retrievedAt: schedule.retrievedAt, lastModified: schedule.lastModified });
+  return sourceEnvelope({
+    source: schedule, events, provider: "Bank of Canada policy interest rate announcement schedule", publisher: "Bank of Canada", publisherId: "BOC",
+    scheduleUrl: BOC_RATE_CALENDAR_URL, timezone: TORONTO, timezoneBasis: "issuer states 9:45 Eastern Time; IANA America/Toronto conversion",
+    frequency: "publisher-listed eight fixed rate-announcement dates per year; updated by Bank of Canada",
+    coverageNotes: [
+      "The rate-date schedule and separate official blackout-guidelines page are checked together; the latter states the decision is published at 9:45 Eastern Time.",
+      "Eastern Time is resolved with America/Toronto so standard/daylight offsets follow the calendar date.",
+      "This is an additional central-bank source, not complete global macro or exchange calendar coverage."
+    ]
+  });
+}
+
+export async function fetchRbaBoardCalendar(fetchImpl = fetch) {
+  const source = await fetchHtml(fetchImpl, RBA_BOARD_CALENDAR_URL);
+  const events = parseRbaBoardCalendar(source.html, { retrievedAt: source.retrievedAt, lastModified: source.lastModified });
+  return sourceEnvelope({
+    source, events, provider: "Reserve Bank of Australia Monetary Policy Board meeting calendar", publisher: "Reserve Bank of Australia", publisherId: "RBA",
+    scheduleUrl: RBA_BOARD_CALENDAR_URL, timezone: SYDNEY, timezoneBasis: "meeting location Australia/Sydney; date-only publisher schedule",
+    frequency: "publisher-listed board meeting date ranges; updated by RBA",
+    coverageNotes: [
+      "Only Monetary Policy Board date ranges are included; the page does not supply a decision release time and no time is inferred.",
+      "Meeting date ranges may be revised. Verify the issuer calendar before relying on a date.",
+      "This is an additional central-bank source, not complete global macro or exchange calendar coverage."
+    ]
+  });
+}
+
+const BEA_INSTRUMENT_RELEVANCE = {
+  "Gross Domestic Product": { type: "BEA_GDP_RELEASE", affected: ["ES", "NQ", "ZN"], note: "Editorial macro relevance for U.S. equity-index and Treasury futures; not a market-impact forecast." },
+  "Personal Income and Outlays": { type: "BEA_PERSONAL_INCOME_OUTLAYS_RELEASE", affected: ["ES", "NQ", "ZN", "GC"], note: "Includes BEA personal-consumption and price-index releases; relevance tags are editorial context, not a market-impact forecast." },
+  "U.S. International Trade in Goods and Services": { type: "BEA_INTERNATIONAL_TRADE_RELEASE", affected: ["6E", "6B", "6J", "6A", "6C", "6S", "DX"], note: "Editorial international-trade context for currency futures; not a market-impact forecast." },
+  "U.S. International Transactions": { type: "BEA_INTERNATIONAL_TRANSACTIONS_RELEASE", affected: ["6E", "6B", "6J", "6A", "6C", "6S", "DX"], note: "Editorial international-transactions context for currency futures; not a market-impact forecast." },
+  "U.S. International Investment Position": { type: "BEA_INTERNATIONAL_INVESTMENT_POSITION_RELEASE", affected: ["6E", "6B", "6J", "6A", "6C", "6S", "DX"], note: "Editorial international-investment context for currency futures; not a market-impact forecast." },
+  "U.S. International Transactions and Investment Position": { type: "BEA_INTERNATIONAL_TRANSACTIONS_AND_INVESTMENT_POSITION_RELEASE", affected: ["6E", "6B", "6J", "6A", "6C", "6S", "DX"], note: "Editorial international-transactions context for currency futures; not a market-impact forecast." },
+  "Corporate Profits": { type: "BEA_CORPORATE_PROFITS_RELEASE", affected: ["ES", "NQ"], note: "Editorial U.S. corporate-profits context for equity-index futures; not a market-impact forecast." }
+};
+
+function beaTimestamp(value) {
+  const match = /^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2}):(\d{2})(?:\.(\d{1,9}))?(Z|\+00:00)$/i.exec(String(value || ""));
+  if (!match) return null;
+  const [, yearText, monthText, dayText, hourText, minuteText, secondText] = match;
+  const year = Number(yearText), month = Number(monthText), day = Number(dayText);
+  const hour = Number(hourText), minute = Number(minuteText), second = Number(secondText);
+  const calendarDate = new Date(Date.UTC(year, month - 1, day));
+  if (calendarDate.getUTCFullYear() !== year || calendarDate.getUTCMonth() + 1 !== month || calendarDate.getUTCDate() !== day || hour > 23 || minute > 59 || second > 59) return null;
+  const epochMs = Date.parse(value);
+  return Number.isFinite(epochMs) ? new Date(epochMs).toISOString() : null;
+}
+
+function beaSlug(value) {
+  return String(value).normalize("NFKD").replace(/[^\w-]+/g, "-").replace(/^-+|-+$/g, "").toLowerCase().slice(0, 90) || "release";
+}
+
+export function parseBeaReleaseDates(input, { retrievedAt = new Date().toISOString(), now = Date.now(), horizonDays = 400, maxEvents = 250 } = {}) {
+  let data = input;
+  if (typeof input === "string") {
+    try { data = JSON.parse(input); } catch { throw new Error("BEA release schedule was not valid JSON"); }
+  }
+  if (!data || typeof data !== "object" || Array.isArray(data)) throw new Error("BEA release schedule did not contain an object");
+  const revision = typeof data.file_last_updated === "string" && data.file_last_updated.length <= 64 ? data.file_last_updated : null;
+  const cutoff = now + Math.max(1, Math.min(550, Number(horizonDays) || 400)) * 86400000;
+  const rows = [];
+  let categoryCount = 0;
+  for (const [release, record] of Object.entries(data)) {
+    if (release === "file_last_updated") continue;
+    if (!release.trim() || !record || typeof record !== "object" || Array.isArray(record) || !Array.isArray(record.release_dates)) {
+      throw new Error("BEA release schedule contained an unexpected category record");
+    }
+    categoryCount++;
+    for (const value of record.release_dates) {
+      const timestamp = beaTimestamp(value);
+      if (!timestamp) throw new Error("BEA release schedule contained an invalid UTC release timestamp");
+      const epoch = Date.parse(timestamp);
+      if (epoch < now || epoch > cutoff) continue;
+      const classification = BEA_INSTRUMENT_RELEVANCE[release] || null;
+      const slug = beaSlug(release);
+      rows.push({
+        event_id: `bea:${slug}:${timestamp.replace(/[-:.]/g, "").replace(/Z$/, "z")}`,
+        event_type: classification?.type || "BEA_PUBLISHER_RELEASE",
+        title: release,
+        country: "US",
+        publisher: "U.S. Bureau of Economic Analysis",
+        publisher_id: "BEA",
+        source_url: BEA_RELEASE_SCHEDULE_URL,
+        scheduled_at_utc: timestamp,
+        scheduled_date: timestamp.slice(0, 10),
+        scheduled_timezone: "UTC",
+        timezone_basis: "publisher JSON timestamp with explicit UTC offset",
+        schedule_time_resolution: "exact",
+        published_at_utc: null,
+        actual_release_at_utc: null,
+        retrieved_at_utc: retrievedAt,
+        previous_value: null,
+        forecast_value: null,
+        actual_value: null,
+        unit: null,
+        period_label: "Publisher-listed release date and time; forecast and actual values are not supplied.",
+        affected_instruments: classification?.affected || [],
+        relevance_basis: classification?.note || "No instrument mapping is asserted for this BEA release category.",
+        importance: null,
+        schedule_status: "scheduled",
+        data_class: "official-bea-release-schedule",
+        source_revision: revision,
+        date_only: false,
+        schedule_local_time: timestamp.slice(11, 19),
+        schedule_note: "BEA schedule data can be revised. Verify the publisher schedule before relying on an event."
+      });
+    }
+  }
+  if (!categoryCount) throw new Error("BEA release schedule did not contain any release categories");
+  const unique = [...new Map(rows.map(row => [row.event_id, row])).values()];
+  unique.sort((a, b) => a.scheduled_at_utc.localeCompare(b.scheduled_at_utc) || a.title.localeCompare(b.title));
+  return { events: unique.slice(0, Math.max(1, Math.min(500, Number(maxEvents) || 250))), sourceRevision: revision, categoryCount };
+}
+
+export async function fetchBeaReleaseCalendar(fetchImpl = fetch) {
+  const response = await fetchImpl(BEA_RELEASE_DATES_URL, {
+    headers: { Accept: "application/json", "User-Agent": "FinanceIntelligenceOS/1.3 public research" },
+    signal: AbortSignal.timeout(12000)
+  });
+  if (!response.ok) throw new Error("Official BEA release schedule HTTP " + response.status);
+  const contentType = String(response.headers.get("content-type") || "").toLowerCase();
+  if (contentType && !/(application\/json|text\/json)/.test(contentType)) throw new Error("Official BEA schedule returned an unexpected content type");
+  let text = "";
+  if (response.body?.getReader) {
+    const reader = response.body.getReader(), decoder = new TextDecoder();
+    let bytes = 0;
+    while (true) {
+      const chunk = await reader.read();
+      if (chunk.done) break;
+      bytes += chunk.value.byteLength;
+      if (bytes > MAX_SCHEDULE_BYTES) { await reader.cancel(); throw new Error("Official BEA schedule response too large"); }
+      text += decoder.decode(chunk.value, { stream: true });
+    }
+    text += decoder.decode();
+  } else {
+    text = await response.text();
+    if (new TextEncoder().encode(text).byteLength > MAX_SCHEDULE_BYTES) throw new Error("Official BEA schedule response too large");
+  }
+  const retrievedAt = new Date().toISOString();
+  const parsed = parseBeaReleaseDates(text, { retrievedAt });
+  return {
+    schema_version: 1,
+    data_type: "official_economic_release_schedule",
+    status: "fresh",
+    provider: "U.S. Bureau of Economic Analysis release calendar",
+    publisher: "U.S. Bureau of Economic Analysis",
+    publisher_id: "BEA",
+    source_url: BEA_RELEASE_SCHEDULE_URL,
+    source_feed_url: BEA_RELEASE_DATES_URL,
+    schedule_url: BEA_RELEASE_SCHEDULE_URL,
+    source_timezone: "UTC",
+    timezone_basis: "BEA machine-readable release dates include explicit UTC offsets",
+    frequency: "publisher-updated release schedule",
+    retrieved_at: retrievedAt,
+    data_as_of: null,
+    source_revision: parsed.sourceRevision,
+    source_category_count: parsed.categoryCount,
+    event_count: parsed.events.length,
+    events: parsed.events,
+    coverage_notes: [
+      "This feed uses BEA's machine-readable release-date JSON and includes upcoming categories published by BEA within a 400-day horizon.",
+      "The publisher's release schedule may change; check the official BEA schedule for revisions before relying on an event.",
+      "BEA provides release dates and times only here; forecasts, actual values, and measured release timestamps are not included.",
+      "Instrument relevance tags are editorial context. Unmapped categories remain visible without inferred market relevance.",
+      "BEA coverage is one component of a partial macro calendar, not a complete U.S. or global event calendar."
+    ]
+  };
+}

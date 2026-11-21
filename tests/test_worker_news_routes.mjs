@@ -1,212 +1,503 @@
-YªçŠx-®éÜj×¢ëiºÚ+Š§j[h‘éÜ¢éí×M|é:-jZ.¶›­–)Þ³V–×÷'BFW7Bg&öÒvæöFS§FW7Bs°¦–×÷'B76W'Bg&öÒvæöFS¦76W'B÷7G&–7Bs°¦–×÷'B²7&VFU&WV—&RÒg&öÒvæöFS¦ÖöGVÆRs° ¦6öç7B&WV—&RÒ7&VFU&WV—&R†–×÷'BæÖWFçW&Â“°¦6öç7B²FVfVÇC¢v÷&¶W"ÒÒv—B–×÷'B‚rââö6Æ÷VFfÆ&R÷7&2ö–æFW‚æ§2r“° ¦gVæ7F–öâÖ¶TVçb‡fÇVW2Ò·Ò’°¢6öç7B7F÷&RÒæWrÖ„ö&¦V7BæVçG&–W2‡fÇVW2’“°¢&WGW&â°¢ÄÄõtTEôõ$”t”å3¢v‡GG3¢òöæW†×ÆRrÀ¢4ä4„õE3¢°¢7–æ2vWB†¶W’ÂG—R’²6öç7BfÇVRÒ7F÷&RævWB†¶W’“²–b‡fÇVRÓÓÒVæFVf–æVB’&WGW&âçVÆÃ²&WGW&âG—RÓÓÒv§6öârbbG—VöbfÇVRÓÓÒw7G&–ærrò¥4ôâç'6R‡fÇVR’¢fÇVS²ÒÀ¢7–æ2WB†¶W’ÂfÇVR’²7F÷&Rç6WB†¶W’ÂfÇVR“²ÒÀ¢7–æ2FVÆWFR†¶W’’²7F÷&RæFVÆWFR†¶W’“²ÒÀ¢7–æ2Æ—7B‡²&Vf—‚ÒrrÒÒ·Ò’²&WGW&â²¶W—3¢²ââç7F÷&Ræ¶W—2‚•Òæf–ÇFW"†¶W’Óâ¶W’ç7F'G5v—F‚‡&Vf—‚’’æÖ†æÖRÓâ‡²æÖRÒ’’Ó²Ð¢ÒÂââçfÇVW2åõöVç`¢Ó°§Ð ¦gVæ7F–öâ6öçFW‡B‚’²&WGW&â²v—EVçF–Â‚’·ÒÓ²Ð §FW7B‚væWw2&÷WFRÆ–W2fÆ–FFVBf–ÇFW'2æBW‡÷6W2F†RfW'6–öæVBF—66÷fW'’6öçG&7BrÂ7–æ2‚’Óâ°¢6öç7B6æ6†÷BÒ°¢7FGW3¢vg&W6‚rÂÆ7D6†V6¶VDC¢s##bÓÓ•C#££ã¢rÂvVæW&FVDC¢s##bÓÓ•C#££ã¢rÀ¢VW'”6÷VçC¢Â7V66W76gVÅVW&–W3¢Âæ÷FW3¢²ttDTÅB—2F—66÷fW'’–æFW‚âuÒÀ¢'F–6ÆW3¢°¢²F—FÆS¢uU25’&VÆV6RrÂV&Æ—6†W#¢v&Ç2æv÷brÂ–ç7G'VÖVçE÷Fw3¢²vçuÒÂF÷–5÷Fw3¢²vÖ7&òuÒÂ&÷f–FW%÷6VVåöC¢s##c•CS¢rÂV&Æ—6†VEöC¢çVÆÂÂ&WG&–WfVEöC¢s##bÓÓ•C#££ã¢rÂfW&–f–6F–öå÷7FGW3¢wVçfW&–f–VBrÒÀ¢²F—FÆS¢tT”7'VFR7Fö6·2rÂV&Æ—6†W#¢vV–æv÷brÂ–ç7G'VÖVçE÷Fw3¢²v6ÂuÒÂF÷–5÷Fw3¢²vVæW&w’uÒÂ&÷f–FW%÷6VVåöC¢s##c•CC¢rÐ¢Ð¢Ó°¢6öç7BVçbÒÖ¶TVçb‡²w6æ6†÷C¦vFVÇC¦æWw3§cs¢¥4ôâç7G&–æv–g’‡6æ6†÷B’Ò“°¢6öç7B&W7öç6RÒv—Bv÷&¶W"æfWF6‚†æWr&WVW7B‚v‡GG3¢òöVFvRæW†×ÆRö’÷cöæWw3ö–ç7G'VÖVçCÔågF÷–3ÖÖ7&òfÆ–Ö—CÓRrÂ²†VFW'3¢²÷&–v–ã¢v‡GG3¢òöæW†×ÆRrÒÒ’ÂVçbÂ6öçFW‡B‚’“°¢76W'BæWVÂ‡&W7öç6Rç7FGW2Â#“°¢76W'BæWVÂ‡&W7öç6Ræ†VFW'2ævWB‚t66W72Ô6öçG&öÂÔÆÆ÷rÔ÷&–v–âr’Âv‡GG3¢òöæW†×ÆRr“°¢6öç7B–ÆöBÒv—B&W7öç6Ræ§6öâ‚“°¢76W'BæWVÂ‡–ÆöBæFF÷G—RÂvæWw5öF—66÷fW'’r“°¢76W'BæWVÂ‡–ÆöBç7FGW2Âvg&W6‚r“°¢76W'BæWVÂ‡–ÆöBæ'F–6ÆW2æÆVæwF‚Â“°¢76W'BæWVÂ‡–ÆöBæ'F–6ÆW5³ÒçF—FÆRÂuU25’&VÆV6Rr“°¢76W'BæWVÂ‡–ÆöBæFFö5ööbÂçVÆÂ“°¢76W'BæWVÂ‡–ÆöBæ66†UövU÷6V6öæG2ãÒÂG'VR“°§Ò“° §FW7B‚væWw2&÷WFR&V¦V7G2Vç7W÷'FVB–ç7G'VÖVçG2v—F‚7F&ÆR¥4ôâW'&÷"rÂ7–æ2‚’Óâ°¢6öç7BVçbÒÖ¶TVçb‚“°¢6öç7B&W7öç6RÒv—Bv÷&¶W"æfWF6‚†æWr&WVW7B‚v‡GG3¢òöVFvRæW†×ÆRö’÷cöæWw3ö–ç7G'VÖVçCÕ5’r’ÂVçbÂ6öçFW‡B‚’“°¢76W'BæWVÂ‡&W7öç6Rç7FGW2ÂC“°¢6öç7B–ÆöBÒv—B&W7öç6Ræ§6öâ‚“°¢76W'BæWVÂ‡–ÆöBç7FGW2Âv–çfÆ–B×VW'’r“°¢76W'BæWVÂ‡–ÆöBæW'&÷"æ6öFRÂwVç7W÷'FVEö–ç7G'VÖVçBr“°§Ò“° §FW7B‚w6÷W&6R&Vv—7G'’W‡÷6W2GG&–'WF–öâæBÖ&¶WBÖFF7FGW2&VÖ–ç2F—6&ÆVBrÂ7–æ2‚’Óâ°¢6öç7BVçbÒÖ¶TVçb‚“°¢6öç7B6÷W&6W2Òv—Bv÷&¶W"æfWF6‚†æWr&WVW7B‚v‡GG3¢òöVFvRæW†×ÆRö’÷cöæWw2÷6÷W&6W2r’ÂVçbÂ6öçFW‡B‚’“°¢6öç7B6÷W&6U–ÆöBÒv—B6÷W&6W2æ§6öâ‚“°¢76W'BæWVÂ‡6÷W&6U–ÆöBæFF÷G—RÂvæWw5÷6÷W&6U÷&Vv—7G'’r“°¢76W'BæWVÂ‡6÷W&6U–ÆöBç6÷W&6W5³ÒçFW&×5÷7FGW2æ–æ6ÇVFW2‚ttDTÅB6—FF–öâ&WV—&VBr’ÂG'VR“°¢76W'BæWVÂ‡6÷W&6U–ÆöBç6÷W&6W5³ÒæVæ&ÆVBÂG'VR“° ¢6öç7BÖ&¶WBÒv—Bv÷&¶W"æfWF6‚†æWr&WVW7B‚v‡GG3¢òöVFvRæW†×ÆRö’÷cöÖ&¶WBÖFF÷7FGW2r’ÂVçbÂ6öçFW‡B‚’“°¢6öç7BÖ&¶WE–ÆöBÒv—BÖ&¶WBæ§6öâ‚“°¢76W'BæWVÂ†Ö&¶WE–ÆöBç7FGW2Âvæ÷BÖ6öæf–wW&VBr“°¢76W'BæWVÂ†Ö&¶WE–ÆöBæFF÷G—RÂvW†6†ævUöÖ&¶WEöFF÷7FGW2r“°¢76W'BæWVÂ†Ö&¶WE–ÆöBç6÷W&6U÷&÷f–FW"ÂçVÆÂ“°§Ò“° §FW7B‚w&÷f–FW"&Vv—7G'’&VG2F†R7W'&VçB&÷VæFVB4õB66†RæÖW76RrÂ7–æ2‚’Óâ°¢6öç7B&WG&–WfVDBÒæWrFFR‚’çFô•4õ7G&–ær‚“°¢6öç7BVçbÒÖ¶TVçb‡°¢v6÷C§Ffc¦gWGW&W2ÖöæÇ“§cc¦ÆÂs¢¥4ôâç7G&–æv–g’‡²7FGW3¢vg&W6‚rÂFF4öc¢s##bÓÓrÂ&WG&–WfVDBÒ¢Ò“°¢6öç7B&W7öç6RÒv—Bv÷&¶W"æfWF6‚†æWr&WVW7B‚v‡GG3¢òöVFvRæW†×ÆRö’÷c÷&÷f–FW'2r’ÂVçbÂ6öçFW‡B‚’“°¢76W'BæWVÂ‡&W7öç6Rç7FGW2Â#“°¢6öç7B–ÆöBÒv—B&W7öç6Ræ§6öâ‚“°¢6öç7B6gF2Ò–ÆöBç&÷f–FW'2æf–æB‡&÷f–FW"Óâ&÷f–FW"æ–BÓÓÒv6gF2×&Rr“°¢76W'BæWVÂ†6gF2ç7FFRç7FGW2Âvg&W6‚r“°¢76W'BæWVÂ†6gF2ç7FFRæFF4öbÂs##bÓÓr“°¢76W'BæWVÂ†6gF2ç7FFRç&WG&–WfVDBÂ&WG&–WfVDB“°§Ò“° §FW7B‚vöff–6–Â$Å2WfVçG2&÷WFRGG&–'WFW266†VBV&Æ—6†W"6æ6†÷BæBfö–G2&WVBW7G&VÒ&WVW7G2rÂ7–æ2‚’Óâ°¢6öç7B÷&–v–æÄfWF6‚ÒvÆö&ÅF†—2æfWF6ƒ°¢ÆWB6ÆÇ2Ò°¢vÆö&ÅF†—2æfWF6‚Ò7–æ2–çWBÓâ°¢6ÆÇ2²³°¢76W'BæWVÂ…7G&–ær†–çWB’Âv‡GG3¢ò÷wwræ&Ç2æv÷b÷66†VGVÆRöæWw5÷&VÆV6Rö&Ç2æ–72r“°¢&WGW&âæWr&W7öç6R‚t$Tt”ã¥d4ÄTäD%Ç%Æä$Tt”ã¥dUdTåEÇ%ÆåT”C§FW7EÇ%ÆäEE5D%CµE¤”CÔÖW&–6ôæWuõ–÷&³£##c#ECƒ3Ç%Æå5TÔÔ%“¤V×Æ÷–ÖVçB6—GVF–öåÇ%ÆäTäC¥dUdTåEÇ%ÆäTäC¥d4ÄTäD"rÂ²†VFW'3¢²v6öçFVçB×G—Rs¢wFW‡Bö6ÆVæF"rÒÒ“°¢Ó°¢G'’°¢6öç7BVçbÒÖ¶TVçb‚“°¢6öç7B&W7öç6RÒv—Bv÷&¶W"æfWF6‚†æWr&WVW7B‚v‡GG3¢òöVFvRæW†×ÆRö’÷cöWfVçG2rÂ²†VFW'3¢²÷&–v–ã¢v‡GG3¢òöæW†×ÆRrÒÒ’ÂVçbÂ6öçFW‡B‚’“°¢76W'BæWVÂ‡&W7öç6Rç7FGW2Â#“°¢76W'BæWVÂ‡&W7öç6Ræ†VFW'2ævWB‚t66W72Ô6öçG&öÂÔÆÆ÷rÔ÷&–v–âr’Âv‡GG3¢òöæW†×ÆRr“°¢6öç7B–ÆöBÒv—B&W7öç6Ræ§6öâ‚“°¢76W'BæWVÂ‡–ÆöBæFF÷G—RÂvöff–6–ÅöV6öæöÖ–5÷&VÆV6U÷66†VGVÆRr“°¢76W'BæWVÂ‡–ÆöBç7FGW2Âvg&W6‚r“°¢76W'BæWVÂ‡–ÆöBæWfVçEö6÷VçBÂ“°¢76W'BæWVÂ‡–ÆöBæWfVçG5³Òç66†VGVÆVEöE÷WF2Âs##bÓ"ÓEC3£3£ã¢r“°¢76W'BæWVÂ‡–ÆöBæWfVçG5³Òæ7GVÅ÷&VÆV6UöE÷WF2ÂçVÆÂ“°¢76W'BæWVÂ‡–ÆöBç6÷W&6U÷W&ÂÂv‡GG3¢ò÷wwræ&Ç2æv÷b÷66†VGVÆRöæWw5÷&VÆV6Rö&Ç2æ–72r“°¢v—Bv÷&¶W"æfWF6‚†æWr&WVW7B‚v‡GG3¢òöVFvRæW†×ÆRö’÷cöWfVçG2r’ÂVçbÂ6öçFW‡B‚’“°¢76W'BæWVÂ†6ÆÇ2Â“°¢Òf–æÆÇ’²vÆö&ÅF†—2æfWF6‚Ò÷&–v–æÄfWF6ƒ²Ð§Ò“° §FW7B‚vöff–6–Â$Å2WfVçG2&÷WFR6W'fW26ÆV&Ç’7FÆR6æ6†÷Bv†Vâ&Vg&W6‚f–Ç2rÂ7–æ2‚’Óâ°¢6öç7B÷&–v–æÄfWF6‚ÒvÆö&ÅF†—2æfWF6ƒ°¢ÆWB6ÆÇ2Ò°¢vÆö&ÅF†—2æfWF6‚Ò7–æ2‚’Óâ²6ÆÇ2²³²F‡&÷ræWrW'&÷"‚wW7G&VÒVæf–Æ&ÆRr“²Ó°¢G'’°¢6öç7B66†VBÒ²66†VÖ÷fW'6–öã¢ÂFF÷G—S¢vöff–6–ÅöV6öæöÖ–5÷&VÆV6U÷66†VGVÆRrÂ7FGW3¢vg&W6‚rÂ&WG&–WfVEöC¢æWrFFR„FFRææ÷r‚’Ò3c’çFô•4õ7G&–ær‚’ÂWfVçEö6÷VçC¢ÂWfVçG3¢·²WfVçEö–C¢v&Ç3¦66†VBrÂF—FÆS¢t66†VB$Å2—FVÒrÕÒÓ°¢6öç7BVçbÒÖ¶TVçb‡²w66†VGVÆS¦&Ç3¦–73§cs¢¥4ôâç7G&–æv–g’†66†VB’Ò“°¢6öç7B&W7öç6RÒv—Bv÷&¶W"æfWF6‚†æWr&WVW7B‚v‡GG3¢òöVFvRæW†×ÆRö’÷cöWfVçG2r’ÂVçbÂ6öçFW‡B‚’“°¢76W'BæWVÂ‡&W7öç6Rç7FGW2Â#“°¢6öç7B–ÆöBÒv—B&W7öç6Ræ§6öâ‚“°¢76W'BæWVÂ‡–ÆöBç7FGW2Âw7FÆRr“°¢76W'BæÖF6‚‡–ÆöBæÆ7EöW'&÷"ÂöÆ7B7V66W76gVÂò“°¢76W'BæWVÂ‡–ÆöBæWfVçG5³ÒæWfVçEö–BÂv&Ç3¦66†VBr“°¢76W'Bæö²‡–ÆöBç&WG'•öB“°¢6öç7B&6¶VDöfbÒv—Bv÷&¶W"æfWF6‚†æWr&WVW7B‚v‡GG3¢òöVFvRæW†×ÆRö’÷cöWfVçG2r’ÂVçbÂ6öçFW‡B‚’“°¢76W'BæWVÂ‚†v—B&6¶VDöfbæ§6öâ‚’’ç7FGW2Âw7FÆRr“°¢76W'BæWVÂ†6ÆÇ2Â“°¢Òf–æÆÇ’²vÆö&ÅF†—2æfWF6‚Ò÷&–v–æÄfWF6ƒ²Ð§Ò“° §FW7B‚v6ÆVæF"W7G&VÒf–ÇW&W2v—F†÷WB66†VB6æ6†÷B&R&W÷'FVBVæf–Æ&ÆRæB&FRÖÆ–Ö—FVB'’µb&6¶öfbrÂ7–æ2‚’Óâ°¢6öç7B÷&–v–æÄfWF6‚ÒvÆö&ÅF†—2æfWF6ƒ°¢ÆWB6ÆÇ2Ò°¢vÆö&ÅF†—2æfWF6‚Ò7–æ2‚’Óâ²6ÆÇ2²³²F‡&÷ræWrW'&÷"‚w&÷f–FW"Væf–Æ&ÆRr“²Ó°¢G'’°¢6öç7BVçbÒÖ¶TVçb‚“°¢6öç7Bf—'7BÒv—Bv÷&¶W"æfWF6‚†æWr&WVW7B‚v‡GG3¢òöVFvRæW†×ÆRö’÷cöWfVçG2r’ÂVçbÂ6öçFW‡B‚’“°¢76W'BæWVÂ†f—'7Bç7FGW2ÂS"“°¢6öç7Bf–ÇW&RÒv—Bf—'7Bæ§6öâ‚“°¢76W'BæWVÂ†f–ÇW&Rç7FGW2ÂwVæf–Æ&ÆRr“°¢76W'Bæö²†f–ÇW&Rç&WG'•öB“°¢6öç7B6V6öæBÒv—Bv÷&¶W"æfWF6‚†æWr&WVW7B‚v‡GG3¢òöVFvRæW†×ÆRö’÷cöWfVçG2r’ÂVçbÂ6öçFW‡B‚’“°¢76W'BæWVÂ‡6V6öæBç7FGW2ÂS"“°¢76W'BæWVÂ†6ÆÇ2Â“°¢76W'Bæö²„çVÖ&W"‡6V6öæBæ†VFW'2ævWB‚u&WG'’ÔgFW"r’’â“°¢Òf–æÆÇ’²vÆö&ÅF†—2æfWF6‚Ò÷&–v–æÄfWF6ƒ²Ð§Ò“° §FW7B‚vöff–6–ÂT”WfVçG2&÷WFR6W'fW26÷W&6RÖÆ&VÆÆVBWG&öÆWVÒ&VÆV6RF–ÖW2æB66†W2F†RvR'6RrÂ7–æ2‚’Óâ°¢6öç7B÷&–v–æÄfWF6‚ÒvÆö&ÅF†—2æfWF6ƒ°¢ÆWB6ÆÇ2Ò°¢vÆö&ÅF†—2æfWF6‚Ò7–æ2–çWBÓâ°¢6ÆÇ2²³°¢76W'BæWVÂ…7G&–ær†–çWB’Âv‡GG3¢ò÷wwræV–æv÷b÷WG&öÆWVÒ÷7WÇ’÷vVV¶Ç’÷66†VGVÆRç‡r“°¢&WGW&âæWr&W7öç6R‚sÆ‡FÖÃãÆƒåvVV¶Ç’WG&öÆWVÒ7FGW2&W÷'B66†VGVÆSÂöƒãÇåF†R7FæF&B&VÆV6RF–ÖRæBF’öbF†RvVV²v–ÆÂ&RB£3æÒâV7FW&âF–ÖRöâvVFæW6F’v—F‚F†RföÆÆ÷v–ærW†6WF–öç2âÆÂF–ÖW2&RV7FW&âãÂ÷ãÇF&ÆSãÇG#ãÇFƒäFFvVV²VæF–æsÂ÷FƒãÇFƒäÇFW&æFRFFSÂ÷FƒãÇFƒå&VÆV6RF“Â÷FƒãÇFƒå&VÆV6RF–ÖSÂ÷FƒãÇFƒä†öÆ–F“Â÷FƒãÂ÷G#ãÇG#ãÇFCä¦çV'’bÂ##cÂ÷FCãÇFCä¦çV'’#"Â##cÂ÷FCãÇFCåF‡W'6F“Â÷FCãÇFCã#£æÒãÂ÷FCãÇFCäÖ'F–âÇWF†W"¶–ær§"âF“Â÷FCãÂ÷G#ãÂ÷F&ÆSãÂö‡FÖÃârÂ²†VFW'3¢²v6öçFVçB×G—Rs¢wFW‡Bö‡FÖÂrÂvÆ7BÖÖöF–f–VBs¢uvVBÂ‚æ÷b##b#££tÕBrÒÒ“°¢Ó°¢G'’°¢6öç7BVçbÒÖ¶TVçb‚“°¢6öç7B&W7öç6RÒv—Bv÷&¶W"æfWF6‚†æWr&WVW7B‚v‡GG3¢òöVFvRæW†×ÆRö’÷cöWfVçG2öV–rÂ²†VFW'3¢²÷&–v–ã¢v‡GG3¢òöæW†×ÆRrÒÒ’ÂVçbÂ6öçFW‡B‚’“°¢76W'BæWVÂ‡&W7öç6Rç7FGW2Â#“°¢76W'BæWVÂ‡&W7öç6Ræ†VFW'2ævWB‚t66W72Ô6öçG&öÂÔÆÆ÷rÔ÷&–v–âr’Âv‡GG3¢òöæW†×ÆRr“°¢6öç7B–ÆöBÒv—B&W7öç6Ræ§6öâ‚“°¢76W'BæWVÂ‡–ÆöBæFF÷G—RÂvöff–6–ÅöV6öæöÖ–5÷&VÆV6U÷66†VGVÆRr“°¢76W'BæWVÂ‡–ÆöBç7FGW2Âvg&W6‚r“°¢76W'BæWVÂ‡–ÆöBçV&Æ—6†W"ÂuRå2âVæW&w’–æf÷&ÖF–öâFÖ–æ—7G&F–öâr“°¢76W'BæWVÂ‡–ÆöBç6÷W&6U÷W&ÂÂv‡GG3¢ò÷wwræV–æv÷b÷WG&öÆWVÒ÷7WÇ’÷vVV¶Ç’÷66†VGVÆRç‡r“°¢76W'Bæö²‡–ÆöBæWfVçG2æÆVæwF‚â“°¢76W'Bæö²‡–ÆöBæWfVçG2æWfW'’†WfVçBÓâWfVçBæffV7FVEö–ç7G'VÖVçG2æ–æ6ÇVFW2‚t4Âr’bbWfVçBæf÷&V67E÷fÇVRÓÓÒçVÆÂ’“°¢v—Bv÷&¶W"æfWF6‚†æWr&WVW7B‚v‡GG3¢òöVFvRæW†×ÆRö’÷cöWfVçG2öV–r’ÂVçbÂ6öçFW‡B‚’“°¢76W'BæWVÂ†6ÆÇ2Â“°¢Òf–æÆÇ’²vÆö&ÅF†—2æfWF6‚Ò÷&–v–æÄfWF6ƒ²Ð§Ò“° §FW7B‚w&÷f–FW"&Vv—7G'’W‡÷6W2V&Æ—6†W"6ÆVæF"g&W6†æW726W&FVÇ’g&öÒFF&÷f–FW'2rÂ7–æ2‚’Óâ°¢6öç7B&WG&–WfVDBÒæWrFFR‚’çFô•4õ7G&–ær‚“°¢6öç7BVçbÒÖ¶TVçb‡°¢w66†VGVÆS¦&Ç3¦–73§cs¢¥4ôâç7G&–æv–g’‡²7FGW3¢vg&W6‚rÂWfVçEö6÷VçC¢"Â&WG&–WfVEöC¢&WG&–WfVDBÒ’À¢w66†VGVÆS¦V–§w7#§cs¢¥4ôâç7G&–æv–g’‡²7FGW3¢vg&W6‚rÂWfVçEö6÷VçC¢‚Â&WG&–WfVEöC¢&WG&–WfVDBÒ’À¢w66†VGVÆS¦6gF3¦6÷C§cs¢¥4ôâç7G&–æv–g’‡²7FGW3¢vg&W6‚rÂWfVçEö6÷VçC¢BÂ&WG&–WfVEöC¢&WG&–WfVDBÒ’À¢w66†VGVÆS¦fVC¦föÖ3§cs¢¥4ôâç7G&–æv–g’‡²7FGW3¢vg&W6‚rÂWfVçEö6÷VçC¢"Â&WG&–WfVEöC¢&WG&–WfVDBÒ’À¢w66†VGVÆS¦V6#¦6÷Væ6–Ã§cs¢¥4ôâç7G&–æv–g’‡²7FGW3¢vg&W6‚rÂWfVçEö6÷VçC¢2Â&WG&–WfVEöC¢&WG&–WfVDBÒ’À¢w66†VGVÆS¦&öS¦×3§cs¢¥4ôâç7G&–æv–g’‡²7FGW3¢vg&W6‚rÂWfVçEö6÷VçC¢‚Â&WG&–WfVEöC¢&WG&–WfVDBÒ’À¢w66†VGVÆS¦&ö3§öÆ–7’×&FS§cs¢¥4ôâç7G&–æv–g’‡²7FGW3¢vg&W6‚rÂWfVçEö6÷VçC¢‚Â&WG&–WfVEöC¢&WG&–WfVDBÒ’À¢w66†VGVÆS§&&¦ÖöæWF'’×öÆ–7’Ö&ö&C§cs¢¥4ôâç7G&–æv–g’‡²7FGW3¢vg&W6‚rÂWfVçEö6÷VçC¢‚Â&WG&–WfVEöC¢&WG&–WfVDBÒ’À¢w66†VGVÆS¦&V§&VÆV6RÖFFW3§cs¢¥4ôâç7G&–æv–g’‡²7FGW3¢vg&W6‚rÂWfVçEö6÷VçC¢RÂ&WG&–WfVEöC¢&WG&–WfVDBÂ6÷W&6U÷&Wf—6–öã¢s##bÓÓ#%C#£Cƒ£#rãcSccsRrÒ¢Ò“°¢6öç7B&W7öç6RÒv—Bv÷&¶W"æfWF6‚†æWr&WVW7B‚v‡GG3¢òöVFvRæW†×ÆRö’÷c÷&÷f–FW'2r’ÂVçbÂ6öçFW‡B‚’“°¢6öç7B&÷f–FW'2Ò†v—B&W7öç6Ræ§6öâ‚’’ç&÷f–FW'3°¢6öç7B6ÆVæF"Ò&÷f–FW'2æf–æB‡&÷f–FW"Óâ&÷f–FW"æ–BÓÓÒv&Ç2Ö6ÆVæF"r“°¢6öç7BV–66†VGVÆRÒ&÷f–FW'2æf–æB‡&÷f–FW"Óâ&÷f–FW"æ–BÓÓÒvV–×w7"×66†VGVÆRr“°¢6öç7B6gF566†VGVÆRÒ&÷f–FW'2æf–æB‡&÷f–FW"Óâ&÷f–FW"æ–BÓÓÒv6gF2Ö6÷B×66†VGVÆRr“°¢6öç7BföÖ46ÆVæF"Ò&÷f–FW'2æf–æB‡&÷f–FW"Óâ&÷f–FW"æ–BÓÓÒvföÖ2Ö6ÆVæF"r“°¢6öç7BV6$6ÆVæF"Ò&÷f–FW'2æf–æB‡&÷f–FW"Óâ&÷f–FW"æ–BÓÓÒvV6"Ö6÷Væ6–ÂÖ6ÆVæF"r“°¢6öç7B&öT6ÆVæF"Ò&÷f–FW'2æf–æB‡&÷f–FW"Óâ&÷f–FW"æ–BÓÓÒv&öRÖ×2Ö6ÆVæF"r“°¢6öç7B&ö46ÆVæF"Ò&÷f–FW'2æf–æB‡&÷f–FW"Óâ&÷f–FW"æ–BÓÓÒv&ö2×&FRÖ6ÆVæF"r“°¢6öç7B&&6ÆVæF"Ò&÷f–FW'2æf–æB‡&÷f–FW"Óâ&÷f–FW"æ–BÓÓÒw&&ÖÖöæWF'’×öÆ–7’Ö6ÆVæF"r“°¢6öç7B&V6ÆVæF"Ò&÷f–FW'2æf–æB‡&÷f–FW"Óâ&÷f–FW"æ–BÓÓÒv&V×&VÆV6RÖ6ÆVæF"r“°¢76W'BæWVÂ†6ÆVæF"ç7FFRç7FGW2Âvg&W6‚r“°¢76W'BæWVÂ†6ÆVæF"ç7FFRæWfVçD6÷VçBÂ"“°¢76W'BæWVÂ†6ÆVæF"ç7FFRç&WG&–WfVDBÂ&WG&–WfVDB“°¢76W'BæÖF6‚†6ÆVæF"ææ÷FW2Âöæ÷B6ö×ÆWFRÖ7&ò6ÆVæF"ò“°¢76W'BæWVÂ†V–66†VGVÆRç7FFRæWfVçD6÷VçBÂ‚“°¢76W'BæÖF6‚†V–66†VGVÆRææ÷FW2Âö†öÆ–F’W†6WF–öç2ò“°¢76W'BæWVÂ†6gF566†VGVÆRç7FFRæWfVçD6÷VçBÂB“°¢76W'BæÖF6‚†6gF566†VGVÆRææ÷FW2Â÷6VÖ—vVV¶Ç’6FVæ6R6†ævRò“°¢76W'BæWVÂ†föÖ46ÆVæF"ç7FFRæWfVçD6÷VçBÂ"“°¢76W'BæÖF6‚†föÖ46ÆVæF"ææ÷FW2Âöæò&VÆV6RF–ÖRò“°¢76W'BæWVÂ†V6$6ÆVæF"ç7FFRæWfVçD6÷VçBÂ2“°¢76W'BæÖF6‚†V6$6ÆVæF"ææ÷FW2Âöæò&VÆV6RF–ÖRò“°¢76W'BæWVÂ†&öT6ÆVæF"ç7FFRæWfVçD6÷VçBÂ‚“°¢76W'BæWVÂ†&ö46ÆVæF"ç7FFRæWfVçD6÷VçBÂ‚“°¢76W'BæWVÂ‡&&6ÆVæF"ç7FFRæWfVçD6÷VçBÂ‚“°¢76W'BæÖF6‚‡&&6ÆVæF"ææ÷FW2ÂöæòFV6—6–öâ&VÆV6RF–ÖRò“°¢76W'BæWVÂ†&V6ÆVæF"ç7FFRæWfVçD6÷VçBÂR“°¢76W'BæWVÂ†&V6ÆVæF"ç7FFRç6÷W&6U&Wf—6–öâÂs##bÓÓ#%C#£Cƒ£#rãcSccsRr“°¢76W'BæÖF6‚†&V6ÆVæF"ææ÷FW2ÂöÖ6†–æR×&VF&ÆRV&Æ—6†W"fVVBò“° ¢6öç7BVæ6öæf–wW&VBÒÖ¶TVçb‡²õöVçc¢²4ä4„õE3¢çVÆÂÒÒ“°¢6öç7BVæf–Æ&ÆU&W7öç6RÒv—Bv÷&¶W"æfWF6‚†æWr&WVW7B‚v‡GG3¢òöVFvRæW†×ÆRö’÷c÷&÷f–FW'2r’ÂVæ6öæf–wW&VBÂ6öçFW‡B‚’“°¢6öç7BVæf–Æ&ÆU&÷f–FW'2Ò†v—BVæf–Æ&ÆU&W7öç6Ræ§6öâ‚’’ç&÷f–FW'3°¢f÷"†6öç7B–Böb²v&Ç2Ö6ÆVæF"rÂvV–×w7"×66†VGVÆRrÂv6gF2Ö6÷B×66†VGVÆRrÂvföÖ2Ö6ÆVæF"rÂvV6"Ö6÷Væ6–ÂÖ6ÆVæF"rÂv&öRÖ×2Ö6ÆVæF"rÂ}uó«h‘éì¶»§q«^wÝÝÝË˜˜[šÛÙ™[™Û[™˜ÛËZËÛ[Û™]\žK\ÛXÞKÝ\ÛÛZ[™Ë[\ËY]\ÉË	Ï[O“[Û™]\žHÛXÞHÛÛ[Z]YH]\È›ÜˆŒˆ[™ŒÏÚOŒŒˆÛÛ™š\›YY]\ÏÚ•\œÙ^HMÈXÙ[X™\ˆXÙ[X™\ˆTÈÝ[[X\žH[™Z[]\ÏÜ•\ÈYÙHØ\È\Ý\]YŒHÙ\[X™\ˆŒÜÚ[‰×KˆÉÚÎ‹ËÝÝÝË˜˜[šÛÙ™[™Û[™˜ÛËZËÛ[Û™]\žK\ÛXÞIË[•ÙHX›\ÚHTÉÜÈXÚ\Ú[ÛˆÚ]HZ[]\ÈÙˆHYY][™ÜÈ]Lˆ›ÛÛˆÛˆH^HÙˆH[››Ý[˜Ù[Y[ÚXÚ\È\ÝX[HH\œÙ^KÜÚ[ˆ—KˆÉÚÎ‹ËÝÝÝË˜˜[šÛÙ˜Ø[˜YK˜ØKØÛÜ™KY[˜Ý[ÛœËÛ[Û™]\žK\ÛXÞKÚÙ^KZ[\™\Ý\˜]KÉË	Ï[O”ÛXÞH[\™\Ý˜]OÚO”ØÚY[H›ÜˆŒÚ‘XÙ[X™\ˆH[\™\Ý˜]H[››Ý[˜Ù[Y[ÜÚ[‰×KˆÉÚÎ‹ËÝÝÝË˜˜[šÛÙ˜Ø[˜YK˜ØKØÛÜ™KY[˜Ý[ÛœËÛ[Û™]\žK\ÛXÞKÚÙ^KZ[\™\Ý\˜]KØ›XÚÛÝ]YÝZY[[™\ËÉË	Ï[•HÙ^HÛXÞH˜]HXÚ\Ú[Ûˆ\ÈX›\ÚYÛˆHÙY™\Ù^H]NHX\Ý\›ˆ[YKÜÚ[‰×KˆÉÚÎ‹ËÝÝÝËœ˜˜K™ÛÝ‹˜]KÜØÚY[\ËY]™[ËØ›Ø\™[YY][™Ë\ØÚY[\Ëš[	Ë	Ï[O›Ø\™YY][™ÈØÚY[\ÏÚO•HYY][™ÈØÚY[\È›ÜˆH[Û™]\žHÛXÞH›Ø\™[™^[Y[ÈÞ\Ý[H›Ø\™\™H™[ÝËÜ›Ø\™YY][™ÈØÚY[\ÈŒÚX›O‘XÙ[X™\ÝÉ›™\ÚÎXÙ[X™\ÝÝÝÝX›OÚ[‰×BˆJNÂˆÛØ˜[\Ë™™]ÚH\Þ[˜È[œ]OˆÂˆÛÛœÝ\›HÝš[™Ê[œ]
-NÈ™\]Y\ÝYœ\Ú
-\›
-NÂˆYˆ
-\ÛÝ\˜Ù\Ëš\Ê\›
-JH›ÝÈ™]È\œ›ÜŠ[™^XÝY\Ý™X[H	Ý\›X
-NÂˆ™]\›ˆ™]È™\ÜÛœÙJÛÝ\˜Ù\Ë™Ù]
-\›
-KÈXY\œÎˆÈ	ØÛÛ[]\IÎˆ	Ý^Ú[	Ë	Û\Ý[[ÙYšYY	Îˆ	ÕÙYN›ÝˆŒˆLŽŒŒÓU	ÈHJNÂˆNÂˆžHÂˆÛÛœÝ[ˆHXZÙQ[Š
-NÂˆÛÛœÝ^XÝYHÂˆÉËØ\KÝŒKÙ]™[ËÙXØ‰Ë	ÑPÐ‰ËYWKÉËØ\KÝŒKÙ]™[ËØ›ÙIË	Ð“ÑIË˜[ÙWKˆÉËØ\KÝŒKÙ]™[ËØ›ØÉË	Ð“ÐÉË˜[ÙWKÉËØ\KÝŒKÙ]™[ËÜ˜˜IË	ÔIËYWBˆNÂˆ›Üˆ
-ÛÛœÝÜ]X›\Ú\’Y]SÛ›WHÙˆ^XÝY
-HÂˆÛÛœÝ™\ÜÛœÙHH]ØZ]ÛÜšÙ\‹™™]Ú
-™]È™\]Y\Ý
-Î‹ËÙYÙK™^[\IÜ]X
-K[‹ÛÛ^
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import { createRequire } from 'node:module';
 
-JNÂˆ\ÜÙ\™\]X[
-™\ÜÛœÙKœÝ]\ËŒ]
-NÂˆÛÛœÝ^[ØYH]ØZ]™\ÜÛœÙKšœÛÛŠ
-NÂˆ\ÜÙ\™\]X[
-^[ØYœX›\Ú\—ÚYX›\Ú\’Y
-NÂˆ\ÜÙ\›ÚÊ^[ØY™]™[Ë›[™Ý	Ü]H™]\›™Y›È]\™HYY][™ÜÎˆ	Ü^[ØY™\œ›Üˆ^[ØY›\ÝÙ\œ›Üˆ^[ØYœÝ]\ßX
-NÂˆ\ÜÙ\™\]X[
-^[ØY™]™[ØÛÝ[^[ØY™]™[Ë›[™Ý
-NÂˆ\ÜÙ\™\]X[
-^[ØY™]™[ÖÌK™]WÛÛ›K]SÛ›JNÂˆ\ÜÙ\™\]X[
-^[ØY™]™[ÖÌKœÛÝ\˜ÙWÝ\›œÝ\ÕÚ]
-	ÚÎ‹ËÉÊKYJNÂˆ]ØZ]ÛÜšÙ\‹™™]Ú
-™]È™\]Y\Ý
-Î‹ËÙYÙK™^[\IÜ]X
-K[‹ÛÛ^
+const require = createRequire(import.meta.url);
+const { default: worker } = await import('../cloudflare/src/index.js');
 
-JNÂˆBˆ\ÜÙ\™\]X[
-™\]Y\ÝY›[™ÝŠNÂˆÛÛœÝ[˜ÛÛ™šYÝ\™YH]ØZ]ÛÜšÙ\‹™™]Ú
-™]È™\]Y\Ý
-	ÚÎ‹ËÙYÙK™^[\KØ\KÝŒKÙ]™[ËÙXØ‰ÊKXZÙQ[ŠÈ×Ù[ŽˆÈÓTÒÕÎˆ[HJKÛÛ^
+function makeEnv(values = {}) {
+  const store = new Map(Object.entries(values));
+  return {
+    ALLOWED_ORIGINS: 'https://app.example',
+    SNAPSHOTS: {
+      async get(key, type) { const value = store.get(key); if (value === undefined) return null; return type === 'json' && typeof value === 'string' ? JSON.parse(value) : value; },
+      async put(key, value) { store.set(key, value); },
+      async delete(key) { store.delete(key); },
+      async list({ prefix = '' } = {}) { return { keys: [...store.keys()].filter(key => key.startsWith(prefix)).map(name => ({ name })) }; }
+    }, ...values.__env
+  };
+}
 
-JNÂˆ\ÜÙ\™\]X[
-[˜ÛÛ™šYÝ\™YœÝ]\ËLÊNÂˆ\ÜÙ\™\]X[
+function context() { return { waitUntil() {} }; }
 
-]ØZ][˜ÛÛ™šYÝ\™YšœÛÛŠ
-JKœÝ]\Ë	Û›ÝXÛÛ™šYÝ\™Y	ÊNÂˆHš[˜[HÈÛØ˜[\Ë™™]ÚHÜšYÚ[˜[™]ÚÈBŸJNÂ‚\Ý
-	Ð‘PHØ[[™\ˆ›Ý]H™]Ú\È[™ØXÚ\ÈHÙ™šXÚX[”ÓÓˆ™[X\ÙHØÚY[IË\Þ[˜È
+test('news route applies validated filters and exposes the versioned discovery contract', async () => {
+  const snapshot = {
+    status: 'fresh', lastCheckedAt: '2026-11-19T12:00:00.000Z', generatedAt: '2026-11-19T12:00:00.000Z',
+    queryCount: 1, successfulQueries: 1, notes: ['GDELT is a discovery index.'],
+    articles: [
+      { title: 'US CPI release', publisher: 'bls.gov', instrument_tags: ['nq'], topic_tags: ['macro'], provider_seen_at: '20261119T115000Z', published_at: null, retrieved_at: '2026-11-19T12:00:00.000Z', verification_status: 'unverified' },
+      { title: 'EIA crude stocks', publisher: 'eia.gov', instrument_tags: ['cl'], topic_tags: ['energy'], provider_seen_at: '20261119T114000Z' }
+    ]
+  };
+  const env = makeEnv({ 'snapshot:gdelt:news:v1': JSON.stringify(snapshot) });
+  const response = await worker.fetch(new Request('https://edge.example/api/v1/news?instrument=NQ&topic=macro&limit=5', { headers: { Origin: 'https://app.example' } }), env, context());
+  assert.equal(response.status, 200);
+  assert.equal(response.headers.get('Access-Control-Allow-Origin'), 'https://app.example');
+  const payload = await response.json();
+  assert.equal(payload.data_type, 'news_discovery');
+  assert.equal(payload.status, 'fresh');
+  assert.equal(payload.articles.length, 1);
+  assert.equal(payload.articles[0].title, 'US CPI release');
+  assert.equal(payload.data_as_of, null);
+  assert.equal(payload.cache_age_seconds >= 0, true);
+});
 
-HOˆÂˆÛÛœÝÜšYÚ[˜[™]ÚHÛØ˜[\Ë™™]ÚÂˆÛÛœÝ™\]Y\ÝYH×NÂˆÛØ˜[\Ë™™]ÚH\Þ[˜È[œ]OˆÂˆ™\]Y\ÝYœ\Ú
-Ýš[™Ê[œ]
-JNÂˆYˆ
-Ýš[™Ê[œ]
-HOOH	ÚÎ‹ËØ\Ë˜™XK™ÛÝ‹ÐTKÜÚYÛ\Ü™[X\ÙWÙ]\ËšœÛÛ‰ÊH›ÝÈ™]È\œ›ÜŠ	Ý[™^XÝY‘PHÛÝ\˜ÙIÊNÂˆ™]\›ˆ™]È™\ÜÛœÙJ”ÓÓ‹œÝš[™ÚYžJÂˆ	ÑÜ›ÜÜÈÛY\ÝXÈ›ÙXÝ	ÎˆÈ™[X\ÙWÙ]\ÎˆÉÌŒËLKLŽLÎŒÌŒ
-ÌŒ	×HKˆš[WÛ\ÝÝ\]Yˆ	ÌŒ‹LLLŒ•LŽŒËMÍIÂˆJKÈXY\œÎˆÈ	ØÛÛ[]\IÎˆ	Ø\XØ][Û‹ÚœÛÛ‰ÈHJNÂˆNÂˆžHÂˆÛÛœÝ[ˆHXZÙQ[Š
-NÂˆÛÛœÝ™\ÜÛœÙHH]ØZ]ÛÜšÙ\‹™™]Ú
-™]È™\]Y\Ý
-	ÚÎ‹ËÙYÙK™^[\KØ\KÝŒKÙ]™[ËØ™XIËÈXY\œÎˆÈÜšYÚ[Žˆ	ÚÎ‹ËØ\™^[\IÈHJK[‹ÛÛ^
+test('news route rejects unsupported instruments with a stable JSON error', async () => {
+  const env = makeEnv();
+  const response = await worker.fetch(new Request('https://edge.example/api/v1/news?instrument=SPY'), env, context());
+  assert.equal(response.status, 400);
+  const payload = await response.json();
+  assert.equal(payload.status, 'invalid-query');
+  assert.equal(payload.error.code, 'unsupported_instrument');
+});
 
-JNÂˆ\ÜÙ\™\]X[
-™\ÜÛœÙKœÝ]\ËŒ
-NÂˆ\ÜÙ\™\]X[
-™\ÜÛœÙKšXY\œË™Ù]
-	ÐXØÙ\ÜËPÛÛ›ÛP[ÝËSÜšYÚ[‰ÊK	ÚÎ‹ËØ\™^[\IÊNÂˆÛÛœÝ^[ØYH]ØZ]™\ÜÛœÙKšœÛÛŠ
-NÂˆ\ÜÙ\™\]X[
-^[ØYœX›\Ú\—ÚY	Ð‘PIÊNÂˆ\ÜÙ\™\]X[
-^[ØYœÛÝ\˜ÙWÙ™YYÝ\›	ÚÎ‹ËØ\Ë˜™XK™ÛÝ‹ÐTKÜÚYÛ\Ü™[X\ÙWÙ]\ËšœÛÛ‰ÊNÂˆ\ÜÙ\™\]X[
-^[ØYœÛÝ\˜ÙWÜ™]š\Ú[Û‹	ÌŒ‹LLLŒ•LŽŒËMÍIÊNÂˆ\ÜÙ\™\]X[
-^[ØY™]™[ØÛÝ[JNÂˆ\ÜÙ\™\]X[
-^[ØY™]™[ÖÌKœØÚY[YØ]Ý]Ë	ÌŒËLKLŽLÎŒÌŒŒ‰ÊNÂˆ]ØZ]ÛÜšÙ\‹™™]Ú
-™]È™\]Y\Ý
-	ÚÎ‹ËÙYÙK™^[\KØ\KÝŒKÙ]™[ËØ™XIÊK[‹ÛÛ^
+test('source registry exposes attribution and market-data status remains disabled', async () => {
+  const env = makeEnv();
+  const sources = await worker.fetch(new Request('https://edge.example/api/v1/news/sources'), env, context());
+  const sourcePayload = await sources.json();
+  assert.equal(sourcePayload.data_type, 'news_source_registry');
+  assert.equal(sourcePayload.sources[0].terms_status.includes('GDELT citation required'), true);
+  assert.equal(sourcePayload.sources[0].enabled, true);
 
-JNÂˆ\ÜÙ\™\]X[
-™\]Y\ÝY›[™ÝJNÂ‚ˆÛÛœÝ[˜ÛÛ™šYÝ\™YH]ØZ]ÛÜšÙ\‹™™]Ú
-™]È™\]Y\Ý
-	ÚÎ‹ËÙYÙK™^[\KØ\KÝŒKÙ]™[ËØ™XIÊKXZÙQ[ŠÈ×Ù[ŽˆÈÓTÒÕÎˆ[HJKÛÛ^
+  const market = await worker.fetch(new Request('https://edge.example/api/v1/market-data/status'), env, context());
+  const marketPayload = await market.json();
+  assert.equal(marketPayload.status, 'not-configured');
+  assert.equal(marketPayload.data_type, 'exchange_market_data_status');
+  assert.equal(marketPayload.source_provider, null);
+});
 
-JNÂˆ\ÜÙ\™\]X[
-[˜ÛÛ™šYÝ\™YœÝ]\ËLÊNÂˆ\ÜÙ\™\]X[
+test('provider registry reads the current bounded COT cache namespace', async () => {
+  const retrievedAt = new Date().toISOString();
+  const env = makeEnv({
+    'cot:tff:futures-only:v6:all': JSON.stringify({ status: 'fresh', dataAsOf: '2026-11-10', retrievedAt })
+  });
+  const response = await worker.fetch(new Request('https://edge.example/api/v1/providers'), env, context());
+  assert.equal(response.status, 200);
+  const payload = await response.json();
+  const cftc = payload.providers.find(provider => provider.id === 'cftc-pre');
+  assert.equal(cftc.state.status, 'fresh');
+  assert.equal(cftc.state.dataAsOf, '2026-11-10');
+  assert.equal(cftc.state.retrievedAt, retrievedAt);
+});
 
-]ØZ][˜ÛÛ™šYÝ\™YšœÛÛŠ
-JKœÝ]\Ë	Û›ÝXÛÛ™šYÝ\™Y	ÊNÂˆHš[˜[HÈÛØ˜[\Ë™™]ÚHÜšYÚ[˜[™]ÚÈBŸJNÂ‚\Ý
-	ÐÓÕ›Ý]HÙ[XÝÈH^XÝÛÛXš[™Y]\Ù][™Ù\\˜]\È™\ÜÜÚ][Ûˆ[™™]šY]˜[]\ÉË\Þ[˜È
+test('official BLS events route attributes a cached publisher snapshot and avoids repeat upstream requests', async () => {
+  const originalFetch = globalThis.fetch;
+  let calls = 0;
+  globalThis.fetch = async input => {
+    calls++;
+    assert.equal(String(input), 'https://www.bls.gov/schedule/news_release/bls.ics');
+    return new Response('BEGIN:VCALENDAR\r\nBEGIN:VEVENT\r\nUID:test\r\nDTSTART;TZID=America/New_York:20261204T083000\r\nSUMMARY:Employment Situation\r\nEND:VEVENT\r\nEND:VCALENDAR', { headers: { 'content-type': 'text/calendar' } });
+  };
+  try {
+    const env = makeEnv();
+    const response = await worker.fetch(new Request('https://edge.example/api/v1/events', { headers: { Origin: 'https://app.example' } }), env, context());
+    assert.equal(response.status, 200);
+    assert.equal(response.headers.get('Access-Control-Allow-Origin'), 'https://app.example');
+    const payload = await response.json();
+    assert.equal(payload.data_type, 'official_economic_release_schedule');
+    assert.equal(payload.status, 'fresh');
+    assert.equal(payload.event_count, 1);
+    assert.equal(payload.events[0].scheduled_at_utc, '2026-12-04T13:30:00.000Z');
+    assert.equal(payload.events[0].actual_release_at_utc, null);
+    assert.equal(payload.source_url, 'https://www.bls.gov/schedule/news_release/bls.ics');
+    await worker.fetch(new Request('https://edge.example/api/v1/events'), env, context());
+    assert.equal(calls, 1);
+  } finally { globalThis.fetch = originalFetch; }
+});
 
-HOˆÂˆÛÛœÝÜšYÚ[˜[™]ÚHÛØ˜[\Ë™™]ÚÂˆ]™\]Y\ÝY\›H	ÉÎÂˆÛØ˜[\Ë™™]ÚH\Þ[˜È[œ]OˆÂˆ™\]Y\ÝY\›HÝš[™Ê[œ]
-NÂˆ™]\›ˆ™]È™\ÜÛœÙJ”ÓÓ‹œÝš[™ÚYžJÞÂˆ™\ÜÙ]WØ\×Þ^^^WÛ[WÙˆ	ÌŒ‹LLKLLŒŒŒ	ËˆÙ×ØÛÛ˜XÝÛX\šÙ]ØÛÙNˆ	ÌLŒÍM‰ËˆÙ×ÛX\šÙ]ØÛÙNˆ	ÌLŒÉËˆÛÛ˜XÝÛX\šÙ]Û˜[YNˆ	ÓTÑTHKSRS’IËˆX\šÙ]Ø[™Ù^Ú[™ÙWÛ˜[Y\Îˆ	ÓTÑTHKSRS’HHÒPÐQÓÈQTÐS•SHVÒS‘ÑIËˆÜ[—Ú[\™\ÝØ[ˆ	ÌL	ËˆX[\—ÜÜÚ][Ûœ×ÛÛ™×Ø[ˆ	ÌLL	ËˆX[\—ÜÜÚ][Ûœ×ÜÚÜØ[ˆ	ÎL	Ëˆ\ÜÙ]ÛYÜ—ÜÜÚ][Ûœ×ÛÛ™Îˆ	ÌLŒ	Ëˆ\ÜÙ]ÛYÜ—ÜÜÚ][Ûœ×ÜÚÜˆ	ÌL	Ëˆ]—Û[Û™^WÜÜÚ][Ûœ×ÛÛ™Îˆ	ÌL	Ëˆ]—Û[Û™^WÜÜÚ][Ûœ×ÜÚÜˆ	ÌML	Ëˆ]—Û[Û™^WÜÜÚ][Ûœ×ÜÜ™XYˆ	ÌL	ËˆÝ\—Ü™\ÜÜÚ][Ûœ×ÛÛ™Îˆ	Î	ËˆÝ\—Ü™\ÜÜÚ][Ûœ×ÜÚÜˆ	ÍÌ	Ëˆ›Ûœ™\ÜÜÚ][Ûœ×ÛÛ™×Ø[ˆ	ÌŒ	Ëˆ›Ûœ™\ÜÜÚ][Ûœ×ÜÚÜØ[ˆ	ÌIÂˆWJKÈÝ]\ÎˆŒXY\œÎˆÈ	ÐÛÛ[U\IÎˆ	Ø\XØ][Û‹ÚœÛÛ‰ÈHJNÂˆNÂˆžHÂˆÛÛœÝ[ˆHXZÙQ[ŠÈ	ØÛÝ™Ž˜ÛÛXš[™YN›˜\Ù\IÎˆ”ÓÓ‹œÝš[™ÚYžJÂˆÝ]\Îˆ	Ùœ™\Ú	Ë™]šY]™Y]ˆ™]È]J
-KÒTÓÔÝš[™Ê
-K™\Üˆ	Ý™‰Ë˜\šX[ˆ	ØÛÛXš[™Y	Ëˆ›ÝÜÎˆ×K›Ü›X[^™Y›ÝÜÎˆ×KÛÝ\˜ÙU\›ˆ	ÚÎ‹ËÜÛÝ\˜ÙK™^[\KÛØœÛÛ]K[›Ü›X[^™Y[Û›KXØXÚIÂˆJHJNÂˆÛÛœÝ™\ÜÛœÙHH]ØZ]ÛÜšÙ\‹™™]Ú
-™]È™\]Y\Ý
-	ÚÎ‹ËÙYÙK™^[\KØ\KÝŒKØÛÝÜ™\Ü]™‰˜\šX[XÛÛXš[™Y	œOSTÑTIÊK[‹ÛÛ^
+test('official BLS events route serves a clearly stale snapshot when refresh fails', async () => {
+  const originalFetch = globalThis.fetch;
+  let calls = 0;
+  globalThis.fetch = async () => { calls++; throw new Error('upstream unavailable'); };
+  try {
+    const cached = { schema_version: 1, data_type: 'official_economic_release_schedule', status: 'fresh', retrieved_at: new Date(Date.now() - 3600000).toISOString(), event_count: 1, events: [{ event_id: 'bls:cached', title: 'Cached BLS item' }] };
+    const env = makeEnv({ 'schedule:bls:ics:v1': JSON.stringify(cached) });
+    const response = await worker.fetch(new Request('https://edge.example/api/v1/events'), env, context());
+    assert.equal(response.status, 200);
+    const payload = await response.json();
+    assert.equal(payload.status, 'stale');
+    assert.match(payload.last_error, /last successful/);
+    assert.equal(payload.events[0].event_id, 'bls:cached');
+    assert.ok(payload.retry_at);
+    const backedOff = await worker.fetch(new Request('https://edge.example/api/v1/events'), env, context());
+    assert.equal((await backedOff.json()).status, 'stale');
+    assert.equal(calls, 1);
+  } finally { globalThis.fetch = originalFetch; }
+});
 
-JNÂˆ\ÜÙ\™\]X[
-™\ÜÛœÙKœÝ]\ËŒ
-NÂˆÛÛœÝÛÝ\˜ÙU\›H™]ÈT“
-™\]Y\ÝY\›
-NÂˆ\ÜÙ\›X]Ú
-ÛÝ\˜ÙU\›œ]˜[YKÞ]ÎY‹ZŽM—šœÛÛ‹ÊNÂˆ\ÜÙ\™\]X[
-ÛÝ\˜ÙU\›œÙX\˜Ú\˜[\Ë™Ù]
-	É[Z]	ÊK	ÌMM‰ÊNÂˆ\ÜÙ\›ÚÊÛÝ\˜ÙU\›œÙX\˜Ú\˜[\Ë™Ù]
-	ÉÙ[XÝ	ÊKš[˜ÛY\Ê	Û]—Û[Û™^WÜÜÚ][Ûœ×ÛÛ™ÉÊJNÂˆ\ÜÙ\›X]Ú
-ÛÝ\˜ÙU\›œÙX\˜Ú\˜[\Ë™Ù]
-	ÉÚ\™IÊKÓTÑTKÊNÂˆÛÛœÝ^[ØYH]ØZ]™\ÜÛœÙKšœÛÛŠ
-NÂˆ\ÜÙ\™\]X[
-^[ØY™]WÝ\K	ØÙ×ØÛÝÜÜÚ][ÛœÉÊNÂˆ\ÜÙ\™\]X[
-^[ØYœ™\ÜÙ˜[Z[K	Ý™‰ÊNÂˆ\ÜÙ\™\]X[
-^[ØYœ™\ÜÝ˜\šX[	ØÛÛXš[™Y	ÊNÂˆ\ÜÙ\™\]X[
-^[ØYœÜÚ][Û—Ù]K	ÌŒ‹LLKLL	ÊNÂˆ\ÜÙ\™\]X[
-^[ØYœX›\ÚYØ][
-NÂˆ\ÜÙ\›ÚÊ^[ØYœ™]šY]™YØ]
-NÂˆ\ÜÙ\›ÚÊ^[ØY››Ü›X[^™Y›ÝÜËœÛÛYJ›ÝÈOˆ›ÝË˜Y\Ø]YÛÜžHOOH	Ó]™\˜YÙY[™ÉÈ	‰ˆ›ÝË›™]OOHL
-JNÂˆ\ÜÙ\™\]X[
-^[ØYœ›ÝÜË›[™ÝJNÂˆ\ÜÙ\™\]X[
-^[ØYœ›ÝÜÖÌK˜ÛÛ˜XÝÛX\šÙ]Û˜[YK	ÓTÑTHKSRS’IÊNÂˆ\ÜÙ\™\]X[
-^[ØYœ›ÝÜÖÌKœ™\ÜÙ]WØ\×Þ^^^WÛ[WÙ	ÌŒ‹LLKLLŒŒŒ	ÊNÂˆ\ÜÙ\™\]X[
-^[ØYœ›ÝÜÖÌK›]—Û[Û™^WÜÜÚ][Ûœ×ÛÛ™Ë	ÌL	ÊNÂˆ\ÜÙ\›ÚÊ^[ØY››Ü›X[^™Y›ÝÜË›[™Ýˆ^[ØYœ›ÝÜË›[™Ý
-NÂˆ\ÜÙ\™\]X[
-Øš™XÝš\ÓÝÛŠ^[ØY››Ü›X[^™Y›ÝÜÖÌK	ÜÛÝ\˜ÙS˜]]™QšY[ÉÊK˜[ÙJNÂˆ\ÜÙ\™\]X[
-^[ØYœ\œÚ\Ý[˜ÙKœÝ]\Ë	Û›ÝXÛÛ™šYÝ\™Y	ÊNÂˆHš[˜[HÂˆÛØ˜[\Ë™™]ÚHÜšYÚ[˜[™]ÚÂˆBŸJNÂ‚\Ý
-	Ý[™š[\™YÓÕ™\]Y\ÝÈ™]\›ˆH›Ý[™Y]\Ý[X\šÙ]Û˜\ÚÝ›ÜˆÛ\ˆœ›Û[™ÉË\Þ[˜È
+test('calendar upstream failures without a cached snapshot are reported unavailable and rate-limited by KV backoff', async () => {
+  const originalFetch = globalThis.fetch;
+  let calls = 0;
+  globalThis.fetch = async () => { calls++; throw new Error('provider unavailable'); };
+  try {
+    const env = makeEnv();
+    const first = await worker.fetch(new Request('https://edge.example/api/v1/events'), env, context());
+    assert.equal(first.status, 502);
+    const failure = await first.json();
+    assert.equal(failure.status, 'unavailable');
+    assert.ok(failure.retry_at);
+    const second = await worker.fetch(new Request('https://edge.example/api/v1/events'), env, context());
+    assert.equal(second.status, 502);
+    assert.equal(calls, 1);
+    assert.ok(Number(second.headers.get('Retry-After')) > 0);
+  } finally { globalThis.fetch = originalFetch; }
+});
 
-HOˆÂˆÛÛœÝÜšYÚ[˜[™]ÚHÛØ˜[\Ë™™]ÚÂˆ]™\]Y\ÝY\›H	ÉÎÂˆÛØ˜[\Ë™™]ÚH\Þ[˜È[œ]OˆÂˆ™\]Y\ÝY\›HÝš[™Ê[œ]
-NÂˆ™]\›ˆ™]È™\ÜÛœÙJ”ÓÓ‹œÝš[™ÚYžJÞÂˆ™\ÜÙ]WØ\×Þ^^^WÛ[WÙˆ	ÌŒ‹LLKLLŒŒŒ	ËˆÙ×ØÛÛ˜XÝÛX\šÙ]ØÛÙNˆ	ÌLŒÍM‰ËÛÛ˜XÝÛX\šÙ]Û˜[YNˆ	ÓTÑTIËÜ[—Ú[\™\ÝØ[ˆ	ÌL	Ëˆ]—Û[Û™^WÜÜÚ][Ûœ×ÛÛ™Îˆ	ÌL	Ë]—Û[Û™^WÜÜÚ][Ûœ×ÜÚÜˆ	ÌML	ÂˆWJKÈÝ]\ÎˆŒXY\œÎˆÈ	ÐÛÛ[U\IÎˆ	Ø\XØ][Û‹ÚœÛÛ‰ÈHJNÂˆNÂˆžHÂˆÛÛœÝ[ˆHXZÙQ[Š
-NÂˆÛÛœÝ™\ÜÛœÙHH]ØZ]ÛÜšÙ\‹™™]Ú
-™]È™\]Y\Ý
-	ÚÎ‹ËÙYÙK™^[\KØ\KÝŒKØÛÝÜ™\Ü]™‰ÊK[‹ÛÛ^
+test('official EIA events route serves source-labelled petroleum release times and caches the page parse', async () => {
+  const originalFetch = globalThis.fetch;
+  let calls = 0;
+  globalThis.fetch = async input => {
+    calls++;
+    assert.equal(String(input), 'https://www.eia.gov/petroleum/supply/weekly/schedule.php');
+    return new Response('<html><h1>Weekly Petroleum Status Report Schedule</h1><p>The standard release time and day of the week will be at 10:30 a.m. eastern time on Wednesday with the following exceptions. All times are eastern.</p><table><tr><th>Data week ending</th><th>Alternate date</th><th>Release day</th><th>Release time</th><th>Holiday</th></tr><tr><td>January 16, 2026</td><td>January 22, 2026</td><td>Thursday</td><td>12:00 p.m.</td><td>Martin Luther King Jr. Day</td></tr></table></html>', { headers: { 'content-type': 'text/html', 'last-modified': 'Wed, 18 Nov 2026 12:00:00 GMT' } });
+  };
+  try {
+    const env = makeEnv();
+    const response = await worker.fetch(new Request('https://edge.example/api/v1/events/eia', { headers: { Origin: 'https://app.example' } }), env, context());
+    assert.equal(response.status, 200);
+    assert.equal(response.headers.get('Access-Control-Allow-Origin'), 'https://app.example');
+    const payload = await response.json();
+    assert.equal(payload.data_type, 'official_economic_release_schedule');
+    assert.equal(payload.status, 'fresh');
+    assert.equal(payload.publisher, 'U.S. Energy Information Administration');
+    assert.equal(payload.source_url, 'https://www.eia.gov/petroleum/supply/weekly/schedule.php');
+    assert.ok(payload.events.length > 0);
+    assert.ok(payload.events.every(event => event.affected_instruments.includes('CL') && event.forecast_value === null));
+    await worker.fetch(new Request('https://edge.example/api/v1/events/eia'), env, context());
+    assert.equal(calls, 1);
+  } finally { globalThis.fetch = originalFetch; }
+});
 
-JNÂˆÛÛœÝ^[ØYH]ØZ]™\ÜÛœÙKšœÛÛŠ
-NÂˆ\ÜÙ\™\]X[
-™\ÜÛœÙKœÝ]\ËŒ
-NÂˆ\ÜÙ\™\]X[
-™]ÈT“
-™\]Y\ÝY\›
-KœÙX\˜Ú\˜[\Ë™Ù]
-	É[Z]	ÊK	ÌMM‰ÊNÂˆ\ÜÙ\™\]X[
-™]ÈT“
-™\]Y\ÝY\›
-KœÙX\˜Ú\˜[\Ë™Ù]
-	ÉÚ\™IÊK[
-NÂˆ\ÜÙ\™\]X[
-^[ØY™š[\™Y˜[ÙJNÂˆ\ÜÙ\™\]X[
-^[ØYœ]Y\žWÜØÛÜK	Û]\Ý\›ÝšY\‹[ØœÙ\˜][ÛœÉÊNÂˆ\ÜÙ\›ÚÊ^[ØY››Ü›X[^™Y›ÝÜË›[™Ýˆ
-NÂˆ\ÜÙ\™\]X[
-^[ØYœ›ÝÜÖÌK˜ÛÛ˜XÝÛX\šÙ]Û˜[YK	ÓTÑTIÊNÂˆ\ÜÙ\™\]X[
-^[ØYœ›ÝÜÖÌK›]—Û[Û™^WÜÜÚ][Ûœ×ÛÛ™Ë	ÌL	ÊNÂˆHš[˜[HÂˆÛØ˜[\Ë™™]ÚHÜšYÚ[˜[™]ÚÂˆBŸJNÂ‚\Ý
-	ÓYØXÞHÓÕ›Ú™XÝ[Ûˆ^ÛY\È[œÝ\ÜYÛÛ[Y\˜ÚX[Ü™XY[™È[™™]\›œÈ›Ý[™Y˜]È›ÝÜÉË\Þ[˜È
+test('provider registry exposes publisher calendar freshness separately from data providers', async () => {
+  const retrievedAt = new Date().toISOString();
+  const env = makeEnv({
+    'schedule:bls:ics:v1': JSON.stringify({ status: 'fresh', event_count: 12, retrieved_at: retrievedAt }),
+    'schedule:eia:wpsr:v1': JSON.stringify({ status: 'fresh', event_count: 8, retrieved_at: retrievedAt }),
+    'schedule:cftc:cot:v1': JSON.stringify({ status: 'fresh', event_count: 4, retrieved_at: retrievedAt }),
+    'schedule:fed:fomc:v1': JSON.stringify({ status: 'fresh', event_count: 2, retrieved_at: retrievedAt }),
+    'schedule:ecb:council:v1': JSON.stringify({ status: 'fresh', event_count: 3, retrieved_at: retrievedAt }),
+    'schedule:boe:mpc:v1': JSON.stringify({ status: 'fresh', event_count: 8, retrieved_at: retrievedAt }),
+    'schedule:boc:policy-rate:v1': JSON.stringify({ status: 'fresh', event_count: 8, retrieved_at: retrievedAt }),
+    'schedule:rba:monetary-policy-board:v1': JSON.stringify({ status: 'fresh', event_count: 8, retrieved_at: retrievedAt }),
+    'schedule:bea:release-dates:v1': JSON.stringify({ status: 'fresh', event_count: 15, retrieved_at: retrievedAt, source_revision: '2026-10-22T12:48:27.656675' })
+  });
+  const response = await worker.fetch(new Request('https://edge.example/api/v1/providers'), env, context());
+  const providers = (await response.json()).providers;
+  const calendar = providers.find(provider => provider.id === 'bls-calendar');
+  const eiaSchedule = providers.find(provider => provider.id === 'eia-wpsr-schedule');
+  const cftcSchedule = providers.find(provider => provider.id === 'cftc-cot-schedule');
+  const fomcCalendar = providers.find(provider => provider.id === 'fomc-calendar');
+  const ecbCalendar = providers.find(provider => provider.id === 'ecb-council-calendar');
+  const boeCalendar = providers.find(provider => provider.id === 'boe-mpc-calendar');
+  const bocCalendar = providers.find(provider => provider.id === 'boc-rate-calendar');
+  const rbaCalendar = providers.find(provider => provider.id === 'rba-monetary-policy-calendar');
+  const beaCalendar = providers.find(provider => provider.id === 'bea-release-calendar');
+  assert.equal(calendar.state.status, 'fresh');
+  assert.equal(calendar.state.eventCount, 12);
+  assert.equal(calendar.state.retrievedAt, retrievedAt);
+  assert.match(calendar.notes, /not a complete macro calendar/);
+  assert.equal(eiaSchedule.state.eventCount, 8);
+  assert.match(eiaSchedule.notes, /holiday exceptions/);
+  assert.equal(cftcSchedule.state.eventCount, 4);
+  assert.match(cftcSchedule.notes, /semiweekly cadence change/);
+  assert.equal(fomcCalendar.state.eventCount, 2);
+  assert.match(fomcCalendar.notes, /no release time/);
+  assert.equal(ecbCalendar.state.eventCount, 3);
+  assert.match(ecbCalendar.notes, /no release time/);
+  assert.equal(boeCalendar.state.eventCount, 8);
+  assert.equal(bocCalendar.state.eventCount, 8);
+  assert.equal(rbaCalendar.state.eventCount, 8);
+  assert.match(rbaCalendar.notes, /no decision release time/);
+  assert.equal(beaCalendar.state.eventCount, 15);
+  assert.equal(beaCalendar.state.sourceRevision, '2026-10-22T12:48:27.656675');
+  assert.match(beaCalendar.notes, /machine-readable publisher feed/);
 
-HOˆÂˆÛÛœÝÜšYÚ[˜[™]ÚHÛØ˜[\Ë™™]ÚÂˆÛÛœÝ™\]Y\ÝY\›ÈH×NÂˆÛØ˜[\Ë™™]ÚH\Þ[˜È[œ]OˆÂˆ™\]Y\ÝY\›Ëœ\Ú
-Ýš[™Ê[œ]
-JNÂˆ™]\›ˆ™]È™\ÜÛœÙJ”ÓÓ‹œÝš[™ÚYžJÞÂˆ™\ÜÙ]WØ\×Þ^^^WÛ[WÙˆ	ÌŒ‹LLKLLŒŒŒ	ËˆÙ×ØÛÛ˜XÝÛX\šÙ]ØÛÙNˆ	ÌLŒÍM‰ËˆÛÛ˜XÝÛX\šÙ]Û˜[YNˆ	ÓTÑTHKSRS’IËˆÜ[—Ú[\™\ÝØ[ˆ	ÌL	ËˆÛÛ[WÜÜÚ][Ûœ×ÛÛ™×Ø[ˆ	ÍL	ËˆÛÛ[WÜÜÚ][Ûœ×ÜÚÜØ[ˆ	ÌÌ	Ëˆ›Û˜ÛÛ[WÜÜÚ][Ûœ×ÛÛ™×Ø[ˆ	ÌL	Ëˆ›Û˜ÛÛ[WÜÜÚ][Ûœ×ÜÚÜØ[ˆ	ÍL	Ëˆ›Û˜ÛÛ[WÜÜÝ[Ûœ×ÜÜ™XYØ[ˆ	ÌMIÂˆWJKÈÝ]\ÎˆŒXY\œÎˆÈ	ÐÛÛ[U\IÎˆ	Ø\XØ][Û‹ÚœÛÛ‰ÈHJNÂˆNÂˆžHÂˆ›Üˆ
-ÛÛœÝ˜\šX[ÙˆÉÙ]\™\Ë[Û›IË	ØÛÛXš[™Y	×JHÂˆÛÛœÝ™\ÜÛœÙHH]ØZ]ÛÜšÙ\‹™™]Ú
-™]È™\]Y\Ý
-Î‹ËÙYÙK™^[\KØ\KÝŒKØÛÝÜ™\Ü[YØXÞI˜\šX[IÝ˜\šX[X
-KXZÙQ[Š
-KÛÛ^
+  const unconfigured = makeEnv({ __env: { SNAPSHOTS: null } });
+  const unavailableResponse = await worker.fetch(new Request('https://edge.example/api/v1/providers'), unconfigured, context());
+  const unavailableProviders = (await unavailableResponse.json()).providers;
+  for (const id of ['bls-calendar', 'eia-wpsr-schedule', 'cftc-cot-schedule', 'fomc-calendar', 'ecb-council-calendar', 'boe-mpc-calendar', 'boc-rate-calendar', 'rba-monetary-policy-calendar', 'bea-release-calendar']) {
+    assert.equal(unavailableProviders.find(provider => provider.id === id).state.status, 'not-configured');
+  }
+});
 
-JNÂˆ\ÜÙ\™\]X[
-™\ÜÛœÙKœÝ]\ËŒ
-NÂˆÛÛœÝÛÝ\˜ÙU\›H™]ÈT“
-™\]Y\ÝY\›Ë˜]
-LJJNÂˆ\ÜÙ\›X]Ú
-ÛÝ\˜ÙU\›œ]˜[YK˜\šX[OOH	ØÛÛXš[™Y	ÈÈÚ[ËY˜ÎWšœÛÛ‹ÈˆÍ™ØKX\]Ý×šœÛÛ‹ÊNÂˆÛÛœÝÙ[XÝYHÛÝ\˜ÙU\›œÙX\˜Ú\˜[\Ë™Ù]
-	ÉÙ[XÝ	ÊNÂˆ\ÜÙ\›ÚÊÙ[XÝYš[˜ÛY\Ê	ØÛÛ[WÜÜÚ][Ûœ×ÛÛ™×Ø[	ÊJNÂˆ\ÜÙ\›ÚÊ\Ù[XÝYš[˜ÛY\Ê	ØÛÛ[WÜÜÚ][Ûœ×ÜÜ™XYØ[	ÊJNÂˆÛÛœÝ^[ØYH]ØZ]™\ÜÛœÙKšœÛÛŠ
-NÂˆ\ÜÙ\™\]X[
-^[ØYœ›ÝÜÖÌK˜ÛÛ˜XÝÛX\šÙ]Û˜[YK	ÓTÑTHKSRS’IÊNÂˆÛÛœÝÛÛ[Y\˜ÚX[H^[ØY››Ü›X[^™Y›ÝÜË™š[™
-›ÝÈOˆ›ÝË˜Y\Ø]YÛÜžHOOH	ÐÛÛ[Y\˜ÚX[	ÊNÂˆ\ÜÙ\™\]X[
-ÛÛ[Y\˜ÚX[œÜ™XY[
-NÂˆ\ÜÙ\™\]X[
-ÛÛ[Y\˜ÚX[œÛÝ\˜ÙQšY[X\[™ËœÜ™XY[
-NÂˆ\ÜÙ\™\]X[
-ÛÛ[Y\˜ÚX[›Z\ÜÚ[™Ô™X\ÛÛ‹œÜ™XY	Û›Ý›ÝšYYžHHÑ•ÈYØXÞHØÚ[XIÊNÂˆ\ÜÙ\™\]X[
-Øš™XÝš\ÓÝÛŠÛÛ[Y\˜ÚX[	ÜÛÝ\˜ÙS˜]]™QšY[ÉÊK˜[ÙJNÂˆBˆHš[˜[HÂˆÛØ˜[\Ë™™]ÚHÜšYÚ[˜[™]ÚÂˆBŸJNÂ‚\Ý
-	ÐÓÕ›Ý]H™Z™XÝÈ[šÛ›ÝÛˆ™\Ü˜\šX[È[™[œØY™HX\šÙ]š[\œÈ™Y›Ü™H›ÝšY\ˆXØÙ\ÜÉË\Þ[˜È
+test('official CFTC and Federal Reserve schedule routes fetch and cache separate publisher snapshots', async t => {
+  t.mock.timers.enable({ apis: ['Date'], now: new Date('2026-11-19T12:00:00.000Z') });
+  const originalFetch = globalThis.fetch;
+  const urls = [];
+  const cftc = '<html><h1>Release Schedule</h1><p>The Commitments of Traders reports are released at 3:30 p.m. Eastern time. The following is a tentative schedule of releases through 2026.</p><h2>2026 Release Schedule</h2><table><tr><th>Month</th><th>Dates</th></tr><tr><td>November</td><td>20</td><td>30*</td></tr><tr><td>December</td><td>04</td><td>11</td></tr></table><p>*Delayed release date due to a federal holiday.</p></html>';
+  const fomc = '<html><h1>Federal Open Market Committee</h1><p>Meeting calendars, statements, and minutes.</p><h3>2026 FOMC Meetings</h3><h4>December</h4><p>8-9*</p><h3>2027 FOMC Meetings</h3><h4>January</h4><p>26-27</p><p>Last Update: November 18, 2026</p></html>';
+  globalThis.fetch = async input => {
+    const url = String(input); urls.push(url);
+    if (url === 'https://www.cftc.gov/MarketReports/CommitmentsofTraders/ReleaseSchedule/index.htm') return new Response(cftc, { headers: { 'content-type': 'text/html' } });
+    if (url === 'https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm') return new Response(fomc, { headers: { 'content-type': 'text/html' } });
+    throw new Error('unexpected publisher endpoint');
+  };
+  try {
+    const env = makeEnv();
+    const cftcResponse = await worker.fetch(new Request('https://edge.example/api/v1/events/cftc', { headers: { Origin: 'https://app.example' } }), env, context());
+    assert.equal(cftcResponse.status, 200);
+    assert.equal(cftcResponse.headers.get('Access-Control-Allow-Origin'), 'https://app.example');
+    const cftcPayload = await cftcResponse.json();
+    assert.equal(cftcPayload.publisher_id, 'CFTC');
+    assert.equal(cftcPayload.event_count, 4);
+    assert.equal(cftcPayload.events[0].event_type, 'CFTC_COT_PUBLICATION');
+    await worker.fetch(new Request('https://edge.example/api/v1/events/cftc'), env, context());
+    assert.equal(urls.filter(url => url.includes('cftc.gov')).length, 1);
 
-HOˆÂˆÛÛœÝ[ˆHXZÙQ[Š
-NÂˆÛÛœÝ˜\šX[H]ØZ]ÛÜšÙ\‹™™]Ú
-™]È™\]Y\Ý
-	ÚÎ‹ËÙYÙK™^[\KØ\KÝŒKØÛÝÝ˜\šX[[]™IÊK[‹ÛÛ^
+    const fomcResponse = await worker.fetch(new Request('https://edge.example/api/v1/events/fomc'), env, context());
+    assert.equal(fomcResponse.status, 200);
+    const fomcPayload = await fomcResponse.json();
+    assert.equal(fomcPayload.publisher_id, 'FED');
+    assert.equal(fomcPayload.events[0].date_only, true);
+    assert.equal(fomcPayload.events[0].scheduled_at_utc, null);
+    await worker.fetch(new Request('https://edge.example/api/v1/events/fomc'), env, context());
+    assert.equal(urls.filter(url => url.includes('federalreserve.gov')).length, 1);
+  } finally {
+    globalThis.fetch = originalFetch;
+    t.mock.timers.reset();
+  }
+});
 
-JNÂˆ\ÜÙ\™\]X[
-˜\šX[œÝ]\Ë
-NÂˆ\ÜÙ\™\]X[
+test('central-bank calendar routes are independently source-labelled, cached, and policy-gated', async () => {
+  const originalFetch = globalThis.fetch;
+  const requested = [];
+  const sources = new Map([
+    ['https://www.ecb.europa.eu/press/calendars/mgcgc/html/index.en.html', '<html><h1>Schedules for the meetings of the Governing Council and General Council of the ECB and related press conferences</h1><p>16/12/2026</p><p>Governing Council of the ECB: monetary policy meeting in Frankfurt (Day 1)</p></html>'],
+    ['https://www.bankofengland.co.uk/monetary-policy/upcoming-mpc-dates', '<html><h1>Monetary Policy Committee dates for 2026 and 2027</h1><h2>2026 confirmed dates</h2><p>Thursday 17 December | December MPC Summary and minutes</p><p>This page was last updated 21 September 2026</p></html>'],
+    ['https://www.bankofengland.co.uk/monetary-policy', "<html><p>We publish the MPC's decision with the minutes of the meetings at 12 noon on the day of the announcement, which is usually a Thursday.</p></html>"],
+    ['https://www.bankofcanada.ca/core-functions/monetary-policy/key-interest-rate/', '<html><h1>Policy interest rate</h1><h2>Schedule for 2026</h2><p>December 9 Interest rate announcement</p></html>'],
+    ['https://www.bankofcanada.ca/core-functions/monetary-policy/key-interest-rate/blackout-guidelines/', '<html><p>The key policy rate decision is published on a Wednesday at 9:45 Eastern Time.</p></html>'],
+    ['https://www.rba.gov.au/schedules-events/board-meeting-schedules.html', '<html><h1>Board Meeting Schedules</h1><p>The meeting schedules for the Monetary Policy Board and Payments System Board are below.</p><h2>Board meeting schedules 2026</h2><table><tr><td>December</td><td>7&ndash;8 December</td><td></td></tr></table></html>']
+  ]);
+  globalThis.fetch = async input => {
+    const url = String(input); requested.push(url);
+    if (!sources.has(url)) throw new Error(`unexpected upstream ${url}`);
+    return new Response(sources.get(url), { headers: { 'content-type': 'text/html', 'last-modified': 'Wed, 18 Nov 2026 12:00:00 GMT' } });
+  };
+  try {
+    const env = makeEnv();
+    const expected = [
+      ['/api/v1/events/ecb', 'ECB', true], ['/api/v1/events/boe', 'BOE', false],
+      ['/api/v1/events/boc', 'BOC', false], ['/api/v1/events/rba', 'RBA', true]
+    ];
+    for (const [path, publisherId, dateOnly] of expected) {
+      const response = await worker.fetch(new Request(`https://edge.example${path}`), env, context());
+      assert.equal(response.status, 200, path);
+      const payload = await response.json();
+      assert.equal(payload.publisher_id, publisherId);
+      assert.ok(payload.events.length, `${path} returned no future meetings: ${payload.error || payload.last_error || payload.status}`);
+      assert.equal(payload.event_count, payload.events.length);
+      assert.equal(payload.events[0].date_only, dateOnly);
+      assert.equal(payload.events[0].source_url.startsWith('https://'), true);
+      await worker.fetch(new Request(`https://edge.example${path}`), env, context());
+    }
+    assert.equal(requested.length, 6);
+    const unconfigured = await worker.fetch(new Request('https://edge.example/api/v1/events/ecb'), makeEnv({ __env: { SNAPSHOTS: null } }), context());
+    assert.equal(unconfigured.status, 503);
+    assert.equal((await unconfigured.json()).status, 'not-configured');
+  } finally { globalThis.fetch = originalFetch; }
+});
 
-]ØZ]˜\šX[šœÛÛŠ
-JK™\œ›Ü‹˜ÛÙK	Ý[œÝ\ÜYÝ˜\šX[	ÊNÂˆÛÛœÝX\šÙ]H]ØZ]ÛÜšÙ\‹™™]Ú
-™]È™\]Y\Ý
-	ÚÎ‹ËÙYÙK™^[\KØ\KÝŒKØÛÝÜOQTÉLÉLŒÔ‰LŒILÑIÊK[‹ÛÛ^
+test('BEA calendar route fetches and caches the official JSON release schedule', async () => {
+  const originalFetch = globalThis.fetch;
+  const requested = [];
+  globalThis.fetch = async input => {
+    requested.push(String(input));
+    if (String(input) !== 'https://apps.bea.gov/API/signup/release_dates.json') throw new Error('unexpected BEA source');
+    return new Response(JSON.stringify({
+      'Gross Domestic Product': { release_dates: ['2027-01-28T13:30:00+00:00'] },
+      file_last_updated: '2026-10-22T12:48:27.656675'
+    }), { headers: { 'content-type': 'application/json' } });
+  };
+  try {
+    const env = makeEnv();
+    const response = await worker.fetch(new Request('https://edge.example/api/v1/events/bea', { headers: { Origin: 'https://app.example' } }), env, context());
+    assert.equal(response.status, 200);
+    assert.equal(response.headers.get('Access-Control-Allow-Origin'), 'https://app.example');
+    const payload = await response.json();
+    assert.equal(payload.publisher_id, 'BEA');
+    assert.equal(payload.source_feed_url, 'https://apps.bea.gov/API/signup/release_dates.json');
+    assert.equal(payload.source_revision, '2026-10-22T12:48:27.656675');
+    assert.equal(payload.event_count, 1);
+    assert.equal(payload.events[0].scheduled_at_utc, '2027-01-28T13:30:00.000Z');
+    await worker.fetch(new Request('https://edge.example/api/v1/events/bea'), env, context());
+    assert.equal(requested.length, 1);
 
-JNÂˆ\ÜÙ\™\]X[
-X\šÙ]œÝ]\Ë
-NÂˆ\ÜÙ\™\]X[
+    const unconfigured = await worker.fetch(new Request('https://edge.example/api/v1/events/bea'), makeEnv({ __env: { SNAPSHOTS: null } }), context());
+    assert.equal(unconfigured.status, 503);
+    assert.equal((await unconfigured.json()).status, 'not-configured');
+  } finally { globalThis.fetch = originalFetch; }
+});
 
-]ØZ]X\šÙ]šœÛÛŠ
-JK™\œ›Ü‹˜ÛÙK	Ú[˜[YÛX\šÙ]Ü]Y\žIÊNÂŸJNÂ‚\Ý
-	ÐÓÕ\œÚ\Ý[˜ÙH\Ù\ÈÙ\™\‹\ÚYHÝ\X˜\ÙHÜ™Y[X[È[™H˜\šX[X]Ø\™HY[\Ý[˜ÞHÙ^IË\Þ[˜È
+test('COT route selects the exact combined dataset and separates report, position and retrieval dates', async () => {
+  const originalFetch = globalThis.fetch;
+  let requestedUrl = '';
+  globalThis.fetch = async input => {
+    requestedUrl = String(input);
+    return new Response(JSON.stringify([{
+      report_date_as_yyyy_mm_dd: '2026-11-10T00:00:00.000',
+      cftc_contract_market_code: '123456',
+      cftc_market_code: '123',
+      contract_market_name: 'NASDAQ E-MINI',
+      market_and_exchange_names: 'NASDAQ E-MINI - CHICAGO MERCANTILE EXCHANGE',
+      open_interest_all: '1000',
+      dealer_positions_long_all: '110',
+      dealer_positions_short_all: '90',
+      asset_mgr_positions_long: '120',
+      asset_mgr_positions_short: '100',
+      lev_money_positions_long: '250',
+      lev_money_positions_short: '150',
+      lev_money_positions_spread: '10',
+      other_rept_positions_long: '80',
+      other_rept_positions_short: '70',
+      nonrept_positions_long_all: '20',
+      nonrept_positions_short_all: '25'
+    }]), { status: 200, headers: { 'Content-Type': 'application/json' } });
+  };
+  try {
+    const env = makeEnv({ 'cot:tff:combined:v5:nasdaq': JSON.stringify({
+      status: 'fresh', retrievedAt: new Date().toISOString(), report: 'tff', variant: 'combined',
+      rows: [], normalizedRows: [], sourceUrl: 'https://source.example/obsolete-normalized-only-cache'
+    }) });
+    const response = await worker.fetch(new Request('https://edge.example/api/v1/cot?report=tff&variant=combined&q=NASDAQ'), env, context());
+    assert.equal(response.status, 200);
+    const sourceUrl = new URL(requestedUrl);
+    assert.match(sourceUrl.pathname, /yw9f-hn96\.json/);
+    assert.equal(sourceUrl.searchParams.get('$limit'), '156');
+    assert.ok(sourceUrl.searchParams.get('$select').includes('lev_money_positions_long'));
+    assert.match(sourceUrl.searchParams.get('$where'), /NASDAQ/);
+    const payload = await response.json();
+    assert.equal(payload.data_type, 'cftc_cot_positions');
+    assert.equal(payload.report_family, 'tff');
+    assert.equal(payload.report_variant, 'combined');
+    assert.equal(payload.position_date, '2026-11-10');
+    assert.equal(payload.published_at, null);
+    assert.ok(payload.retrieved_at);
+    assert.ok(payload.normalizedRows.some(row => row.traderCategory === 'Leveraged Funds' && row.net === 100));
+    assert.equal(payload.rows.length, 1);
+    assert.equal(payload.rows[0].contract_market_name, 'NASDAQ E-MINI');
+    assert.equal(payload.rows[0].report_date_as_yyyy_mm_dd, '2026-11-10T00:00:00.000');
+    assert.equal(payload.rows[0].lev_money_positions_long, '250');
+    assert.ok(payload.normalizedRows.length > payload.rows.length);
+    assert.equal(Object.hasOwn(payload.normalizedRows[0], 'sourceNativeFields'), false);
+    assert.equal(payload.persistence.status, 'not-configured');
+  } finally {
+    globalThis.fetch = originalFetch;
+  }
+});
 
-HOˆÂˆÛÛœÝÜšYÚ[˜[™]ÚHÛØ˜[\Ë™™]ÚÂˆ]\Ù\\›H	ÉË\Ù\XY\œÈH[\Ù\›ÝÜÈH×NÂˆÛØ˜[\Ë™™]ÚH\Þ[˜È
-[œ][š]HßJHOˆÂˆÛÛœÝ\›HÝš[™Ê[œ]
-NÂˆYˆ
-\›š[˜ÛY\Ê	ÜX›XÜ™\Ü[™Ë˜ÙË™ÛÝ‹Ü™\ÛÝ\˜ÙKÉÊJHÂˆ™]\›ˆ™]È™\ÜÛœÙJ”ÓÓ‹œÝš[™ÚYžJÞÂˆ™\ÜÙ]WØ\×Þ^^^WÛ[WÙˆ	ÌŒ‹LLKLLŒŒŒ	ËˆÙ×ØÛÛ˜XÝÛX\šÙ]ØÛÙNˆ	ÌLŒÍM‰ËˆÙ×ÛX\šÙ]ØÛÙNˆ	ÌLŒÉËˆÛÛ˜XÝÛX\šÙ]Û˜[YNˆ	ÓTÑTHKSRS’IËˆX\šÙ]Ø[™Ù^Ú[™ÙWÛ˜[Y\Îˆ	ÓTÑTHKSRS’HHÒPÐQÓÈQTÐS•SHVÒS‘ÑIËˆÜ[—Ú[\™\ÝØ[ˆ	ÌL	Ëˆ]—Û[Û™^WÜÜÚ][Ûœ×ÛÛ™Îˆ	ÌL	Ëˆ]—Û[Û™^WÜÜÚ][Ûœ×ÜÚÜˆ	ÌML	Ëˆ]—Û[Û™^WÜÜÚ][Ûœ×ÜÜ™XYˆ	ÌL	ÂˆWJKÈÝ]\ÎˆŒXY\œÎˆÈ	ÐÛÛ[U\IÎˆ	Ø\XØ][Û‹ÚœÛÛ‰ÈHJNÂˆBˆ\Ù\\›H\›Ý\Ù\XY\œÈH[š]šXY\œÎÝ\Ù\›ÝÜÈH”ÓÓ‹œ\œÙJ[š]˜›ÙJNÂˆ™]\›ˆ™]È™\ÜÛœÙJ[ÈÝ]\ÎˆŒHJNÂˆNÂˆžHÂˆÛÛœÝ[ˆHXZÙQ[Š
-NÙ[‹”ÕTPTÑWÕT“IÚÎ‹ËÙ‹™^[\IÎÙ[‹”ÕTPTÑWÔÑPÔ‘UÒÑVOIÜØ—ÜÙXÜ™]Ý\ÝÛÛ›IÎÂˆÛÛœÝ™\ÜÛœÙHH]ØZ]ÛÜšÙ\‹™™]Ú
-™]È™\]Y\Ý
-	ÚÎ‹ËÙYÙK™^[\KØ\KÝŒKØÛÝÜ™\Ü]™‰˜\šX[XÛÛXš[™Y	˜ÛÛ˜XÝÛX\šÙ]ØÛÙOLLŒÍM‰ÊK[‹ÛÛ^
+test('unfiltered COT requests return a bounded latest-market snapshot for older frontends', async () => {
+  const originalFetch = globalThis.fetch;
+  let requestedUrl = '';
+  globalThis.fetch = async input => {
+    requestedUrl = String(input);
+    return new Response(JSON.stringify([{
+      report_date_as_yyyy_mm_dd: '2026-11-10T00:00:00.000',
+      cftc_contract_market_code: '123456', contract_market_name: 'NASDAQ', open_interest_all: '1000',
+      lev_money_positions_long: '250', lev_money_positions_short: '150'
+    }]), { status: 200, headers: { 'Content-Type': 'application/json' } });
+  };
+  try {
+    const env = makeEnv();
+    const response = await worker.fetch(new Request('https://edge.example/api/v1/cot?report=tff'), env, context());
+    const payload = await response.json();
+    assert.equal(response.status, 200);
+    assert.equal(new URL(requestedUrl).searchParams.get('$limit'), '156');
+    assert.equal(new URL(requestedUrl).searchParams.get('$where'), null);
+    assert.equal(payload.filtered, false);
+    assert.equal(payload.query_scope, 'latest-provider-observations');
+    assert.ok(payload.normalizedRows.length > 0);
+    assert.equal(payload.rows[0].contract_market_name, 'NASDAQ');
+    assert.equal(payload.rows[0].lev_money_positions_long, '250');
+  } finally {
+    globalThis.fetch = originalFetch;
+  }
+});
 
-JNÂˆ\ÜÙ\™\]X[
-™\ÜÛœÙKœÝ]\ËŒ
-NÂˆÛÛœÝ^[ØYH]ØZ]™\ÜÛœÙKšœÛÛŠ
-NÂˆ\ÜÙ\™\]X[
-^[ØYœ\œÚ\Ý[˜ÙKœÝ]\Ë	Ùœ™\Ú	ÊNÂˆ\ÜÙ\™\]X[
-^[ØYœ\œÚ\Ý[˜ÙKœ\œÚ\ÝY›ÝÜËJNÂˆ\ÜÙ\›X]Ú
-\Ù\\›ØÛÝÜ™\ÜÛØœÙ\˜][Ûœ×ÛÛ—ØÛÛ™›XÝ\™\ÜÙ˜[Z[K™\ÜÝ˜\šX[ÛÛ˜XÝÛX\šÙ]ØÛÙK™\ÜÙ]K˜Y\—ØØ]YÛÜžKÊNÂˆ\ÜÙ\™\]X[
-\Ù\XY\œË˜\ZÙ^K	ÜØ—ÜÙXÜ™]Ý\ÝÛÛ›IÊNÂˆ\ÜÙ\™\]X[
-\Ù\›ÝÜÖÌKœ™\ÜÝ˜\šX[	ØÛÛXš[™Y	ÊNÂˆ\ÜÙ\™\]X[
-\Ù\›ÝÜÖÌKœ™\ÜÙ]K	ÌŒ‹LLKLL	ÊNÂˆ\ÜÙ\™\]X[
-\Ù\›ÝÜÖÌKœX›\ÚYØ][
-NÂˆ\ÜÙ\™\]X[
-\Ù\›ÝÜÖÌKœÛÝ\˜ÙWÙšY[Ë˜Ù×ØÛÛ˜XÝÛX\šÙ]ØÛÙK	ÌLŒÍM‰ÊNÂˆHš[˜[HÂˆÛØ˜[\Ë™™]ÚHÜšYÚ[˜[™]ÚÂˆBŸJNÂ
+test('Legacy COT projection excludes unsupported commercial spreading and returns bounded raw rows', async () => {
+  const originalFetch = globalThis.fetch;
+  const requestedUrls = [];
+  globalThis.fetch = async input => {
+    requestedUrls.push(String(input));
+    return new Response(JSON.stringify([{
+      report_date_as_yyyy_mm_dd: '2026-11-10T00:00:00.000',
+      cftc_contract_market_code: '123456',
+      contract_market_name: 'NASDAQ E-MINI',
+      open_interest_all: '1000',
+      comm_positions_long_all: '500',
+      comm_positions_short_all: '300',
+      noncomm_positions_long_all: '250',
+      noncomm_positions_short_all: '450',
+      noncomm_postions_spread_all: '15'
+    }]), { status: 200, headers: { 'Content-Type': 'application/json' } });
+  };
+  try {
+    for (const variant of ['futures-only', 'combined']) {
+      const response = await worker.fetch(new Request(`https://edge.example/api/v1/cot?report=legacy&variant=${variant}`), makeEnv(), context());
+      assert.equal(response.status, 200);
+      const sourceUrl = new URL(requestedUrls.at(-1));
+      assert.match(sourceUrl.pathname, variant === 'combined' ? /jun7-fc8e\.json/ : /6dca-aqww\.json/);
+      const selected = sourceUrl.searchParams.get('$select');
+      assert.ok(selected.includes('comm_positions_long_all'));
+      assert.ok(!selected.includes('comm_positions_spread_all'));
+      const payload = await response.json();
+      assert.equal(payload.rows[0].contract_market_name, 'NASDAQ E-MINI');
+      const commercial = payload.normalizedRows.find(row => row.traderCategory === 'Commercial');
+      assert.equal(commercial.spread, null);
+      assert.equal(commercial.sourceFieldMapping.spread, null);
+      assert.equal(commercial.missingReason.spread, 'not provided by the CFTC Legacy schema');
+      assert.equal(Object.hasOwn(commercial, 'sourceNativeFields'), false);
+    }
+  } finally {
+    globalThis.fetch = originalFetch;
+  }
+});
+
+test('COT route rejects unknown report variants and unsafe market filters before provider access', async () => {
+  const env = makeEnv();
+  const variant = await worker.fetch(new Request('https://edge.example/api/v1/cot?variant=live'), env, context());
+  assert.equal(variant.status, 400);
+  assert.equal((await variant.json()).error.code, 'unsupported_variant');
+  const market = await worker.fetch(new Request('https://edge.example/api/v1/cot?q=ES%27%20OR%201%3D1'), env, context());
+  assert.equal(market.status, 400);
+  assert.equal((await market.json()).error.code, 'invalid_market_query');
+});
+
+test('COT persistence uses server-side Supabase credentials and a variant-aware idempotency key', async () => {
+  const originalFetch = globalThis.fetch;
+  let upsertUrl = '', upsertHeaders = null, upsertRows = [];
+  globalThis.fetch = async (input, init = {}) => {
+    const url = String(input);
+    if (url.includes('publicreporting.cftc.gov/resource/')) {
+      return new Response(JSON.stringify([{
+        report_date_as_yyyy_mm_dd: '2026-11-10T00:00:00.000',
+        cftc_contract_market_code: '123456',
+        cftc_market_code: '123',
+        contract_market_name: 'NASDAQ E-MINI',
+        market_and_exchange_names: 'NASDAQ E-MINI - CHICAGO MERCANTILE EXCHANGE',
+        open_interest_all: '1000',
+        lev_money_positions_long: '250',
+        lev_money_positions_short: '150',
+        lev_money_positions_spread: '10'
+      }]), { status: 200, headers: { 'Content-Type': 'application/json' } });
+    }
+    upsertUrl = url;upsertHeaders = init.headers;upsertRows = JSON.parse(init.body);
+    return new Response(null, { status: 201 });
+  };
+  try {
+    const env = makeEnv();env.SUPABASE_URL='https://db.example';env.SUPABASE_SECRET_KEY='sb_secret_test_only';
+    const response = await worker.fetch(new Request('https://edge.example/api/v1/cot?report=tff&variant=combined&contract_market_code=123456'), env, context());
+    assert.equal(response.status, 200);
+    const payload = await response.json();
+    assert.equal(payload.persistence.status, 'fresh');
+    assert.equal(payload.persistence.persistedRows, 1);
+    assert.match(upsertUrl, /cot_report_observations\?on_conflict=report_family,report_variant,contract_market_code,report_date,trader_category/);
+    assert.equal(upsertHeaders.apikey, 'sb_secret_test_only');
+    assert.equal(upsertRows[0].report_variant, 'combined');
+    assert.equal(upsertRows[0].report_date, '2026-11-10');
+    assert.equal(upsertRows[0].published_at, null);
+    assert.equal(upsertRows[0].source_fields.cftc_contract_market_code, '123456');
+  } finally {
+    globalThis.fetch = originalFetch;
+  }
+});
