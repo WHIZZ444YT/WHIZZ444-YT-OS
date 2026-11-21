@@ -86,6 +86,7 @@ def nav_markup(current='/'):
         '<a class="os-sidebar-brand" href="/" aria-label="Futures Intelligence OS overview">'
         '<span class="brand-mark">FI</span><span class="os-brand-copy"><b>FUTURES INTELLIGENCE OS</b><small>RESEARCH WORKSPACE</small></span></a>'
         f'<nav class="os-sidebar-nav" aria-label="13 futures product areas">{"".join(groups)}</nav>'
+        '<a class="os-context-link" href="/ict-lab/" title="ICT Lab">ICT Lab</a>'
         '<div class="os-sidebar-foot"><span class="os-foot-dot"></span><span class="os-foot-copy">RESEARCH MODE · NO BROKER EXECUTION</span></div>'
         '</aside>'
     )
@@ -349,7 +350,7 @@ def build():
     if DIST.exists(): shutil.rmtree(DIST)
     DIST.mkdir(parents=True)
     # Copy repository files except dev-only/legacy archive material.
-    for name in ['index.html','resources.json','icon.svg','manifest.webmanifest','sw.js','assets','ict-futures','futures-intelligence','docs','README.md','SECURITY.md','LICENSE','.well-known']:
+    for name in ['index.html','resources.json','icon.svg','manifest.webmanifest','sw.js','assets','ict-futures','ict-lab','futures-intelligence','docs','README.md','SECURITY.md','LICENSE','.well-known']:
         src=ROOT/name
         if not src.exists(): continue
         dst=DIST/name
@@ -614,6 +615,7 @@ def build():
     body=page_intro('Education library','ICT Futures Academy',
         'A prerequisite-based futures learning library with 82 concept lessons, 9 preserved guided tutorials and 10 study tracks. Includes futures mechanics, ICT concept chains, contract-roll context, replay practice and explicit evidence limits.',
         f'<div class="stats-row"><b>{len(academy)}</b><span>Concept lessons</span><b>{len(tutorials)}</b><span>Guided tutorials</span><b>{len(tracks)}</b><span>Learning tracks</span></div>')
+    body+='<p><a class="text-link" href="/ict-lab/">Open ICT Lab lessons and practice →</a></p>'
     body+='<section class="academy-progress-summary"><strong data-academy-global-progress>0 / 82 lessons completed</strong><span id="academyProgressMeta">Previous completions are retained when lesson content is revised; current-version completion requires the updated practice and checks.</span></section>'
     body+=f'<p class="small-note" role="status"><strong>VIDEO COVERAGE: {escape(video_coverage["status"])}</strong> · {video_coverage["coveredCount"]} of {video_coverage["eligibleCount"]} lessons have exact verified video mappings ({video_coverage["coveragePercent"]}%). <a href="/ict-futures/academy/video-coverage.json">View coverage register ↗</a></p>'
     body+='<section class="content-section"><div class="section-top"><div><h2>Guided practice tutorials</h2><p>Nine preserved workbooks with chart-replay workflows, deliverables and review criteria.</p></div><a class="text-link" href="/ict-futures/academy/tutorials/">Open all tutorials →</a></div><div class="academy-course-grid">'+''.join(tutorial_cards)+'</div></section>'
@@ -698,6 +700,7 @@ def build():
     model_cards=''.join(card(c.get('name','Entry model'),c.get('definition',''),f"/ict-futures/academy/{c.get('id','')}.html",c.get('level','ICT concept'),'PLAYBOOK') for c in entry_models)
     body=page_intro('ICT playbook library','Entry Models','Eight preserved entry-model concepts from the ICT Academy source catalogue. These are educational playbooks, not a ranked signal service or evidence of a profitable edge.',f'<div class="stats-row"><b>{len(entry_models)}</b><span>Model concepts</span><b>0</b><span>Verified model performance rankings</span></div>')
     body+='<section class="content-section"><div class="section-top"><div><h2>Model catalogue</h2><p>Open each lesson for its definition, conditions, use cases, invalidation and common mistakes.</p></div><a class="text-link" href="/academy/">Browse all Academy concepts ↗</a></div><div class="card-grid">'+model_cards+'</div></section>'
+    body+='<p><a class="text-link" href="/ict-lab/?view=playbooks">Explore ICT Lab playbooks →</a></p>'
     body+='<section class="content-section"><h2>Performance evidence policy</h2><p>No model is labelled “best” until its rules are operationally defined and tested on timestamped historical data with commissions, slippage, contract rolls, survivorship controls and out-of-sample validation. The eight models have no audited win-rate, expectancy, profit-factor or drawdown ranking yet.</p></section>'
     write(DIST/'entry-models/index.html',shell('ICT Entry Models | Futures Intelligence OS','Eight ICT entry-model concepts with educational playbook links and no unsupported performance claims.',body,'/entry-models/'))
 
@@ -839,7 +842,7 @@ def build():
 
     # Sitemap only when canonical base exists, else create relative noindex sitemap not intended for submission.
     if SITE_URL:
-        urls=['/','/futures-intelligence/','/markets/','/academy/','/entry-models/','/news/','/volume-open-interest/','/research/positioning/','/contract-specs/','/strategy-lab/','/risk/','/account/','/data-health/','/macro/','/status/','/docs/','/sources/','/ict-futures/']
+        urls=['/','/ict-lab/','/futures-intelligence/','/markets/','/academy/','/entry-models/','/news/','/volume-open-interest/','/research/positioning/','/contract-specs/','/strategy-lab/','/risk/','/account/','/data-health/','/macro/','/status/','/docs/','/sources/','/ict-futures/']
         urls += [f'/ict-futures/markets/{p.name}' for p in (DIST/'ict-futures/markets').glob('*.html')]
         urls += [f'/ict-futures/academy/{p.name}' for p in (DIST/'ict-futures/academy').glob('*.html')]
         urls.append('/ict-futures/academy/tutorials/')
