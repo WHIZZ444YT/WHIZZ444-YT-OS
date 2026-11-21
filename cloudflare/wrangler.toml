@@ -2,11 +2,25 @@ name = "finance-intelligence-os-edge"
 main = "src/index.js"
 compatibility_date = "2026-11-08"
 workers_dev = true
+preview_urls = false
 
 [observability]
 enabled = true
+head_sampling_rate = 1
+redact_query_string = true
 
-# Replace the placeholder ID with the namespace created for this account.
+[observability.logs]
+enabled = true
+head_sampling_rate = 1
+persist = true
+invocation_logs = true
+
+[observability.traces]
+enabled = false
+head_sampling_rate = 1
+persist = true
+
+# Production KV namespace; verified against the deployed Worker settings.
 [[kv_namespaces]]
 binding = "SNAPSHOTS"
 id = "b6bb020cb42b408596d295ddd0dd53f8"

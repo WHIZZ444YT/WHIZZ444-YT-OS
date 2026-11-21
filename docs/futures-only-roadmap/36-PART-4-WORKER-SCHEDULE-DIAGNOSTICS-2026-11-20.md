@@ -1,7 +1,7 @@
 # Part 4 — Worker schedule failure diagnostics
 
 **Review date:** 20 November 2026  
-**Status:** Diagnostic change merged in PR #24; production Worker 2.2.0 still needs a separate Cloudflare deployment before these diagnostics are available live.
+**Status at review:** The diagnostics change had merged in PR #24; this report captured the pre-deployment state on 20 November. The Worker was subsequently deployed and checked on 21 November; see [Part 4 Worker deployment and live route check](37-PART-4-WORKER-DEPLOYMENT-AND-LIVE-CHECK-2026-11-21.md) for the superseding release evidence.
 
 ## Live evidence
 

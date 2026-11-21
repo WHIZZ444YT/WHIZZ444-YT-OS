@@ -1,6 +1,7 @@
 import { fileURLToPath } from 'node:url';
 
 export const EXPECTED_WORKER_VERSION = '2.2.0';
+export const EXPECTED_WORKER_NAME = 'finance-intelligence-os-edge';
 export const DEFAULT_FRONTEND_ORIGIN = 'https://finance-intelligence-os-whizz444yt-7353.vercel.app';
 
 const CALENDAR_ROUTES = [
@@ -53,6 +54,7 @@ async function requestJson(fetchImpl, baseUrl, path, init = {}) {
     return { response: null, body: null, error: `${error?.name || 'NetworkError'}: Worker endpoint could not be reached.` };
   }
 
+  if ([204, 205, 304].includes(response.status)) return { response, body: null, error: null };
   const contentType = response.headers.get('content-type') || '';
   if (!contentType.toLowerCase().includes('application/json')) {
     return { response, body: null, error: `Expected JSON, received ${contentType || 'an unknown content type'}.` };
@@ -70,13 +72,19 @@ function addResult(results, failures, degraded, { name, ok, note, isDegraded = f
   else if (isDegraded) degraded.push(`${name}: ${note}`);
 }
 
-export async function runWorkerSmoke({ baseUrl, frontendOrigin = DEFAULT_FRONTEND_ORIGIN, fetchImpl = fetch } = {}) {
+export async function runWorkerSmoke({ baseUrl, frontendOrigin = DEFAULT_FRONTEND_ORIGIN, fetchImpl = fetch, versionId } = {}) {
   const base = normalizedBaseUrl(baseUrl);
+  if (versionId && !/^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(versionId)) {
+    throw new Error('Pass a valid Worker version UUID for a version override.');
+  }
+  const versionHeaders = versionId
+    ? { 'Cloudflare-Workers-Version-Overrides': `${EXPECTED_WORKER_NAME}="${versionId}"` }
+    : {};
   const results = [];
   const failures = [];
   const degraded = [];
 
-  const health = await requestJson(fetchImpl, base, '/health');
+  const health = await requestJson(fetchImpl, base, '/health', { headers: versionHeaders });
   const healthOk = Boolean(
     health.response?.status === 200
     && health.body?.ok === true
@@ -99,6 +107,7 @@ export async function runWorkerSmoke({ baseUrl, frontendOrigin = DEFAULT_FRONTEN
     const preflight = await requestJson(fetchImpl, base, '/health', {
       method: 'OPTIONS',
       headers: {
+        ...versionHeaders,
         Origin: origin,
         'Access-Control-Request-Method': 'GET',
       },
@@ -114,7 +123,7 @@ export async function runWorkerSmoke({ baseUrl, frontendOrigin = DEFAULT_FRONTEN
     });
   }
 
-  const providers = await requestJson(fetchImpl, base, '/api/v1/providers');
+  const providers = await requestJson(fetchImpl, base, '/api/v1/providers', { headers: versionHeaders });
   const providerIds = new Set(Array.isArray(providers.body?.providers) ? providers.body.providers.map((provider) => provider?.id) : []);
   const missingProviders = [...REQUIRED_CALENDAR_PROVIDERS].filter((provider) => !providerIds.has(provider));
   const providersOk = providers.response?.status === 200 && missingProviders.length === 0;
@@ -124,7 +133,7 @@ export async function runWorkerSmoke({ baseUrl, frontendOrigin = DEFAULT_FRONTEN
     note: providers.error || (providersOk ? 'All nine calendar publishers are registered.' : `HTTP ${providers.response?.status ?? 'no response'}; missing ${missingProviders.join(', ') || 'provider registry'}.`),
   });
 
-  const marketData = await requestJson(fetchImpl, base, '/api/v1/market-data/status');
+  const marketData = await requestJson(fetchImpl, base, '/api/v1/market-data/status', { headers: versionHeaders });
   const marketDataOk = marketData.response?.status === 200
     && marketData.body?.data_type === 'exchange_market_data_status'
     && typeof marketData.body?.status === 'string'
@@ -139,7 +148,7 @@ export async function runWorkerSmoke({ baseUrl, frontendOrigin = DEFAULT_FRONTEN
   });
 
   for (const path of CALENDAR_ROUTES) {
-    const result = await requestJson(fetchImpl, base, path);
+    const result = await requestJson(fetchImpl, base, path, { headers: versionHeaders });
     const body = result.body;
     const eventCountMatches = Number.isInteger(body?.event_count)
       && Array.isArray(body?.events)
@@ -161,35 +170,39 @@ export async function runWorkerSmoke({ baseUrl, frontendOrigin = DEFAULT_FRONTEN
       && (!unconfigured || (body.event_count === 0 && Boolean(body.error)))
     );
     const isDegraded = ok && (body.status === 'stale' || unavailable || unconfigured);
+    const errorCode = body?.status === 'unavailable' ? body?.error_code
+      : body?.status === 'stale' ? body?.last_error_code : null;
     addResult(results, failures, degraded, {
       name: path,
       ok,
       isDegraded,
       note: result.error || (ok
-        ? `${body.status}; ${body.event_count} dated events; retrieved ${body.retrieved_at || 'not available'}`
+        ? `${body.status}; ${body.event_count} dated events; retrieved ${body.retrieved_at || 'not available'}${errorCode ? `; diagnostic ${errorCode}` : ''}`
         : `invalid schedule response (HTTP ${result.response?.status ?? 'no response'}, status ${body?.status ?? 'missing'}, event count ${body?.event_count ?? 'missing'})`),
     });
   }
 
-  return { ok: failures.length === 0, degraded: degraded.length > 0, results, failures, degradedReasons: degraded };
+  return { ok: failures.length === 0, degraded: degraded.length > 0, results, failures, degradedReasons: degraded, versionId: versionId || null };
 }
 
 async function main() {
   const baseUrl = process.argv[2] || process.env.FINANCE_OS_WORKER_URL;
+  const versionId = process.argv[3] || process.env.FINANCE_OS_WORKER_VERSION_ID;
   if (!baseUrl) {
-    console.error('Usage: npm run smoke:worker -- https://<worker>.<subdomain>.workers.dev');
+    console.error('Usage: npm run smoke:worker -- https://<worker>.<subdomain>.workers.dev [version-id]');
     console.error('Or set FINANCE_OS_WORKER_URL. No API key is required for public health and calendar reads.');
     process.exitCode = 2;
     return;
   }
   let report;
   try {
-    report = await runWorkerSmoke({ baseUrl });
+    report = await runWorkerSmoke({ baseUrl, versionId });
   } catch (error) {
     console.error(error.message);
     process.exitCode = 2;
     return;
   }
+  if (report.versionId) console.log(`Version override — ${report.versionId}`);
   for (const result of report.results) {
     const state = result.ok ? result.degraded ? 'DEGRADED' : 'PASS' : 'FAIL';
     console.log(`${state} ${result.name} — ${result.note}`);

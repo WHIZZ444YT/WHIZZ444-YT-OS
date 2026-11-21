@@ -6,6 +6,8 @@
 
 This report is the current status checkpoint. The 19 November audit and Part 0–9 reports remain useful as dated history, but this report supersedes their current-state claims where the repository, merge or deployment has changed. A merged page, a successful build or a deployment status does not prove acceptance of the entire roadmap.
 
+**Superseding Worker update — 21 November 2026:** The sanitized diagnostics bundle is now deployed at 100% production traffic and has passed route-envelope and CORS checks. The result is degraded because BLS, BoE and RBA are unavailable and licensed market data is not configured. See the [21 November deployment report](37-PART-4-WORKER-DEPLOYMENT-AND-LIVE-CHECK-2026-11-21.md); it supersedes all 20 November Worker deployment and direct-smoke statements below. Other roadmap areas remain as described in this report unless a later dated report updates them.
+
 ## Current repository and production state
 
 - GitHub PR [#20](https://github.com/WHIZZ444YT/WHIZZ444-YT-OS/pull/20) was merged at `a4f66c872743b30599688859130ce7cbbfa0a1a7`. Its GitHub quality checks and Vercel check passed.

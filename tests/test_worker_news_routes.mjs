@@ -220,7 +220,8 @@ test('provider registry exposes publisher calendar freshness separately from dat
   }
 });
 
-test('official CFTC and Federal Reserve schedule routes fetch and cache separate publisher snapshots', async () => {
+test('official CFTC and Federal Reserve schedule routes fetch and cache separate publisher snapshots', async t => {
+  t.mock.timers.enable({ apis: ['Date'], now: new Date('2026-11-19T12:00:00.000Z') });
   const originalFetch = globalThis.fetch;
   const urls = [];
   const cftc = '<html><h1>Release Schedule</h1><p>The Commitments of Traders reports are released at 3:30 p.m. Eastern time. The following is a tentative schedule of releases through 2026.</p><h2>2026 Release Schedule</h2><table><tr><th>Month</th><th>Dates</th></tr><tr><td>November</td><td>20</td><td>30*</td></tr><tr><td>December</td><td>04</td><td>11</td></tr></table><p>*Delayed release date due to a federal holiday.</p></html>';
@@ -251,7 +252,10 @@ test('official CFTC and Federal Reserve schedule routes fetch and cache separate
     assert.equal(fomcPayload.events[0].scheduled_at_utc, null);
     await worker.fetch(new Request('https://edge.example/api/v1/events/fomc'), env, context());
     assert.equal(urls.filter(url => url.includes('federalreserve.gov')).length, 1);
-  } finally { globalThis.fetch = originalFetch; }
+  } finally {
+    globalThis.fetch = originalFetch;
+    t.mock.timers.reset();
+  }
 });
 
 test('central-bank calendar routes are independently source-labelled, cached, and policy-gated', async () => {
