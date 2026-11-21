@@ -16,6 +16,8 @@ Documentation package | 21 November 2026 | Finance Intelligence OS
 | [08 · Public UI and repository presentation](08-public-ui-and-repository-presentation.md) | Theme palette, responsive screen specifications and GitHub presentation |
 | [09 · Repository review and prioritized findings](09-repository-review-and-findings.md) | Code evidence, release risks, older-roadmap decisions and implementation tickets |
 | [10 · ICT editorial import and learning paths](10-ict-editorial-import-and-learning-paths.md) | Terminal tutorial imports, lesson placement, discovery and optional editorial additions |
+| [11 · Official ICT scope and mentor resources](11-official-ict-scope-and-mentor-resources.md) | Exact counts, 13 numbered Charter sources, ten channel picks and additional entry variants |
+| [12 · ICT video coverage and public resource UX](12-ict-video-gap-register-and-public-ux.md) | Evidence and action for all 31 open Academy slugs, public mentor filters and final media acceptance |
 
 **Baseline.** [GitHub main at 2caa352](https://github.com/WHIZZ444YT/WHIZZ444-YT-OS/commit/2caa35210b71cf8ce0dc0ea7494344613c33c298) and the [matching Vercel production deployment](https://vercel.com/whizz444yt-7353/finance-intelligence-os/Ex2bhsBHLo8ULT9y96wEnwx7wbeo).
 

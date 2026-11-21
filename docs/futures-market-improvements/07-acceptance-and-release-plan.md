@@ -36,3 +36,7 @@ Baseline commands are defined in [Quality](../../.github/workflows/quality.yml) 
 3. Merge only when route parity, media evidence and practice gates have signed-off results or explicit tracked release decisions. Match the production deployment's Git SHA to the reviewed commit and open anonymous deep links on the real alias.
 4. Roll back using the previously verified Vercel deployment if public pages regress. Treat Cloudflare Worker rollout separately. Keep migrations additive and use compatible readers and exports so a frontend rollback preserves user records.
 5. Archive the link report, per-device screenshots, route map, unresolved video IDs and release scope in the implementation PR.
+
+## Final ICT source and mentor gates
+
+Use the [official source inventory](11-official-ict-scope-and-mentor-resources.md) and [source-gap register](12-ict-video-gap-register-and-public-ux.md). Validate the separate 13-entry Charter source shelf, ten mentor profiles with channel links, and the public Popular filter's evidence rules. Compare claimed tutorial coverage against the exact lesson, instrument and chapter. Keep pending items visible by ID until media and browser acceptance are recorded.

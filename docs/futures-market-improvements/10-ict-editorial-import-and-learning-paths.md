@@ -85,3 +85,5 @@ Add an optional **Academy extensions** shelf for existing BOS, CHoCH terminology
 3. Track C34's partial open lesson, C55's source vs custom midnight anchors, C54's forex source, and P09's XAUUSD example. Provide clearly labeled NQ/ES teaching examples with rule-by-rule chart annotations.
 4. Disclose public video failures by module, C/P ID or mentor/episode. Keep a verified direct fallback, an alternate, or a visible written lesson. Retain unmatched source candidates in the editorial backlog with a concrete check owner and decision.
 5. Make sure each lesson has a “Practice next” destination. Test learning paths and source cards anonymously, by keyboard, in both themes and on phone.
+
+Use the [final official ICT and mentor inventory](11-official-ict-scope-and-mentor-resources.md) and [31-slug coverage register](12-ict-video-gap-register-and-public-ux.md) when implementing source shelves and public mentor profiles.
