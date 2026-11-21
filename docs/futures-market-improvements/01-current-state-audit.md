@@ -23,6 +23,19 @@
 | P2 | Generic search links in terminal are useful for discovery | Retain as labeled discovery links where relevant. Use exact video IDs on lessons |
 | P2 | Accessibility and generated-route checks do not establish end-to-end Lab coverage | Add media, no-JS, keyboard, dynamic compatibility, mobile and deployed deep-link checks |
 
+## Implementation baseline · 21 November 2026
+
+The production alias resolved to Vercel deployment `dpl_CY8JTtSurdJBfQBSve4BktioApPS` in state `READY`. Its Git source matched [GitHub main at `18f2488`](https://github.com/WHIZZ444YT/WHIZZ444-YT-OS/commit/18f24886831b9a8009245213a9f6a1bc304daa48), the documentation merge. The anonymous [C34 deep link](https://finance-intelligence-os-alpha.vercel.app/ict-lab/?view=learn&id=C34) rendered the five Lab tabs, the lesson with three text examples, and a link to video `kmVXVJE08eQ`. This observation covers link rendering. Playback, consent, embedding, keyboard interaction and responsive layout require separate checks.
+
+| Surface | Compatibility baseline |
+|---|---|
+| Lab | `/ict-lab/?view=learn&id=C34`, `?view=playbooks&id=P10`, `?view=practice&id=16`, `?view=podcasts&id=8OX-mcSHWhg`, `?view=mentors&id=M10`. Search uses `q`. |
+| Academy | `/academy/` and the 82 published `/ict-futures/academy/<id>.html` URLs. |
+| Terminal | `/ict-futures/`, the `market` query preset, and section anchors for dashboard, daily brief, markets, profile, charts, learning, Academy, sessions, playbook, calendar, news, social, positioning, risk, journal and sources. |
+| Browser storage | Practice prefix `ict-lab.practice.v1.`, including the journal and instrument-specific replay keys. Terminal keys `ictfos.personalEvents.v1`, `ictfos.checks.v1`, `ictfos.journal.v1` and `ictfos.theme`. Academy progress uses `ictfos.academy.done.v1` and `ictfos.academy.progress.v2`. |
+
+The generated-site tests check representative Lab query variants and the 82 legacy Academy URLs. During testing, an unescaped apostrophe in the backtest copy prevented the entire Practice script from parsing. The repair restores Practice and removes replacement characters from its source. No-trade entries save null playbook and outcome fields under the existing storage prefix, and legacy records remain readable. The Lab HTML now contains direct links to Academy and Entry Models if JavaScript is disabled. The full static lesson migration and media, chart, practice and release acceptance remain in the linked implementation documents.
+
 ## Existing source coverage
 
 PR #25 reports exact-item mappings for 51 of 82 Academy lessons and four of eight Entry Models. The Academy source also contains 51 concepts with a verified curriculum video record. Those checks provide source mapping evidence. Playback, geographic access, consent and embed behavior need their own observations. See the [crosswalk](04-academy-and-entry-model-crosswalk.md) for specific gaps.
