@@ -24,7 +24,7 @@
     ['w42kzZb9oYY',words,'JadeCap','Full episode','Risk and emotional control','Study how this trader describes risk discipline and composure following a loss.', ['C40'],[[1090,'Risk management'],[5136,'Emotional control'],[5522,'Handling losses']]],
     ['9j1jttkm4s8',words,'NBB Trader, JadeCap, Ali Khan and Kimmel Trading','Full episode','ICT roundtable','Compare four perspectives on technical concepts, study habits and execution discipline.', ['C25','C40'],[[948,'Studying ICT'],[1752,'Technical concepts'],[4861,'Discipline']]],
     ['rxPPBj29kFg',words,'Omor / NBB Trader','Full episode','ICT strategy and execution, part II','Compare the interview with the guest’s Chart Fanatics walkthrough.', ['C25','C45'],[]],
-    ['LF1VTFohH0U',words,'ICT trader interview','Full episode','Learning and execution mistakes','Use the guest discussion to review execution habits. Treat the headline percentage as a guest claim.', ['C40','C45'],[]],
+    ['LF1VTFohH0U',words,'Omor / NBB Trader','Full episode','Learning and execution mistakes','Use the guest discussion to review execution habits. Treat the headline percentage as a guest claim.', ['C40','C45'],[[1407,'Consistency in trading methods'],[1818,'Retracement entry strategy'],[2622,'Risk and drawdowns']]],
     ['nY1NaXsFDQM','Words of Rizdom Clips','Ali Khan','Clip','Episode 69 excerpt','Study the guest perspective alongside his step-by-step setup lesson.', ['C25','C45'],[]]
   ];
   const el = (tag, value) => { const node = document.createElement(tag); if(value) node.textContent=value; return node; };
