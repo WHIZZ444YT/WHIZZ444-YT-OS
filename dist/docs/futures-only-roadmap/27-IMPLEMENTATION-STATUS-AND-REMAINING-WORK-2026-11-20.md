@@ -6,7 +6,9 @@
 
 This report is the current status checkpoint. The 19 November audit and Part 0–9 reports remain useful as dated history, but this report supersedes their current-state claims where the repository, merge or deployment has changed. A merged page, a successful build or a deployment status does not prove acceptance of the entire roadmap.
 
-**Superseding Worker update — 21 November 2026:** The sanitized diagnostics bundle is now deployed at 100% production traffic and has passed route-envelope and CORS checks. The result is degraded because BLS, BoE and RBA are unavailable and licensed market data is not configured. See the [21 November deployment report](37-PART-4-WORKER-DEPLOYMENT-AND-LIVE-CHECK-2026-11-21.md); it supersedes all 20 November Worker deployment and direct-smoke statements below. Other roadmap areas remain as described in this report unless a later dated report updates them.
+**Superseding Worker update — 21 November 2026:** Worker v22 remains at 100% production traffic. Candidate v23, which adds HTML-entity decoding for BoE/RBA schedules and a specific BLS HTTP failure code, is staged at 0% in a separate deployment. Candidate smoke returned fresh BoE/RBA snapshots, BLS `upstream_http_403`, and unconfigured licensed market data. Worker versions share the same `SNAPSHOTS` KV, so the candidate smoke refreshed snapshots that v22 can read; this does not mean v23 is serving normal production traffic. See the [deployment report](37-PART-4-WORKER-DEPLOYMENT-AND-LIVE-CHECK-2026-11-21.md) and [calendar recovery report](38-PART-4-CALENDAR-SOURCE-RECOVERY-STAGED-2026-11-21.md), which supersede earlier Worker status statements below. Other roadmap areas remain as described here unless a later dated report updates them.
+
+**Verification update — 21 November 2026:** Following the calendar parser and report changes, the site build passed (50 resources, 15 families, 82 Academy pages); Python tests passed 72/72; Node tests passed 105/105; site validation passed 183/183; internal-link audit passed with 1,385 links and no issues; and Wrangler dry-run passed at 207.20 KiB / 48.50 KiB gzip. These checks do not satisfy the separately listed provider-rights, production UI, or disposable-user acceptance gates.
 
 ## Current repository and production state
 
@@ -75,9 +77,11 @@ The repository can represent provider adapters and safe unavailable states, but 
 
 Disposable test-user credentials and an approved non-production environment are required for the Auth/RLS/file/deletion acceptance checks. Official item-by-item video verification and independent out-of-sample backtest evidence also require research inputs and review; links or test results must not be fabricated to close the checklist.
 
-## Latest Worker route observation — 20 November 2026
+## Historical Worker route observation — 20 November 2026 (superseded)
 
 Cloudflare Observability logged `/api/v1/events/bea` HTTP 200, `/api/v1/events/boe` HTTP 502, and `/api/v1/events/ecb` HTTP 200 at 14:23 UTC. These status codes alone do not establish feed freshness. The 2.2.0 Worker discarded source exceptions; PR #24 now adds sanitized failure codes and log fields, but that branch change has not been deployed to the Worker. See the [Part 4 diagnostic report](36-PART-4-WORKER-SCHEDULE-DIAGNOSTICS-2026-11-20.md).
+
+The later 21 November candidate smoke and its shared-KV caveat are documented in reports [37](37-PART-4-WORKER-DEPLOYMENT-AND-LIVE-CHECK-2026-11-21.md) and [38](38-PART-4-CALENDAR-SOURCE-RECOVERY-STAGED-2026-11-21.md). The earlier statement that the diagnostics branch had not been deployed is historical and superseded by report 37.
 
 ## Verification and release record
 

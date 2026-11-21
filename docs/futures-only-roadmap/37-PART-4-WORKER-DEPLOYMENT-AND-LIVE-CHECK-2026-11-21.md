@@ -4,6 +4,8 @@
 
 **Status:** Worker diagnostic bundle deployed to production and route-smoke checked; publisher coverage and licensed market-data acceptance remain partial.
 
+**Later same-day update:** This report is the v22 release checkpoint. Candidate v23 was subsequently staged at 0% traffic to test official-calendar parser recovery; v22 remains at 100%. See [report 38](38-PART-4-CALENDAR-SOURCE-RECOVERY-STAGED-2026-11-21.md) for the later smoke results and shared-KV caveat. The earlier BLS/BoE/RBA status table below is retained as a timestamped v22 observation, not the latest candidate result.
+
 ## Release evidence
 
 The bundle was prepared from the merged Worker source containing PR #24's sanitized publisher-failure diagnostics. Wrangler 4.164.0 is pinned in the repository so the release configuration can be dry-run reproducibly. `npm run worker:dry-run` passed with the configured `SNAPSHOTS` KV namespace, `ALLOWED_ORIGINS`, `SUPABASE_URL`, and the existing 30-minute Cron; Wrangler reported 207.06 KiB uncompressed and 48.43 KiB gzip. The configuration keeps Worker Preview URLs disabled and retains the existing observability and query-string redaction settings.
@@ -36,7 +38,7 @@ The diagnostics are stable allowlisted codes; raw upstream error text, URLs, hea
 
 ## Remaining acceptance work
 
-- Investigate BLS, BoE and RBA fetch/policy-format failures, then rerun the live smoke and confirm freshness from their official sources.
+- Recheck BLS, BoE and RBA through the official sources after the candidate change is reviewed/deployed; current candidate smoke reports BLS HTTP 403 and fresh BoE/RBA snapshots. See report 38 for details.
 - Obtain and configure approved licensed market-data access before enabling any real-time/intraday display, storage or redistribution.
 - Complete the wider calendar scope: exchange product hours, breaks, holidays, early closes, justified global releases and schedule revision history.
 - Run the public production route smoke after future Worker changes; keep the smoke outcome and deployment version together in the release record.
