@@ -1,31 +1,39 @@
 # 02 · Public website and terminal migration
 
-## Placement and URLs
+## Target state
 
-| Current entry | Public destination | Compatibility and terminal behavior |
+One public application shell owns every learning, research and tools screen. Port terminal functionality into that shell, including advanced charts. Remove the current standalone terminal renderer after parity. Keep `/ict-futures/` as a lightweight compatibility page and preserve nested Academy and market URLs. Public tool pages can be opened without an account. A sign-in protects synced journals, attachments and personal records.
+
+## Terminal-to-public parity matrix
+
+| Legacy entry under `/ict-futures/` | Public destination | Behavior that must migrate before removal |
 |---|---|---|
-| Home and shared navigation | `/` with Learn, Markets, Research, Tools and Account groups using existing components | Promote ICT Lab under Learn and give each group a readable landing page only where it improves discovery |
-| Academy and `/ict-futures/#learning`, `#academy` | `/academy/`, stable Academy lesson and tutorial URLs, Lab Learn track | Keep Academy `.html` legacy paths and progress keys. Keep both terminal anchors as short cards with relevant links |
-| Terminal `#playbook` and `/entry-models/` | `/ict-lab/playbooks/` for P01–P10, `/entry-models/` as comparison index for all distinct models | Keep terminal context cards and existing market/context-dependent model links |
-| Lab existing query views | `/ict-lab/`, `/ict-lab/learn/`, `/ict-lab/playbooks/`, `/ict-lab/practice/`, `/ict-lab/podcasts/`, `/ict-lab/mentors/` | Map old query `view`, `id` and `q` to canonical pages; an unsupported ID produces a useful browse page |
-| Lab concepts, models and practice | `/ict-lab/learn/c01/`, `/ict-lab/playbooks/p01/`, `/ict-lab/practice/11/` patterns | Preserve stable C/P IDs and numeric lab IDs. Where an Academy slug already covers the same lesson, render from the shared record and identify one canonical edition |
-| Terminal `#markets`, `#market-profile`, `#charts` | `/markets/`, existing `/ict-futures/markets/{id}.html` and a public chart landing page when the tools are extracted | Carry recognized contract, comparison and timeframe context. Keep advanced linked charts and contract switching in terminal |
-| Terminal `#sessions`, `#calendar` | `/sessions/` and Practice 12 | Keep contextual session/next-event summary and anchors. Route edit actions to their public or private owner |
-| Terminal `#daily-brief`, `#news`, `#positioning`, `#social`, `#sources` | `/futures-intelligence/`, `/news/`, `/research/positioning/`, `/sources/` | Retain contextual source links and a compact market summary where useful. Prefer public research surfaces for full reports |
-| Terminal `#risk`, `#journal` | `/risk/`, Practice 15–16, `/account/` | Preserve old anchors, checklist and local journal data. Invite optional account sync through explicit import |
-| Strategy Lab | `/strategy-lab/` with Practice 14 guided entry | Use the same execution engine and provide a context link |
-| Podcasts and Mentors | Public views linked from Lab and learning navigation | Expose these directly in the public shell and shareable routes |
+| Base URL, `#top`, `#dashboard` | `/` for dashboard; `/futures-intelligence/` for desk | Quick navigation, data status, ET/IST reference and useful market context |
+| `#daily-brief` | `/futures-intelligence/#daily-brief` | Contract and horizon selection, provenance, stale/empty states and brief content |
+| `#markets`, `#market-profile` | `/markets/` and existing `/ict-futures/markets/{id}.html` | Family/tier filters, exact market routes, session notes, research links, model fit and contract selection |
+| `#charts` | Proposed `/charts/` in the public shell | Contract, interval and comparison controls, explicit TradingView load, direct chart fallback, no claim of live computed SMT |
+| `#learning`, `#academy` | `/ict-lab/learn/`, `/academy/` | Terminal featured official uploads, learning paths, source notes, search, progress and all existing Academy lesson/tutorial links |
+| `#playbook` | `/ict-lab/playbooks/`, `/entry-models/` | Concept quick reference, terminal model variants and established market/model link targets |
+| `#sessions`, `#calendar` | `/sessions/#windows`, `/sessions/#calendar`, Practice 12 | Session windows, heat map conventions, date-aware ET/IST, publisher calendar and private manual reminders |
+| `#news`, `#social`, `#positioning`, `#sources` | `/news/`, `/sources/`, `/research/positioning/` | Market filters, snapshot times, public social discovery with attribution, COT context and provider links |
+| `#risk` | `/risk/`, Practice 15 | Shared fixed-point calculation, provenance and conditional risk status, symbol context |
+| `#journal` | Practice 16, `/account/` | Public local practice, legacy checklist/import/export, sign-in for owner-scoped records, review metrics |
+| Existing Lab `?view=&id=&q=` | Five public views under `/ict-lab/`; example `/ict-lab/learn/c01/` | Preserve recognized stable C/P IDs, practice IDs, query search state and safe unknown-item fallback |
 
-## Navigation and presentation
+Proposed fragments and paths in this table require implementation. Establish any more real fragment/link destinations in the baseline crawl, including mobile and terminal global-search results. The source terminal accepts an allowlisted `?market=` preset. Preserve it where destination behavior supports it and provide a market landing page for a recognized preset with no specific hash.
 
-Desktop uses the shared sidebar and top bar. Mobile uses the same drawer and a wrapping Lab subnavigation. Use existing light/dark tokens, dark-first preference, skip link, visible focus, heading landmarks, `aria-current`, clear empty/loading states and contained table overflow. Open each tab as a real link. Browser Back should restore view, filters and scroll where practical.
+## Compatibility contract
 
-Each detailed page starts with the explanation and what to look for on the chart. Follow with valid/invalid examples and a practice task, then a clearly labeled **Watch** section. Show creator, source role and applicability next to each button. Lazy-load a permitted embed on user intent and always provide direct link fallback. Keep private account and attachment URLs out of the sitemap.
+- The old base page renders links for visitors with JavaScript disabled. A small client dispatcher reads fragments and recognized market parameters, maps them to same-origin public destinations and uses history replacement for direct legacy bookmarks. A server redirect without a fragment-aware destination has insufficient context. Decode and validate once. Unknown values and any off-origin data go to a safe public index with visible links.
+- Do not blanket-redirect the path prefix. Existing `/ict-futures/academy/*.html`, `/ict-futures/academy/tutorials/`, `/ict-futures/markets/*.html` and any still-referenced assets/data are separate dependencies. Link one canonical page per duplicate concept and keep bookmarked Academy details readable.
+- Avoid duplicate nav and render bundles. After parity, the base compatibility document ships only the shared shell or minimal links, route map and dispatcher. No terminal-only dashboard, Academy, journal or chart code initializes there.
+- Port existing session/market state before removing old controls. Keep local journal, reminders, checklist, theme and Academy progress readable. Provide idempotent preview/import, reconcile duplicate records and keep private account state intact. Never auto-upload a browser journal.
+- Include Back/Forward tests for real public navigation and redirected bookmarks. A failed or unsupported move presents a public index instead of leaving a browser history loop. Preserve the previous Vercel deployment until compatibility tests and cache-eviction checks pass.
 
-## Migration mechanics
+## Cutover order
 
-1. Capture existing generated paths, terminal hash targets, legacy risk/tools redirects, bookmarks, query parameters, search aliases, and account/learning data keys before changing templates. Legacy fragments are client-side. Preserve the anchor or provide a client-side compatibility bridge with a visible link.
-2. Add stable public pages alongside legacy views. Generate Lab views with the shared shell. Preserve meaningful reading when JavaScript is unavailable; practice widgets can enhance the static instructions.
-3. Move content ownership to versioned curriculum and resource records. Academy tracks and Lab modules reference those records with their existing IDs and URLs. Keep separate parts of a concept where the crosswalk marks overlaps as partial.
-4. Move global links and search to public destinations, transfer allowlisted query state, and validate redirect/canonical behavior on Vercel. Avoid broad wildcard redirects that capture lessons, asset routes, or anchors.
-5. Collapse terminal educational blocks into linked summaries only after their public equivalents pass parity and deep-link tests. Preserve legacy browser data until explicit import and reconciliation succeed.
+1. Inventory actual hrefs, fragments, query values, owners, data keys and visible behavior. Take screenshots and route traces.
+2. Add public content and tool routes in parallel with catalog normalization. Share chart, calendar, risk, replay and account logic. Verify public feature parity and URL compatibility.
+3. Change links and search targets on the main site. Turn the old base page into the compatibility dispatcher. Exclude it from primary navigation and search results.
+4. Delete the standalone renderer and scoped service-worker registration only as part of the reviewed migration. Keep legacy route fixtures and tested cache transition. Remove unused CSS/data only after checking dependent public routes.
+5. Verify the deployed deep links on an anonymous mobile and desktop browser. If critical parity fails, restore the previous Vercel deployment while preserving migrated and legacy records.

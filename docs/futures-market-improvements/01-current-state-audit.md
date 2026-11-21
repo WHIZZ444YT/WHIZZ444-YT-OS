@@ -13,7 +13,7 @@
 
 | Priority | Finding | Implementation disposition |
 |---|---|---|
-| P1 | Public and terminal both offer Academy entries and model content, with separate labels and data paths | Public Academy and Lab share records and read views. Terminal links directly to full public detail |
+| P1 | Public and terminal both offer Academy entries and model content, with separate labels and data paths | Public Academy and Lab share records and read views. Migrate to public detail, then retire the duplicate terminal renderer behind a compatibility dispatcher |
 | P1 | Lab uses a separate dark shell and JavaScript query routes | Generate public HTML views and details in the existing shell. Keep query-route compatibility |
 | P1 | Catalog records exist but lesson examples are primarily text. C34 has three short textual examples but lacks chart-backed exercises with explicit conventions | Author annotated NQ/ES educational fixtures with metadata and review questions |
 | P1 | The 82-record video registry exists but renderers also construct links and infer metadata independently | One video ID record, per-lesson placements, explicit check evidence |
@@ -26,3 +26,7 @@
 ## Existing source coverage
 
 PR #25 reports exact-item mappings for 51 of 82 Academy lessons and four of eight Entry Models. The Academy source also contains 51 concepts with a verified curriculum video record. Those checks provide source mapping evidence. Playback, geographic access, consent and embed behavior need their own observations. See the [crosswalk](04-academy-and-entry-model-crosswalk.md) for specific gaps.
+
+## Review of the documentation branch
+
+The original draft PR passed GitHub validation and Vercel Preview at commit `c5944ffc`. It did not specify full terminal retirement, quantified design tokens, generated-artifact drift or conditional lifecycle release tests. Those omissions are addressed in [02](02-public-site-and-terminal-migration.md), [08](08-public-ui-and-repository-presentation.md) and [09](09-repository-review-and-findings.md). Preview status belongs to its exact commit. Production remained on `2caa3521` when rechecked. [Draft PR #27](https://github.com/WHIZZ444YT/WHIZZ444-YT-OS/pull/27) · [Production record](https://vercel.com/whizz444yt-7353/finance-intelligence-os/Ex2bhsBHLo8ULT9y96wEnwx7wbeo)
