@@ -12,7 +12,7 @@ function fakeFetch({ version = '2.2.0', storageConfigured = true, origins = true
   const calls = [];
   const fetchImpl = async (input, init = {}) => {
     const url = new URL(input);
-    calls.push({ path: url.pathname, method: init.method || 'GET' });
+    calls.push({ path: url.pathname, method: init.method || 'GET', headers: Object.fromEntries(new Headers(init.headers)) });
     const headers = new Headers();
     if (init.method === 'OPTIONS') {
       const origin = new Headers(init.headers).get('origin');
@@ -63,8 +63,29 @@ test('live Worker smoke accepts current routes and explicitly reports unlicensed
   assert.equal(report.degraded, true);
   assert.equal(report.results.length, 14);
   assert.ok(report.results.some((result) => result.name === '/api/v1/market-data/status' && result.degraded));
+  assert.ok(report.results.filter((result) => result.name.startsWith('CORS ')).every((result) => result.note.startsWith('HTTP 204;')));
   assert.deepEqual(fetchImpl.calls.filter((call) => call.method === 'GET').map((call) => call.path), expectedGetPaths);
   assert.equal(fetchImpl.calls.filter((call) => call.method === 'OPTIONS').length, 2);
+});
+
+test('live Worker smoke can target one staged version without enabling a public Preview URL', async () => {
+  const fetchImpl = fakeFetch();
+  const versionId = '9d25d09f-d340-44a7-b41e-e6ad60762d12';
+  const report = await runWorkerSmoke({
+    baseUrl: 'https://worker.example',
+    fetchImpl,
+    versionId,
+  });
+  assert.equal(report.versionId, versionId);
+  assert.ok(fetchImpl.calls.every((call) => call.headers['cloudflare-workers-version-overrides']
+    === `finance-intelligence-os-edge="${versionId}"`));
+});
+
+test('live Worker smoke rejects malformed version override identifiers', async () => {
+  await assert.rejects(
+    runWorkerSmoke({ baseUrl: 'https://worker.example', versionId: 'not-a-version-id', fetchImpl: fakeFetch() }),
+    /valid Worker version UUID/,
+  );
 });
 
 test('live Worker smoke accepts a safe unavailable schedule response but marks the source degraded', async () => {

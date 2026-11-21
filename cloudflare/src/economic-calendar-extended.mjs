@@ -30,6 +30,8 @@ function textLines(input) {
     .replace(/<(?:br\b[^>]*|\/?(?:p|div|li|h[1-6]|tr|td|th|section|article|ul|ol)\b[^>]*)>/gi, "\n")
     .replace(/<[^>]*>/g, " ")
     .replace(/&nbsp;|&#160;|&#xA0;/gi, " ")
+    .replace(/&lsquo;/gi, "‘").replace(/&rsquo;/gi, "’")
+    .replace(/&ndash;/gi, "–").replace(/&mdash;/gi, "—")
     .replace(/&amp;/gi, "&").replace(/&quot;/gi, '"').replace(/&#39;|&apos;/gi, "'")
     .replace(/&lt;/gi, "<").replace(/&gt;/gi, ">")
     .replace(/&#(\d+);/g, (_, code) => safeCodePoint(Number(code)))
@@ -39,7 +41,7 @@ function textLines(input) {
 
 export function classifyPublisherScheduleFailure(error) {
   const message = String(error?.message || error || "");
-  const status = /Official schedule HTTP (\d{3})/i.exec(message)?.[1];
+  const status = /(?:Official schedule|BLS calendar) HTTP (\d{3})/i.exec(message)?.[1];
   if (status) return `upstream_http_${status}`;
   if (/timeout|timed out|aborted|deadline/i.test(message)) return "upstream_timeout";
   if (/unexpected content type/i.test(message)) return "unexpected_content_type";
