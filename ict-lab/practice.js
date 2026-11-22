@@ -1,6 +1,7 @@
 import './session-time.js';
-import {calculateFuturesPosition, formatMicros} from './futures-risk-engine.mjs';
+import {formatMicros} from './futures-risk-engine.mjs';
 import {runExperiment, tradesToCsv} from './strategy-backtest-engine.mjs';
+import {PRACTICE_KEY, FIXTURE_DATE, FIXTURE_START, closedBarTime, readAttempt, appendDecision, labRisk, journalRestorePlan, upgradeJournalBackup} from './ict-practice-state.mjs';
 
 /* ICT Lab practice. All sample prices are deterministic teaching examples. */
 (() => {
@@ -9,12 +10,14 @@ import {runExperiment, tradesToCsv} from './strategy-backtest-engine.mjs';
   const inversion=document.querySelector('[data-ifvg-practice]');
   if(!root&&!inversion) return;
   const playbooks=[...document.querySelectorAll('[data-journal-playbooks] option')].map(option=>option.value);
-  const tickValues={NQ:5,MNQ:0.5,ES:12.5,MES:1.25};
+  const reference=document.querySelector('#ict-practice-reference');
+  const {contracts={},sessionIds=[]}=reference?JSON.parse(reference.textContent):{};
   const raw=[[4,6,2,5],[5,7,3,6],[6,7,1,3],[3,4,0,2],[2,7,1,6],[6,10,5,9],[9,12,8,11],[11,12,7,8],[8,10,6,9],[9,14,8,13],[13,15,12,14],[14,15,9,10]];
   const sample=symbol=>raw.map(row=>row.map(n=>(symbol==='ES'?5000:20000)+n));
   const samples=['NQ','ES'];
-  const key='ict-lab.practice.v1.';
-  const history=group=>Object.keys(localStorage).filter(k=>k.startsWith(key+group+'.')).sort().map(k=>JSON.parse(localStorage.getItem(k)));
+  const key=PRACTICE_KEY;
+  const recordKeys=group=>Object.keys(localStorage).filter(k=>k.startsWith(key+group+'.')).sort();
+  const history=group=>recordKeys(group).map(k=>JSON.parse(localStorage.getItem(k)));
   function save(group,record){localStorage.setItem(key+group+'.'+Date.now()+'.'+crypto.randomUUID(),JSON.stringify(record));}
   const element=(tag,text)=>{const el=document.createElement(tag);if(text!==undefined)el.textContent=text;return el;};
   function add(host,tag,text){const el=element(tag,text);host.append(el);return el;}
@@ -39,17 +42,19 @@ import {runExperiment, tradesToCsv} from './strategy-backtest-engine.mjs';
     };
     return f;
   }
-  function chart(box,symbol,bars,purpose='REPLAY',marks=[]){
-    const fig=add(box,'figure'),cap=add(fig,'figcaption',symbol+' · EDU-'+symbol+'-'+purpose+'-01 · 2026-06-02 · 5 min · NY AM · America/New_York · synthetic OHLC teaching sample');
+  function chart(box,symbol,bars,purpose='REPLAY',marks=[],positions=[]){
+    const fig=add(box,'figure'),cap=add(fig,'figcaption',symbol+' · EDU-'+symbol+'-'+purpose+'-01 v1 · '+FIXTURE_DATE+' · starts 09:30 ET · 5 min · NY AM · America/New_York · synthetic Lab OHLC · closed candles');
     const low=Math.min(...bars.map(b=>b[2]))-1, high=Math.max(...bars.map(b=>b[1]))+1;
     const y=p=>Math.round(95-90*(p-low)/(high-low));
     const graphic=add(fig,'div');
-    graphic.innerHTML='<svg viewBox="0 0 320 105" role="img" aria-label="Visible five-minute candlesticks" style="width:100%;max-height:220px">'+bars.map(([o,h,l,c],i)=>{const x=12+i*26,color=c>=o?'#46b598':'#dd876d';return '<line x1="'+x+'" x2="'+x+'" y1="'+y(h)+'" y2="'+y(l)+'" stroke="'+color+'"/><rect x="'+(x-5)+'" y="'+Math.min(y(o),y(c))+'" width="10" height="'+Math.max(1,Math.abs(y(o)-y(c)))+'" fill="'+color+'"/>';}).join('')+'</svg>';
+    const markers=positions.filter(([bar,price])=>bar>=1&&bar<=bars.length&&price>=low&&price<=high)
+      .map(([bar,price,n])=>'<text x="'+(12+(bar-1)*26)+'" y="'+Math.max(10,y(price)-4)+'" fill="currentColor" font-size="10">'+n+'</text>').join('');
+    graphic.innerHTML='<svg viewBox="0 0 320 105" role="img" aria-label="Visible five-minute candlesticks; numeric values are in the table" style="width:100%;max-height:220px">'+bars.map(([o,h,l,c],i)=>{const x=12+i*26,color=c>=o?'#46b598':'#dd876d';return '<line x1="'+x+'" x2="'+x+'" y1="'+y(h)+'" y2="'+y(l)+'" stroke="'+color+'"/><rect x="'+(x-5)+'" y="'+Math.min(y(o),y(c))+'" width="10" height="'+Math.max(1,Math.abs(y(o)-y(c)))+'" fill="'+color+'"/>';}).join('')+markers+'</svg>';
     if(marks.length){
       const list=add(fig,'ol');
       for(const mark of marks)add(list,'li',mark);
     }
-    const d=add(fig,'details');add(d,'summary','Read candle values');const table=add(d,'table');const header=add(table,'tr');['Bar','Open','High','Low','Close'].forEach(x=>add(header,'th',x));bars.forEach((b,i)=>{const row=add(table,'tr');[i+1,...b].forEach(x=>add(row,'td',x));});return cap;
+    const d=add(fig,'details');add(d,'summary','Read candle values');const table=add(d,'table');const header=add(table,'tr');['Bar','Open','High','Low','Close','Close time (UTC)'].forEach(x=>add(header,'th',x));bars.forEach((b,i)=>{const row=add(table,'tr');[i+1,...b,closedBarTime(i+1).slice(11,16)].forEach(x=>add(row,'td',x));});return cap;
   }
   function choose(box,label,options,render){const wrap=add(box,'label',label+' '),sel=add(wrap,'select');options.forEach(v=>add(sel,'option',v));const host=add(box,'section');const go=()=>{host.replaceChildren();render(host,sel.value);};sel.onchange=go;go();}
   function annotation(box){
@@ -57,7 +62,11 @@ import {runExperiment, tradesToCsv} from './strategy-backtest-engine.mjs';
       const offset=symbol==='ES'?5000:20000;
       const bars=[[5,7,3,6],[6,7,1,3],[3,4,2,3],[3,4,0,2],[2,8,2,7],[7,10,5,9]]
         .map(row=>row.map(price=>price+offset));
-      chart(host,symbol,bars,'ANNOTATION');
+      const preview=add(host,'section');
+      const coords=v=>[[2,+v.level,1],[+v.swing,bars[+v.swing-1]?.[2],2],[+v.sweep,bars[+v.sweep-1]?.[2],3],
+        [+v.displacement,bars[+v.displacement-1]?.[3],4],[4,+v.floor,5],[6,+v.ceiling,6]]
+        .filter(([,price])=>Number.isFinite(price)&&price>0);
+      chart(preview,symbol,bars,'ANNOTATION');
       add(host,'p','Use only these six closed bars. Mark the three-bar swing low, the sweep, the displacement candle and the confirmed bullish gap.');
       const reference=add(host,'section');
       form(host,'Check annotations',f=>{
@@ -67,7 +76,27 @@ import {runExperiment, tradesToCsv} from './strategy-backtest-engine.mjs';
         }
         field(f,'floor','FVG lower boundary','number','',{step:'.25'});
         field(f,'ceiling','FVG upper boundary','number','',{step:'.25'});
+        const marks=['level','swing','sweep','displacement','floor','ceiling'];
+        const controls=marks.map(name=>f.elements.namedItem(name));
+        const undo=add(f,'button','Undo last mark');undo.type='button';undo.disabled=true;
+        const snapshots=[controls.map(control=>control.value)];
+        const redraw=values=>{
+          preview.replaceChildren();
+          chart(preview,symbol,bars,'ANNOTATION',[],coords(Object.fromEntries(marks.map((name,i)=>[name,values[i]]))));
+          undo.disabled=snapshots.length<2;
+        };
+        f.addEventListener('change',()=>{
+          snapshots.push(controls.map(control=>control.value));
+          redraw(snapshots.at(-1));
+        });
+        undo.onclick=()=>{
+          snapshots.pop();
+          const previous=snapshots.at(-1);
+          controls.forEach((control,i)=>{control.value=previous[i];});
+          redraw(previous);
+        };
         add(f,'button','Reset marks').type='reset';
+        f.addEventListener('reset',()=>{snapshots.splice(1);redraw(snapshots[0]);reference.replaceChildren();});
       },v=>{
         const answers={level:bars[1][2],swing:2,sweep:4,displacement:5,floor:bars[3][1],ceiling:bars[5][2]};
         const score=Object.entries(answers).filter(([name,answer])=>Number(v[name])===answer).length;
@@ -79,7 +108,9 @@ import {runExperiment, tradesToCsv} from './strategy-backtest-engine.mjs';
           'Bar 4 trades below that low and closes back above it.',
           'Bar 5 expands upward and closes above bar 4’s high.',
           'At bar 6 close, bar 4 high '+answers.floor+' and bar 6 low '+answers.ceiling+' define the gap.',
-        ]);
+        ],coords(answers));
+        const results=add(reference,'ul');
+        for(const [name,answer] of Object.entries(answers))add(results,'li',name+': '+(Number(v[name])===answer?'correct':'expected '+answer));
         return score+'/6 marks match.';
       });
     });
@@ -124,22 +155,61 @@ import {runExperiment, tradesToCsv} from './strategy-backtest-engine.mjs';
   function planner(box){
     add(box,'p','Use public issuer schedules to check releases, holidays and date-only entries before saving a plan.');
     link(box,'Review the public calendar','/sessions/#calendar');
-    form(box,'Save plan',f=>{
+    const schedule=add(box,'section');
+    const planForm=form(box,'Save plan',f=>{
       field(f,'symbol','Contract',samples);
       field(f,'date','Trading date','date',today());
-      field(f,'session','Session',['New York AM','New York PM','Overnight']);
+      field(f,'session','Session (New York reference)',sessionIds);
       field(f,'time','Session time in New York','time','09:30');
       field(f,'disambiguation','If clock time repeats',['reject','earlier','later']);
-      field(f,'levels','Key prices and liquidity objective');
+      field(f,'levels','Key prices');
+      field(f,'objective','Liquidity objective');
       field(f,'bias','Working bias',['Bullish','Bearish','Neutral']);
       field(f,'news','Issuer release or wait condition','text','',{required:false});
+      field(f,'newsFilter','Check publisher calendar for',['Selected contract','All releases']);
       field(f,'invalid','What invalidates the bias?');
       field(f,'skip','What would make you skip?');
     },v=>{
       const clocks=localTimes(v.date,v.time,v.disambiguation);
       save('plan',{...v,clocks});return 'Plan saved on this device. '+clocks;
     });
-    saved(box,'plan',v=>[v.date,v.symbol,v.clocks,v.bias,v.levels,'Invalidation: '+v.invalid,'Skip: '+v.skip].join(' · '));
+    const calendar=add(planForm,'button','Check publisher schedules');
+    calendar.type='button';
+    const coverage=add(schedule,'p');coverage.setAttribute('role','status');
+    const releases=add(schedule,'ul');
+    calendar.onclick=async()=>{
+      const fields=new FormData(planForm);
+      const date=fields.get('date'),symbol=fields.get('symbol'),filter=fields.get('newsFilter');
+      if(!date){coverage.textContent='Select the planning date first.';return;}
+      const base=String(globalThis.FINANCE_OS_CONFIG?.apiBase||'').replace(/\/$/,'');
+      releases.replaceChildren();
+      if(!base||!globalThis.loadPublisherSchedules){coverage.textContent='Issuer gateway unavailable. Check the public calendar and exchange holiday schedule.';return;}
+      calendar.disabled=true;
+      coverage.textContent='Checking publisher snapshots for '+date+'…';
+      try{
+        const results=await globalThis.loadPublisherSchedules(base);
+        const feeds=results.filter(result=>result.status==='fulfilled').map(result=>result.value);
+        const events=new Map();
+        for(const {data} of feeds){
+          for(const event of data.events||[]){
+            if(event.scheduled_date!==date)continue;
+            const markets=event.affected_instruments||[];
+            if(filter==='Selected contract'&&markets.length&&!markets.some(m=>m.toUpperCase()===symbol))continue;
+            events.set(event.event_id,event);
+          }
+        }
+        for(const event of events.values()){
+          const time=event.scheduled_at_utc?new Intl.DateTimeFormat('en-GB',{timeZone:newYork,timeStyle:'short'}).format(new Date(event.scheduled_at_utc))+' ET':'date only';
+          add(releases,'li',[event.title||event.event_name,event.publisher_id,time].filter(Boolean).join(' · '));
+        }
+        const labels=feeds.map(({id,data})=>id+' '+(data.status||'unknown')+' ('+(data.retrieved_at||'retrieval unavailable')+')');
+        coverage.textContent=(events.size?events.size+' matching releases. ':'No matching releases in the received snapshots. ')+
+          (feeds.length<results.length?'Some issuer feeds were unavailable. ':'')+
+          labels.join(' · ')+'. Check exchange holidays separately.';
+      }catch{coverage.textContent='Schedule check failed. Use the official issuer calendars.';}
+      finally{calendar.disabled=false;}
+    };
+    saved(box,'plan',v=>[v.date,v.symbol,v.clocks,v.bias,v.levels,v.objective,'Invalidation: '+v.invalid,'Skip: '+v.skip].filter(Boolean).join(' · '));
   }
   function saved(box,group,describe,showEvidence){const d=add(box,'details');add(d,'summary','Review saved records');d.ontoggle=()=>{if(!d.open)return;d.querySelector('ul')?.remove();const list=add(d,'ul');try{const rows=history(group);rows.reverse().forEach(r=>{
     const row=add(list,'li',describe(r));if(showEvidence)showEvidence(row,r);
@@ -147,27 +217,38 @@ import {runExperiment, tradesToCsv} from './strategy-backtest-engine.mjs';
   function replay(box){
     choose(box,'Replay instrument',samples,(host,symbol)=>{
       const bars=sample(symbol),k=key+'replay-'+symbol;
+      const dataset='EDU-'+symbol+'-REPLAY-01';
+      const withLock=task=>{
+        if(!globalThis.navigator?.locks?.request)throw Error('This browser cannot safely lock a replay attempt.');
+        return navigator.locks.request(k,task);
+      };
       function draw(focus=false){
         const prior=localStorage.getItem(k);
-        const stored=JSON.parse(prior||'null');
-        const state=Array.isArray(stored) ? {id:crypto.randomUUID(),decisions:stored,revision:stored.length}
-          : stored||{id:crypto.randomUUID(),decisions:[],revision:0};
-        const {decisions}=state,n=Math.min(bars.length,4+decisions.length);
+        const state=readAttempt(prior,dataset,()=>crypto.randomUUID());
+        const {decisions,cursor:n}=state;
         host.replaceChildren();
         const heading=add(host,'h2',n===bars.length?'Replay complete':'Replay through bar '+n);
         heading.tabIndex=-1;
+        add(host,'p','Attempt '+state.id+' · revision '+state.revision);
         chart(host,symbol,bars.slice(0,n));
         const pivots=[];
         for(let j=1;j<n-1;j++){
-          if(bars[j][1]>Math.max(bars[j-1][1],bars[j+1][1]))pivots.push('high on '+(j+1));
-          if(bars[j][2]<Math.min(bars[j-1][2],bars[j+1][2]))pivots.push('low on '+(j+1));
+          if(bars[j][1]>Math.max(bars[j-1][1],bars[j+1][1]))pivots.push({kind:'high',bar:j+1,price:bars[j][1],knownAt:closedBarTime(j+2)});
+          if(bars[j][2]<Math.min(bars[j-1][2],bars[j+1][2]))pivots.push({kind:'low',bar:j+1,price:bars[j][2],knownAt:closedBarTime(j+2)});
         }
-        add(host,'p','Confirmed three-bar pivots: '+(pivots.join(', ')||'none')+'. A pivot needs one closed candle on each side.');
+        add(host,'p','Confirmed three-bar pivots: '+(pivots.map(p=>p.kind+' '+p.price+' on bar '+p.bar).join(', ')||'none')+'. A pivot needs one closed candle on each side.');
         if(n===bars.length){
           decisions.forEach(x=>add(host,'p','Bar '+x.bar+' · '+x.action+' · '+x.reason));
-          add(host,'button','Start another attempt').onclick=()=>{
+          add(host,'button','Start another attempt').onclick=async()=>{
             const status=add(host,'p');status.setAttribute('role','status');
-            try{save('replayArchive',{symbol,...state});localStorage.removeItem(k);draw(true);}
+            try{
+              await withLock(()=>{
+                if(localStorage.getItem(k)!==prior)throw Error('This attempt changed in another tab.');
+                localStorage.setItem(key+'replayArchive.'+state.id,JSON.stringify({symbol,dataset,...state}));
+                localStorage.removeItem(k);
+              });
+              draw(true);
+            }
             catch{status.textContent='The attempt could not be archived. Your replay remains available.';}
           };
         } else {
@@ -175,13 +256,7 @@ import {runExperiment, tradesToCsv} from './strategy-backtest-engine.mjs';
             field(f,'action','Decision',['Wait','Skip','Enter long','Enter short']);
             field(f,'reason','Evidence at the current candle');
           },async v=>{
-            function commit(){
-              if(localStorage.getItem(k)!==prior) throw Error('This attempt changed in another tab. Reload to resume.');
-              const decision={bar:n,barClose:new Date(Date.UTC(2026,5,2,13,30+n*5)).toISOString(),knownPivots:pivots,...v};
-              localStorage.setItem(k,JSON.stringify([...decisions,decision]));
-            }
-            if(navigator.locks?.request) await navigator.locks.request(k,commit);
-            else commit();
+            await withLock(()=>appendDecision(localStorage,k,prior,state,dataset,v.action,v.reason,pivots,bars.length));
             draw(true);
           });
         }
@@ -190,7 +265,7 @@ import {runExperiment, tradesToCsv} from './strategy-backtest-engine.mjs';
       draw();
     });
   }
-  const sampleDate='2026-06-02';
+  const sampleDate=FIXTURE_DATE;
   function download(name, type, body){
     const url=URL.createObjectURL(new Blob([body],{type}));
     const anchor=document.createElement('a');
@@ -244,30 +319,37 @@ import {runExperiment, tradesToCsv} from './strategy-backtest-engine.mjs';
     add(box,'p','Synthetic closing-price breakout v1: signal at bar close above the prior high, then entry at the next open. This sample does not detect ICT setups.');
     const results=add(box,'section');
     form(box,'Run sample backtest',f=>{
-      field(f,'symbol','Sample market',samples);
+      field(f,'symbol','Synthetic dataset',samples);
+      field(f,'rule','Signal rule version',['Closing-price breakout v1']);
       field(f,'fees','Commission per side, USD','number','1',{min:0,step:'.01'});
       field(f,'slip','Slippage per side, ticks','number','1',{min:0,max:100,step:'1'});
+      field(f,'stop','Stop distance, ticks','number','4',{min:1,step:'1'});
+      field(f,'target','Target, R multiple','number','2',{min:.25,step:'.25'});
+      field(f,'maxBars','Maximum bars per position','number','2',{min:1,step:'1'});
     },async v=>{
       const market=v.symbol+'M26',name='EDU-'+v.symbol+'-BACKTEST-01';
       const bars=sample(v.symbol);
       const input=Array.from({length:36},(_,i)=>bars[i%bars.length].map(price=>price+16*Math.floor(i/bars.length)));
       const csv=['timestamp,open,high,low,close,signal,contract,expiry',...input.map((row,i)=>[
-        new Date(Date.UTC(2026,5,2,13,i*5)).toISOString(),...row,
+        new Date(FIXTURE_START+(i-6)*300000).toISOString(),...row,
         i>0&&row[3]>input[i-1][1]?'LONG':'FLAT',market,'2026-06-18'
       ].join(','))].join('\n');
-      const result=await runExperiment(csv,{startingCapital:10000,riskPercent:1,tickSize:.25,tickValue:tickValues[v.symbol],
-        commissionPerSide:v.fees,slippageTicks:v.slip,stopTicks:4,targetRR:2,maxBarsInTrade:2,maxContracts:1,
+      const spec=contracts[v.symbol];
+      const result=await runExperiment(csv,{startingCapital:10000,riskPercent:1,tickSize:spec.tickSize,tickValue:spec.tickValue,
+        commissionPerSide:v.fees,slippageTicks:v.slip,stopTicks:v.stop,targetRR:v.target,maxBarsInTrade:v.maxBars,maxContracts:1,
         trainPercent:50,validationPercent:20,modelId:'custom',strategyName:'Synthetic closing breakout v1',
         marketSymbol:market,timeframe:'5m',timezone:newYork,signalSourceNotes:'Generated after each synthetic candle closes',
         dataSource:'Synthetic Lab fixture, no market data',datasetId:name,downloadDate:sampleDate,
         costSource:'User inputs',costAsOf:today()},name+'.csv');
       const label=metrics=>metrics.trades+' closed trades · win rate '+(metrics.winRatePct===null?'unavailable':metrics.winRatePct.toFixed(1)+'%')+
         ' · expectancy '+(metrics.averageR??'-')+' R · drawdown $'+
-        (metrics.maxDrawdownUsd??'—');
+        (metrics.maxDrawdownUsd??'-')+(metrics.winRate95PctInterval?' · 95% win-rate interval '+metrics.winRate95PctInterval.join('–')+'%':' · interval unavailable');
       const record={symbol:v.symbol,contract:market,version:'close-breakout-v1',sample:name,
         sampleStart:sampleDate,sampleEnd:sampleDate,session:'New York AM',commissionPerSide:v.fees,slippagePerSideTicks:v.slip,
         fillAssumption:'Next bar open after a closed signal, with modeled costs',result:label(result.fullSample.metrics),
-        fingerprint:result.manifest.runFingerprint,splits:result.splits.map(s=>({key:s.key,metrics:s.metrics}))};
+        fingerprint:result.manifest.runFingerprint,datasetHash:result.manifest.dataset.sha256,
+        execution:result.manifest.method,assumptions:result.manifest.config,
+        splits:result.splits.map(s=>({key:s.key,startIndex:s.startIndex,endIndexExclusive:s.endIndexExclusive,metrics:s.metrics}))};
       save('tests',record);
       results.replaceChildren();
       add(results,'h2','Evaluation periods');
@@ -281,27 +363,33 @@ import {runExperiment, tradesToCsv} from './strategy-backtest-engine.mjs';
     link(box,'Open the full Strategy Lab','/strategy-lab/');
   }
   function risk(box){
-    add(box,'p','Conditional educational references. Verify the contract’s effective tick schedule and trading costs before relying on a sizing result.');
-    form(box,'Calculate size',f=>{
-      field(f,'symbol','Contract',Object.keys(tickValues));
+    const evidence=add(box,'p');
+    const riskForm=form(box,'Calculate size',f=>{
+      field(f,'symbol','Contract',Object.keys(contracts));
       field(f,'side','Direction',['Long','Short']);
       field(f,'entry','Entry price','number','20000',{step:'.25'});
       field(f,'stop','Stop price','number','19990',{step:'.25'});
       field(f,'budget','Maximum risk in USD','number','200',{min:0,step:'.01'});
+      field(f,'remaining','Remaining loss limit in USD','number','',{min:0,step:'.01',required:false});
       field(f,'fees','Round-turn fees per contract in USD','number','0',{min:0,step:'.01'});
+      field(f,'spread','Round-trip spread in ticks','number','0',{min:0,step:'1'});
       field(f,'slip','Round-trip slippage in ticks','number','0',{min:0,step:'1'});
       field(f,'max','Maximum contracts','number','10',{min:1,max:10000,step:'1'});
     },v=>{
-      const entry=Number(v.entry)*4,stop=Number(v.stop)*4;
-      if(!Number.isSafeInteger(entry)||!Number.isSafeInteger(stop)) throw Error('Entry and stop must align to a 0.25-point tick.');
-      const distance=(entry-stop)*(v.side==='Long'?1:-1);
-      if(distance<=0) throw Error('Stop must be on the loss side of entry.');
-      const out=calculateFuturesPosition({balance:Number(v.budget)>0?v.budget:'1',riskPercent:'100',
-        dailyLossRemaining:v.budget,drawdownRemaining:'',tickValue:tickValues[v.symbol],stopTicks:distance,
-        targetTicks:distance,spreadTicks:0,slippageTicks:v.slip,maxContracts:v.max,commissionPerContract:v.fees});
+      const out=labRisk(v,contracts[v.symbol]);
       return out.quantity+' whole contracts · '+formatMicros(out.allInRiskPerContractMicros)+
-        ' estimated risk per contract · '+formatMicros(out.totalRiskMicros)+' total estimated risk.';
+        ' estimated risk per contract · '+formatMicros(out.totalRiskMicros)+' total estimated risk · '+formatMicros(out.effectiveBudgetMicros)+' effective budget.';
     });
+    const updateReference=()=>{
+      const spec=contracts[riskForm.elements.namedItem('symbol').value];
+      evidence.textContent='Conditional reference · tick size '+spec.tickSize+' · tick value $'+spec.tickValue+
+        ' · registry '+spec.status+' · source checked '+(spec.checkedAt||'unconfirmed')+
+        ' · effective date '+(spec.effectiveFrom||'pending')+' · ';
+      link(evidence,'Exchange specification',spec.source);
+      for(const name of ['entry','stop'])riskForm.elements.namedItem(name).step=spec.tickSize;
+    };
+    riskForm.elements.namedItem('symbol').onchange=updateReference;
+    updateReference();
     link(box,'Open the full Risk Lab','/risk/');
   }
   function readChart(file){
@@ -372,13 +460,73 @@ import {runExperiment, tradesToCsv} from './strategy-backtest-engine.mjs';
     add(box,'button','Export this device’s journal').onclick=()=>{
       const status=add(box,'p');status.setAttribute('role','status');
       try{
-        download('ict-journal.json','application/json',JSON.stringify({schemaVersion:1,entries:history('journal'),
-          legacyTrades:readLegacy('ictfos.journal.v1',[]),legacyChecklist:readLegacy('ictfos.checks.v1',{})},null,2));
+        const prefix=key+'journal.';
+        const entries=recordKeys('journal').map(k=>({origin:k.slice(prefix.length),record:JSON.parse(localStorage.getItem(k))}));
+        download('ict-journal.json','application/json',JSON.stringify({schemaVersion:2,entries,
+          legacyTrades:readLegacy('ictfos.journal.v1',[]),legacyChecklist:readLegacy('ictfos.checks.v1',{}),
+          legacyReminders:readLegacy('ictfos.personalEvents.v1',[])},null,2));
         status.textContent='Journal export prepared.';
       }catch{status.textContent='Local storage could not be read.';}
     };
+    restoreJournal(box);
     add(box,'p','Use the signed-in workspace for private chart attachments and intentional legacy import.');
     link(box,'Open private account workspace','/account/');
+  }
+
+  function restoreJournal(box){
+    const restore=add(box,'details');
+    add(restore,'summary','Preview and restore a Lab journal backup');
+    add(restore,'p','Restore adds Lab journal entries on this device. Terminal records in the backup are available for review.');
+    const chooser=add(restore,'label','Backup JSON ');
+    const file=add(chooser,'input');file.type='file';file.accept='application/json,.json';
+    const status=add(restore,'p');status.setAttribute('role','status');
+    const report=add(restore,'ul');
+    const apply=add(restore,'button','Restore eligible entries');apply.type='button';apply.disabled=true;
+    let backup=null;
+    let selection=0;
+    const show=plan=>{
+      report.replaceChildren();
+      for(const item of plan)add(report,'li',(item.origin||'Unidentified record')+' · '+item.state);
+      apply.disabled=!plan.some(item=>item.state==='Ready');
+      status.textContent=plan.length+' record(s) checked.';
+    };
+    file.onchange=async()=>{
+      const selected=++selection;
+      apply.disabled=true;
+      backup=null;
+      report.replaceChildren();
+      try{
+        const input=file.files[0];
+        if(!input||input.size>8*1024*1024)throw Error('Choose a Lab journal JSON file up to 8 MB.');
+        const parsed=await upgradeJournalBackup(JSON.parse(await input.text()),playbooks);
+        const plan=journalRestorePlan(parsed,localStorage,playbooks);
+        if(selected!==selection)return;
+        backup=parsed;
+        show(plan);
+      }catch(error){if(selected===selection)status.textContent=error.message;}
+    };
+    apply.onclick=async()=>{
+      let count=0;
+      if(!globalThis.navigator?.locks?.request){status.textContent='This browser cannot safely lock restore operations.';return;}
+      const selectedBackup=backup;
+      apply.disabled=true;
+      file.disabled=true;
+      try{
+        await navigator.locks.request(key+'journal-restore',()=>{
+          for(const item of journalRestorePlan(selectedBackup,localStorage,playbooks)){
+            if(item.state==='Ready'&&localStorage.getItem(item.key)===null){
+              localStorage.setItem(item.key,JSON.stringify(item.record));
+              count++;
+            }
+          }
+        });
+        show(journalRestorePlan(selectedBackup,localStorage,playbooks));
+        status.textContent='Restored '+count+' record(s) on this device.';
+      }catch{
+        apply.disabled=false;
+        status.textContent='Restored '+count+' record(s) before storage failed. Preview again or retry to resume.';
+      }finally{file.disabled=false;}
+    };
   }
 
   if(inversion) inversionPractice(inversion);
