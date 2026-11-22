@@ -274,7 +274,7 @@ try {
   await advanced.click();
   assert.ok(await page.getByLabel('In-sample allocation (%)').isVisible());
   await page.goto(site + '/risk/');
-  assert.equal(await page.locator('#riskResult').getAttribute('role'), 'status');
+  assert.equal(await page.locator('#riskResult').getAttribute('aria-live'), 'polite');
   await staticPage.close();
   console.log('Public UI passed at six widths in both themes, including keyboard drawer and homepage search.');
 } finally {
