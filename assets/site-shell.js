@@ -6,6 +6,10 @@
   const scrim = document.getElementById('sidebarScrim');
   if (!sidebar || !toggle) return;
 
+  const background = shell.querySelector('.os-main-column');
+  const skip = document.querySelector('.skip');
+  const closeButton = sidebar.querySelector('.os-drawer-close');
+
   const COLLAPSED_KEY = 'fios.app-sidebar.collapsed.v1';
   const THEME_KEY = 'fios.theme.preference.v1';
   const mobileQuery = window.matchMedia('(max-width: 850px)');
@@ -49,6 +53,16 @@
       scrim.hidden = !(mobile && drawerOpen);
       scrim.setAttribute('aria-hidden', String(!(mobile && drawerOpen)));
     }
+    const modal = mobile && drawerOpen;
+    if (background) background.inert = modal;
+    if (skip) skip.inert = modal;
+    if (modal) {
+      sidebar.setAttribute('role', 'dialog');
+      sidebar.setAttribute('aria-modal', 'true');
+    } else {
+      sidebar.removeAttribute('role');
+      sidebar.removeAttribute('aria-modal');
+    }
     if (mobile) {
       sidebar.inert = !drawerOpen;
       sidebar.setAttribute('aria-hidden', String(!drawerOpen));
@@ -69,12 +83,18 @@
       sidebar.querySelector('a[href],button:not([disabled])')?.focus();
     } else if (mobileQuery.matches) toggle.focus();
   });
-  scrim?.addEventListener('click', () => { drawerOpen = false; renderNav(); toggle.focus(); });
+  function closeDrawer() {
+    drawerOpen = false;
+    renderNav();
+    toggle.focus();
+  }
+  scrim?.addEventListener('click', closeDrawer);
+  closeButton?.addEventListener('click', closeDrawer);
   sidebar.addEventListener('click', event => {
     if (mobileQuery.matches && event.target.closest('a')) { drawerOpen = false; renderNav(); }
   });
   document.addEventListener('keydown', event => {
-    if (event.key === 'Escape' && drawerOpen) { drawerOpen = false; renderNav(); toggle.focus(); return; }
+    if (event.key === 'Escape' && drawerOpen) { event.preventDefault(); closeDrawer(); return; }
     if (event.key === 'Tab' && drawerOpen && mobileQuery.matches) {
       const items = [...sidebar.querySelectorAll('a[href],button:not([disabled]),[tabindex]:not([tabindex="-1"])')];
       if (!items.length) return;
@@ -83,7 +103,12 @@
       else if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first.focus(); }
     }
   });
-  mobileQuery.addEventListener?.('change', () => { drawerOpen = false; renderNav(); });
+  mobileQuery.addEventListener?.('change', () => {
+    const focusWasInDrawer = sidebar.contains(document.activeElement);
+    drawerOpen = false;
+    renderNav();
+    if (mobileQuery.matches && focusWasInDrawer) toggle.focus();
+  });
   renderTheme();
   renderNav();
 })();

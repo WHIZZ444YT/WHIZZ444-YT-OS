@@ -245,8 +245,8 @@ class BuildTests(unittest.TestCase):
         shell_css=(ROOT/'assets/site-shell.css').read_text(encoding="utf-8")
         self.assertIn('body.os-ict-terminal .topbar{z-index:var(--os-z-topbar)',shell_css)
         self.assertIn("html = html.replace('<body>', '<body class=\"dark os-ict-terminal\">', 1)",builder)
-        self.assertIn('--os-z-sidebar:30',shell_css)
-        self.assertIn('--os-z-topbar:20',shell_css)
+        self.assertRegex(shell_css, r'--os-z-sidebar:\s*30;')
+        self.assertRegex(shell_css, r'--os-z-topbar:\s*20;')
     def test_futures_module_assets_and_retired_route_redirects(self):
         for name in ['volume-open-interest.js','data-health.js']:
             self.assertTrue((ROOT/'assets'/name).exists(),name)

@@ -107,6 +107,7 @@ def nav_markup(current='/'):
         groups.append(f'<div class="os-nav-group"><span class="os-nav-group-label">{group}</span>{"".join(items)}</div>')
     return (
         '<aside class="os-sidebar" id="appSidebar" aria-label="Primary navigation">'
+        '<button class="os-drawer-close secondary-button" type="button">Close navigation</button>'
         '<a class="os-sidebar-brand" href="/" aria-label="Futures Intelligence OS overview">'
         '<span class="brand-mark">FI</span><span class="os-brand-copy"><b>FUTURES INTELLIGENCE OS</b><small>RESEARCH WORKSPACE</small></span></a>'
         f'<nav class="os-sidebar-nav" aria-label="Futures product areas">{"".join(groups)}</nav>'
@@ -204,7 +205,7 @@ def shell(title, description, body, canonical_path='/', extra_head='', right_pan
 <div class="os-main-column"><header class="os-topbar">
 <div class="os-topbar-start"><button class="os-sidebar-toggle" id="sidebarToggle" type="button" aria-expanded="true" aria-controls="appSidebar" aria-label="Collapse navigation"><span aria-hidden="true">☰</span></button><div class="os-topbar-heading"><span>FUTURES INTELLIGENCE OS</span><b>{area}</b></div></div>
 <div class="os-topbar-actions"><a class="os-global-search" href="/search/">Search</a><span class="os-mode-chip"><i></i> RESEARCH ONLY</span><button class="os-theme-toggle" id="osThemeToggle" type="button" aria-pressed="false" aria-label="Switch to light theme" title="Switch theme">☼</button><a class="os-workspace-link" href="/account/">Private workspace <span aria-hidden="true">↗</span></a></div>
-</header><main id="content" class="os-content">{content}</main>
+</header><main id="content" tabindex="-1" class="os-content">{content}</main>
 <footer class="os-footer"><div><b>Futures Intelligence OS</b><span>Exchange-listed futures research · ICT Futures education</span></div><div class="os-footer-links"><a href="/data-health/">Data Health &amp; Sources</a><a href="/status/">Platform status</a><a href="/docs/">Documentation</a><a href="/charts/">Futures Charts</a></div><small>Public-source frequency, freshness, contract verification and licensing boundaries apply. No broker execution is connected.</small></footer>
 </div></div><script src="/assets/site-shell.js" defer></script></body></html>'''
 
@@ -365,6 +366,10 @@ def wrap_standalone_shell(path, current_path, kind):
         html = html.replace('<a class="fi-ict-link"', '<button class="os-theme-toggle" id="osThemeToggle" type="button" aria-pressed="false" aria-label="Switch to light theme" title="Switch theme">☼</button><a class="fi-ict-link"', 1)
         html = re.sub(r'<button class="menu-toggle" id="menuToggle"[^>]*>.*?</button>', '', html, count=1, flags=re.S)
         html = html.replace('</body>', '</div></div>' + js_link + '</body>', 1)
+    target = "top" if kind == "ict" else "content"
+    html = html.replace(f'<main id="{target}"', f'<main id="{target}" tabindex="-1"', 1)
+    html = html.replace('<div class="os-app-shell',
+                        f'<a class="skip" href="#{target}">Skip to content</a><div class="os-app-shell', 1)
     path.write_text(html, encoding='utf-8')
 
 
