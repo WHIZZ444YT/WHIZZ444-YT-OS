@@ -57,6 +57,16 @@ try {
   assert.equal(new URL(page.url()).searchParams.get('q'), 'weekly open');
 
   await page.goto(site + '/ict-lab/learn/');
+  const firstPath = page.getByRole('article').filter({ has: page.getByRole('heading', { name: 'First ICT workflow' }) });
+  await firstPath.getByRole('link', { name: 'Liquidity', exact: true }).focus();
+  await page.keyboard.press('Enter');
+  await page.waitForURL(site + '/ict-lab/learn/c01/');
+  assert.equal(await page.getByRole('link', { name: 'Practice next' }).count(), 1);
+  await page.goBack();
+  await page.getByRole('link', { name: 'Browse the complete resource index' }).click();
+  await page.waitForURL(site + '/ict-lab/resources/');
+  assert.ok(await page.getByRole('heading', { name: 'Predecessor tutorial placements' }).isVisible());
+  await page.goBack();
   const labSearch = page.locator('[data-ict-search]');
   const labQuery = labSearch.getByRole('searchbox');
   for (const alias of ['FVG', 'IFVG', 'MSS', 'BSL', 'CBDR']) {
@@ -82,3 +92,4 @@ try {
 } finally {
   await browser.close();
 }
+

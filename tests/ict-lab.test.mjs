@@ -49,13 +49,13 @@ test('the five Lab views and all 93 detail pages contain public HTML without scr
   const inversion = published(lab + 'learn/c17/index.html');
   assert.match(inversion, /data-ifvg-practice=/);
   assert.match(inversion, /UIGZtoGGPH4&amp;t=1306s/);
-  assert.match(inversion, /C16 · Fair value gap/);
-  assert.match(inversion, /C09 · Displacement/);
-  assert.match(inversion, /Look-alike · synthetic NQ/);
-  assert.match(inversion, /Worked inversion · separate synthetic NQ example/);
+  assert.match(inversion, /C16 � Fair value gap/);
+  assert.match(inversion, /C09 � Displacement/);
+  assert.match(inversion, /Look-alike � synthetic NQ/);
+  assert.match(inversion, /Worked inversion � separate synthetic NQ example/);
   assert.doesNotMatch(inversion, /sample 7, price 20006/);
   assert.match(inversion, /Playback: unchecked/);
-  assert.match(published(lab + 'learn/c54/index.html'), /Forex source · Futures adaptation/);
+  assert.match(published(lab + 'learn/c54/index.html'), /Forex source � Futures adaptation/);
   assert.match(published(lab + 'learn/c55/index.html'), /Watch-page check: 2026-11-22/);
   assert.match(published(lab + 'learn/c56/index.html'), /18:00 IST.*19:00 IST/);
   assert.match(published(lab + 'mentors/m08/index.html'), /nY1NaXsFDQM/);
@@ -111,8 +111,8 @@ test('the crosswalk distinguishes shared concepts, separate variants and exact A
   assert.match(labBsl, /From the Academy lesson/);
   assert.match(labBsl, /href="\/ict-futures\/academy\/bsl.html"/);
   assert.match(published('ict-lab/learn/c04/index.html'), /linked Academy convention additionally requires a close back inside/);
-  assert.match(published('ict-lab/learn/c27/index.html'), /02:00–05:00 ET/);
-  assert.match(published('ict-lab/learn/c28/index.html'), /08:30–11:00 ET/);
+  assert.match(published('ict-lab/learn/c27/index.html'), /02:00-05:00 ET/);
+  assert.match(published('ict-lab/learn/c28/index.html'), /08:30-11:00 ET/);
 
   const gaps = published('ict-lab/learn/c35/index.html');
   assert.match(gaps, /watch\?v=-M-RAtxB-bE/);
@@ -126,8 +126,8 @@ test('the crosswalk distinguishes shared concepts, separate variants and exact A
   assert.match(sell, /Lab-authored synthetic NQ/);
   assert.match(sell, /XAUUSD/);
   const modelIndex = published('entry-models/index.html');
-  assert.match(modelIndex, /FVG Continuation · Distinct variant/);
-  assert.match(modelIndex, /Judas \+ MSS · Overlapping setup/);
+  assert.match(modelIndex, /FVG Continuation � Distinct variant/);
+  assert.match(modelIndex, /Judas \+ MSS � Overlapping setup/);
   assert.match(modelIndex, /href="\/ict-futures\/academy\/ifvg-reversal-model.html"/);
   assert.match(published('ict-futures/academy/ifvg-reversal-model.html'), /Continue in ICT Lab[\s\S]+\/ict-lab\/playbooks\/p07\//);
   assert.match(published('search/index.html'), /"path": "\/ict-futures\/academy\/bsl.html"[^}]*"practicePath": "\/ict-lab\/learn\/c01\/"/);
@@ -358,7 +358,7 @@ test('Practice preserves journal evidence, before-retest decisions, and backtest
 });
 
 test('lesson and playbook contracts are visible without running scripts', () => {
-  assert.match(published('ict-lab/learn/index.html'), /Prerequisites · [\s\S]*Related Practice 11/);
+  assert.match(published('ict-lab/learn/index.html'), /Prerequisites � [\s\S]*Related Practice 11/);
   const c34 = published('ict-lab/learn/c34/index.html');
   for (const period of ['DAY','WEEK','MONTH']) assert.match(c34, new RegExp('EDU-OPEN-01-' + period));
   assert.match(c34, /Friday to Monday/);
@@ -368,10 +368,27 @@ test('lesson and playbook contracts are visible without running scripts', () => 
   for (let n = 1; n <= 10; n++) {
     const id = String(n).padStart(2, '0');
     const page = published('ict-lab/playbooks/p' + id + '/index.html');
-    assert.match(page, new RegExp('Lab Rule · P' + id + ' v1'));
+    assert.match(page, new RegExp('Lab Rule � P' + id + ' v1'));
     for (const label of ['Eligible state','Long','Short','No trade','Expiration']) assert.ok(page.includes(label), id + ' ' + label);
   }
   const risk = payload(published('ict-lab/practice/15/index.html'), 'ict-practice-reference');
   assert.deepEqual(Object.keys(risk.contracts).sort(), ['ES','MES','MNQ','NQ']);
   assert.ok(Object.values(risk.contracts).every(spec => spec.source.startsWith('https://www.cmegroup.com/') && spec.status === 'partial'));
 });
+
+test('editorial paths, practice destinations and predecessor placements are published', () => {
+  const learn = published(lab + 'learn/index.html');
+  for (const path of ['First ICT workflow', 'Active NQ/ES learner', 'Contract foundations', 'Practice review']) {
+    assert.ok(learn.includes(path), path);
+  }
+  const resources = published(lab + 'resources/index.html');
+  for (const id of ['c14', 'c08', 'c16', 'c09', 'p01', 'c21', 'liquidity-sweep-mss-model']) {
+    assert.ok(resources.includes('id="placement-' + id + '"'), id);
+  }
+  assert.match(resources, /Official ICT playlists/);
+  assert.match(resources, /Playback and chapter fit are pending editorial review/);
+  assert.match(published(lab + 'learn/c54/index.html'), /EDU-C54-01/);
+  assert.match(published(lab + 'learn/c34/index.html'), /Practice next/);
+  assert.match(published(lab + 'playbooks/p01/index.html'), /Practice next/);
+});
+
