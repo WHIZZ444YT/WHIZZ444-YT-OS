@@ -25,9 +25,9 @@ TERMINAL_ROUTES = {
 }
 
 
-def market_options(markets):
+def market_options(markets, default=None):
     return "".join(
-        f'<option value="{escape(m["id"])}" data-symbol="{escape(m.get("chart", ""))}">'
+        f'<option value="{escape(m["id"])}" data-symbol="{escape(m.get("chart", ""))}"{" selected" if m["id"] == default else ""}>'
         f'{escape(m["label"])}</option>' for m in markets
     )
 
@@ -36,22 +36,24 @@ def chart_page(markets):
     markets = [m for m in markets if m.get("chart")]
     nq = next(m for m in markets if m["id"] == "nq")
     options = market_options(markets)
+    primary_options = market_options(markets, "nq")
     direct = "https://www.tradingview.com/chart/?" + urlencode({"symbol": nq["chart"], "interval": "15"})
     return f"""<section class="ict-public"><header class="ict-hero"><h1>Futures charts</h1>
 <p>Compare contract families at the same interval. Load a TradingView preview or open the full chart for drawing tools.</p></header>
-<form id="public-chart-controls" class="ict-chart-controls" action="/charts/" hidden>
-<label>Market <select name="market">{options}</select></label>
+<form id="public-chart-controls" class="ict-chart-controls" action="/charts/" inert>
+<label>Market <select name="market">{primary_options}</select></label>
 <label>Comparison <select name="comparison"><option value="">None</option>{options}</select></label>
 <label>Interval <select name="interval"><option value="1">1 minute</option><option value="5">5 minutes</option>
 <option value="15" selected>15 minutes</option><option value="60">1 hour</option><option value="240">4 hours</option>
 <option value="D">Daily</option><option value="W">Weekly</option></select></label>
 <button type="submit">Load previews</button></form>
-<p id="public-chart-status" role="status">Data availability and delays depend on TradingView.</p>
+<p id="public-chart-status" role="status">Direct chart links are ready. Load previews to connect to TradingView.</p>
 <div class="ict-grid ict-chart-previews">
 <article class="ict-card" data-chart-slot><h2>{escape(nq["label"])}</h2>
 <p><a href="{escape(direct)}" target="_blank" rel="noopener noreferrer">Open chart on TradingView</a></p><div data-chart-mount></div></article>
 <article class="ict-card" data-chart-slot hidden><h2>Comparison chart</h2>
 <p><a href="https://www.tradingview.com/markets/futures/" target="_blank" rel="noopener noreferrer">Open comparison on TradingView</a></p><div data-chart-mount></div></article></div>
+<noscript><p>Enable JavaScript to change the selection or use the direct chart link above.</p></noscript>
 <p>Continuous symbols may contain roll adjustments or gaps. Match listed expiries and bar times when comparing swings. Use the linked lesson to assess SMT manually.</p>
 <p><a href="/markets/">Market profiles</a> · <a href="/volume-open-interest/">Volume and open interest</a> · <a href="/ict-lab/learn/c43/">Learn NQ/ES SMT</a></p></section>"""
 

@@ -59,6 +59,6 @@
     update();
   });
   applySelection(params);
-  form.hidden = false;
+  form.inert = false;
   update();
 })();
