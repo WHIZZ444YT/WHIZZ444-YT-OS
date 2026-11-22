@@ -10,6 +10,7 @@ from build_academy import academy_video_coverage, build_academy, verified_lesson
 from build_ict_lab import build_ict_lab
 from build_route_manifest import route_manifest
 from ict_crosswalk import IctCrosswalk, PUBLIC_MODELS
+from public_market_context import build_market_context, market_context_text
 from build_public_futures import bookmarks_page, chart_page, daily_brief, personal_reminders, search_page, session_heatmap, social_discovery
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -390,7 +391,8 @@ def build():
         shutil.copy2(ROOT/name, target)
     obsolete_prediction_client = DIST/'assets/prediction-markets.js'
     if obsolete_prediction_client.exists(): obsolete_prediction_client.unlink()
-    mdata = load(ROOT/'ict-futures/data/market-universe.json',{}).get('markets',[])
+    market_registry = load(ROOT/'ict-futures/data/market-universe.json',{})
+    mdata = market_registry['markets']
     shutil.copyfile(ROOT/'ict-lab/practice.js', DIST/'assets/ict-practice.mjs')
     ict_terminal=DIST/'ict-futures/index.html'
     desk = DIST/'futures-intelligence/index.html'
@@ -477,6 +479,14 @@ def build():
                     '<meta name="robots" content="noindex,follow"><script defer src="/assets/ict-terminal-compat.js"></script>'))
     news = load(ROOT/'data/news-snapshot.json',{})
     lifecycle_data=public_contract_lifecycle_data(load(ROOT/'data/contract-lifecycle.json',{}))
+    market_context = build_market_context(market_registry, lifecycle_data)
+    for context in market_context["families"].values():
+        context["summary"] = market_context_text(context)
+    write(DIST/'data/market-context.json', json_script(market_context))
+    desk_path = DIST/'futures-intelligence/index.html'
+    desk = desk_path.read_text(encoding='utf8')
+    desk = desk.replace('</body>', f'<script id="publicMarketContext" type="application/json">{json_script(market_context)}</script></body>', 1)
+    write(desk_path, desk)
     lifecycle_products={x.get('marketId'):x for x in lifecycle_data.get('products',[]) if x.get('marketId')}
     lifecycle_snapshot_date=lifecycle_data.get('cmeSourceBusinessDate') or lifecycle_data.get('asOfDate') or 'not recorded'
     write(DIST/'data/contract-lifecycle.json',json.dumps(lifecycle_data,ensure_ascii=False,indent=2)+'\n')
@@ -530,6 +540,8 @@ def build():
         pending_items=[str(x) for x in evidence.get('pendingFields', lifecycle_fields)]
         pending=escape(', '.join(pending_items or lifecycle_fields))
         pending_note=(f'<details class="os-lifecycle-details"><summary>Full lifecycle sign-off still pending</summary><p>{pending}</p><p>The dated rows below report publisher-listed dates only. They do not establish the cutoff time, effective rule revision, product hours/holiday exceptions or a continuous-series roll policy.</p></details>')
+        context_label = escape(market_context["families"][m["id"]]["summary"])
+        spec_rows += f'<div class="os-spec-field"><span>Market context</span><span>{context_label}</span></div>'
         month_snapshot=contract_lifecycle_table(lifecycle_products.get(str(m.get('id') or ''),{}),lifecycle_snapshot_date)
         micro=m.get('microSpec') or {}
         micro_html=''
@@ -589,7 +601,7 @@ def build():
     # Markets
     cards=''.join(
         f'<div data-market-profile="{escape(m["id"])}" data-tier="{escape(m["tier"])}">'
-        + card(m["label"],m["role"],f'/ict-futures/markets/{m["id"]}.html',m["exchange"],m["tier"])
+        + card(m["label"],market_context["families"][m["id"]]["summary"],f'/ict-futures/markets/{m["id"]}.html',m["exchange"],m["tier"])
         + '</div>' for m in mdata)
     market_filter='<form hidden class="ict-chart-controls"><label>Find a contract <input type="search" name="q"></label><label>Tier <select name="tier"><option value="">All</option><option>T1</option><option>T2</option><option>T3</option></select></label></form><p role="status"></p>'
     body=page_intro('Listed futures universe','Futures markets','Explore the 15 retained futures contract families. CME currency and Bitcoin futures remain in scope. Verify current exchange specifications before trading.')
