@@ -156,6 +156,15 @@ class ContractLifecycleRightsGateTests(unittest.TestCase):
         valid["products"][0]["marketId"] = "unknown"
         self.assertEqual(public_contract_lifecycle_data(valid,self.family_ids,as_of=day)["products"], [])
 
+    def test_conflicting_months_fail_import_and_publication(self):
+        day = date(2026, 11, 20)
+        source = self.authorized_fixture(day)
+        rows = source["products"][0]["contractMonths"]
+        rows.append({**rows[0], "contractMonth": "209911"})
+        with self.assertRaisesRegex(ValueError, "conflicting contract months"):
+            validate_snapshot(source, self.family_ids, day)
+        self.assertEqual(public_contract_lifecycle_data(source, self.family_ids, as_of=day)["products"], [])
+
     def test_authorized_import_build_and_validate_in_an_isolated_copy(self):
         day = datetime.now(timezone.utc).date()
         with tempfile.TemporaryDirectory() as directory:
@@ -192,3 +201,4 @@ class ContractLifecycleRightsGateTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+

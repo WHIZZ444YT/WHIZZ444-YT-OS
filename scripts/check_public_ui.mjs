@@ -52,8 +52,33 @@ try {
   await page.getByRole('searchbox', { name: 'Search markets, lessons and tools' }).fill('FVG');
   await page.getByRole('search', { name: 'Global search' }).getByRole('button', { name: 'Search' }).click();
   assert.equal(new URL(page.url()).searchParams.get('q'), 'FVG');
+  await page.goto(site + '/ict-lab/?view=learn&id=C34&q=weekly+open');
+  await page.waitForURL(url => url.pathname === '/ict-lab/learn/c34/');
+  assert.equal(new URL(page.url()).searchParams.get('q'), 'weekly open');
+
+  await page.goto(site + '/ict-lab/learn/');
+  const labSearch = page.locator('[data-ict-search]');
+  const labQuery = labSearch.getByRole('searchbox');
+  for (const alias of ['FVG', 'IFVG', 'MSS', 'BSL', 'CBDR']) {
+    await labQuery.fill(alias);
+    await labQuery.press('Enter');
+    assert.equal(new URL(page.url()).searchParams.get('q'), alias);
+    assert.match(await page.locator('[data-ict-search-status]').innerText(), /matching items/);
+  }
+  await page.goBack();
+  assert.equal(await labQuery.inputValue(), 'BSL');
+  await page.goForward();
+  assert.equal(await labQuery.inputValue(), 'CBDR');
+
+  const staticPage = await browser.newPage({ javaScriptEnabled: false });
+  for (const path of ['/ict-lab/learn/c34/', '/ict-lab/playbooks/p10/', '/ict-lab/practice/16/']) {
+    const response = await staticPage.goto(site + path);
+    assert.equal(response.status(), 200, path);
+    assert.ok(await staticPage.getByRole('heading', { level: 1 }).isVisible(), path);
+    assert.ok(await staticPage.locator('[data-ict-view] p').count(), path);
+  }
+  await staticPage.close();
   console.log('Public UI passed at six widths in both themes, including keyboard drawer and homepage search.');
 } finally {
   await browser.close();
 }
-

@@ -61,6 +61,12 @@ jobs:
         run: python3 scripts/validate.py
       - name: Audit internal links
         run: python3 scripts/audit_internal_links.py
+      - name: Verify clean artifact reproducibility
+        env:
+          SITE_URL: https://finance-intelligence-os-whizz444yt-7353.vercel.app
+        run: python3 scripts/check_clean_artifact.py
+      - name: Check exact ICT watch URLs
+        run: python3 scripts/check_ict_watch_urls.py
       - name: Compare clean standard and cutover route manifests
         env:
           SITE_URL: https://finance-intelligence-os-whizz444yt-7353.vercel.app

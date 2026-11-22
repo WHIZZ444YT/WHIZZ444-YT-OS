@@ -16,6 +16,9 @@ ROOT = Path(__file__).resolve().parents[1]
 DIST = ROOT / 'dist'
 SITE_URL = os.getenv('SITE_URL', '').rstrip('/')
 TERMINAL_CUTOVER = os.getenv('ICT_TERMINAL_CUTOVER') == '1'
+PUBLIC_DOCS = {
+    'docs/futures-only-roadmap/22-PART-7-MODEL-RULE-CARDS.md',
+}
 
 NAV_ITEMS = [
     ('Overview', '/'),
@@ -370,12 +373,16 @@ def build():
     if DIST.exists(): shutil.rmtree(DIST)
     DIST.mkdir(parents=True)
     # Copy repository files except dev-only/legacy archive material.
-    for name in ['index.html','resources.json','icon.svg','manifest.webmanifest','sw.js','assets','ict-futures','futures-intelligence','docs','README.md','SECURITY.md','LICENSE','.well-known']:
+    for name in ['index.html','resources.json','icon.svg','manifest.webmanifest','sw.js','assets','ict-futures','futures-intelligence','SECURITY.md','LICENSE','.well-known']:
         src=ROOT/name
         if not src.exists(): continue
         dst=DIST/name
         if src.is_dir(): shutil.copytree(src,dst,dirs_exist_ok=True)
         else: shutil.copy2(src,dst)
+    for name in sorted(PUBLIC_DOCS):
+        target = DIST/name
+        target.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copy2(ROOT/name, target)
     obsolete_prediction_client = DIST/'assets/prediction-markets.js'
     if obsolete_prediction_client.exists(): obsolete_prediction_client.unlink()
     mdata = load(ROOT/'ict-futures/data/market-universe.json',{}).get('markets',[])
@@ -902,11 +909,22 @@ def build():
     body+=f'<section class="content-section"><table class="status-table"><thead><tr><th>Service</th><th>Verified state</th></tr></thead><tbody>{rows}</tbody></table></section>'
     body+='<section class="content-section"><h2>Data state definitions</h2><p><span class="data-pill">LIVE API</span> received from a provider at request time · <span class="data-pill">SNAPSHOT</span> stored response · <span class="data-pill">DELAYED</span> provider-labelled delay · <span class="data-pill">OFFICIAL LINK</span> publisher page · <span class="data-pill">SEARCH LINK</span> provider search query · <span class="data-pill">STALE</span> retained last-known data · <span class="data-pill">UNAVAILABLE</span> no usable response.</p></section>'
     write(DIST/'status/index.html',shell('System Status | Futures Intelligence OS','Verified setup status for GitHub, Vercel, Supabase, Builder.io and Cloudflare.',body,'/status/'))
-    body=page_intro('Developer reference','Documentation','Architecture, setup, data contracts, source provenance, integration boundaries and operational instructions for maintaining this application.')
-    docs_cards=[card('Master requirements','The complete five-tool architecture, APIs, phases and acceptance criteria.','/docs/FINANCE_INTELLIGENCE_OS_COMPLETE_MASTER_REQUIREMENTS.md','Specification'),card('Implementation guide','How to configure the repository, data adapters, Worker and CMS integration.','/docs/IMPLEMENTATION.md','Guide'),card('Architecture','System component boundaries and data flows.','/docs/ARCHITECTURE.md','Technical'),card('Environment variables','Names and handling rules; never commit secret values.','/docs/ENVIRONMENT.md','Operations'),card('Futures-only roadmap','Part-by-part requirements, evidence rules, implementation status and remaining gaps.','/docs/futures-only-roadmap/README.md','Current status'),card('Production release checklist','Production QA gates for data, security, private workspace and release.','/docs/RELEASE-CHECKLIST.md','Release readiness')]
-    body+='<section class="card-grid">'+''.join(docs_cards)+'</section>'
-    body+='<section class="content-section"><h2>Historical source preservation</h2><p>Previous Global Research source baselines remain in the repository under <code>legacy/global-research/</code> and are not published in the active site. The ICT Futures terminal remains available under <code>/ict-futures/</code>.</p></section>'
-    write(DIST/'docs/index.html',shell('Documentation | Futures Intelligence OS','Technical documentation, build and service setup for the futures-only product.',body,'/docs/'))
+    body = page_intro('Site guide', 'Help & documentation',
+                      'Find learning paths, market data definitions and instructions for the public futures tools.')
+    docs_cards = [
+        card('Learn ICT', 'Find written lessons, practice exercises and source videos.', '/ict-lab/learn/', 'Lessons'),
+        card('Practice workflows', 'Use chart exercises, review decisions and practice journaling.', '/ict-lab/practice/', 'Practice'),
+        card('Data coverage', 'Review source availability, timestamps and limitations.', '/data-health/', 'Sources'),
+        card('Contracts and expiry', 'Read contract references and see lifecycle data availability.', '/contract-specs/', 'Contracts'),
+        card('Strategy Lab rule cards', 'Review model assumptions and evidence required before testing.',
+             '/docs/futures-only-roadmap/22-PART-7-MODEL-RULE-CARDS.md', 'Reference'),
+    ]
+    body += '<section class="card-grid">' + ''.join(docs_cards) + '</section>'
+    repo_docs = 'https://github.com/WHIZZ444YT/WHIZZ444-YT-OS/tree/main/docs'
+    body += ('<section class="content-section"><h2>Developer documentation</h2>'
+             f'<p><a href="{repo_docs}">Browse architecture, setup and release guides on GitHub</a>.</p></section>')
+    write(DIST/'docs/index.html', shell('Help & Documentation | Futures Intelligence OS',
+          'Public guides for learning, practice and market data.', body, '/docs/'))
 
     # Source archives stay in Git and are intentionally not published in dist.
     write(DIST/'legacy/index.html',redirect_page('Source archives are maintained in the repository','/docs/'))
