@@ -30,3 +30,20 @@ References: [WCAG 2.2](https://www.w3.org/TR/WCAG22/) · [Focus not obscured](ht
 - Keep the Python builder as the publishing boundary and JavaScript ES modules as the interaction layer. Introduce TypeScript for a new shared state or data module only if it has multiple typed consumers and CI can type-check it. A React or Next.js migration needs a separate decision with measured costs, route compatibility and deployment impact.
 - Define shared component contracts for Page header, Section heading, Card, Filter bar, Data state, Table wrapper and Dialog. Specify label, optional supporting text, action priority, error association and focus behavior before styling.
 - Maintain density by screen purpose. Use comfortable spacing for learning pages and opt-in data density for tables. Keep important values and statuses visible at the actual target widths. Use text, icon or line pattern to distinguish status and chart series in addition to color.
+
+## Implementation notes
+
+The shared stylesheet now declares one default token block and one light-theme
+override block before layout and compatibility rules. Keep feature-specific
+styles after the shared stylesheet. A page title names the current task in the
+main landmark, while the shell context and section headings support navigation.
+
+The mobile drawer isolates background content, exposes a named dialog and
+returns focus on Escape or explicit dismissal. Desktop navigation remains a
+normal sidebar. The Academy lesson and tutorial templates and both standalone
+entry points now have a focusable skip target. Terminal fragment IDs remain
+stable.
+
+Use the Chromium workflow to review keyboard and width regression evidence.
+Real browser zoom, assistive-technology review and a computed contrast inventory
+of feature-specific controls still require separate acceptance evidence.
