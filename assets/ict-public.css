@@ -76,6 +76,10 @@
 .ict-public table {border-collapse: collapse; width: 100%; font-variant-numeric: tabular-nums;}
 .ict-public th, .ict-public td {padding: .45rem; border-bottom: 1px solid var(--ict-line); text-align: left}
 .ict-public caption {text-align: left; color: var(--ict-muted); padding-block: .5rem}
+.ict-lesson-chart {border: 1px solid var(--ict-line); padding: .75rem; border-radius: 8px}
+.ict-lesson-chart svg {display: block; width: 100%; height: auto; max-width: 40rem}
+.ict-video-evidence {margin-block: .3rem .65rem; font-size: .875rem}
+.ict-reading img {max-width: 100%; height: auto}
 .ict-chart-controls {display: flex; align-items: end; flex-wrap: wrap; gap: .85rem}
 .ict-chart-controls label {display: grid; gap: .25rem}
 .ict-chart-controls[hidden], [data-market-profile][hidden] {display: none}
