@@ -6,11 +6,12 @@ import {runExperiment, tradesToCsv} from './strategy-backtest-engine.mjs';
 (() => {
   'use strict';
   const root=document.querySelector('[data-ict-practice]');
-  if(!root) return;
+  const inversion=document.querySelector('[data-ifvg-practice]');
+  if(!root&&!inversion) return;
   const playbooks=[...document.querySelectorAll('[data-journal-playbooks] option')].map(option=>option.value);
   const tickValues={NQ:5,MNQ:0.5,ES:12.5,MES:1.25};
   const raw=[[4,6,2,5],[5,7,3,6],[6,7,1,3],[3,4,0,2],[2,7,1,6],[6,10,5,9],[9,12,8,11],[11,12,7,8],[8,10,6,9],[9,14,8,13],[13,15,12,14],[14,15,9,10]];
-  const sample=(symbol, purpose='replay')=>raw.map(row=>row.map(n=>(symbol==='ES'?5000:20000)+n+(purpose==='annotation'?25:0)));
+  const sample=symbol=>raw.map(row=>row.map(n=>(symbol==='ES'?5000:20000)+n));
   const samples=['NQ','ES'];
   const key='ict-lab.practice.v1.';
   const history=group=>Object.keys(localStorage).filter(k=>k.startsWith(key+group+'.')).sort().map(k=>JSON.parse(localStorage.getItem(k)));
@@ -38,21 +39,75 @@ import {runExperiment, tradesToCsv} from './strategy-backtest-engine.mjs';
     };
     return f;
   }
-  function chart(box,symbol,bars,purpose='REPLAY'){
+  function chart(box,symbol,bars,purpose='REPLAY',marks=[]){
     const fig=add(box,'figure'),cap=add(fig,'figcaption',symbol+' · EDU-'+symbol+'-'+purpose+'-01 · 2026-06-02 · 5 min · NY AM · America/New_York · synthetic OHLC teaching sample');
     const low=Math.min(...bars.map(b=>b[2]))-1, high=Math.max(...bars.map(b=>b[1]))+1;
     const y=p=>Math.round(95-90*(p-low)/(high-low));
     const graphic=add(fig,'div');
     graphic.innerHTML='<svg viewBox="0 0 320 105" role="img" aria-label="Visible five-minute candlesticks" style="width:100%;max-height:220px">'+bars.map(([o,h,l,c],i)=>{const x=12+i*26,color=c>=o?'#46b598':'#dd876d';return '<line x1="'+x+'" x2="'+x+'" y1="'+y(h)+'" y2="'+y(l)+'" stroke="'+color+'"/><rect x="'+(x-5)+'" y="'+Math.min(y(o),y(c))+'" width="10" height="'+Math.max(1,Math.abs(y(o)-y(c)))+'" fill="'+color+'"/>';}).join('')+'</svg>';
+    if(marks.length){
+      const list=add(fig,'ol');
+      for(const mark of marks)add(list,'li',mark);
+    }
     const d=add(fig,'details');add(d,'summary','Read candle values');const table=add(d,'table');const header=add(table,'tr');['Bar','Open','High','Low','Close'].forEach(x=>add(header,'th',x));bars.forEach((b,i)=>{const row=add(table,'tr');[i+1,...b].forEach(x=>add(row,'td',x));});return cap;
   }
   function choose(box,label,options,render){const wrap=add(box,'label',label+' '),sel=add(wrap,'select');options.forEach(v=>add(sel,'option',v));const host=add(box,'section');const go=()=>{host.replaceChildren();render(host,sel.value);};sel.onchange=go;go();}
   function annotation(box){
-    choose(box,'Instrument',samples,(host,symbol)=>{const bars=sample(symbol,'annotation').slice(0,6);chart(host,symbol,bars,'ANNOTATION');
-      add(host,'p','Mark the lowest point of bar 3, then the candle that sweeps it. Identify the bullish FVG confirmed by the close of bar 6.');
-      form(host,'Check annotations',f=>{field(f,'level','Bar 3 liquidity low','number','',{step:'.25'});field(f,'sweep','Sweep candle number','number','',{min:'1',max:'6'});field(f,'floor','FVG lower boundary','number','',{step:'.25'});field(f,'ceiling','FVG upper boundary','number','',{step:'.25'});add(f,'button','Reset marks').type='reset';},v=>{
-        const answers=[bars[2][2],4,bars[3][1],bars[5][2]];const score=[v.level,v.sweep,v.floor,v.ceiling].filter((x,i)=>+x===answers[i]).length;
-        save('annotation',{symbol,score,...v});return score+'/4. Bar 4 sweeps '+answers[0]+'. Bar 4 high '+answers[2]+' and bar 6 low '+answers[3]+' bound the gap.';});});
+    choose(box,'Instrument',samples,(host,symbol)=>{
+      const offset=symbol==='ES'?5000:20000;
+      const bars=[[5,7,3,6],[6,7,1,3],[3,4,2,3],[3,4,0,2],[2,8,2,7],[7,10,5,9]]
+        .map(row=>row.map(price=>price+offset));
+      chart(host,symbol,bars,'ANNOTATION');
+      add(host,'p','Use only these six closed bars. Mark the three-bar swing low, the sweep, the displacement candle and the confirmed bullish gap.');
+      const reference=add(host,'section');
+      form(host,'Check annotations',f=>{
+        field(f,'level','Liquidity low','number','',{step:'.25'});
+        for(const [name,label] of [['swing','Swing bar'],['sweep','Sweep bar'],['displacement','Displacement bar']]){
+          field(f,name,label,'number','',{min:'1',max:'6'});
+        }
+        field(f,'floor','FVG lower boundary','number','',{step:'.25'});
+        field(f,'ceiling','FVG upper boundary','number','',{step:'.25'});
+        add(f,'button','Reset marks').type='reset';
+      },v=>{
+        const answers={level:bars[1][2],swing:2,sweep:4,displacement:5,floor:bars[3][1],ceiling:bars[5][2]};
+        const score=Object.entries(answers).filter(([name,answer])=>Number(v[name])===answer).length;
+        save('annotation',{symbol,score,...v});
+        reference.replaceChildren();
+        add(reference,'h3','Reference chart and marking guide');
+        chart(reference,symbol,bars,'ANNOTATION',[
+          'Bar 2 forms the swing low at '+answers.level+' once bar 3 closes with a higher low.',
+          'Bar 4 trades below that low and closes back above it.',
+          'Bar 5 expands upward and closes above bar 4’s high.',
+          'At bar 6 close, bar 4 high '+answers.floor+' and bar 6 low '+answers.ceiling+' define the gap.',
+        ]);
+        return score+'/6 marks match.';
+      });
+    });
+  }
+  function inversionPractice(box){
+    const decisionBar=5;
+    const closes=box.dataset.ifvgPractice.split(',').map(Number);
+    const bars=closes.map((close,i)=>{
+      const open=closes[i-1]??close;
+      return [open,Math.max(open,close)+.25,Math.min(open,close)-.25,close];
+    });
+    chart(box,'NQ',bars.slice(0,decisionBar),'IFVG');
+    const review=add(box,'section');
+    form(box,'Save decision and reveal chart',f=>{
+      field(f,'decision','Decision before the retest',['','Eligible','Wait','Invalid']);
+      field(f,'invalidation','Short invalidation price','number','',{step:'.25'});
+    },(v,controls)=>{
+      const correct=v.decision==='Wait'&&Number(v.invalidation)===20012;
+      save('ifvg',{fixture:'EDU-NQ-IFVG-01',decisionBar,correct,...v});
+      controls.hidden=true;
+      review.replaceChildren();
+      add(review,'h3','After saving your decision');
+      chart(review,'NQ',bars,'IFVG',[
+        'The first eligible return from below is bar 6. Bar 5 had not yet reached the lower gap boundary.',
+        'The short idea invalidates at 20012 or higher. This review grades the rule at bar 5 independently of what followed.',
+      ]);
+      return correct?'Rule followed at bar 5.':'The rule required Wait before the retest and 20012 as the invalidation level.';
+    });
   }
   const newYork = 'America/New_York';
   const kolkata = 'Asia/Kolkata';
@@ -86,7 +141,9 @@ import {runExperiment, tradesToCsv} from './strategy-backtest-engine.mjs';
     });
     saved(box,'plan',v=>[v.date,v.symbol,v.clocks,v.bias,v.levels,'Invalidation: '+v.invalid,'Skip: '+v.skip].join(' · '));
   }
-  function saved(box,group,describe){const d=add(box,'details');add(d,'summary','Review saved records');d.ontoggle=()=>{if(!d.open)return;d.querySelector('ul')?.remove();const list=add(d,'ul');try{const rows=history(group);rows.reverse().forEach(r=>add(list,'li',describe(r)));if(!rows.length)add(list,'li','No records yet.');}catch{add(list,'li','Device storage could not be read.');}};}
+  function saved(box,group,describe,showEvidence){const d=add(box,'details');add(d,'summary','Review saved records');d.ontoggle=()=>{if(!d.open)return;d.querySelector('ul')?.remove();const list=add(d,'ul');try{const rows=history(group);rows.reverse().forEach(r=>{
+    const row=add(list,'li',describe(r));if(showEvidence)showEvidence(row,r);
+  });if(!rows.length)add(list,'li','No records yet.');}catch{add(list,'li','Device storage could not be read.');}};}
   function replay(box){
     choose(box,'Replay instrument',samples,(host,symbol)=>{
       const bars=sample(symbol),k=key+'replay-'+symbol;
@@ -195,7 +252,7 @@ import {runExperiment, tradesToCsv} from './strategy-backtest-engine.mjs';
       const bars=sample(v.symbol);
       const input=Array.from({length:36},(_,i)=>bars[i%bars.length].map(price=>price+16*Math.floor(i/bars.length)));
       const csv=['timestamp,open,high,low,close,signal,contract,expiry',...input.map((row,i)=>[
-        new Date(Date.UTC(2026,5,2,13,30+i*5)).toISOString(),...row,
+        new Date(Date.UTC(2026,5,2,13,i*5)).toISOString(),...row,
         i>0&&row[3]>input[i-1][1]?'LONG':'FLAT',market,'2026-06-18'
       ].join(','))].join('\n');
       const result=await runExperiment(csv,{startingCapital:10000,riskPercent:1,tickSize:.25,tickValue:tickValues[v.symbol],
@@ -204,14 +261,19 @@ import {runExperiment, tradesToCsv} from './strategy-backtest-engine.mjs';
         marketSymbol:market,timeframe:'5m',timezone:newYork,signalSourceNotes:'Generated after each synthetic candle closes',
         dataSource:'Synthetic Lab fixture, no market data',datasetId:name,downloadDate:sampleDate,
         costSource:'User inputs',costAsOf:today()},name+'.csv');
-      const label=metrics=>metrics.trades+' closed trades · expectancy '+(metrics.averageR??'—')+' R · drawdown $'+
+      const label=metrics=>metrics.trades+' closed trades · win rate '+(metrics.winRatePct===null?'unavailable':metrics.winRatePct.toFixed(1)+'%')+
+        ' · expectancy '+(metrics.averageR??'-')+' R · drawdown $'+
         (metrics.maxDrawdownUsd??'—');
-      save('tests',{symbol:v.symbol,version:'close-breakout-v1',sample:name,result:label(result.fullSample.metrics),fingerprint:result.manifest.runFingerprint});
+      const record={symbol:v.symbol,contract:market,version:'close-breakout-v1',sample:name,
+        sampleStart:sampleDate,sampleEnd:sampleDate,session:'New York AM',commissionPerSide:v.fees,slippagePerSideTicks:v.slip,
+        fillAssumption:'Next bar open after a closed signal, with modeled costs',result:label(result.fullSample.metrics),
+        fingerprint:result.manifest.runFingerprint,splits:result.splits.map(s=>({key:s.key,metrics:s.metrics}))};
+      save('tests',record);
       results.replaceChildren();
       add(results,'h2','Evaluation periods');
       result.splits.forEach(s=>add(results,'p',s.key+': '+label(s.metrics)));
       add(results,'p','Tiny educational sample. Closed-trade counts are insufficient to infer a market edge.');
-      add(results,'button','Download manifest').onclick=()=>download(name+'.json','application/json',JSON.stringify(result.manifest,null,2));
+      add(results,'button','Download manifest').onclick=()=>download(name+'.json','application/json',JSON.stringify({...result.manifest,labRecord:record},null,2));
       add(results,'button','Download trade ledger').onclick=()=>download(name+'-trades.csv','text/csv',tradesToCsv(result.splits.flatMap(s=>s.trades)));
       return 'Completed. Results and export links are above.';
     });
@@ -242,7 +304,20 @@ import {runExperiment, tradesToCsv} from './strategy-backtest-engine.mjs';
     });
     link(box,'Open the full Risk Lab','/risk/');
   }
+  function readChart(file){
+    if(!file?.size)return null;
+    if(!['image/png','image/jpeg','image/webp'].includes(file.type)||file.size>512*1024){
+      throw Error('Choose a PNG, JPEG or WebP image no larger than 512 KB.');
+    }
+    return new Promise((resolve,reject)=>{
+      const reader=new FileReader();
+      reader.onload=()=>resolve(reader.result);
+      reader.onerror=()=>reject(Error('Could not read the chart image.'));
+      reader.readAsDataURL(file);
+    });
+  }
   function journal(box){
+    add(box,'p','Optional before and after chart images stay on this device. Use PNG, JPEG or WebP up to 512 KB each.');
     form(box,'Save journal entry',f=>{
       field(f,'date','Session date','date',today());
       field(f,'symbol','Contract',samples);
@@ -256,22 +331,43 @@ import {runExperiment, tradesToCsv} from './strategy-backtest-engine.mjs';
       const outcome=field(f,'outcome','Trade outcome',['','Win','Loss','Scratch']);
       field(f,'emotion','Emotional state');
       field(f,'review','Review note');
+      for(const [name,label] of [['before','Before chart'],['after','After chart']]){
+        field(f,name,label,'file','',{required:false,accept:'image/png,image/jpeg,image/webp'});
+      }
       action.onchange=()=>{
         const skipped=action.value==='No trade';
         for(const control of [primary,outcome]){
           control.disabled=skipped;control.required=!skipped;
         }
       };
-    },v=>{
+    },async v=>{
       if(v.action==='Trade'&&(!playbooks.includes(v.primary)||!['Win','Loss','Scratch'].includes(v.outcome))){
         throw Error('A trade requires one playbook and a trade outcome.');
       }
-      save('journal',{...v,primary:v.action==='Trade'?v.primary:null,outcome:v.action==='Trade'?v.outcome:null,
-        tags:v.tags.split(',').map(x=>x.trim()).filter(Boolean)});
+      const {before,after,...record}=v;
+      const [beforeChart,afterChart]=await Promise.all([readChart(before),readChart(after)]);
+      try{
+        save('journal',{...record,primary:v.action==='Trade'?v.primary:null,outcome:v.action==='Trade'?v.outcome:null,
+          tags:v.tags.split(',').map(x=>x.trim()).filter(Boolean),charts:{before:beforeChart,after:afterChart}});
+      }catch(error){
+        if(error.name==='QuotaExceededError')throw Error('Device storage is full. Export your journal before clearing old data.');
+        throw error;
+      }
       return 'Journal entry saved on this device.';
     });
     saved(box,'journal',v=>[v.date,v.symbol,v.primary,(v.tags||[]).join(', '),v.action,v.quality,v.adherence,v.outcome,
-      v.plan,v.actual,v.emotion,v.review].filter(Boolean).join(' · '));
+      v.plan,v.actual,v.emotion,v.review].filter(Boolean).join(' · '),(row,record)=>{
+        for(const [phase,label] of [['before','Before chart'],['after','After chart']]){
+          const data=record.charts?.[phase];
+          if(!/^data:image\/(png|jpeg|webp);base64,/.test(data||''))continue;
+          const details=add(row,'details');
+          add(details,'summary',label);
+          const image=add(details,'img');
+          image.src=data;
+          image.alt=label;
+          image.loading='lazy';
+        }
+      });
     legacyJournal(box);
     add(box,'button','Export this device’s journal').onclick=()=>{
       const status=add(box,'p');status.setAttribute('role','status');
@@ -285,6 +381,8 @@ import {runExperiment, tradesToCsv} from './strategy-backtest-engine.mjs';
     link(box,'Open private account workspace','/account/');
   }
 
+  if(inversion) inversionPractice(inversion);
+  if(!root) return;
   root.replaceChildren();
   try{[annotation,planner,replay,backtest,risk,journal][Number(root.dataset.ictPractice)-11](root);}
   catch(e){add(root,'p','This practice could not load. '+e.message);}

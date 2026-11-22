@@ -230,3 +230,9 @@ The five selected episodes cover ICT futures playbooks, lower-timeframe confirma
 | **Continue learning** | Link to C16 Fair Value Gap, C09 Displacement, P07 iFVG Entry, and Module 13 Blind Replay. |
 
 Two improvements matter across the entire site. First, **track when a chart label became knowable**. A swing identified with later candles should appear in replay only after those candles close. Second, **grade the decision separately from the outcome**. A learner can follow the written rule correctly and lose the simulated trade, or violate the rule and make a simulated profit. That distinction gives the journal something meaningful to review.
+
+## Implementation and media evidence
+
+The builder validates each placement against the stable video ID and timestamp, checks the six added concept placements and derives the displayed totals from the catalog. C17 saves a decision and invalidation price before revealing later bars. The synthetic lesson diagrams include textual marking guides. Practice keeps annotated answers, test manifests and journal evidence on the device. Optional local chart images support PNG, JPEG and WebP up to 512 KB per image.
+
+The catalog records whether a published title was retrieved, the date of a successful watch-page metadata check when known, and separate chapter, playback and embed status. The 22 November 2026 watch-page checks cover 35 exact video IDs. For the links where metadata could not be retrieved, the supplied watch label remains available and no successful check is recorded. Confirm chapter content, playback and embedding separately before assigning those statuses.

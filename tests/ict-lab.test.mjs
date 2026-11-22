@@ -46,6 +46,18 @@ test('the five Lab views and all 93 detail pages contain public HTML without scr
     }
   }
   assert.match(published(lab + 'learn/c34/index.html'), /<caption>EDU-OPEN-01/);
+  const inversion = published(lab + 'learn/c17/index.html');
+  assert.match(inversion, /data-ifvg-practice=/);
+  assert.match(inversion, /UIGZtoGGPH4&amp;t=1306s/);
+  assert.match(inversion, /C16 · Fair value gap/);
+  assert.match(inversion, /C09 · Displacement/);
+  assert.match(inversion, /Look-alike · synthetic NQ/);
+  assert.match(inversion, /Playback: unchecked/);
+  assert.match(published(lab + 'learn/c54/index.html'), /Forex source · Futures adaptation/);
+  assert.match(published(lab + 'learn/c55/index.html'), /Watch-page check: 2026-11-22/);
+  assert.match(published(lab + 'learn/c56/index.html'), /18:00 IST.*19:00 IST/);
+  assert.match(published(lab + 'mentors/m08/index.html'), /nY1NaXsFDQM/);
+  assert.match(published(lab + 'podcasts/w42kzZb9oYY/index.html'), /1:25:36/);
   assert.match(published(lab + 'practice/16/index.html'), /data-journal-playbooks/);
   const search = published('search/index.html');
   assert.ok(search.includes('"path": "/ict-lab/learn/c34/"'));
@@ -194,7 +206,7 @@ test('chart controls restore Back and Forward selections without automatically l
   assert.equal(frames().length, 0);
 });
 
-test('no-trade and legacy journal entries remain readable with the public Practice module', async t => {
+test('Practice preserves journal evidence, before-retest decisions, and backtest results', async t => {
   function node(tag) {
     return {
       tag, style: {}, children: [],
@@ -210,6 +222,7 @@ test('no-trade and legacy journal entries remain readable with the public Practi
   const findAll = (host, tag) => typeof host === 'string' ? [] :
     [...(host.tag === tag ? [host] : []), ...host.children.flatMap(child => findAll(child, tag))];
   const root = { ...node('section'), dataset: { ictPractice: '16' } };
+  let current = root, inversion = null;
   const savedKey = 'ict-lab.practice.v1.journal.1.legacy';
   const legacy = JSON.stringify({ action: 'No trade', primary: 'P01 2022 Mentorship', outcome: 'No trade',
     tags: ['C34'], review: 'Legacy review note' });
@@ -221,11 +234,14 @@ test('no-trade and legacy journal entries remain readable with the public Practi
   };
   const mocks = {
     document: {
-      querySelector: selector => selector === '[data-ict-practice]' ? root : null,
+      querySelector: selector => selector === '[data-ict-practice]' ? current : selector === '[data-ifvg-practice]' ? inversion : null,
       querySelectorAll: () => [{ value: 'P01 2022 Mentorship' }],
       createElement: node,
     },
     localStorage: storage,
+    FileReader: class {
+      readAsDataURL(file) { this.result = 'data:' + file.type + ';base64,AA=='; this.onload(); }
+    },
     FormData: function (form) {
       return [...findAll(form, 'select'), ...findAll(form, 'input')].filter(field => !field.disabled)
         .map(field => [field.name, field.value ?? '']);
@@ -245,11 +261,13 @@ test('no-trade and legacy journal entries remain readable with the public Practi
   outcome.value = 'Win';
   action.value = 'No trade';
   action.onchange();
+  findAll(form, 'input').find(field => field.name === 'before').value = { size: 1, type: 'image/png' };
   assert.ok(primary.disabled && outcome.disabled);
   await form.onsubmit({ preventDefault() {} });
   const entry = JSON.parse(storage[Object.keys(storage).find(key => key.startsWith('ict-lab.practice.v1.journal.') && key !== savedKey)]);
   assert.equal(entry.primary, null);
   assert.equal(entry.outcome, null);
+  assert.equal(entry.charts.before, 'data:image/png;base64,AA==');
   assert.equal(storage[savedKey], legacy);
   for (const history of findAll(root, 'details')) { history.open = true; history.ontoggle(); }
   const rows = findAll(root, 'li').map(row => row.textContent || '');
@@ -258,4 +276,32 @@ test('no-trade and legacy journal entries remain readable with the public Practi
   action.value = 'Trade';
   action.onchange();
   assert.ok(!primary.disabled && !outcome.disabled && primary.required && outcome.required);
+
+  current = null;
+  inversion = { ...node('section'), dataset: { ifvgPractice: '20014,20011,20013,20005,20008,20011,20006' } };
+  await import('../dist/assets/ict-practice.mjs?ifvg');
+  const [decision] = findAll(inversion, 'form');
+  decision.querySelector = () => node('button');
+  findAll(decision, 'select')[0].value = 'Wait';
+  findAll(decision, 'input')[0].value = '20012';
+  assert.equal(findAll(inversion, 'tr').length, 6);
+  await decision.onsubmit({ preventDefault() {} });
+  const attempt = JSON.parse(storage[Object.keys(storage).find(key => key.startsWith('ict-lab.practice.v1.ifvg.'))]);
+  assert.equal(attempt.decisionBar, 5);
+  assert.equal(attempt.correct, true);
+  assert.equal(decision.hidden, true);
+  assert.equal(findAll(inversion, 'tr').length, 14);
+
+  inversion = null;
+  current = { ...node('section'), dataset: { ictPractice: '14' } };
+  await import('../dist/assets/ict-practice.mjs?backtest');
+  const [backtest] = findAll(current, 'form');
+  backtest.querySelector = () => node('button');
+  await backtest.onsubmit({ preventDefault() {} });
+  const resultKey = Object.keys(storage).find(key => key.startsWith('ict-lab.practice.v1.tests.'));
+  assert.ok(resultKey, findAll(current, 'p').map(row => row.textContent).join(' '));
+  const result = JSON.parse(storage[resultKey]);
+  assert.equal(result.session, 'New York AM');
+  assert.match(result.result, /win rate.*expectancy.*drawdown/);
+  assert.deepEqual(result.splits.map(split => split.key), ['in-sample', 'validation', 'out-of-sample']);
 });
