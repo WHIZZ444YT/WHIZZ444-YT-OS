@@ -1,31 +1,19 @@
 .ict-public {
-  --ict-bg: #0c1420;
-  --ict-surface: #152233;
-  --ict-text: #ecf3fa;
-  --ict-muted: #a9b9ca;
-  --ict-accent: #63dcc9;
-  --ict-action-ink: #09231f;
-  --ict-link: #9acbff;
-  --ict-line: #647b92;
-  --ict-focus: #ffcc73;
+  --ict-bg: var(--os-bg);
+  --ict-surface: var(--os-surface);
+  --ict-text: var(--os-ink);
+  --ict-muted: var(--os-muted);
+  --ict-accent: var(--os-action);
+  --ict-link: var(--os-blue);
+  --ict-line: var(--os-line-strong);
+  --ict-focus: var(--os-focus);
+  --ict-action-ink: var(--os-action-ink);
   background: var(--ict-bg);
   color: var(--ict-text);
   padding: clamp(1rem, 3vw, 2.5rem);
   border-radius: 16px;
   min-width: 0;
   font-size: 1rem;
-}
-
-.os-light .ict-public {
-  --ict-bg: #f5f8fc;
-  --ict-surface: #fff;
-  --ict-text: #122539;
-  --ict-muted: #475c70;
-  --ict-accent: #087064;
-  --ict-action-ink: #fff;
-  --ict-link: #174f86;
-  --ict-line: #62778c;
-  --ict-focus: #744600;
 }
 
 .ict-public h1, .ict-public h2, .ict-public h3 {color: var(--ict-text); line-height: 1.2}

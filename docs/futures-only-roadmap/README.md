@@ -155,3 +155,6 @@ A Part is complete only when its source-level scope is implemented, existing rou
 ## Change and handoff policy
 
 Use a focused branch/PR. Inspect current source and current provider documentation before changing a Part; update canonical source/build inputs rather than generated output. Keep secrets server-side and database migrations additive. Do not reset production data. Report changed files, observed checks, unverified assumptions, license/configuration blockers and remaining acceptance items.
+
+See the [Futures Market Improvements roadmap](../futures-market-improvements/README.md)
+for the public site, ICT Lab and current release acceptance criteria.

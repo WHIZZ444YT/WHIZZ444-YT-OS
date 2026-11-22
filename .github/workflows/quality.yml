@@ -51,10 +51,27 @@ jobs:
       - name: Internal link and anchor audit
         run: python3 scripts/audit_internal_links.py
 
+      - name: Check responsive public pages in Chromium
+        if: matrix.cutover == '0'
+        run: |
+          npm install --prefix "$RUNNER_TEMP/public-ui" --no-audit --no-fund playwright@1.56.1
+          "$RUNNER_TEMP/public-ui/node_modules/.bin/playwright" install --with-deps chromium
+          python3 -m http.server 8798 --bind 127.0.0.1 --directory dist &
+          for attempt in {1..20}; do
+            if curl --fail --silent http://127.0.0.1:8798/ > /dev/null; then break; fi
+            sleep 1
+          done
+          node scripts/check_public_ui.mjs "$RUNNER_TEMP/public-ui" "$RUNNER_TEMP/public-ui-screenshots"
+      - name: Archive desktop and phone screenshots
+        if: always() && matrix.cutover == '0'
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: public-ui-screenshots
+          path: ${{ runner.temp }}/public-ui-screenshots/
+
       - name: Compare clean standard and cutover route manifests
         if: matrix.cutover == '0'
         run: |
           cp dist/route-manifest.json "$RUNNER_TEMP/standard-routes.json"
           ICT_TERMINAL_CUTOVER=1 python3 scripts/build_site.py
           python3 scripts/check_release_parity.py "$RUNNER_TEMP/standard-routes.json" dist/route-manifest.json
-
