@@ -77,14 +77,16 @@ def validate_rights_manifest(rights: dict, family_ids: set[str], as_of: date) ->
     return reviewed_at
 
 
-def validate_snapshot(snapshot: dict, family_ids: set[str], as_of: date) -> dict:
+def validate_snapshot(snapshot: dict, family_ids: set[str], as_of: date, *, require_fresh=True) -> dict:
     if not isinstance(snapshot, dict) or snapshot.get("schemaVersion") != 1:
         raise ValueError("Source snapshot schemaVersion must be 1.")
     source_date = _iso_date(snapshot.get("cmeSourceBusinessDate"), "cmeSourceBusinessDate", required=True)
     age_days = (as_of - date.fromisoformat(source_date)).days
-    if age_days < 0 or age_days > 7:
+    if age_days < 0 or (require_fresh and age_days > 7):
         raise ValueError("Source business date must not be future-dated or more than seven days old.")
-    _iso_date(snapshot.get("asOfDate"), "asOfDate", required=True)
+    snapshot_date = _iso_date(snapshot.get("asOfDate"), "asOfDate", required=True)
+    if not source_date <= snapshot_date <= as_of.isoformat():
+        raise ValueError("Snapshot asOfDate must be between the source business date and today.")
     products = snapshot.get("products")
     if not isinstance(products, list) or {p.get("marketId") for p in products if isinstance(p, dict)} != family_ids or len(products) != len(family_ids):
         raise ValueError("Source snapshot must contain one product record for each of the 15 configured families.")
@@ -100,18 +102,22 @@ def validate_snapshot(snapshot: dict, family_ids: set[str], as_of: date) -> dict
         if not isinstance(rows, list) or not rows or len(rows) > 1000:
             raise ValueError(f"{market_id} must have between one and 1,000 listed contract rows.")
         seen_rows: set[tuple[str, str]] = set()
+        months_by_symbol = {}
         for row in rows:
             if not isinstance(row, dict):
                 raise ValueError(f"{market_id} contains a non-object contract row.")
             symbol, month = row.get("contractSymbol"), row.get("contractMonth")
             if not isinstance(symbol, str) or not re.fullmatch(r"[A-Z0-9]{1,12}", symbol):
                 raise ValueError(f"{market_id} has an invalid contractSymbol.")
-            if not isinstance(month, str) or not re.fullmatch(r"\d{6}", month):
+            if (not isinstance(month, str) or not re.fullmatch(r"[0-9]{6}", month)
+                    or int(month[:4]) < 1 or not 1 <= int(month[4:]) <= 12):
                 raise ValueError(f"{market_id}/{symbol} has an invalid YYYYMM contractMonth.")
             key = (symbol, month)
             if key in seen_rows:
                 raise ValueError(f"{market_id} contains a duplicate contract row: {symbol} {month}.")
             seen_rows.add(key)
+            if months_by_symbol.setdefault(symbol, month) != month:
+                raise ValueError(f"{market_id}/{symbol} has conflicting contract months.")
             last_trade = _iso_date(row.get("lastTradeDate"), f"{market_id}/{symbol}/{month}.lastTradeDate", required=True)
             if last_trade < source_date:
                 raise ValueError(f"{market_id}/{symbol}/{month} is expired at the source business date.")
@@ -139,7 +145,7 @@ def load_json(path: Path, byte_limit: int, label: str) -> dict:
 
 
 def import_snapshot(snapshot_path: Path, rights_path: Path, output_path: Path, as_of: date | None = None) -> dict:
-    as_of = as_of or date.today()
+    as_of = as_of or datetime.now(timezone.utc).date()
     markets = json.loads(MARKETS_PATH.read_text(encoding="utf-8"))
     family_ids = {market["id"] for market in markets.get("markets", [])}
     if len(family_ids) != 15:
@@ -148,8 +154,10 @@ def import_snapshot(snapshot_path: Path, rights_path: Path, output_path: Path, a
     rights = load_json(rights_path, MAX_RIGHTS_BYTES, "Rights manifest")
     reviewed_at = validate_rights_manifest(rights, family_ids, as_of)
     normalized = validate_snapshot(snapshot, family_ids, as_of)
+    normalized["status"] = "authorized-snapshot"
     normalized["rightsStatus"] = "approved-public-display"
     normalized["rightsReviewDate"] = reviewed_at
+    normalized["rightsValidThrough"] = rights["validThrough"]
     normalized["generatedAt"] = datetime.now(timezone.utc).replace(microsecond=0).isoformat().replace("+00:00", "Z")
     normalized["limitations"] = list(normalized.get("limitations") or []) + [
         "Public display was enabled from an owner-supplied rights attestation; keep the governing agreement and scope review current.",

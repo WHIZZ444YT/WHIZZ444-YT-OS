@@ -67,7 +67,7 @@ ok('Static assets no longer receive a one-year immutable cache','max-age=300, st
 nav_source=(ROOT/'scripts/build_site.py').read_text(encoding="utf-8")
 p1_labels=['Overview','Futures Markets','ICT Academy','Entry Models','Sessions & Calendar','Futures News','Volume & Open Interest','COT & Positioning','Contract Specs & Expiry','Strategy Lab','Risk & Prop Firms','Journal & Watchlists','Data Health & Sources']
 ok('Part 1 has exactly 13 futures-only areas',all("('"+label+"'," in nav_source for label in p1_labels) and "('Prediction Markets'," not in nav_source)
-ok('Part 1 groups navigation in a shared accessible app shell','NAV_GROUPS' in nav_source and 'aria-label="13 futures product areas"' in nav_source and 'class="os-sidebar"' in nav_source)
+ok('Part 1 groups navigation in a shared accessible app shell','NAV_GROUPS' in nav_source and 'aria-label="Futures product areas"' in nav_source and 'class="os-sidebar"' in nav_source)
 ok('Part 1 sessions route is a first-class calendar page while risk/tools keep compatibility redirects',all(x in nav_source for x in ["DIST/'sessions/index.html'","DIST/'risk/index.html'","DIST/'tools/index.html',redirect_page","sessions-page.css","sessions-page.js"]) and "redirect_page('Sessions & Calendar" not in nav_source)
 ok('Part 1 distinguishes source-checked core contract facts from unverified lifecycle data','PARTIAL · SOURCED CORE' in nav_source and 'SOURCED · CHECKED' in nav_source and 'NOT VERIFIED IN THIS RECORD' in nav_source and 'NO LICENSED SNAPSHOT CONFIGURED · CHECK OFFICIAL SOURCE' in nav_source and 'NO APPROVED POLICY CONFIGURED' in nav_source)
 ok('Weekly open-interest endpoint is distinct from exchange volume','/api/v1/volume-open-interest' in worker and 'cadence:"weekly"' in worker and 'metric:"open_interest"' in worker and 'status:"not-connected"' in worker)
@@ -81,10 +81,12 @@ contract_registry=readj(Path('ict-futures/data/market-universe.json'))
 contract_rows=contract_registry.get('markets',[])
 contract_version='partial-official-spec-review-'+str(contract_registry.get('generatedAt','undated'))
 ok('Part 3 has 15 partial contract records with dated official core-spec evidence',len(contract_rows)==15 and all(x.get('specStatus')=='partial' and x.get('specVersionId')==contract_version and x.get('specVerifiedAt') is None and x.get('specEffectiveFrom') is None and x.get('specEffectiveTo') is None and x.get('specEvidence',{}).get('sourceStatus')=='SOURCED' and x.get('specEvidence',{}).get('checkedAt')==contract_registry.get('generatedAt') and isinstance(x.get('tickSize'),str) and isinstance(x.get('tickValue'),str) for x in contract_rows) and sum(bool(x.get('microSpec')) for x in contract_rows)==13 and all(x['microSpec'].get('specEvidence',{}).get('sourceStatus')=='SOURCED' for x in contract_rows if x.get('microSpec')))
+from build_site import TERMINAL_CUTOVER, futures_terminal_bundle
+
 terminal_template=(ROOT/'ict-futures/index.html').read_text(encoding='utf-8')
 terminal_built=(ROOT/'dist/ict-futures/index.html').read_text(encoding='utf-8')
 terminal_match=re.search(r'const DATA_BUNDLE = (.*?);\s*const DATA=DATA_BUNDLE;',terminal_built,re.S)
-try: terminal_data=json.loads(terminal_match.group(1)) if terminal_match else {}
+try: terminal_data=json.loads(terminal_match.group(1)) if terminal_match else futures_terminal_bundle() if TERMINAL_CUTOVER else {}
 except Exception: terminal_data={}
 verified_video_ids={'ict-2022-model':'ict-2022-ep14','mss':'ict-2022-ep03-mss','fvg':'ict-2022-ep06-fvg','order-block':'ict-2022-ep22-order-block','silver-bullet':'ict-2023-silver-bullet-model','liquidity':'ict-2025-advanced-liquidity','liquidity-run':'ict-liquidity-runs-2022','ipda':'ict-ipda-data-ranges-2022','market-maker-buy-model':'ict-2024-mmbm-example','market-maker-sell-model':'ttrades-cpi-gold-market-maker-sell-model-2024','ote':'ttrades-ote-2023','unicorn':'ttrades-unicorn-2023','ifvg':'ttrades-ifvg-2023','amd-po3':'ttrades-po3-amd-2023','cisd':'ttrades-cisd-orderblock-2023','market-structure':'ttrades-structure-mss-fvg-displacement-2022','displacement':'ttrades-structure-mss-fvg-displacement-2022','bsl':'ttrades-liquidity-levels-2023','ssl':'ttrades-liquidity-levels-2023','eqh':'ttrades-liquidity-levels-2023','eql':'ttrades-liquidity-levels-2023','pdh-pdl':'ttrades-liquidity-levels-2023','pwh-pwl':'ttrades-liquidity-levels-2023','session-high-low':'ttrades-liquidity-levels-2023','swing-high-low':'paul-leroy-fvg-essentials-swing-pivots-2022','judas-swing':'ict-judas-swing-2017','bos':'ttrades-structure-shift-liquidity-grab-2022','breaker-block':'ttrades-breaker-blocks-simplified-2024','mitigation-block':'ttrades-mitigation-blocks-simplified-2024','dealing-range':'ttrades-choosing-dealing-ranges-2022','premium-discount':'ttrades-equilibrium-discount-premium-2025','equilibrium':'ttrades-equilibrium-discount-premium-2025','irl-erl':'ttrades-internal-external-liquidity-daily-bias-2024','opposing-liquidity':'ttrades-draw-on-liquidity-2023','ndog':'ict-ndog-new-day-opening-gap-2023','nwog':'ict-nwog-new-week-opening-gap-2023','bpr':'ttrades-balanced-price-range-2022','liquidity-void':'ict-month-04-liquidity-voids-2022','mean-threshold':'ttrades-orderblocks-mean-threshold-2023','killzones':'ttrades-killzones-indicator-settings-2023','time-anchors':'ttrades-important-time-levels-2024','smt':'ttrades-smt-divergence-ict-concepts-2023','weekly-profiles':'ttrades-weekly-profile-intraweek-reversal-2026','mmxm':'ttrades-mmxm-advanced-lesson-2024','pd-arrays':'ict-pd-array-matrix-revealed-2025','asian-range':'ict-friday-asian-range-2020','volume-imbalance':'ict-daily-volume-imbalance-draw-2024','fpfvg':'ict-opening-range-first-presented-fvg-2025','rejection-block':'ict-rejection-block-entry-techniques','midnight-open':'lumitraders-ny-midnight-open-explained-2026','weekly-open':'lumitraders-premarket-plan-weekly-open-2024'}
 ok('Part 3 ICT terminal uses the canonical source bundle instead of embedded duplicate data',terminal_template.count('__FUTURES_DATA_BUNDLE__')==1 and 'const DATA_BUNDLE = {' not in terminal_template and len(terminal_data.get('markets',[]))==15 and terminal_data.get('academy',{}).get('conceptCount')==82 and len(terminal_data.get('academy',{}).get('tracks',[]))==10 and {v.get('id') for v in terminal_data.get('academy',{}).get('featuredVideos',[])}==set(verified_video_ids.values()))
@@ -105,13 +107,15 @@ calendar_snapshot=playbook.get('calendarSnapshot',{})
 ok('Part 4 imported publisher events carry explicit stale/unverified provenance',calendar_snapshot.get('status')=='unverified' and calendar_snapshot.get('asOfDate')=='2026-11-08' and calendar_snapshot.get('retrievedAtUtc') is None and len(playbook.get('events',[]))>0 and all(e.get('publisher') and e.get('status')=='unverified' and e.get('retrievedAtUtc') is None and e.get('actualAtUtc') is None and e.get('revisionAtUtc') is None for e in playbook.get('events',[])))
 time_engine=(ROOT/'assets/session-time.js').read_text(encoding='utf-8')
 ok('Part 4 terminal ships the tested DST-aware conversion engine',"<script src=\"/assets/session-time.js\"></script>" in terminal_template and (ROOT/'dist/assets/session-time.js').exists() and all(x in time_engine for x in ['resolveWallTime','nonexistent','ambiguous']))
-ok('Part 4 unverified references are excluded from calendar/countdown/export',all(x in terminal_built for x in ['calendarScheduleEvents()','Imported publisher references · not a schedule','No verified publisher schedule']) and 'rows=calendarScheduleEvents()' in terminal_built)
+terminal_for_checks=terminal_template if TERMINAL_CUTOVER else terminal_built
+ok('Part 4 unverified references are excluded from calendar/countdown/export',all(x in terminal_for_checks for x in ['calendarScheduleEvents()','Imported publisher references · not a schedule','No verified publisher schedule']) and 'rows=calendarScheduleEvents()' in terminal_for_checks)
 calendar_api=(ROOT/'cloudflare/src/economic-calendar.mjs').read_text(encoding='utf-8')
 extended_calendar_api=(ROOT/'cloudflare/src/economic-calendar-extended.mjs').read_text(encoding='utf-8')
 session_page=(ROOT/'dist/sessions/index.html').read_text(encoding='utf-8')
 session_ui=(ROOT/'assets/sessions-page.js').read_text(encoding='utf-8')
+publisher_schedules=(ROOT/'assets/publisher-schedules.js').read_text(encoding='utf-8')
 ok('Part 4 official BLS, EIA, CFTC, BEA, Federal Reserve and four additional central-bank schedule adapters are source-attributed and bounded',all(x in calendar_api for x in ['BLS_CALENDAR_URL','EIA_WPSR_SCHEDULE_URL','BLS_CALENDAR_MAX_BYTES','America/New_York','parseBlsIcs','parseEiaWpsrSchedule','resolveCalendarWallTime','actual_release_at_utc: null']) and all(x in extended_calendar_api for x in ['BEA_RELEASE_DATES_URL','parseBeaReleaseDates','fetchBeaReleaseCalendar','CFTC_COT_SCHEDULE_URL','FOMC_CALENDAR_URL','ECB_COUNCIL_CALENDAR_URL','BOE_MPC_CALENDAR_URL','BOC_RATE_CALENDAR_URL','RBA_BOARD_CALENDAR_URL','parseCftcCotSchedule','parseFomcCalendar','parseEcbCouncilCalendar','parseBoeMpcCalendar','parseBocRateCalendar','parseRbaBoardCalendar','MAX_SCHEDULE_BYTES']))
-ok('Part 4 dedicated sessions page separates publisher schedules, ICT conventions and unverified exchange hours',all(x in session_ui for x in ['/api/v1/events','/api/v1/events/eia','/api/v1/events/cftc','/api/v1/events/fomc','/api/v1/events/ecb','/api/v1/events/boe','/api/v1/events/boc','/api/v1/events/rba','/api/v1/events/bea']) and all(x in session_page for x in ['sessionsWindowDate','PRACTITIONER CONVENTION','Official product hours are not configured','CME holiday calendar','BLS · EIA · CFTC · FED · ECB · BOE · BOC · RBA · BEA','Verify CFTC COT schedule','Verify FOMC meeting dates','Verify ECB council dates','Verify Bank of England MPC dates','Verify Bank of Canada dates','Verify RBA board dates','Verify BEA release schedule']) and 'http-equiv="refresh"' not in session_page)
+ok('Part 4 dedicated sessions page separates publisher schedules, ICT conventions and unverified exchange hours','loadPublisherSchedules' in session_ui and all(x in publisher_schedules for x in ['/api/v1/events','/api/v1/events/eia','/api/v1/events/cftc','/api/v1/events/fomc','/api/v1/events/ecb','/api/v1/events/boe','/api/v1/events/boc','/api/v1/events/rba','/api/v1/events/bea']) and all(x in session_page for x in ['sessionsWindowDate','PRACTITIONER CONVENTION','Official product hours are not configured','CME holiday calendar','BLS · EIA · CFTC · FED · ECB · BOE · BOC · RBA · BEA','Verify CFTC COT schedule','Verify FOMC meeting dates','Verify ECB council dates','Verify Bank of England MPC dates','Verify Bank of Canada dates','Verify RBA board dates','Verify BEA release schedule']) and 'http-equiv="refresh"' not in session_page)
 
 economic=(ROOT/'cloudflare/src/economic-providers.js').read_text(encoding="utf-8")
 ok('P2 supports BEA, EIA, FRED, Treasury and ECB adapters',all(x in economic for x in ['case "bea"','case "eia"','case "fred"','case "us_treasury"','case "ecb"']))
@@ -270,19 +274,34 @@ if dist.exists():
     overview=(dist/'index.html').read_text(errors='ignore')
     desk_page=(dist/'futures-intelligence/index.html').read_text(errors='ignore')
     ict_page=(dist/'ict-futures/index.html').read_text(errors='ignore')
-    ok('Part 1 overview renders the 13-area shell and core widget containers',overview.count('class="os-nav-link')==13 and all(x in overview for x in ['overviewContract','overviewNewsList','overviewCotSummary','overviewClockET','overviewCalendarTitle','overviewPrivateMetrics','overviewHealthBadge']))
+    ok('Part 1 overview renders the shared shell, product destinations and core widget containers',
+       all(f'href="{path}"' in overview for path in ['/search/','/charts/','/ict-lab/','/ict-lab/practice/16/']) and
+       all(x in overview for x in ['overviewContract','overviewNewsList','overviewCotSummary','overviewClockET','overviewCalendarTitle','overviewPrivateMetrics','overviewHealthBadge']))
     ok('Part 1 wraps both standalone terminals in the shared shell',all('data-os-shell' in x and 'id="appSidebar"' in x and 'id="sidebarToggle"' in x for x in [desk_page,ict_page]))
     ok('Part 1 loads dashboard and shared shell assets once',overview.count('overview-dashboard.js')==1 and (dist/'assets/overview-dashboard.js').exists() and (dist/'assets/site-shell.js').exists())
     ok('Part 1 overview avoids fabricated quotes and economic release events','QUOTE NOT CONNECTED' in overview and 'NOT CONNECTED' in overview and 'calendar is not available' in overview.lower())
     contract_page=(dist/'contract-specs/index.html').read_text(encoding='utf-8',errors='ignore')
     ok('Part 1 contract registry exposes all 15 partial families with official product and lifecycle references',contract_page.count('class="os-contract-spec-card"')==15 and contract_page.count('data-family=')==15 and 'PARTIAL · SOURCED CORE' in contract_page and 'SOURCED · CHECKED 2026-11-20' in contract_page and 'CME micro specification' in contract_page and 'contractSpecSearch' in contract_page and 'contractSpecExchange' in contract_page and 'Full lifecycle sign-off remains 0 / 15' in contract_page and 'https://www.cmegroup.com/tools-information/calendars/expiration-calendar.html' in contract_page and 'https://www.ice.com/products/194/US-Dollar-Index-Futures/expiry' in contract_page and 'NOT VERIFIED IN THIS RECORD' in contract_page and 'risk estimates remain conditional' in contract_page.lower() and 'Contract date display is rights-gated' in contract_page)
     lifecycle=readj(Path('dist/data/contract-lifecycle.json'))
-    lifecycle_coverage=lifecycle.get('coverage') or {}
-    ok('Part 3 lifecycle data is hidden unless public-display rights are explicitly reviewed',lifecycle.get('rightsStatus')=='not-approved' and lifecycle_coverage.get('familyCount')==15 and lifecycle_coverage.get('familiesWithCurrentOrFutureRows')==0 and lifecycle_coverage.get('contractMonthRows')==0 and not lifecycle.get('products') and 'Contract date display is rights-gated' in contract_page)
-    ok('Part 3 public JSON contains no unlicensed lifecycle rows',lifecycle.get('sourceFiles')==[] and lifecycle.get('coverage',{}).get('contractMonthRows')==0 and all('contractMonths' not in p for p in lifecycle.get('products',[])))
+    from build_site import contract_lifecycle_table, public_contract_lifecycle_data
+    lifecycle_source=readj(Path('data/contract-lifecycle.json'))
+    expected=public_contract_lifecycle_data(lifecycle_source,{row['id'] for row in contract_rows})
+    ok('Part 3 lifecycle publication matches the configured rights state',
+       lifecycle==expected and lifecycle.get('rightsStatus')==lifecycle_source.get('rightsStatus')
+       and 'Contract date display is rights-gated' in contract_page)
+    if expected['rightsStatus']=='approved-public-display':
+        snapshot_date=expected['cmeSourceBusinessDate']
+        ok('Part 3 authorized lifecycle HTML matches the public snapshot',
+           contract_page.count('DATED SNAPSHOT')==len(expected['products'])
+           and all(contract_lifecycle_table(product,snapshot_date) in contract_page for product in expected['products']))
+    else:
+        ok('Part 3 unconfigured lifecycle HTML and JSON publish zero rows',
+           not lifecycle.get('sourceFiles') and not lifecycle.get('products')
+           and lifecycle.get('coverage',{}).get('contractMonthRows')==0
+           and contract_page.count('No lifecycle dates are licensed and configured for public display')==len(contract_rows))
     voi_page=(dist/'volume-open-interest/index.html').read_text(encoding='utf-8',errors='ignore')
     ok('Part 6 page separates weekly CFTC history from rights-gated exchange observations',all(x in voi_page for x in ['Weekly open-interest history','Authorized exchange observations','exchangeObservationState','exchangeObservationRows','aria-live="polite"','RIGHTS-GATED']))
-    ok('Part 1 first-class calendar route preserves the timezone-aware ICT tools','id="sessionsEventList"' in (dist/'sessions/index.html').read_text(errors='ignore') and 'renderSessions' in ict_page)
+    ok('Part 1 first-class calendar route preserves the timezone-aware ICT tools','id="sessionsEventList"' in (dist/'sessions/index.html').read_text(errors='ignore') and ('id="personal-reminders"' in session_page if TERMINAL_CUTOVER else 'renderSessions' in ict_page))
     risk_page=(dist/'risk/index.html').read_text(errors='ignore')
     ok('P8 risk route labels conditional sizing and no verified firm programs','CONDITIONAL ESTIMATE' in risk_page and 'NO VERIFIED PROGRAMS' in risk_page and 'Blue Shift 25K' in risk_page and 'type="module"' in risk_page)
     dist_prop_rules=readj(Path('dist/data/prop-firm-programs.json'))
@@ -316,6 +335,9 @@ if dist.exists():
     p7_template=dist/'strategy-lab/backtest-input-template.csv'
     ok('P7 CSV template requires exact contract and expiry fields',
         p7_template.exists() and p7_template.read_text(encoding="utf-8").strip()=='timestamp,open,high,low,close,signal,contract,expiry,stop_ticks,volume')
+    published_docs = {p.relative_to(dist).as_posix() for p in (dist/'docs').rglob('*') if p.is_file()}
+    ok('Public documentation is limited to the help index and linked rule cards',
+       published_docs == {'docs/index.html', 'docs/futures-only-roadmap/22-PART-7-MODEL-RULE-CARDS.md'})
     ok('P7 rule-card decisions are included in generated docs',
         (dist/'docs/futures-only-roadmap/22-PART-7-MODEL-RULE-CARDS.md').exists())
     p5_page=(dist/'account/index.html').read_text(errors='ignore') if (dist/'account/index.html').exists() else ''
@@ -336,11 +358,27 @@ if dist.exists():
     ok('Retired routes are noindex redirects',all('noindex' in (dist/path).read_text(errors='ignore') for path in ['research/index.html','prediction-markets/index.html','legacy/index.html']))
     ok('Generated navigation has no event-market item','Prediction Markets' not in (dist/'index.html').read_text(encoding="utf-8") and '/prediction-markets/' not in (dist/'index.html').read_text(encoding="utf-8"))
     active_ict=(dist/'ict-futures/index.html').read_text(errors='ignore')
+    bookmark_path = dist / ('ict-futures/index.html' if TERMINAL_CUTOVER else 'ict-futures/bookmarks/index.html')
+    bookmarks = bookmark_path.read_text(encoding='utf-8')
+    worker = (dist/'ict-futures/sw.js').read_text(encoding='utf-8')
+    ok('Terminal cutover toggle selects a fragment dispatcher and matching scoped worker',
+        all(x in bookmarks for x in ['ict-terminal-routes','ict-terminal-compat.js','href="/charts/"']) and
+        'DATA_BUNDLE' not in bookmarks and 'serviceWorker.register' not in bookmarks and
+        (('DATA_BUNDLE' not in active_ict and 'registration.unregister()' in worker) if TERMINAL_CUTOVER
+         else ('DATA_BUNDLE' in active_ict and 'registration.unregister()' not in worker)))
     ok('ICT terminal excludes retired event-market and issuer content',
        'id="predictions"' not in active_ict and 'href="#predictions"' not in active_ict and
        'Polymarket' not in active_ict and 'Kalshi' not in active_ict and
        'Stocktwits' not in active_ict and 'SEC EDGAR — Form 4' not in active_ict)
     sitemap=(dist/'sitemap.xml').read_text(errors='ignore')
+    from build_route_manifest import route_manifest
+    from os import getenv
+    manifest=readj(Path('dist/route-manifest.json'))
+    ok('Route manifest matches generated pages, cutover mode, bookmarks and source hashes',
+       manifest==route_manifest(ROOT,dist,cutover=TERMINAL_CUTOVER,
+                                commit=getenv('VERCEL_GIT_COMMIT_SHA') or getenv('GITHUB_SHA')))
+    ok('Sitemap omits private workspace and terminal compatibility routes',
+       all(f'{path}</loc>' not in sitemap for path in ('/account/','/ict-futures/','/ict-futures/bookmarks/')))
     ok('Sitemap excludes retired research, prediction and archive routes',
        all(x not in sitemap for x in ['/prediction-markets/','/research/</loc>','/legacy/']))
     ok('Part 1 redirect-only Sessions route is excluded from sitemap','/sessions/' not in sitemap)
@@ -351,7 +389,7 @@ if dist.exists():
     else:
         ok('Part 1 local noindex build keeps sitemap empty','<url>' not in sitemap)
     ok('Service worker cache no longer references generic 73-instrument dataset',
-       'data/market-universe.json' not in (ROOT/'sw.js').read_text(encoding="utf-8") and 'v1.1.0-futures-only-p1' in (ROOT/'sw.js').read_text(encoding="utf-8"))
+       'data/market-universe.json' not in (ROOT/'sw.js').read_text(encoding="utf-8") and 'v1.1.0-public-shell' in (ROOT/'sw.js').read_text(encoding="utf-8"))
     ok('Runtime config exists only with publishable Supabase key', (dist/'assets/runtime-config.js').exists() and 'service_role' not in (dist/'assets/runtime-config.js').read_text(encoding="utf-8").lower())
     # Validate inline scripts in the two preserved monolithic applications.
     for page in [dist/'index.html', dist/'ict-futures/index.html']:

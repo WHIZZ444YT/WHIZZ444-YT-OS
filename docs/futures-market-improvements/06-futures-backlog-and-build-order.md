@@ -27,3 +27,18 @@ The [prior roadmap](../futures-only-roadmap/README.md) and its [remaining-work r
 | F · Production acceptance | Run quality, link and media checks, preview review, sign-off, Vercel promotion and independent Worker/account verification where applicable | E | [Release evidence](07-acceptance-and-release-plan.md) plus rollback candidate |
 
 Fix the [lifecycle release gate](09-repository-review-and-findings.md) in a separate track before enabling approved contract data. B and C can proceed in parallel after A. Chart fixture authoring, media checking and schema review can proceed independently once IDs are fixed. D can develop against the agreed data contract while content is completed. Keep B–E in reviewable changes. Add no duplicated teaching catalog, second journal, competing backtest engine, unexplained social signals, broker execution, unsupported data feed or automatic claims of trade performance.
+
+## Checkpoint and release dependencies
+
+| Package | Build evidence | Open release evidence |
+|---|---|---|
+| A | `/route-manifest.json` records generated routes and anchors, Lab query targets, the terminal map, browser key names and SHA-256 source revisions. Vercel builds record their commit when supplied. | Compare the deployed manifests and record desktop and mobile screenshots. |
+| B | The shared shell publishes the five Lab sections and public charts. | Keyboard navigation, contrast and mobile review on the candidate deployment. |
+| C | The catalog and crosswalk preserve stable IDs and Academy routes. C17 uses a separate worked example so its practice retest stays hidden until the decision is saved. | Editorial sign-off, playback, precise chapters and embed checks. |
+| D | Six public labs use the existing risk and strategy logic. Replay and local restore failure paths have automated checks. | Two-account private workspace, attachments and restore QA. |
+| E | Both the default build and the opt-in cutover build can be rehearsed. The sitemap omits the private workspace and terminal index. | Public parity, real browser bookmark and cache transition checks, and rollback evidence. |
+| F | Build and link checks can run on the candidate commit. | Production sign-off and promotion, independent Worker/provider smoke, and rollback evidence. |
+
+The lifecycle track validates actual calendar months both at import and before publishing. It accepts the configured authorized state only after all 15 families, published fields, coverage and HTML/JSON agree. Tests import a synthetic 15-family snapshot in an isolated copy. Live contract dates still require current owner approval and verified exchange records. Re-import older authorized snapshots to record the approval expiry, and rebuild before expiry to withdraw public rows as needed.
+
+The 22 November 2026 control-plane check recorded Vercel production at commit `18f2488` (deployment `dpl_CY8JTtSurdJBfQBSve4BktioApPS`). Cloudflare reported Worker version 22 at 100% traffic and candidate version 23 at 0% (deployment `31ded4a8-ee34-4d73-84f8-ed59523d381c`). A fresh public endpoint smoke result remains open. Provider entitlements, verified exchange hours, approved volume/OI ingestion and exact prop-firm terms retain their separate evidence gates.

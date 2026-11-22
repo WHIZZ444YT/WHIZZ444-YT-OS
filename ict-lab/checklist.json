@@ -1,0 +1,12 @@
+[
+  "List red-folder news and release times",
+  "Set Weekly / Daily bias and draw on liquidity",
+  "Mark PDH / PDL, PWH / PWL and 20/40/60-day extremes",
+  "Mark Asian and London highs/lows",
+  "Mark Midnight Open, 09:30 Open and NDOG/NWOG",
+  "Check DX and ZN for macro context",
+  "Check NQ / ES / YM SMT only when relevant",
+  "Choose one contract and one trading window",
+  "Set maximum trade risk and daily loss limit",
+  "Verify contract expiry, active month and roll"
+]

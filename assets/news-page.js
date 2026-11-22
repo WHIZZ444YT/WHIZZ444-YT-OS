@@ -5,6 +5,8 @@
  const valid=v=>{try{const u=new URL(v);return ['https:','http:'].includes(u.protocol)?u.href:'#'}catch{return '#'}};
  const base=String(window.FINANCE_OS_CONFIG?.apiBase||window.FINANCE_OS_API_BASE||'').replace(/\/$/,'');
  const byId=id=>document.getElementById(id);
+ const contract=byId('newsInstrument'), preset=new URLSearchParams(location.search).get('market');
+ if(contract && [...contract.options].some(option=>option.value===preset)) contract.value=preset;
  const knownPublishers=new Map();
  let pollHandle=null;
  function timeLabel(value){

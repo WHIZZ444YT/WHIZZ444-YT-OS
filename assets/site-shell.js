@@ -12,7 +12,7 @@
   let collapsed = false, drawerOpen = false, theme = 'dark';
   try {
     collapsed = localStorage.getItem(COLLAPSED_KEY) === '1';
-    const savedTheme = localStorage.getItem(THEME_KEY);
+    const savedTheme = localStorage.getItem(THEME_KEY) ?? localStorage.getItem('ictfos.theme');
     if (savedTheme === 'light' || savedTheme === 'dark') theme = savedTheme;
   } catch (_) {}
 

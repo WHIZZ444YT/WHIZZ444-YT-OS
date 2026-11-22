@@ -22,3 +22,28 @@ Documentation package | 21 November 2026 | Finance Intelligence OS
 **Baseline.** [GitHub main at 2caa352](https://github.com/WHIZZ444YT/WHIZZ444-YT-OS/commit/2caa35210b71cf8ce0dc0ea7494344613c33c298) and the [matching Vercel production deployment](https://vercel.com/whizz444yt-7353/finance-intelligence-os/Ex2bhsBHLo8ULT9y96wEnwx7wbeo).
 
 This package is the implementation brief for a later build. Read 02 and 08 together for the final public-site structure. Use 09 to triage implementation and 10 to reconcile media. Subsequent decisions supersede earlier terminal-retention proposals. Acceptance statuses describe current evidence or work to schedule. The catalog defines the Lab scope. The [existing Futures-Only Roadmap](../futures-only-roadmap/README.md) remains the detailed record of Parts 0–9.
+
+## Integrated release status
+
+The implementation was built in PRs [28-39](https://github.com/WHIZZ444YT/WHIZZ444-YT-OS/pulls?q=sort%3Acreated-desc+futures).
+The integration branch preserves the complete source stack and runs the same
+standard and terminal-cutover build checks against main.
+
+| Documents | Implementation evidence |
+|---|---|
+| 01-02 | Public routes, a second build mode for the terminal dispatcher, and stable bookmark targets. |
+| 03-05 | 56 concepts, 10 playbooks, six labs, Academy crosswalk, fixtures, and replay and journal checks. |
+| 06-07 | Route parity, lifecycle gate, scoped-worker retirement, offline cache restrictions, and release validation. |
+| 08-09 | Shared palette and navigation, responsive Chromium evidence, curated help and reproducible artifacts. |
+| 10-12 | Four learning paths, original sources, 13 Charter lectures, ten mentors, 11 podcast records, and the 31-entry Academy gap register. |
+ 
+CI archives desktop and phone screenshots and mobile lab LCP/CLS measurements
+for Home, Learn, C34 and Charts. These measurements use controlled throttling
+with third-party requests blocked. Field INP and actual browser zoom QA require
+separate evidence.
+
+Production promotion and terminal retirement still require preview and release
+sign-off. The remaining checks include live playback and chapter placement,
+two-account privacy and installed-worker cutover tests, the live Worker rollout,
+and a confirmed inventory of any consumer of the tracked static snapshot.
+Exchange data remains subject to provider approvals.

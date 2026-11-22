@@ -63,3 +63,16 @@ This accounts for the 31 previously open Academy slugs. A candidate is a source 
 2. Validate every supplied video ID and timestamp URL, then validate source and candidate URLs separately. Check actual YouTube watch, chapter and deployed embedding in supported conditions before reporting full media coverage. Maintain plain descriptive CTAs and publisher title metadata.
 3. Test direct public URLs in desktop and mobile browsers, resource filters, no-JavaScript lesson readability, link fallback and stable browser history. Use production-like network conditions and the [shared UI specification](08-public-ui-and-repository-presentation.md). Report actual results by route rather than assuming that built pages are smooth.
 4. Confirm no feature requires entry through the old terminal renderer, and that migrated links, progress and journal data follow the [terminal migration contract](02-public-site-and-terminal-migration.md).
+
+## Implementation evidence
+
+The public ICT resource index publishes all 31 register entries as linked
+Academy records. It derives mapped and open counts from the Academy and labels
+video evidence independently of candidate or related-source status. The Learn
+and Playbooks filters preserve their selections in the URL, while direct links
+keep the written content available without JavaScript. Mentor profiles link to
+matching lessons. The mentor Popular filter appears only when at least one
+profile has comparable publisher-verified snapshots.
+
+Direct watch links are available without loading a player. Live chapter,
+playback, and embed checks remain open where the registry lacks observations.

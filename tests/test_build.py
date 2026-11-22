@@ -3,6 +3,7 @@ from pathlib import Path
 ROOT=Path(__file__).resolve().parents[1]
 sys.path.insert(0,str(ROOT/'scripts'))
 from build_academy import academy_video_coverage
+from build_site import TERMINAL_CUTOVER, futures_terminal_bundle
 class BuildTests(unittest.TestCase):
     def test_futures_sources_and_archived_baselines(self):
         active=json.loads((ROOT/'resources.json').read_text(encoding="utf-8"))
@@ -282,8 +283,13 @@ class BuildTests(unittest.TestCase):
         self.assertNotIn('const DATA_BUNDLE = {',template)
         html=(ROOT/'dist/ict-futures/index.html').read_text(encoding="utf-8")
         match=re.search(r'const DATA_BUNDLE = (.*?);\s*const DATA=DATA_BUNDLE;',html,re.S)
-        self.assertIsNotNone(match)
-        bundle=json.loads(match.group(1))
+        if TERMINAL_CUTOVER:
+            self.assertIsNone(match)
+            self.assertIn('ict-terminal-compat.js', html)
+            bundle=futures_terminal_bundle()
+        else:
+            self.assertIsNotNone(match)
+            bundle=json.loads(match.group(1))
         self.assertEqual(len(bundle['markets']),15)
         self.assertEqual(bundle['academy']['conceptCount'],82)
         self.assertEqual(len(bundle['academy']['concepts']),82)

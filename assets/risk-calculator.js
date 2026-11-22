@@ -15,6 +15,8 @@ import { calculateFuturesPosition, formatMicros } from "./futures-risk-engine.mj
  for(const market of contracts){
   const option=document.createElement('option');option.value=market.id;option.textContent=market.label+' · '+(market.exchange||'Exchange');sel.appendChild(option);
  }
+ const preset = new URLSearchParams(location.search).get('market');
+ if (contracts.some(market => market.id === preset)) sel.value = preset;
  const contractLabel=sel.closest('label');
  const modeLabel=document.createElement('label');modeLabel.textContent='Contract size (standard / micro)';
  const mode=document.createElement('select');mode.id='contractMode';

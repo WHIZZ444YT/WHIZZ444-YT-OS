@@ -1,0 +1,78 @@
+.ict-public {
+  --ict-bg: var(--os-bg);
+  --ict-surface: var(--os-surface);
+  --ict-text: var(--os-ink);
+  --ict-muted: var(--os-muted);
+  --ict-accent: var(--os-action);
+  --ict-link: var(--os-blue);
+  --ict-line: var(--os-line-strong);
+  --ict-focus: var(--os-focus);
+  --ict-action-ink: var(--os-action-ink);
+  background: var(--ict-bg);
+  color: var(--ict-text);
+  padding: clamp(1rem, 3vw, 2.5rem);
+  border-radius: 16px;
+  min-width: 0;
+  font-size: 1rem;
+}
+
+.ict-public h1, .ict-public h2, .ict-public h3 {color: var(--ict-text); line-height: 1.2}
+.ict-public p {line-height: 1.6}
+.ict-public a {color: var(--ict-link); text-underline-offset: .2em; overflow-wrap: anywhere}
+.ict-public a:hover {text-decoration-thickness: .15em}
+.ict-public :focus-visible {outline: 3px solid var(--ict-focus); outline-offset: 3px}
+.ict-public [hidden] {display: none !important}
+.ict-public :is(h1,h2,h3,button,a,input,select,summary) {scroll-margin-top: 5rem}
+.ict-hero {max-width: 72ch; padding-block: 1rem}
+.ict-hero h1 {font-size: clamp(2rem, 6vw, 4rem); letter-spacing: -.045em; margin: .35em 0}
+.ict-hero p {color: var(--ict-muted); margin: .5em 0}
+.ict-tabs {display: flex; flex-wrap: wrap; gap: .45rem; padding-block: 1rem 1.5rem}
+.ict-tabs a, .ict-public button {
+  display: inline-flex; align-items: center; min-height: 44px; padding: .5rem .8rem; border-radius: 8px;
+  border: 1px solid var(--ict-line); font: inherit;
+}
+.ict-tabs a {text-decoration: none}
+.ict-tabs a[aria-current], .ict-public button {
+  background: var(--ict-accent); border-color: var(--ict-accent); color: var(--ict-action-ink);
+  font-weight: 650;
+}
+.ict-public button {cursor: pointer; justify-content: center}
+.ict-grid {display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 15rem), 1fr)); gap: .8rem}
+.ict-card {border: 1px solid var(--ict-line); padding: 1rem; border-radius: 12px; background: var(--ict-surface); min-width: 0}
+.ict-card h3 {margin: 0 0 .55rem; font-size: 1.1rem}
+.ict-card p {color: var(--ict-muted); margin: 0}
+.ict-group {margin-block: 1.8rem}
+.ict-search {display: grid; gap: .35rem; margin-block: 1rem; max-width: 34rem}
+.ict-search > div {display: flex; flex-wrap: wrap; gap: .5rem}
+.ict-search input {flex: 1 1 10rem}
+.ict-public :is(input, select, textarea) {
+  max-width: 100%; min-height: 44px; padding: .45rem .6rem; border: 1px solid var(--ict-line);
+  border-radius: 8px; background: var(--ict-surface); color: var(--ict-text); font: inherit;
+}
+.ict-reading {max-width: 74ch}
+.ict-reading h2 {margin-top: 2rem}
+.ict-reading li {margin-block: .35rem}
+.ict-public small {display: block; color: var(--ict-muted)}
+.ict-muted {color: var(--ict-muted)}
+.ict-scenarios {
+  display: grid; gap: .4rem; padding: 1rem; background: var(--ict-surface); border-radius: 12px;
+  border: 1px solid var(--ict-line);
+}
+.ict-scenarios dt {font-weight: 700}
+.ict-scenarios dd {margin: 0 0 .65rem}
+.ict-scroll, .ict-public figure {max-width: 100%; margin-inline: 0; overflow-x: auto}
+.ict-public table {border-collapse: collapse; width: 100%; font-variant-numeric: tabular-nums;}
+.ict-public th, .ict-public td {padding: .45rem; border-bottom: 1px solid var(--ict-line); text-align: left}
+.ict-public caption {text-align: left; color: var(--ict-muted); padding-block: .5rem}
+.ict-lesson-chart {border: 1px solid var(--ict-line); padding: .75rem; border-radius: 8px}
+.ict-lesson-chart svg {display: block; width: 100%; height: auto; max-width: 40rem}
+.ict-video-evidence {margin-block: .3rem .65rem; font-size: .875rem}
+.ict-reading img {max-width: 100%; height: auto}
+.ict-chart-controls {display: flex; align-items: end; flex-wrap: wrap; gap: .85rem}
+.ict-chart-controls label {display: grid; gap: .25rem}
+.ict-chart-controls[hidden], [data-market-profile][hidden] {display: none}
+.ict-chart-controls select {max-width: 100%; min-width: 0}
+.ict-chart-controls label {min-width: 0; max-width: 100%}
+.ict-chart-previews iframe {display: block; width: 100%; height: max(370px, 54vh); border: 0; margin-top: 1rem}
+@media (max-width: 540px) { .ict-chart-controls {display: grid; align-items: stretch} }
+@media (prefers-reduced-motion: reduce) { .ict-public * { scroll-behavior: auto; transition: none; } }
