@@ -269,7 +269,9 @@ test('Practice preserves journal evidence, before-retest decisions, and backtest
   };
   const mocks = {
     document: {
-      querySelector: selector => selector === '[data-ict-practice]' ? current : selector === '[data-ifvg-practice]' ? inversion : null,
+      querySelector: selector => selector === '[data-ict-practice]' ? current : selector === '[data-ifvg-practice]' ? inversion
+        : selector === '#ict-practice-reference' ? {textContent: JSON.stringify(payload(published('ict-lab/practice/14/index.html'), 'ict-practice-reference'))}
+        : null,
       querySelectorAll: () => [{ value: 'P01 2022 Mentorship' }],
       createElement: node,
     },
@@ -304,7 +306,7 @@ test('Practice preserves journal evidence, before-retest decisions, and backtest
   assert.equal(entry.outcome, null);
   assert.equal(entry.charts.before, 'data:image/png;base64,AA==');
   assert.equal(storage[savedKey], legacy);
-  for (const history of findAll(root, 'details')) { history.open = true; history.ontoggle(); }
+  for (const history of findAll(root, 'details')) { history.open = true; history.ontoggle?.(); }
   const rows = findAll(root, 'li').map(row => row.textContent || '');
   assert.ok(rows.some(value => value.includes('Legacy review note')));
   assert.ok(rows.some(value => value.includes('Original terminal entry')));
@@ -338,5 +340,26 @@ test('Practice preserves journal evidence, before-retest decisions, and backtest
   const result = JSON.parse(storage[resultKey]);
   assert.equal(result.session, 'New York AM');
   assert.match(result.result, /win rate.*expectancy.*drawdown/);
+  assert.match(result.datasetHash, /^[a-f0-9]{64}$/);
+  assert.equal(result.execution.entry, 'next-bar-open');
   assert.deepEqual(result.splits.map(split => split.key), ['in-sample', 'validation', 'out-of-sample']);
+});
+
+test('lesson and playbook contracts are visible without running scripts', () => {
+  assert.match(published('ict-lab/learn/index.html'), /Prerequisites · [\s\S]*Related Practice 11/);
+  const c34 = published('ict-lab/learn/c34/index.html');
+  for (const period of ['DAY','WEEK','MONTH']) assert.match(c34, new RegExp('EDU-OPEN-01-' + period));
+  assert.match(c34, /Friday to Monday/);
+  assert.match(c34, /August 1 is Saturday/);
+  assert.match(published('ict-lab/learn/c56/index.html'), /00:01[\s\S]*08:31/);
+  assert.match(published('ict-lab/learn/c55/index.html'), /MIDNIGHT-RANGE v1/);
+  for (let n = 1; n <= 10; n++) {
+    const id = String(n).padStart(2, '0');
+    const page = published('ict-lab/playbooks/p' + id + '/index.html');
+    assert.match(page, new RegExp('Lab Rule · P' + id + ' v1'));
+    for (const label of ['Eligible state','Long','Short','No trade','Expiration']) assert.ok(page.includes(label), id + ' ' + label);
+  }
+  const risk = payload(published('ict-lab/practice/15/index.html'), 'ict-practice-reference');
+  assert.deepEqual(Object.keys(risk.contracts).sort(), ['ES','MES','MNQ','NQ']);
+  assert.ok(Object.values(risk.contracts).every(spec => spec.source.startsWith('https://www.cmegroup.com/') && spec.status === 'partial'));
 });

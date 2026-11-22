@@ -437,7 +437,7 @@ def build():
     playbook_data=load(ROOT/'ict-futures/data/ict-playbook.json',{})
     crosswalk = IctCrosswalk(academy_data, catalog, playbook_data)
     build_academy(DIST, academy_data, SITE_URL, crosswalk)
-    lab_routes = build_ict_lab(ROOT, DIST, shell, write, academy, json_script, catalog, crosswalk)
+    lab_routes = build_ict_lab(ROOT, DIST, shell, write, academy, json_script, catalog, crosswalk, mdata)
     write(DIST/'academy/crosswalk/index.html', shell(
         'Academy and Lab Crosswalk | Futures Intelligence OS',
         'Find shared definitions, distinct models and Academy media gaps.',
