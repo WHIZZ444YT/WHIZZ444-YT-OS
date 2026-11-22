@@ -335,6 +335,9 @@ if dist.exists():
     p7_template=dist/'strategy-lab/backtest-input-template.csv'
     ok('P7 CSV template requires exact contract and expiry fields',
         p7_template.exists() and p7_template.read_text(encoding="utf-8").strip()=='timestamp,open,high,low,close,signal,contract,expiry,stop_ticks,volume')
+    published_docs = {p.relative_to(dist).as_posix() for p in (dist/'docs').rglob('*') if p.is_file()}
+    ok('Public documentation is limited to the help index and linked rule cards',
+       published_docs == {'docs/index.html', 'docs/futures-only-roadmap/22-PART-7-MODEL-RULE-CARDS.md'})
     ok('P7 rule-card decisions are included in generated docs',
         (dist/'docs/futures-only-roadmap/22-PART-7-MODEL-RULE-CARDS.md').exists())
     p5_page=(dist/'account/index.html').read_text(errors='ignore') if (dist/'account/index.html').exists() else ''

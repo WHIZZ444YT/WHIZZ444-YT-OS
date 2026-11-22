@@ -32,3 +32,12 @@ To preview the generated site, serve `dist/` with a local static server. A local
 - Preserve existing user data, legacy baselines and useful futures/ICT routes. Prefer reversible route deprecation and archival over deletion.
 
 See the dated [Part 0 execution report](docs/futures-only-roadmap/15-PART-0-EXECUTION-REPORT-2026-11-19.md) for the latest repository audit and observed checks.
+## Publication decision
+
+Vercel builds from source with `python3 scripts/build_site.py` and publishes
+`dist/`. The repository has no `gh-pages` branch or checked-in Pages deployment
+workflow. A repository-settings or external static mirror could not be confirmed,
+so the legacy tracked output stays in Git pending a hosting inventory. For a
+manual upload, build from the reviewed source in a clean checkout and run the
+quality checks. The linked clean-artifact check compares file paths and SHA-256
+digests after rebuilding.
