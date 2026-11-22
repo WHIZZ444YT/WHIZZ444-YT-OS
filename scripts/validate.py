@@ -386,7 +386,7 @@ if dist.exists():
     else:
         ok('Part 1 local noindex build keeps sitemap empty','<url>' not in sitemap)
     ok('Service worker cache no longer references generic 73-instrument dataset',
-       'data/market-universe.json' not in (ROOT/'sw.js').read_text(encoding="utf-8") and 'v1.1.0-futures-only-p1' in (ROOT/'sw.js').read_text(encoding="utf-8"))
+       'data/market-universe.json' not in (ROOT/'sw.js').read_text(encoding="utf-8") and 'v1.1.0-public-shell' in (ROOT/'sw.js').read_text(encoding="utf-8"))
     ok('Runtime config exists only with publishable Supabase key', (dist/'assets/runtime-config.js').exists() and 'service_role' not in (dist/'assets/runtime-config.js').read_text(encoding="utf-8").lower())
     # Validate inline scripts in the two preserved monolithic applications.
     for page in [dist/'index.html', dist/'ict-futures/index.html']:
