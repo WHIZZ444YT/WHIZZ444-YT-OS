@@ -328,6 +328,9 @@ def render_lesson(concept, all_concepts, site_url="", academy=None, crosswalk=No
     variants_html = _items(curriculum.get("definitionVariants"), ordered=True)
     preconditions_html = _items(curriculum.get("preconditions"), ordered=True)
     related_html = "".join(related_links) or '<span class="small-note">Related concept IDs are not mapped.</span>'
+    if concept["id"] == "liquidity-sweep-mss-model":
+        related_html += ('<a href="/ict-lab/resources/#placement-liquidity-sweep-mss-model">'
+                         'Compare the predecessor ICT tutorial</a>')
     aliases_display = aliases_html or "No aliases recorded"
     source_date = curriculum.get("reviewedAt") or "Not reviewed"
     content_version = curriculum.get("contentVersion", 2)

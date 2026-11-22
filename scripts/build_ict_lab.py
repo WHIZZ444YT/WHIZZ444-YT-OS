@@ -4,6 +4,7 @@ import json
 import re
 from urllib.parse import parse_qs, urlsplit
 
+from ict_editorial import TERMINAL_PLACEMENTS, featured_for, learning_paths
 from ict_lesson_figures import IFVG, concept_diagrams
 from ict_specs import KNOWABLE, MODULES, PLAYBOOK_CONTEXT
 
@@ -78,6 +79,7 @@ def resource_list(sources, catalog, limit=None, coverage=None):
         if not label.lower().startswith(("watch ", "open ", "study ")):
             label = f"Watch {label}"
         meta = " · ".join(s for s in (video.get("uploader") or "Uploader unconfirmed", video.get("role"), video.get("language")) if s)
+        explanation = source.get("explanation") or coverage
         evidence = [video.get("publishedTitle"), f"Placement {rank} · {label}", coverage or "Selected for this lesson or exercise.",
                     "Channel ID: " + (video.get("channelId") or "unconfirmed"),
                     "Duration: " + (timecode(video["durationSeconds"]) if video.get("durationSeconds") else "unconfirmed"),
@@ -85,7 +87,7 @@ def resource_list(sources, catalog, limit=None, coverage=None):
                     "Playback: " + video["playback"].lower(), "Embed: " + video["embedding"].lower()]
         if seconds is not None:
             evidence.append(video.get("chapterStatus", "Offsets not independently checked"))
-        rendered.append(link(label + (offset if seconds is not None and timecode(seconds) not in label else ""), source["url"], True)
+        rendered.append((f'<p>{escape(explanation)}</p>' if explanation else "") + link(label + (offset if seconds is not None and timecode(seconds) not in label else ""), source["url"], True)
                         + f'<small>{escape(meta)}</small>'
                         + '<details class="ict-video-evidence"><summary>Source details</summary>'
                         + items([escape(value) for value in evidence if value]) + '</details>')
@@ -132,6 +134,15 @@ def concept_fixture(item):
                              ["Reference", "Same local date", "Bar open (ET)", "Synthetic print", "Replay reveals at close (ET)"],
                              [("Midnight", "2026-06-02", "00:00", "5001.25", "00:01"),
                               ("08:30 reference", "2026-06-02", "08:30", "5012.50", "08:31")])
+    if key == "C54":
+        return ('<p>This synthetic NQ session exercise uses a separately chosen 15:30-16:00 ET window. '
+                'Record the observed high and low only after the window closes. A missing bar invalidates the sample. '
+                'Do not apply the forex projection convention to this range.</p>'
+                + example_table("EDU-C54-01 - NQ synthetic - 15 minutes - America/New_York",
+                                ["Bar open (ET)", "High", "Low", "Rule annotation"],
+                                [("15:30", "20008.00", "19998.00", "First eligible bar"),
+                                 ("15:45", "20012.00", "20001.00", "Second eligible bar"),
+                                 ("16:00", "20012.00", "19998.00", "Record the completed range only")]))
     if key == "C55":
         return ('<p>The Academy summary measures the height of the chosen structural range and applies ±1, ±2 and ±2.5 range units. '
                 'For the source exercise, identify both structural anchor prices and the projection convention used in the linked lesson. '
@@ -143,6 +154,12 @@ def concept_fixture(item):
                                 ["Date", "Anchor bar open (ET)", "Low", "High", "One range above high"],
                                 [("2026-06-02", "00:00", "20000.00", "20008.00", "20016.00"),
                                  ("2026-06-03", "00:00", "20005.00", "20010.00", "20015.00")]))
+    return ""
+
+
+def featured_index_link(key):
+    if any(key in placements for placements in TERMINAL_PLACEMENTS.values()):
+        return f'<p>{link("See all predecessor sources for this lesson", ROOT_URL + "resources/#placement-" + key.lower())}</p>'
     return ""
 
 
@@ -187,9 +204,9 @@ def concept_page(item, module, catalog, names, crosswalk):
             f'<details><summary>Show the marking guide</summary><p>{escape(item["rule"])}</p>'
             '<p>Record the reference level or window, the confirming evidence, and the first time the label could be assigned. '
             'Identify which observable condition the look-alike misses.</p></details>'
-            f'<h2>Watch</h2>{resource_list(item["sources"], catalog, 3, notes.get(key))}'
-            f'{crosswalk.media(key, item["sources"])}'
-            f'<h2>Continue learning</h2>{items([*adjacent, *links, link("Open Practice", url("practice"))])}</div>')
+            f'<h2>Watch</h2>{resource_list(featured_for(key, catalog, item["sources"]), catalog, 3, notes.get(key))}'
+            f'{crosswalk.media(key, item["sources"])}{featured_index_link(key)}'
+            f'<h2>Continue learning</h2>{items([*adjacent, *links, link("Practice next", url("practice", MODULES[module["id"]][2]))])}</div>')
 
 
 def playbook_page(item, catalog, crosswalk):
@@ -222,10 +239,10 @@ def playbook_page(item, catalog, crosswalk):
             f'<h2>Direction-specific examples</h2><dl class="ict-scenarios"><dt>Long</dt><dd>{escape(long)}</dd>'
             f'<dt>Short</dt><dd>{escape(short)}</dd></dl>'
             f'<h2>Practice scenarios</h2><dl class="ict-scenarios">{scenarios}</dl>'
-            f'{weekly_plan}{crosswalk.teaching(key)}<h2>Watch</h2>{resource_list(item["sources"], catalog, 3, media_note)}'
-            f'{crosswalk.media(key, item["sources"])}'
+            f'{weekly_plan}{crosswalk.teaching(key)}<h2>Watch</h2>{resource_list(featured_for(key, catalog, item["sources"]), catalog, 3, media_note)}'
+            f'{crosswalk.media(key, item["sources"])}{featured_index_link(key)}'
             f'<h2>Related concepts</h2>{items([lesson_link(k) for k in item["concepts"]])}'
-            f'{academy}'
+            f'{academy}<p>{link("Practice next", url("practice", 13))}</p>'
             f'<p>Record one primary playbook per trade. Record other concepts as secondary tags in the '
             f'{link("practice journal", url("practice", 16))}.</p></div>')
 
@@ -286,8 +303,7 @@ def build_ict_lab(root, dist, shell, write, academy, json_script, source, crossw
          + f'<script type="application/json" id="ict-legacy-details">{json_script(legacy_details)}</script>',
          "Learn the concepts, compare playbooks, and test your decisions on clearly labeled practice samples.")
 
-    paths = (f'<div class="ict-grid">{card("Start learning", detail("learn", "C01"), "Liquidity, structure and the first playbook.")}'
-             f'{card("Build a session plan", url("practice", 12), "Work from daily bias to a conditional NQ or ES plan.")}</div>')
+    paths = learning_paths(link, lesson_link, lambda number: url("practice", number), index)
     rows = []
     names = {k: v["title"] for k, v in index.items()}
     for module in modules:
@@ -404,10 +420,31 @@ def build_ict_lab(root, dist, shell, write, academy, json_script, source, crossw
         )
         emit(url(view), view, "ICT " + VIEWS[view].lower(), search_form(url(view)) + filters + cards, subtitle)
 
+    placements = {}
+    for video, targets in TERMINAL_PLACEMENTS.items():
+        for key, explanation in targets.items():
+            placements.setdefault(key, {})[video] = explanation
+    placement_sections = []
+    for key, sources in placements.items():
+        destination = (link("Liquidity Sweep + MSS", "/ict-futures/academy/" + key + ".html")
+                       if key == "liquidity-sweep-mss-model" else lesson_link(key))
+        refs = [{**ref, "explanation": sources[ref["id"]]}
+                for ref in source["featured"] if ref["id"] in sources]
+        placement_sections.append(f'<section id="placement-{key.lower()}"><h3>{destination}</h3>'
+                                  + resource_list(refs, source) + '</section>')
+    discovery = [link("Official ICT channel", "https://www.youtube.com/@InnerCircleTrader", True),
+                 link("Official ICT playlists", "https://www.youtube.com/@InnerCircleTrader/playlists", True)]
+    discovery.extend(link("Search YouTube for " + row["name"], row["videoSearch"], True) for row in academy
+                     if row.get("videoSearch", "").startswith("https://www.youtube.com/results?"))
     emit(ROOT_URL + "resources/", "learn", "ICT resource index",
          '<div class="ict-reading"><h2>Supplied watch links</h2>' + resource_list(source["library"], source)
+         + '<h2 id="terminal-featured">Predecessor tutorial placements</h2>'
+         + '<p>Compare each upload with the stated lesson rule. Playback and chapter fit are pending editorial review.</p>'
+         + "".join(placement_sections)
          + '<h2>Academy supplements</h2>' + "".join(
              f'<h3>{", ".join(escape(slug) for slug in row["lessons"])}</h3>{resource_list(row["sources"], source)}'
-             for row in source["academySources"]) + "</div>",
+             for row in source["academySources"])
+         + '<h2>Discovery shortcuts</h2><p>Use publisher links and topic searches to find candidates. Playback and chapter coverage need a separate review.</p>'
+         + '<details><summary>Browse channels, playlists and Academy searches</summary>' + items(discovery) + '</details></div>',
          "Resources retain their original time offsets. Playback and embedding can vary.")
     return routes

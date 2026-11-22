@@ -375,3 +375,19 @@ test('lesson and playbook contracts are visible without running scripts', () => 
   assert.deepEqual(Object.keys(risk.contracts).sort(), ['ES','MES','MNQ','NQ']);
   assert.ok(Object.values(risk.contracts).every(spec => spec.source.startsWith('https://www.cmegroup.com/') && spec.status === 'partial'));
 });
+
+test('editorial paths, practice destinations and predecessor placements are published', () => {
+  const learn = published(lab + 'learn/index.html');
+  for (const path of ['First ICT workflow', 'Active NQ/ES learner', 'Contract foundations', 'Practice review']) {
+    assert.ok(learn.includes(path), path);
+  }
+  const resources = published(lab + 'resources/index.html');
+  for (const id of ['c14', 'c08', 'c16', 'c09', 'p01', 'c21', 'liquidity-sweep-mss-model']) {
+    assert.ok(resources.includes('id="placement-' + id + '"'), id);
+  }
+  assert.match(resources, /Official ICT playlists/);
+  assert.match(resources, /Playback and chapter fit are pending editorial review/);
+  assert.match(published(lab + 'learn/c54/index.html'), /EDU-C54-01/);
+  assert.match(published(lab + 'learn/c34/index.html'), /Practice next/);
+  assert.match(published(lab + 'playbooks/p01/index.html'), /Practice next/);
+});

@@ -87,3 +87,13 @@ Add an optional **Academy extensions** shelf for existing BOS, CHoCH terminology
 5. Make sure each lesson has a “Practice next” destination. Test learning paths and source cards anonymously, by keyboard, in both themes and on phone.
 
 Use the [final official ICT and mentor inventory](11-official-ict-scope-and-mentor-resources.md) and [31-slug coverage register](12-ict-video-gap-register-and-public-ux.md) when implementing source shelves and public mentor profiles.
+
+## Implementation evidence
+
+The public Learn page publishes four ordered paths and the 56 Lab concepts keep
+their original IDs. The resource index groups the terminal's four featured
+uploads by destination and keeps Academy sources and discovery links separate.
+The YouTube watch-page titles for Episodes 3, 6, 14 and 22 were observed on
+22 November 2026. These observations cover titles. The editorial reviewer still
+needs to record actual playback, embedding and chapter fit for each placement
+in the source-gap register.
