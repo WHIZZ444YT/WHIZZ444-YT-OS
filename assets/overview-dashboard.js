@@ -3,8 +3,6 @@
 
   const cfg = window.FINANCE_OS_CONFIG || {};
   const API = String(cfg.apiBase || window.FINANCE_OS_API_BASE || "").replace(/\/$/, "");
-  const SUPABASE = String(cfg.supabaseUrl || "").replace(/\/$/, "");
-  const PUBLIC_KEY = String(cfg.supabaseAnonKey || "");
   const $ = id => document.getElementById(id);
   const esc = value => String(value ?? "").replace(/[&<>"']/g, char => ({
     "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
@@ -206,37 +204,6 @@
     }
   }
 
-  async function loadGateway() {
-    setChip("overviewGatewayState", "checking", "CHECKING");
-    setChip("overviewHealthBadge", "checking", "CHECKING");
-    const results = await Promise.allSettled([
-      api("/health"),
-      api("/api/v1/providers")
-    ]);
-    const health = results[0];
-    const registry = results[1];
-    if (health.status === "fulfilled") {
-      const data = health.value;
-      const status = data.ok ? "available-on-demand" : "unavailable";
-      setChip("overviewGatewayState", status, data.ok ? "GATEWAY RESPONDS" : "UNAVAILABLE");
-      setText("overviewGatewayDetail", "Worker response: " + stamp(data.time) +
-        " · KV " + (data.storageConfigured ? "configured" : "not configured") +
-        " · database " + (data.databaseConfigured ? "configured" : "not configured"));
-      setChip("overviewHealthBadge", registry.status === "fulfilled" ? "partial" : status,
-        registry.status === "fulfilled" ? "REGISTRY RESPONDS" : "GATEWAY ONLY");
-      const providers = registry.status === "fulfilled" && Array.isArray(registry.value.providers)
-        ? registry.value.providers : [];
-      setText("overviewHealthDetail", providers.length
-        ? providers.length + " provider registry entries returned. Inspect each provider's status and freshness in Data Health."
-        : "Gateway health responded. Provider registry is unavailable or returned no entries.");
-    } else {
-      setChip("overviewGatewayState", "unavailable");
-      setChip("overviewHealthBadge", "unavailable");
-      setText("overviewGatewayDetail", health.reason?.message || "Gateway health request failed.");
-      setText("overviewHealthDetail", "Gateway health is unavailable. Provider checks remain separate on the Data Health page.");
-    }
-  }
-
   const timezoneKey = "fios.overview.timeZone.v1";
   function initTimezone() {
     const select = $("overviewTimezone");
@@ -280,123 +247,6 @@
   }
 
   const sessionKey = "finance-os-supabase-session-v1";
-  function readSession() {
-    try {
-      return JSON.parse(localStorage.getItem(sessionKey) ||
-        sessionStorage.getItem(sessionKey) || "null");
-    } catch (_) { return null; }
-  }
-  function saveSession(session) {
-    if (!session) return;
-    const next = {...session};
-    if (!next.expires_at && Number(next.expires_in)) {
-      next.expires_at = Math.floor(Date.now()/1000) + Number(next.expires_in);
-    }
-    try {
-      localStorage.setItem(sessionKey, JSON.stringify(next));
-      sessionStorage.setItem(sessionKey, JSON.stringify(next));
-    } catch (_) {}
-    return next;
-  }
-  function authHeaders(session, extra = {}) {
-    return Object.assign({apikey:PUBLIC_KEY}, session?.access_token
-      ? {Authorization:"Bearer " + session.access_token} : {}, extra);
-  }
-  async function refreshSession(session) {
-    if (!SUPABASE || !PUBLIC_KEY || !session?.refresh_token) throw new Error("Sign in to load private data.");
-    const response = await fetch(SUPABASE + "/auth/v1/token?grant_type=refresh_token", {
-      method:"POST",
-      headers:authHeaders(null, {"Content-Type":"application/json"}),
-      body:JSON.stringify({refresh_token:session.refresh_token}),
-      signal:timeoutSignal()
-    });
-    const data = await response.json().catch(() => ({}));
-    if (!response.ok) throw new Error(data.msg || data.message || "Session refresh failed.");
-    return saveSession(data);
-  }
-  async function privateRequest(path, session) {
-    const response = await fetch(SUPABASE + path, {
-      headers:authHeaders(session),
-      signal:timeoutSignal(),
-      cache:"no-store"
-    });
-    const payload = await response.json().catch(() => []);
-    if (!response.ok) {
-      const error = new Error(payload.message || payload.msg || ("HTTP " + response.status));
-      error.status = response.status;
-      throw error;
-    }
-    return payload;
-  }
-  async function loadPrivateSummary() {
-    const badge = $("overviewPrivateBadge");
-    const state = $("overviewPrivateState");
-    const metrics = $("overviewPrivateMetrics");
-    if (!badge || !state || !metrics) return;
-    let session = readSession();
-    if (!session?.access_token) {
-      setChip("overviewPrivateBadge", "not-configured", "SIGNED OUT");
-      state.textContent = "Sign in to load your personal watchlists, journal summary and alert history.";
-      metrics.hidden = true;
-      return;
-    }
-    setChip("overviewPrivateBadge", "checking", "CHECKING SESSION");
-    state.textContent = "Verifying your authenticated account and loading a limited private summary…";
-    try {
-      if (session.refresh_token && session.expires_at && Number(session.expires_at) < Date.now()/1000 + 90) {
-        session = await refreshSession(session);
-      }
-      const user = await privateRequest("/auth/v1/user", session).catch(async error => {
-        if (error.status === 401 && session.refresh_token) {
-          session = await refreshSession(session);
-          return privateRequest("/auth/v1/user", session);
-        }
-        throw error;
-      });
-      if (!user?.id) throw new Error("Supabase did not return an authenticated user.");
-      const headers = {};
-      const userFilter = encodeURIComponent("eq." + user.id);
-      const params = [
-        "/rest/v1/watchlists?select=id,name&order=created_at.desc&limit=50",
-        "/rest/v1/journal_trades?select=id,closed_at,net_pnl&order=opened_at.desc.nullslast&limit=100",
-        "/rest/v1/alert_events?select=id,triggered_at&order=triggered_at.desc&limit=20",
-        "/rest/v1/profiles?select=id,timezone&id=" + userFilter + "&limit=1"
-      ];
-      const rows = await Promise.all(params.map(path => privateRequest(path, session)));
-      const [watchlists,trades,alerts,profiles] = rows;
-      const profileZone = profiles?.[0]?.timezone;
-      if (profileZone && !userChangedTimezone) applyProfileTimezone(profileZone);
-      const closed = (trades || []).filter(row => row.closed_at);
-      metrics.innerHTML = [
-        ["Watchlists", (watchlists || []).length, "up to 50 recent lists"],
-        ["Closed records", closed.length, "from latest 100 journal rows"],
-        ["Alert events", (alerts || []).length, "up to 20 recent events"]
-      ].map(([label,value,detail]) =>
-        '<div><b>' + esc(value) + '</b><span>' + esc(label) + " · " + esc(detail) + "</span></div>"
-      ).join("");
-      metrics.hidden = false;
-      state.textContent = "Private summary loaded with your authenticated Supabase session and existing row-level policies. Counts are bounded to the recent rows noted above.";
-      setChip("overviewPrivateBadge", "fresh", "SIGNED IN");
-    } catch (error) {
-      metrics.hidden = true;
-      state.innerHTML = '<span class="os-error-state">' + esc(error.message) + '</span> <a href="/account/">Open sign-in / private workspace →</a>';
-      setChip("overviewPrivateBadge", "unavailable", "SESSION NEEDS ATTENTION");
-    }
-  }
-  function applyProfileTimezone(zone) {
-    const select = $("overviewTimezone");
-    if (!select || userChangedTimezone || !zone) return;
-    if (![...select.options].some(option => option.value === zone)) {
-      const option = document.createElement("option");
-      option.value = zone;
-      option.textContent = zone + " · profile";
-      select.add(option);
-    }
-    select.value = zone;
-    setText("overviewLocalZoneLabel", zone.toUpperCase());
-    renderClock();
-  }
-
   function bindEvents() {
     $("overviewContract")?.addEventListener("change", event => {
       selectedMarket = event.target.value;
@@ -404,22 +254,29 @@
       loadNews(false);
       loadCot();
     });
-    $("overviewRefresh")?.addEventListener("click", () => {
-      loadGateway();
-      loadNews(false);
-      loadCot();
-    });
     $("overviewNewsRefresh")?.addEventListener("click", () => loadNews(true));
   }
 
+  function showStudyProgress() {
+    try {
+      const records = JSON.parse(localStorage.getItem("ictfos.academy.progress.v2") || "{}");
+      if (!records || typeof records !== "object" || Array.isArray(records)) return;
+      if (Object.keys(records).length) {
+        setText("overviewStudyState", "Academy progress is available on this device.");
+        setText("overviewStudyLink", "Resume in Academy");
+      }
+    } catch (_) { /* The public learning links remain available. */ }
+  }
+
   async function init() {
+    showStudyProgress();
     initTimezone();
     renderClock();
     window.setInterval(renderClock, 1000);
     bindEvents();
     await loadMarketRegistry();
-    await Promise.allSettled([loadGateway(),loadNews(false),loadCot(),loadPrivateSummary()]);
-    setText("overviewUpdated", "Last source checks: " + new Intl.DateTimeFormat("en-IN", {
+    await Promise.allSettled([loadNews(false),loadCot()]);
+    setText("overviewUpdated", "Last snapshot checks: " + new Intl.DateTimeFormat("en-IN", {
       dateStyle:"medium",timeStyle:"short"
     }).format(new Date()));
   }

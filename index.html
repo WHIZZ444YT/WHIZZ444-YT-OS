@@ -22,32 +22,23 @@
 <header class="os-topbar"><div class="os-topbar-start"><button class="os-sidebar-toggle" id="sidebarToggle" type="button" aria-expanded="true" aria-controls="appSidebar" aria-label="Collapse navigation"><span aria-hidden="true">☰</span></button><div class="os-topbar-heading"><span>FUTURES INTELLIGENCE OS</span><b>Overview</b></div></div><div class="os-topbar-actions"><a class="os-global-search" href="/search/">Search</a><span class="os-mode-chip"><i></i> RESEARCH ONLY</span><button class="os-theme-toggle" id="osThemeToggle" type="button" aria-pressed="false" aria-label="Switch to light theme" title="Switch theme">☼</button><a class="os-workspace-link" href="/account/">Private workspace ↗</a></div></header>
 <main id="content" tabindex="-1" class="os-content">
 <div class="os-overview-header"><div><p class="os-eyebrow">FUTURES-ONLY · CONTRACT-AWARE · SOURCE-TRACEABLE</p><h1>Futures Command Center</h1><p>One workspace for listed futures markets, ICT Futures study, macro and positioning context, reproducible testing and private trade preparation.</p></div><div class="os-overview-updated" id="overviewUpdated">Data checks have not run yet.</div></div>
-<form class="os-home-search" action="/search/" role="search" aria-label="Global search">
-<label for="homeSearch">Search markets, lessons and tools</label>
-<div><input id="homeSearch" name="q" type="search" placeholder="Try NQ, FVG or COT"><button class="primary-button" type="submit">Search</button></div>
-</form>
 <div class="os-home-actions">
 <a class="primary-button" href="/ict-lab/learn/">Start learning</a>
 <a class="os-home-secondary" href="/futures-intelligence/">Open Futures Desk</a>
 </div>
+<form class="os-home-search" action="/search/" role="search" aria-label="Global search">
+<label for="homeSearch">Search markets, lessons and tools</label>
+<div><input id="homeSearch" name="q" type="search" placeholder="Try NQ, FVG or COT"><button class="primary-button" type="submit">Search</button></div>
+</form>
 <nav class="os-home-shortcuts" aria-label="Study shortcuts">
-<a href="/academy/">Academy progress</a><a href="/ict-lab/practice/">Practice labs</a><a href="/ict-lab/practice/16/">Journal practice</a>
+<span id="overviewStudyState">Start an Academy lesson to track progress on this device.</span><a href="/academy/" id="overviewStudyLink">Open Academy</a><a href="/ict-lab/practice/">Practice labs</a><a href="/ict-lab/practice/16/">Journal practice</a>
 </nav>
 <div class="os-overview-grid">
 <div class="os-overview-main">
 <section class="os-widget" aria-labelledby="overviewWatchlistTitle">
-<div class="os-widget-head"><div><h2 id="overviewWatchlistTitle">Market watchlist</h2><p>Select a listed futures family. Reference metadata is not a quote.</p></div><span class="os-state-chip neutral">NO LIVE QUOTES</span></div>
-<div class="os-contract-focus"><div><label for="overviewContract">FUTURES FAMILY<select id="overviewContract"><option value="">Loading futures families…</option></select></label><strong id="overviewContractName">Futures universe is loading</strong><p id="overviewContractMeta">15-family registry · exchange and tier metadata only</p><p id="overviewContractRole">No price or order-book data is supplied by this selector.</p><div class="os-widget-actions"><a id="overviewContractSpecs" href="/contract-specs/">Contract specs &amp; expiry ↗</a><a id="overviewContractProfile" href="/markets/">All family profiles ↗</a></div></div><div class="os-quote-placeholder"><strong>QUOTE NOT CONNECTED</strong><small id="overviewQuoteDetail">No licensed real-time or delayed quote feed is active here.</small></div></div>
+<div class="os-widget-head"><div><h2 id="overviewWatchlistTitle">Market snapshot</h2><p>Select a listed futures family. Compare reference details by family.</p></div></div>
+<div class="os-contract-focus"><div><label for="overviewContract">FUTURES FAMILY<select id="overviewContract"><option value="">Loading futures families…</option></select></label><strong id="overviewContractName">Futures universe is loading</strong><p id="overviewContractMeta">15-family registry · exchange and tier metadata only</p><p id="overviewContractRole">Family reference</p><div class="os-widget-actions"><a id="overviewContractSpecs" href="/contract-specs/">Contract specs &amp; expiry ↗</a><a id="overviewContractProfile" href="/markets/">All family profiles ↗</a></div></div><div class="os-quote-placeholder"><small id="overviewQuoteDetail">No licensed real-time or delayed quote feed is active here.</small></div></div>
 <div class="os-source-attribution">Registry: <a href="/contract-specs/">ICT Futures market universe</a> · Imported tick references remain unverified · Expiry is not supplied.</div>
-</section>
-<section class="os-widget" aria-labelledby="overviewFeedsTitle">
-<div class="os-widget-head"><div><h2 id="overviewFeedsTitle">Feed &amp; data status</h2><p>Each source is checked independently. Gateway availability is not exchange-feed availability.</p></div><button class="primary-button" id="overviewRefresh" type="button">Check sources</button></div>
-<div class="os-status-list">
-<div class="os-status-row"><div><b>Cloudflare API gateway</b><small id="overviewGatewayDetail">Health check not run.</small></div><span id="overviewGatewayState" class="os-state-chip neutral">NOT CHECKED</span></div>
-<div class="os-status-row"><div><b>Futures news · GDELT</b><small id="overviewNewsStateDetail">News snapshot not checked.</small></div><span id="overviewNewsState" class="os-state-chip neutral">NOT CHECKED</span></div>
-<div class="os-status-row"><div><b>CFTC positioning</b><small id="overviewCotStateDetail">Weekly futures report not checked.</small></div><span id="overviewCotState" class="os-state-chip neutral">NOT CHECKED</span></div>
-<div class="os-status-row"><div><b>Exchange quotes / depth</b><small>Licensed CME / ICE quote and order-book feed not connected in this build.</small></div><span class="os-state-chip warn">NOT CONNECTED</span></div>
-</div>
 </section>
 <div class="os-widget-grid-2">
 <section class="os-widget" aria-labelledby="overviewClockTitle">
@@ -59,11 +50,7 @@
 <div class="os-filter-line"><label class="os-field-compact" for="overviewTimezone">Display timezone<select class="os-timezone-select" id="overviewTimezone"></select></label></div>
 <div class="os-source-attribution">Session high / low and range: <span class="os-state-chip warn">INTRADAY DATA NOT CONNECTED</span></div>
 </section>
-<section class="os-widget" aria-labelledby="overviewCalendarTitle">
-<div class="os-widget-head"><div><h2 id="overviewCalendarTitle">Economic releases</h2><p>Upcoming events require a dated calendar feed and publisher timezone.</p></div><span class="os-state-chip warn">NOT CONNECTED</span></div>
-<div class="os-calendar-note"><b>Consolidated release calendar is not available</b><p>No event times or consensus values are shown until a source-backed calendar is connected. Verify the latest schedule at the publisher.</p></div>
-<div class="os-context-links"><a href="https://www.bls.gov/schedule/news_release/" target="_blank" rel="noopener noreferrer">BLS official release schedule ↗</a><a href="https://www.bea.gov/news/schedule" target="_blank" rel="noopener noreferrer">BEA official release schedule ↗</a><a href="https://www.eia.gov/petroleum/supply/weekly/" target="_blank" rel="noopener noreferrer">EIA weekly petroleum status ↗</a></div>
-</section>
+<section class="os-widget" aria-labelledby="overviewCalendarTitle"><h2 id="overviewCalendarTitle">Economic releases</h2><p>Check upcoming releases in your timezone.</p><a href="/sessions/#calendar">Open economic calendar</a></section>
 </div>
 <section class="os-widget" aria-labelledby="overviewNewsTitle">
 <div class="os-widget-head"><div><h2 id="overviewNewsTitle">Futures news</h2><p>Contract/topic-matched articles from the available discovery snapshot.</p></div><span id="overviewNewsBadge" class="os-state-chip neutral">NOT CHECKED</span></div>
@@ -78,11 +65,11 @@
 <div class="os-widget-actions"><a href="/research/positioning/">Open COT &amp; Positioning →</a><a href="/volume-open-interest/">Weekly open interest →</a></div>
 </section>
 </div>
-<aside class="os-overview-rail" aria-label="Research and personal workspace">
-<section class="os-widget"><div class="os-widget-head"><div><h2>Quick study</h2><p>Move from market context to structured ICT study.</p></div></div><div class="os-context-links"><a href="/academy/">ICT Academy lessons ↗</a><a href="/ict-lab/">ICT Lab lessons and practice ↗</a><a href="/entry-models/">Entry Models · educational library ↗</a><a href="/sessions/#windows">ICT session and calendar tools ↗</a><a href="/strategy-lab/">Reproducible Strategy Lab ↗</a></div></section>
-<section class="os-widget"><div class="os-widget-head"><div><h2>My watchlists &amp; journal</h2><p>Private records are visible only in your authenticated session.</p></div><span id="overviewPrivateBadge" class="os-state-chip neutral">SIGNED OUT</span></div><div id="overviewPrivateState" class="os-empty-state">Sign in to load your personal watchlists, journal summary and alert history.</div><div id="overviewPrivateMetrics" class="os-private-summary" hidden></div><div class="os-widget-actions"><a href="/account/">Open private workspace →</a></div></section>
-<section class="os-widget"><div class="os-widget-head"><div><h2>Data Health &amp; Sources</h2><p>Inspect provider freshness and source conditions.</p></div><span id="overviewHealthBadge" class="os-state-chip neutral">NOT CHECKED</span></div><p id="overviewHealthDetail" class="os-source-attribution">A gateway response does not certify live exchange access.</p><div class="os-context-links"><a href="/data-health/">Open independent provider checks ↗</a><a href="/sources/">Browse reviewed futures sources ↗</a></div></section>
-<section class="os-widget"><div class="os-widget-head"><div><h2>Market-data boundary</h2><p>No fabricated price movement or feed status.</p></div></div><p class="os-source-attribution">Public macro and CFTC data have provider-specific publication cadence. COT is weekly. Exchange real-time quotes, full-depth order books, licensed intraday history and redistribution rights require separately verified access.</p></section>
+<aside class="os-overview-rail" aria-label="Data sources">
+
+
+<section class="os-widget"><div class="os-widget-head"><div><h2>Data Health &amp; Sources</h2><p>Inspect provider freshness and source conditions.</p></div></div><p id="overviewHealthDetail" class="os-source-attribution">Check source availability and retrieval times.</p><div class="os-context-links"><a href="/data-health/">Open independent provider checks ↗</a><a href="/sources/">Browse reviewed futures sources ↗</a></div></section>
+
 </aside>
 </div>
 </main>

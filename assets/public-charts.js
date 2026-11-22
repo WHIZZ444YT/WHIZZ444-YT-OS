@@ -26,6 +26,12 @@
       const external = new URL('https://www.tradingview.com/chart/');
       external.search = new URLSearchParams({symbol, interval: interval.value});
       slot.querySelector('a').href = external.href;
+      const context = slot.querySelector('[data-chart-context]');
+      if (context) context.textContent = [option.dataset.exchange, symbol,
+        symbol.endsWith('!') ? 'Continuous series' : 'Provider symbol',
+        'TradingView · delay unconfirmed'].filter(Boolean).join(' · ');
+      const profile = slot.querySelector('[data-chart-profile]');
+      if (profile) profile.href = '/ict-futures/markets/' + encodeURIComponent(option.value) + '.html';
       if (!mount) return;
       const embed = new URL('https://s.tradingview.com/widgetembed/');
       embed.search = new URLSearchParams({
@@ -39,7 +45,10 @@
       frame.loading = 'lazy';
       frame.allowFullscreen = true;
       frame.referrerPolicy = 'origin';
+      const fallback = document.createElement('p');
+      fallback.textContent = 'If the preview is blocked or unavailable, open the direct TradingView chart above.';
       mountPoint.append(frame);
+      if (context) mountPoint.append(fallback);
     });
     status.textContent = mount ? 'Provider previews requested. Use the direct links if an embed is unavailable.'
       : 'Direct chart links are ready. Load previews to connect to TradingView.';

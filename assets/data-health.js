@@ -1,4 +1,5 @@
 (() => {
+ const presentation=window.FinanceProviderPresentation;
  const cfg=window.FINANCE_OS_CONFIG||{};
  const API=String(cfg.apiBase||window.FINANCE_OS_API_BASE||"").replace(/\/$/,"");
  const $=id=>document.getElementById(id);
@@ -20,16 +21,16 @@
   {id:"ecb",name:"ECB USD/EUR Reference Series",path:"/api/v1/economic/ecb",detail:"Daily ECB reference rate; not a live FX quote."},
   {id:"market-data",name:"Licensed Futures Market Data",path:"/api/v1/market-data/status",detail:"CME/ICE exchange prices, quotes and bars; remains unavailable until a licensed provider and public display entitlement are configured."}
  ];
- const stateLabel=s=>({fresh:"Fresh",partial:"Partial",stale:"Stale snapshot",unavailable:"Unavailable","not-yet-fetched":"Not fetched","not-configured":"Not configured","available-on-demand":"Available on request","official-source-link":"Official source link","needs-worker-secret":"Worker secret needed","needs-public-space-key":"Public key needed"}[String(s||"").toLowerCase()]||String(s||"Unknown").replaceAll("-"," "));
+ const stateLabel=s=>({denied:"Access denied",limited:"Rate limited",fresh:"Fresh",partial:"Partial",stale:"Stale snapshot",unavailable:"Unavailable","not-yet-fetched":"Not fetched","not-configured":"Not configured","available-on-demand":"Available on request","official-source-link":"Official source link","needs-worker-secret":"Worker secret needed","needs-public-space-key":"Public key needed"}[String(s||"").toLowerCase()]||String(s||"Unknown").replaceAll("-"," "));
  const tone=s=>["fresh","partial"].includes(String(s||"").toLowerCase())?"good":["stale","not-yet-fetched","available-on-demand","not-configured","official-source-link","needs-worker-secret","needs-public-space-key"].includes(String(s||"").toLowerCase())?"warn":"bad";
  async function request(path){
   const response=await fetch(API+path,{headers:{Accept:"application/json"},signal:AbortSignal.timeout(18000),cache:"no-store"});
   const payload=await response.json().catch(()=>({}));
-  if(!response.ok)throw new Error("HTTP "+response.status);
+  if(!response.ok)throw Object.assign(new Error("HTTP "+response.status), {status: response.status});
   return payload;
  }
  function rowCard(p){
-  return '<article class="health-card"><div class="health-card-head"><div><span class="health-kicker">'+esc(p.group||"PUBLIC DATA PROVIDER")+'</span><h3>'+esc(p.name)+'</h3></div><span class="status-pill '+tone(p.status)+'">'+esc(stateLabel(p.status))+'</span></div><p>'+esc(p.detail||"Provider status.")+'</p><div class="health-meta"><span>Endpoint: <code>'+esc(p.path||"configuration")+'</code></span><span>Last checked: '+esc(p.checked||"—")+'</span></div>'+(p.asOf?'<div class="health-asof">Data as of: '+esc(p.asOf)+'</div>':'')+(p.note?'<div class="health-note">'+esc(p.note)+'</div>':'')+'</article>';
+  return '<article class="health-card"><div class="health-card-head"><div><span class="health-kicker">'+esc(p.group||"PUBLIC DATA PROVIDER")+'</span><h3>'+esc(p.name)+'</h3></div><span class="status-pill '+tone(p.status)+'">'+esc(stateLabel(p.status))+'</span></div><p>'+esc(p.detail||"Provider status.")+'</p><div class="health-meta"><span>Endpoint: <code>'+esc(p.path||"configuration")+'</code></span><span>Last checked: '+esc(p.checked||"—")+'</span></div>'+(p.asOf?'<div class="health-asof">Data as of: '+esc(presentation.timestamp(p.asOf))+'</div>':'')+(p.note?'<div class="health-note">'+esc(p.note)+'</div>':'')+'</article>';
  }
  async function refresh(){
   if(!API){$("healthGrid").innerHTML='<div class="empty-state">API gateway is not configured. Set the public Worker URL in the deployment environment.</div>';$("healthHeadline").textContent="Gateway not configured";return;}
@@ -47,7 +48,7 @@
    for(let i=0;i<results.length;i++){
     const result=results[i],e=endpoints[i];
     if(result.status!=="fulfilled"){
-     cards.push({name:e.name,group:"UPSTREAM SNAPSHOT",status:"unavailable",detail:e.detail,path:e.path,checked:new Date().toISOString(),note:String(result.reason?.message||"Request failed")});
+     cards.push({name:e.name,group:"UPSTREAM SNAPSHOT",status:presentation.failed(result.reason?.status),detail:e.detail,path:e.path,checked:new Date().toISOString(),note:String(result.reason?.message||"Request failed")});
      continue;
     }
     const d=result.value.data;

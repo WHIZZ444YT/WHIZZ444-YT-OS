@@ -63,6 +63,17 @@ try {
   await page.getByRole('searchbox', { name: 'Search markets, lessons and tools' }).fill('FVG');
   await page.getByRole('search', { name: 'Global search' }).getByRole('button', { name: 'Search' }).click();
   assert.equal(new URL(page.url()).searchParams.get('q'), 'FVG');
+  await page.waitForURL(url => url.pathname === '/search/');
+  for (const value of ['NQ', 'FVG', 'IFVG', 'MSS', 'COT']) {
+    const query = page.getByRole('searchbox', { name: 'Search the site' });
+    await query.fill(value);
+    await query.press('Enter');
+    assert.ok(await page.locator('[data-results] a').count(), value);
+  }
+  await page.getByRole('button', { name: 'Clear', exact: true }).click();
+  assert.equal(new URL(page.url()).searchParams.has('q'), false);
+  await page.goBack();
+  assert.equal(await page.getByRole('searchbox', { name: 'Search the site' }).inputValue(), 'COT');
   await page.goto(site + '/ict-lab/?view=learn&id=C34&q=weekly+open');
   await page.waitForURL(url => url.pathname === '/ict-lab/learn/c34/');
   assert.equal(new URL(page.url()).searchParams.get('q'), 'weekly open');
