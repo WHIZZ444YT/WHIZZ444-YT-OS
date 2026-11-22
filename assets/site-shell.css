@@ -400,3 +400,81 @@ body.os-ict-terminal:not(.dark) .os-footer{border-color:#d8e2e8;color:#6a7f91}
 .os-date-missing{color:#8798a7;font-style:italic}
 .os-contract-lifecycle-source{display:flex;gap:10px;flex-wrap:wrap;margin-top:8px}
 @media(max-width:760px){.os-contract-lifecycle details{padding:8px}.os-contract-date-table{min-width:650px}}
+
+/* Shared public palette and interaction targets. */
+:root {
+  --os-bg: #0c1420;
+  --os-card: #152233;
+  --os-surface: #152233;
+  --os-ink: #ecf3fa;
+  --os-text: #ecf3fa;
+  --os-muted: #a9b9ca;
+  --os-action: #63dcc9;
+  --os-action-ink: #09231f;
+  --os-blue: #9acbff;
+  --os-line-strong: #647b92;
+  --os-focus: #ffcc73;
+  --os-positive: #69d8a1;
+  --os-warning: #ffd482;
+  --os-negative: #ff9da7;
+}
+body.os-light {
+  --os-bg: #f5f8fc;
+  --os-card: #fff;
+  --os-surface: #fff;
+  --os-ink: #122539;
+  --os-text: #122539;
+  --os-muted: #475c70;
+  --os-action: #087064;
+  --os-action-ink: #fff;
+  --os-blue: #174f86;
+  --os-line-strong: #62778c;
+  --os-focus: #744600;
+  --os-positive: #176548;
+  --os-warning: #754700;
+  --os-negative: #a12339;
+}
+body {font-size: 16px}
+.os-content :focus-visible, .os-topbar :focus-visible {
+  outline: 3px solid var(--os-focus);
+  outline-offset: 3px;
+  scroll-margin-block-start: 5rem;
+}
+.os-topbar :is(.os-global-search, .os-theme-toggle, .os-sidebar-toggle),
+.os-home-actions > a, .os-home-search .primary-button, .os-home-shortcuts a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  min-width: 44px;
+  font-size: 14px;
+}
+.os-home-search {max-width: 44rem; margin: 0 0 16px}
+.os-home-search label {display: block; font-size: 14px; font-weight: 700; margin-bottom: 4px}
+.os-home-search > div {display: flex; gap: 8px}
+.os-home-search input {
+  min-width: 0;
+  flex: 1;
+  padding: 8px 12px;
+  border: 1px solid var(--os-line-strong);
+  border-radius: 8px;
+  color: var(--os-ink);
+  background: var(--os-surface);
+  font: inherit;
+}
+.os-home-actions, .os-home-shortcuts {display: flex; flex-wrap: wrap; gap: 8px 16px; margin-bottom: 16px}
+.os-home-actions .primary-button, .os-home-search .primary-button {
+  color: var(--os-action-ink);
+  background: var(--os-action);
+  text-decoration: none;
+}
+.os-home-actions .primary-button:hover, .os-home-search .primary-button:hover {box-shadow: inset 0 0 0 2px currentColor}
+.os-home-secondary {border: 1px solid var(--os-line-strong); border-radius: 8px; padding-inline: 16px; color: var(--os-blue)}
+.os-home-shortcuts a {color: var(--os-blue); justify-content: start}
+.os-global-search {color: var(--os-blue); padding-inline: 6px}
+.os-overview-updated, .os-quote-placeholder, .os-session-clock-grid {font-variant-numeric: tabular-nums}
+@media (max-width: 480px) {
+  .os-topbar .os-mode-chip, .os-topbar .os-workspace-link {display: none}
+  .os-home-actions > a {flex: 1 1 auto}
+}
+

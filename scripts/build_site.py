@@ -19,6 +19,12 @@ TERMINAL_CUTOVER = os.getenv('ICT_TERMINAL_CUTOVER') == '1'
 
 NAV_ITEMS = [
     ('Overview', '/'),
+    ('Search', '/search/'),
+    ('ICT Lab', '/ict-lab/'),
+    ('Markets', '/markets/'),
+    ('Charts', '/charts/'),
+    ('Macro', '/macro/'),
+    ('Journal practice', '/ict-lab/practice/16/'),
     ('Futures Markets', '/futures-intelligence/'),
     ('ICT Academy', '/academy/'),
     ('Entry Models', '/entry-models/'),
@@ -34,15 +40,17 @@ NAV_ITEMS = [
 ]
 
 NAV_GROUPS = [
-    ('WORKSPACE', ['Overview', 'Futures Markets']),
-    ('LEARN', ['ICT Academy', 'Entry Models']),
-    ('MARKET INTELLIGENCE', ['Sessions & Calendar', 'Futures News', 'Volume & Open Interest', 'COT & Positioning', 'Contract Specs & Expiry']),
-    ('RESEARCH & RISK', ['Strategy Lab', 'Risk & Prop Firms']),
-    ('PERSONAL', ['Journal & Watchlists', 'Data Health & Sources']),
+    ('WORKSPACE', ['Overview', 'Search']),
+    ('LEARN', ['ICT Lab', 'ICT Academy', 'Entry Models']),
+    ('MARKETS', ['Futures Markets', 'Markets', 'Charts', 'Contract Specs & Expiry']),
+    ('RESEARCH', ['Futures News', 'Macro', 'COT & Positioning', 'Volume & Open Interest', 'Data Health & Sources']),
+    ('TOOLS', ['Sessions & Calendar', 'Strategy Lab', 'Risk & Prop Firms', 'Journal practice']),
+    ('ACCOUNT', ['Journal & Watchlists']),
 ]
 
+NAV_DISPLAY = {'Futures Markets': 'Futures Desk', 'Journal & Watchlists': 'Account'}
+
 AREA_ALIASES = {
-    '/macro/': '/sessions/',
     '/tools/': '/risk/',
     '/sources/': '/data-health/',
 }
@@ -76,28 +84,23 @@ def nav_markup(current='/'):
         items = []
         for label in labels:
             href = links[label]
-            is_active = active == href
+            is_active = active == href or (
+                href == '/ict-lab/' and active.startswith(href) and active != '/ict-lab/practice/16/'
+            )
+            visible_label = NAV_DISPLAY.get(label, label)
             symbol = {
-                'Overview':'OV','Futures Markets':'MK','ICT Academy':'AC','Entry Models':'EM',
+                'Search':'SE','ICT Lab':'IL','Markets':'MK','Charts':'CH','Macro':'MA','Journal practice':'JP',
+                'Overview':'OV','Futures Markets':'FD','ICT Academy':'AC','Entry Models':'EM',
                 'Sessions & Calendar':'SC','Futures News':'NW','Volume & Open Interest':'OI',
                 'COT & Positioning':'CT','Contract Specs & Expiry':'SP','Strategy Lab':'SL',
                 'Risk & Prop Firms':'RK','Journal & Watchlists':'JW','Data Health & Sources':'DH'
             }[label]
             current_attr = ' aria-current="page"' if is_active else ''
             items.append(
-                f'<a class="os-nav-link{" is-active" if is_active else ""}" href="{href}"{current_attr} title="{escape(label)}">'
+                f'<a class="os-nav-link{" is-active" if is_active else ""}" href="{href}"{current_attr} title="{escape(visible_label)}">'
                 f'<span class="os-nav-symbol" aria-hidden="true">{symbol}</span>'
-                f'<span class="os-nav-label">{escape(label)}</span></a>'
+                f'<span class="os-nav-label">{escape(visible_label)}</span></a>'
             )
-        extra = {'LEARN': [('ICT Lab', '/ict-lab/', 'IL')],
-                 'WORKSPACE': [('Markets', '/markets/', 'MP'), ('Charts', '/charts/', 'CH'), ('Search', '/search/', 'SE')],
-                 'RESEARCH & RISK': [('Journal practice', '/ict-lab/practice/16/', 'JP')]}
-        for label, href, symbol in extra.get(group, []):
-            selected = current == href or (href == '/ict-lab/' and current.startswith(href)
-                                           and current != '/ict-lab/practice/16/')
-            attr = ' aria-current="page"' if selected else ''
-            items.append(f'<a class="os-nav-link{" is-active" if selected else ""}" href="{href}"{attr}>'
-                         f'<span class="os-nav-symbol" aria-hidden="true">{symbol}</span><span class="os-nav-label">{label}</span></a>')
         groups.append(f'<div class="os-nav-group"><span class="os-nav-group-label">{group}</span>{"".join(items)}</div>')
     return (
         '<aside class="os-sidebar" id="appSidebar" aria-label="Primary navigation">'
@@ -197,7 +200,7 @@ def shell(title, description, body, canonical_path='/', extra_head='', right_pan
 {nav_markup(canonical_path)}<div class="os-sidebar-scrim" id="sidebarScrim" hidden></div>
 <div class="os-main-column"><header class="os-topbar">
 <div class="os-topbar-start"><button class="os-sidebar-toggle" id="sidebarToggle" type="button" aria-expanded="true" aria-controls="appSidebar" aria-label="Collapse navigation"><span aria-hidden="true">☰</span></button><div class="os-topbar-heading"><span>FUTURES INTELLIGENCE OS</span><b>{area}</b></div></div>
-<div class="os-topbar-actions"><span class="os-mode-chip"><i></i> RESEARCH ONLY</span><button class="os-theme-toggle" id="osThemeToggle" type="button" aria-pressed="false" aria-label="Switch to light theme" title="Switch theme">☼</button><a class="os-workspace-link" href="/account/">Private workspace <span aria-hidden="true">↗</span></a></div>
+<div class="os-topbar-actions"><a class="os-global-search" href="/search/">Search</a><span class="os-mode-chip"><i></i> RESEARCH ONLY</span><button class="os-theme-toggle" id="osThemeToggle" type="button" aria-pressed="false" aria-label="Switch to light theme" title="Switch theme">☼</button><a class="os-workspace-link" href="/account/">Private workspace <span aria-hidden="true">↗</span></a></div>
 </header><main id="content" class="os-content">{content}</main>
 <footer class="os-footer"><div><b>Futures Intelligence OS</b><span>Exchange-listed futures research · ICT Futures education</span></div><div class="os-footer-links"><a href="/data-health/">Data Health &amp; Sources</a><a href="/status/">Platform status</a><a href="/docs/">Documentation</a><a href="/charts/">Futures Charts</a></div><small>Public-source frequency, freshness, contract verification and licensing boundaries apply. No broker execution is connected.</small></footer>
 </div></div><script src="/assets/site-shell.js" defer></script></body></html>'''

@@ -39,3 +39,10 @@
 - [ ] Do not describe cached public snapshots as real-time exchange data.
 - [ ] Do not publish a futures strategy performance ranking without reproducible OOS evidence.
 - [ ] Confirm data source licensing and redistribution rights before exposing exchange feeds.
+
+## Public UI evidence for v1.1.0
+
+- [ ] Record the reviewed commit and preview URL.
+- [ ] Review Home, Learn, C34 and Charts at 320, 360, 390, 768, 1280 and 1440 CSS px in both themes, with a 200% zoom check.
+- [ ] Record keyboard focus, drawer return, phone touch targets and reduced motion outcomes.
+- [ ] Archive dated screenshots and the mobile Lighthouse report when field measurements are unavailable. Report LCP and CLS as lab observations and keep field INP pending unless field data exists.

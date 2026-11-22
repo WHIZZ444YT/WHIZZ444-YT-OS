@@ -1,5 +1,12 @@
 # Changelog
 
+## Unreleased (2026-11-22)
+
+- Group public navigation by Learn, Markets, Research, Tools and Account.
+- Add homepage search and direct learning and Futures Desk actions.
+- Share dark and light palette tokens across the shell and ICT Lab.
+
+
 ## 2.2.0 — 2026-10-26
 - Consolidated the release as the Global Research Edition and added a scheduled public-news snapshot for the static site.
 - Added a GDELT collector with per-query errors, bounded timeouts, URL deduplication, stale-snapshot retention and a separate current deployment status.
