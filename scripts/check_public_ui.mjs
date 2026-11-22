@@ -228,10 +228,14 @@ try {
   }
   await research.close();
   const workspace = await browser.newPage();
+  await workspace.route('**/assets/runtime-config.js', route => route.fulfill({
+    contentType: 'application/javascript',
+    body: `window.FINANCE_OS_CONFIG = { supabaseUrl: '${site}/__workspace-fixture', supabaseAnonKey: 'public-fixture' };`,
+  }));
   await workspace.goto(site + '/account/');
   await workspace.getByRole('heading', { name: 'Sign in to your private workspace' }).waitFor();
   const contextForAccount = workspace.context();
-  await contextForAccount.route(url => url.hostname.endsWith('.supabase.co'), route => {
+  await contextForAccount.route(url => url.pathname.startsWith('/__workspace-fixture/'), route => {
     const request = route.request();
     const pathname = new URL(request.url()).pathname;
     const headers = {
@@ -240,7 +244,7 @@ try {
       'access-control-allow-methods': 'GET, POST, OPTIONS',
     };
     if (request.method() === 'OPTIONS') return route.fulfill({ status: 204, headers });
-    return route.fulfill({ headers, json: pathname === '/auth/v1/user'
+    return route.fulfill({ headers, json: pathname.endsWith('/auth/v1/user')
       ? { id: 'ef3cedd4-3377-4539-af29-2d39a716c759', email: 'fixture@example.invalid' } : [] });
   });
   const sessionKey = 'finance-os-supabase-session-v1';
