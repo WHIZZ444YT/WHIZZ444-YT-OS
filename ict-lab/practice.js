@@ -35,7 +35,7 @@
     return f;
   }
   function chart(box,symbol,bars){
-    const fig=add(box,'figure'),cap=add(fig,'figcaption',symbol+' � EDU-'+symbol+'-01 � 5 min � NY AM � America/New_York � synthetic OHLC teaching sample');
+    const fig=add(box,'figure'),cap=add(fig,'figcaption',symbol+' · EDU-'+symbol+'-01 · 5 min · NY AM · America/New_York · synthetic OHLC teaching sample');
     const low=Math.min(...bars.map(b=>b[2]))-1, high=Math.max(...bars.map(b=>b[1]))+1;
     const y=p=>Math.round(95-90*(p-low)/(high-low));
     const graphic=add(fig,'div');
@@ -53,11 +53,11 @@
   function localTimes(date,time){
     const target=Date.parse(date+'T'+time+':00Z');
     for(const h of [4,5]){const at=new Date(target+h*3600000);const fmt=zone=>new Intl.DateTimeFormat('en-GB',{timeZone:zone,year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit',hourCycle:'h23'}).format(at);
-      const ny=fmt('America/New_York');if(ny===date.split('-').reverse().join('/')+', '+time)return ny+' New York � '+fmt('Asia/Kolkata')+' Kolkata';}
+      const ny=fmt('America/New_York');if(ny===date.split('-').reverse().join('/')+', '+time)return ny+' New York · '+fmt('Asia/Kolkata')+' Kolkata';}
     throw Error('This New York wall time does not exist on the selected date.');
   }
   const today=()=>new Date().toISOString().slice(0,10);
-  function planner(box){form(box,'Save plan',f=>{field(f,'symbol','Contract',samples);field(f,'date','Trading date','date',today());field(f,'time','Session time in New York','time','09:30');field(f,'levels','Key prices and liquidity objective');field(f,'bias','Working bias',['Bullish','Bearish','Neutral']);field(f,'invalid','What would invalidate the bias?');field(f,'skip','What would make you skip?');},v=>{const clocks=localTimes(v.date,v.time);save('plan',{...v,clocks});return 'Plan saved on this device. '+clocks;});saved(box,'plan',v=>v.date+' '+v.symbol+' � '+v.clocks+' � '+v.bias+' � '+v.levels+' � Invalidation: '+v.invalid+' � Skip: '+v.skip);}
+  function planner(box){form(box,'Save plan',f=>{field(f,'symbol','Contract',samples);field(f,'date','Trading date','date',today());field(f,'time','Session time in New York','time','09:30');field(f,'levels','Key prices and liquidity objective');field(f,'bias','Working bias',['Bullish','Bearish','Neutral']);field(f,'invalid','What would invalidate the bias?');field(f,'skip','What would make you skip?');},v=>{const clocks=localTimes(v.date,v.time);save('plan',{...v,clocks});return 'Plan saved on this device. '+clocks;});saved(box,'plan',v=>v.date+' '+v.symbol+' · '+v.clocks+' · '+v.bias+' · '+v.levels+' · Invalidation: '+v.invalid+' · Skip: '+v.skip);}
   function saved(box,group,describe){const d=add(box,'details');add(d,'summary','Review saved records');d.ontoggle=()=>{if(!d.open)return;d.querySelector('ul')?.remove();const list=add(d,'ul');try{const rows=history(group);rows.reverse().forEach(r=>add(list,'li',describe(r)));if(!rows.length)add(list,'li','No records yet.');}catch{add(list,'li','Device storage could not be read.');}};}
   function replay(box){
     choose(box,'Replay instrument',samples,(host,symbol)=>{const bars=sample(symbol),k=key+'replay-'+symbol;
@@ -66,28 +66,61 @@
         host.replaceChildren();chart(host,symbol,bars.slice(0,n));const pivots=[];
         for(let j=1;j<n-1;j++){if(bars[j][1]>Math.max(bars[j-1][1],bars[j+1][1]))pivots.push('high on '+(j+1));if(bars[j][2]<Math.min(bars[j-1][2],bars[j+1][2]))pivots.push('low on '+(j+1));}
         add(host,'p','Confirmed three-bar pivots: '+(pivots.join(', ')||'none')+'. A pivot needs a closed candle on each side.');
-        if(n===bars.length){add(host,'p','Sample complete.');decisions.forEach(x=>add(host,'p','Bar '+x.bar+' � '+x.action+' � '+x.reason));const reset=add(host,'button','Start another attempt');reset.onclick=()=>{save('replayArchive',{symbol,decisions});localStorage.removeItem(k);draw();};return;}
+        if(n===bars.length){add(host,'p','Sample complete.');decisions.forEach(x=>add(host,'p','Bar '+x.bar+' · '+x.action+' · '+x.reason));const reset=add(host,'button','Start another attempt');reset.onclick=()=>{save('replayArchive',{symbol,decisions});localStorage.removeItem(k);draw();};return;}
         form(host,'Save decision and reveal next bar',f=>{field(f,'action','Decision',['Wait','Skip','Enter long','Enter short']);field(f,'reason','Evidence at the current candle');},v=>{if(localStorage.getItem(k)!==null&&JSON.stringify(decisions)!==localStorage.getItem(k)){draw();return;}localStorage.setItem(k,JSON.stringify([...decisions,{bar:n,...v}]));draw();});}
       draw();});
   }
-  function backtest(box){add(box,'p','Educational closing-price breakout. Enter long at the following open after a close above the previous high. Exit at that bar's close. Fixed initial risk is one point per trade. Costs apply per round trip.');
-    form(box,'Run sample backtest',f=>{field(f,'symbol','Sample contract',samples);field(f,'split','Evaluation sample',['Development � bars 1-7','Holdout � bars 8-12']);field(f,'fees','Round-turn fees, USD','number','1',{min:0,step:'.01'});field(f,'slip','Round-trip slippage, ticks','number','1',{min:0,step:'1'});},v=>{
+  function backtest(box){add(box,'p','Educational closing-price breakout. Enter long at the following open after a close above the previous high. Exit when that bar closes. Fixed initial risk is one point per trade. Costs apply per round trip.');
+    form(box,'Run sample backtest',f=>{field(f,'symbol','Sample contract',samples);field(f,'split','Evaluation sample',['Development · bars 1-7','Holdout · bars 8-12']);field(f,'fees','Round-turn fees, USD','number','1',{min:0,step:'.01'});field(f,'slip','Round-trip slippage, ticks','number','1',{min:0,step:'1'});},v=>{
       const bars=sample(v.symbol),hold=v.split.startsWith('Holdout'),returns=[];let equity=0,peak=0,dd=0;
       for(let i=hold?7:2;i<(hold?bars.length:7);i++){if(bars[i-1][3]<=bars[i-2][1])continue;const net=bars[i][3]-bars[i][0]-(+v.slip*.25)-(+v.fees/points[v.symbol]);returns.push(net);equity+=net;peak=Math.max(peak,equity);dd=Math.max(dd,peak-equity);}
       const n=returns.length,wins=returns.filter(x=>x>0),losses=returns.filter(x=>x<0);const avg=a=>a.length?(a.reduce((s,x)=>s+x,0)/a.length).toFixed(2):'-';
-      const result=n+' trades � win rate '+(n?(100*wins.length/n).toFixed(1)+'%':'-')+' � average win '+avg(wins)+' R � average loss '+avg(losses)+' R � expectancy '+avg(returns)+' R � max drawdown '+dd.toFixed(2)+' R.';
+      const result=n+' trades · win rate '+(n?(100*wins.length/n).toFixed(1)+'%':'-')+' · average win '+avg(wins)+' R · average loss '+avg(losses)+' R · expectancy '+avg(returns)+' R · max drawdown '+dd.toFixed(2)+' R.';
       save('tests',{...v,version:'close-breakout-v1',sample:'EDU-'+v.symbol+'-01',result});return result;});
-    saved(box,'tests',v=>v.symbol+' � '+v.split+' � '+v.version+' � '+v.result);link(box,'Open the full Strategy Lab','/strategy-lab/');}
+    saved(box,'tests',v=>v.symbol+' · '+v.split+' · '+v.version+' · '+v.result);link(box,'Open the full Strategy Lab','/strategy-lab/');}
   function risk(box){add(box,'p','Conditional educational references. All four examples use a 0.25-point tick. Tick values: NQ $5, MNQ $0.50, ES $12.50, MES $1.25. Confirm the contract specification for your account.');
     form(box,'Calculate size',f=>{field(f,'symbol','Contract',Object.keys(points));field(f,'stop','Stop distance in points','number','10',{step:'.25',min:'.25'});field(f,'budget','Risk budget in USD','number','200',{min:0,step:'.01'});field(f,'fees','Round-turn fees per contract in USD','number','0',{min:0,step:'.01'});field(f,'slip','Round-trip slippage in ticks','number','0',{min:0,step:'1'});},v=>{
       const cents=Math.round(((+v.stop+.25*(+v.slip))*points[v.symbol]+(+v.fees))*100),qty=Math.floor(Math.round(+v.budget*100)/cents);
-      return qty+' whole contracts � $'+(cents/100).toFixed(2)+' estimated risk per contract � $'+(qty*cents/100).toFixed(2)+' total estimated risk.';});link(box,'Open the full Risk Lab','/risk/');}
-  function journal(box){form(box,'Save journal entry',f=>{field(f,'date','Session date','date',today());field(f,'symbol','Contract',samples);field(f,'action','Action',['Trade','No trade']);field(f,'primary','Primary playbook',playbooks);field(f,'tags','Secondary concept tags','text','',{required:false});field(f,'plan','Planned action');field(f,'actual','Actual decision');field(f,'quality','Decision quality',['Sound','Needs review','Poor']);field(f,'adherence','Rule adherence',['Followed','Partial','Violated']);field(f,'outcome','Trade outcome',['Win','Loss','Scratch','No trade']);field(f,'emotion','Emotional state');field(f,'review','Review note');},v=>{if((v.action==='No trade')!==(v.outcome==='No trade'))throw Error('Select matching action and outcome for a no-trade session.');save('journal',{...v,tags:v.tags.split(',').map(x=>x.trim()).filter(Boolean)});return 'Journal entry saved on this device.';});saved(box,'journal',v=>[v.date,v.symbol,v.primary,v.tags.join(', '),v.action,v.quality,v.adherence,v.outcome,v.plan,v.actual,v.emotion,v.review].join(' � '));link(box,'Open private account workspace','/account/');}
+      return qty+' whole contracts · $'+(cents/100).toFixed(2)+' estimated risk per contract · $'+(qty*cents/100).toFixed(2)+' total estimated risk.';});link(box,'Open the full Risk Lab','/risk/');}
+  function journal(box){
+    form(box,'Save journal entry',f=>{
+      field(f,'date','Session date','date',today());
+      field(f,'symbol','Contract',samples);
+      const action=field(f,'action','Action',['Trade','No trade']);
+      const primary=field(f,'primary','Primary playbook',['',...playbooks]);
+      field(f,'tags','Secondary concept tags','text','',{required:false});
+      field(f,'plan','Planned action');
+      field(f,'actual','Actual decision');
+      field(f,'quality','Decision quality',['Sound','Needs review','Poor']);
+      field(f,'adherence','Rule adherence',['Followed','Partial','Violated']);
+      const outcome=field(f,'outcome','Trade outcome',['','Win','Loss','Scratch']);
+      field(f,'emotion','Emotional state');
+      field(f,'review','Review note');
+      action.addEventListener('change',()=>{
+        const trade=action.value==='Trade';
+        for(const control of [primary,outcome]){
+          control.required=trade;
+          control.disabled=!trade;
+        }
+      });
+    },v=>{
+      const trade=v.action==='Trade';
+      if(trade&&(!playbooks.includes(v.primary)||!['Win','Loss','Scratch'].includes(v.outcome))){
+        throw Error('Select a playbook and outcome for a trade.');
+      }
+      save('journal',{...v,primary:trade?v.primary:null,outcome:trade?v.outcome:null,
+        tags:v.tags.split(',').map(x=>x.trim()).filter(Boolean)});
+      return 'Journal entry saved on this device.';
+    });
+    saved(box,'journal',v=>[v.date,v.symbol,v.primary,v.tags.join(', '),v.action,v.quality,v.adherence,
+      v.outcome,v.plan,v.actual,v.emotion,v.review].filter(Boolean).join(' · '));
+    link(box,'Open private account workspace','/account/');
+  }
   window.renderPractice=(root,id,query='')=>{
     root.replaceChildren();const m=modules.find(v=>v.id===Number(id));
     if(!m){add(root,'h2','Practice');modules.filter(v=>(v.title+' '+v.description).toLowerCase().includes(String(query||'').toLowerCase())).forEach(v=>{const card=add(root,'article');link(card,v.id+'. '+v.title,'?view=practice&id='+v.id);add(card,'p',v.description);});return;}
     link(root,'All practice modules','?view=practice');add(root,'h2',m.title);add(root,'p',m.description);
-    const videos=add(root,'p');link(videos,m.label,'https://www.youtube.com/watch?v='+m.video+(m.id===13?'&t=1194s':''));if(m.alternate){videos.append(' � ');link(videos,m.alternateLabel,'https://www.youtube.com/watch?v='+m.alternate+(m.id===16?'&t=1090s':''));}
+    const videos=add(root,'p');link(videos,m.label,'https://www.youtube.com/watch?v='+m.video+(m.id===13?'&t=1194s':''));if(m.alternate){videos.append(' · ');link(videos,m.alternateLabel,'https://www.youtube.com/watch?v='+m.alternate+(m.id===16?'&t=1090s':''));}
     try{[annotation,planner,replay,backtest,risk,journal][m.id-11](root);}catch(e){add(root,'p','This practice could not load. '+e.message);}
   };
 })();
