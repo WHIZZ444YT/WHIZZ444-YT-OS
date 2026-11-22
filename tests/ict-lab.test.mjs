@@ -408,3 +408,16 @@ test('official ICT series, Charter lectures and mentor channel profiles remain d
   assert.match(published(lab + 'mentors/m06/index.html'), /BYIzvNBH59c/);
   assert.match(published(lab + 'learn/c45/index.html'), /TTrades Fractal Model/);
 });
+
+test('public evidence keeps all 31 Academy gaps distinct from verified mappings', () => {
+  const resources = published(lab + 'resources/index.html');
+  assert.equal([...resources.matchAll(/id="gap-[a-z0-9-]+"/g)].length, 31);
+  assert.match(resources, /51 of 82 Academy lessons have recorded mappings/);
+  assert.match(resources, /id="gap-cbdr"[\s\S]*?Exact coverage open/);
+  assert.match(resources, /id="gap-flout"[\s\S]*?Exact coverage open/);
+  const learn = published(lab + 'learn/index.html');
+  assert.match(learn, /<option value="extension">Academy extensions/);
+  assert.match(learn, /<option value="original">Original ICT sources/);
+  assert.match(published(lab + 'playbooks/index.html'), /<option value="academy">Academy model variants/);
+  assert.match(published(lab + 'mentors/m06/index.html'), /Matching lessons/);
+});

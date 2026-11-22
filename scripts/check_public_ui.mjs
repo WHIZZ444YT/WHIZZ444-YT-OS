@@ -87,6 +87,21 @@ try {
     assert.ok(await staticPage.getByRole('heading', { level: 1 }).isVisible(), path);
     assert.ok(await staticPage.locator('[data-ict-view] p').count(), path);
   }
+  await page.goto(site + '/ict-lab/learn/');
+  const category = page.getByLabel('Learning resources');
+  await category.selectOption('extension');
+  assert.ok(await page.getByRole('heading', { name: 'Academy extensions' }).isVisible());
+  await category.selectOption('original');
+  assert.ok(await page.getByRole('heading', { name: 'Original ICT lectures' }).isVisible());
+  await page.goBack();
+  assert.equal(await category.inputValue(), 'extension');
+  await page.goForward();
+  assert.equal(await category.inputValue(), 'original');
+  await page.goto(site + '/ict-lab/playbooks/?format=academy');
+  assert.ok(await page.getByRole('heading', { name: 'Academy model variants' }).isVisible());
+  assert.equal(await page.locator('#charter-lectures').isVisible(), false);
+  await page.goto(site + '/ict-lab/resources/#academy-video-gaps');
+  assert.equal(await page.locator('#academy-video-gaps article').count(), 31);
   await page.goto(site + '/ict-lab/mentors/m06/');
   const channel = page.getByRole('link', { name: 'Visit YouTube channel' });
   await channel.focus();

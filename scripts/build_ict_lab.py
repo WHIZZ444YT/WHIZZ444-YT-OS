@@ -6,6 +6,8 @@ from urllib.parse import parse_qs, urlsplit
 
 from ict_editorial import TERMINAL_PLACEMENTS, featured_for, learning_paths
 from ict_official_sources import CHARTER_INDEX, CREATOR_PLACEMENTS, MENTOR_FOLLOWUPS, OFFICIAL_SERIES, comparable_popular, creator_sources
+from ict_gap_register import gap_register, verification
+from ict_crosswalk import PUBLIC_MODELS
 from ict_lesson_figures import IFVG, concept_diagrams
 from ict_specs import KNOWABLE, MODULES, PLAYBOOK_CONTEXT
 
@@ -85,7 +87,7 @@ def resource_list(sources, catalog, limit=None, coverage=None):
                     "Channel ID: " + (video.get("channelId") or "unconfirmed"),
                     "Duration: " + (timecode(video["durationSeconds"]) if video.get("durationSeconds") else "unconfirmed"),
                     "Watch-page check: " + (video.get("linkCheckedAt") or "no recorded date"),
-                    "Playback: " + video["playback"].lower(), "Embed: " + video["embedding"].lower()]
+                    "Evidence: " + verification(video), "Playback: " + video["playback"].lower(), "Embed: " + video["embedding"].lower()]
         if seconds is not None:
             evidence.append(video.get("chapterStatus", "Offsets not independently checked"))
         rendered.append((f'<p>{escape(explanation)}</p>' if explanation else "") + link(label + (offset if seconds is not None and timecode(seconds) not in label else ""), source["url"], True)
@@ -93,6 +95,14 @@ def resource_list(sources, catalog, limit=None, coverage=None):
                         + '<details class="ict-video-evidence"><summary>Source details</summary>'
                         + items([escape(value) for value in evidence if value]) + '</details>')
     return items(rendered)
+
+
+def filter_control(label, options):
+    choices = '<option value="">All</option>' + "".join(
+        f'<option value="{escape(key)}">{escape(name)}</option>' for key, name in options
+    )
+    return (f'<div data-ict-filter-wrap hidden><label for="ict-format">{escape(label)}</label> '
+            f'<select id="ict-format" data-ict-filter>{choices}</select></div>')
 
 
 def search_form(action):
@@ -332,7 +342,7 @@ def build_ict_lab(root, dist, shell, write, academy, json_script, source, crossw
                  f'{key} · Module {module["id"]:02} · {module["title"]}',
                  '<script type="module" src="/assets/ict-practice.mjs"></script>' if key == "C17" else "")
         rows.append(f'<section class="ict-group" data-ict-group><h2>{module["id"]:02} · {escape(module["title"])}</h2>'
-                    f'<p>{escape(goal)}</p><p>Prerequisites · '
+                    f'<p>{len(module["concepts"])} concepts. {escape(goal)}</p><p>Prerequisites · '
                     + (" · ".join(lesson_link(key, f"{key} · {names[key]}") for key in prerequisites) if prerequisites else "Start here")
                     + ' · ' + link(f"Related Practice {practice}", url("practice", practice)) + '</p>'
                     + resource_list(module["sources"], source) + '<div class="ict-grid">' + "".join(cards) + "</div></section>")
@@ -344,11 +354,19 @@ def build_ict_lab(root, dist, shell, write, academy, json_script, source, crossw
     extensions = [card(c.get("name", c["id"]), f'/ict-futures/academy/{c["id"]}.html', c.get("definition", ""),
                        c["id"], "extension") for c in academy if c.get("id") in extension_slugs]
     rows.append('<section class="ict-group" data-ict-group><h2>Academy extensions</h2>'
-                '<p><a href="/academy/crosswalk/">See shared lessons and source coverage</a></p><div class="ict-grid">'
+                '<p><a href="/academy/crosswalk/">See shared lessons and source coverage</a> · <a href="/ict-lab/resources/#academy-video-gaps">Review exact video gaps</a></p><div class="ict-grid">'
                 + "".join(extensions) + "</div></section>")
-    rows.append('<section class="ict-group"><h2>Original ICT lectures</h2>'
-                + resource_list(source["featured"], source) + f'<p>{link("Browse the complete resource index", ROOT_URL + "resources/")}</p></section>')
-    emit(url("learn"), "learn", "Learn ICT", paths + search_form(url("learn")) + "".join(rows),
+    original_cards = [
+        card(title, ROOT_URL + "resources/#original-sources", note, "official original ICT " + title, "original")
+        for title, note, _ in OFFICIAL_SERIES
+    ]
+    rows.append('<section class="ict-group" data-ict-group><h2>Original ICT lectures</h2>'
+                '<div class="ict-grid">' + "".join(original_cards) + '</div>'
+                + resource_list(source["featured"], source)
+                + f'<p>{link("Browse the complete resource index", ROOT_URL + "resources/")}</p></section>')
+    learn_filters = filter_control("Learning resources", (
+        ("concept", "All concepts"), ("extension", "Academy extensions"), ("original", "Original ICT sources")))
+    emit(url("learn"), "learn", "Learn ICT", paths + search_form(url("learn")) + learn_filters + "".join(rows),
          f"{len(concepts)} concepts across {len(modules)} modules. Browse by module or search a topic.")
 
     play_cards = []
@@ -363,9 +381,18 @@ def build_ict_lab(root, dist, shell, write, academy, json_script, source, crossw
         related = lesson_link("P10") if item["id"] == 9 else lesson_link("P01") if item["id"] == 13 else ""
         charter += (f'<article class="ict-card" data-ict-item data-category="charter"><h3>Charter Model {item["id"]} · '
                     f'{escape(item["title"])}</h3>{resource_list(item["sources"], source)}{related}</article>')
-    emit(url("playbooks"), "playbooks", "ICT playbooks", search_form(url("playbooks"))
+    academy_models = [
+        card(crosswalk.academy[slug]["name"], f'/ict-futures/academy/{slug}.html',
+             note[2], slug + " " + note[0], "academy")
+        for slug, note in PUBLIC_MODELS.items()
+    ]
+    play_filters = filter_control("Playbook sources", (
+        ("playbook", "Lab playbooks"), ("academy", "Academy model variants"), ("charter", "Original ICT Charter")))
+    emit(url("playbooks"), "playbooks", "ICT playbooks", search_form(url("playbooks")) + play_filters
          + '<section class="ict-group" data-ict-group><h2>Lab playbooks</h2><div class="ict-grid">'
-         + "".join(play_cards) + '</div></section><section class="ict-group" id="charter-lectures" data-ict-group><h2>Original ICT Charter sources</h2>'
+         + "".join(play_cards) + '</div></section>'
+         + '<section class="ict-group" data-ict-group><h2>Academy model variants</h2><div class="ict-grid">'
+         + "".join(academy_models) + '</div></section><section class="ict-group" id="charter-lectures" data-ict-group><h2>Original ICT Charter sources</h2>'
          + '<p>Browse the ' + link("creator playlist", OFFICIAL_SERIES[2][2], True) + ' or the '
          + link("independent lecture index", CHARTER_INDEX, True) + '.</p><div class="ict-grid">' + charter + f'</div></section><p>{link("Compare Academy model variants", "/entry-models/")}</p>',
          f"{len(plays)} Lab playbooks and {len(source['charter'])} separately attributed Charter lectures.")
@@ -403,42 +430,62 @@ def build_ict_lab(root, dist, shell, write, academy, json_script, source, crossw
          + '<div class="ict-grid">' + "".join(lab_cards) + "</div>",
          f"{len(labs)} practical modules. Educational samples and local device storage are labeled in each lab.")
 
+    mentor_topics = {
+        "M01": ("C37", "C22", "C45"), "M02": ("C08", "C16", "P01"), "M03": ("C01", "C04"),
+        "M04": ("C37", "C52"), "M05": ("P01", "C45"), "M06": ("C29", "C37"),
+        "M07": ("C01", "C38"), "M08": ("C06", "C16"), "M09": ("P08", "P09"), "M10": ("P08", "P09"),
+    }
     for view, records in (("podcasts", podcasts), ("mentors", mentors)):
         groups = {}
+        has_popular = False
         for item in records:
             key = item["id"]
             title = item.get("title", item.get("name"))
             summary = item["summary"]
             show = item.get("type", "")
             section = item["program"] if view == "podcasts" else ""
-            groups.setdefault(section, []).append(card(
-                title, detail(view, key), summary, " ".join(item.get(k, "") for k in ("type", "program", "guest")), show))
+            refs = item["sources"]
+            popular = []
+            topics = ()
             if view == "mentors":
-                refs = item["sources"] + creator_sources(MENTOR_FOLLOWUPS.get(key, ()), source, item["sources"])
+                refs = refs + creator_sources(MENTOR_FOLLOWUPS.get(key, ()), source, refs)
+                popular = comparable_popular(refs, source["videos"])
+                topics = mentor_topics[key]
+                has_popular |= bool(popular)
+            searchable = " ".join(item.get(k, "") for k in ("type", "program", "guest"))
+            if topics:
+                searchable += " " + " ".join(crosswalk.lab[topic]["title"] for topic in topics)
+            groups.setdefault(section, []).append(card(
+                title, detail(view, key), summary, searchable, "popular" if popular else show))
+            if view == "mentors":
                 subsequent = f'<h3>Follow-up videos</h3>{resource_list(refs[1:], source)}' if refs[1:] else ""
                 channel = link("Visit YouTube channel", item["channel"], True)
                 channel_note = ("<p>The channel opens separately. Upload-to-channel identity still needs review.</p>"
                                 if key == "M06" else "")
-                popular = comparable_popular(refs, source["videos"])
                 ranking = ('<details><summary>Popular</summary>' +
                            '<ol>' + "".join(
                                f'<li>{link(ref["label"], ref["url"], True)} '
                                f'<small>{count:,} views observed {day}</small></li>'
                                for ref, count, day in popular) + '</ol></details>') if popular else ""
-                body = (f'<p>{channel}</p>{channel_note}<h2>Best for this topic</h2>'
-                        f'{resource_list(refs[:1], source)}{subsequent}{ranking}')
+                matching = items([lesson_link(topic, crosswalk.lab[topic]["title"]) for topic in topics])
+                body = (f'<p>{channel}</p>{channel_note}<h2>Start here</h2><h3>Best for this topic</h3>'
+                        f'{resource_list(refs[:1], source)}{subsequent}<h2>Matching lessons</h2>{matching}{ranking}')
             else:
                 identity_note = "<p>Guest identity still needs confirmation from the publisher.</p>" if key == "LF1VTFohH0U" else ""
                 topics = ', '.join(crosswalk.lab[key]["title"] for key in item["related"])
                 body = (f'<p><b>Topics</b> {escape(topics)}</p><p><b>Program</b> {escape(item["program"])}. '
                         f'{escape(item.get("host") or "Individual host unconfirmed.")}</p>'
                         f'<h2>Watch</h2>{resource_list(item["sources"], source)}{identity_note}'
+                        '<p>See Source details for duration and chapter evidence. Unconfirmed fields remain open.</p>' 
                         f'<h2>Related lessons</h2>{items([lesson_link(k) for k in item["related"]])}'
                         f'<p class="ict-muted">{escape(show)} · {escape(item["program"])} · {escape(item["guest"])}</p>')
             emit(detail(view, key), view, title, f'<div class="ict-reading">{body}</div>', summary)
         subtitle = f"{len(mentors)} creator profiles." if view == "mentors" else f"{full} full episodes and {clips} clips."
-        filters = ('<div data-ict-filter-wrap hidden><label for="ict-format">Format</label> <select id="ict-format" data-ict-filter>'
-                   '<option value="">All</option><option>Full episode</option><option>Clip</option></select></div>') if view == "podcasts" else ""
+        filters = ""
+        if view == "podcasts":
+            filters = filter_control("Format", (("Full episode", "Full episode"), ("Clip", "Clip")))
+        elif has_popular:
+            filters = filter_control("Mentor videos", (("popular", "Popular"),))
         cards = "".join(
             (f'<section data-ict-group class="ict-group"><h2>{escape(program)}</h2>' if program else "")
             + '<div class="ict-grid">' + "".join(cards) + "</div>" + ("</section>" if program else "")
@@ -473,7 +520,9 @@ def build_ict_lab(root, dist, shell, write, academy, json_script, source, crossw
                         + link("opening range gaps", "/ict-futures/academy/opening-range-gap.html") + ' and '
                         + link("first-presented FVG", "/ict-futures/academy/fpfvg.html") + '.</p>')
     emit(ROOT_URL + "resources/", "learn", "ICT resource index",
-         '<div class="ict-reading">' + original_sources + '<h2>Supplied watch links</h2>' + resource_list(source["library"], source)
+         '<div class="ict-reading">' + original_sources
+         + '<p>' + link("Review exact Academy video gaps", "#academy-video-gaps") + '</p><h2>Supplied watch links</h2>'  + resource_list(source["library"], source)
+         + gap_register(root, crosswalk, source, link)
          + '<h2 id="terminal-featured">Predecessor tutorial placements</h2>'
          + '<p>Compare each upload with the stated lesson rule. Playback and chapter fit are pending editorial review.</p>'
          + "".join(placement_sections)
