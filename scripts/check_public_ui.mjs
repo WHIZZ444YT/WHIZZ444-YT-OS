@@ -227,6 +227,47 @@ try {
     await research.getByText(context.families.nq.summary, { exact: true }).first().waitFor();
   }
   await research.close();
+  const workspace = await browser.newPage();
+  await workspace.goto(site + '/account/');
+  await workspace.getByRole('heading', { name: 'Sign in to your private workspace' }).waitFor();
+  const contextForAccount = workspace.context();
+  await contextForAccount.route(url => url.hostname.endsWith('.supabase.co'), route => {
+    const request = route.request();
+    const pathname = new URL(request.url()).pathname;
+    const headers = {
+      'access-control-allow-origin': '*',
+      'access-control-allow-headers': '*',
+      'access-control-allow-methods': 'GET, POST, OPTIONS',
+    };
+    if (request.method() === 'OPTIONS') return route.fulfill({ status: 204, headers });
+    return route.fulfill({ headers, json: pathname === '/auth/v1/user'
+      ? { id: 'ef3cedd4-3377-4539-af29-2d39a716c759', email: 'fixture@example.invalid' } : [] });
+  });
+  const sessionKey = 'finance-os-supabase-session-v1';
+  await workspace.evaluate(key => localStorage.setItem(key, JSON.stringify({
+    access_token: 'workspace-fixture', refresh_token: 'workspace-fixture',
+    expires_at: Math.floor(Date.now() / 1000) + 3600,
+  })), sessionKey);
+  await workspace.reload();
+  await workspace.getByRole('heading', { name: 'Performance overview' }).waitFor();
+  await workspace.getByRole('button', { name: 'Trade journal', exact: true }).click();
+  await workspace.locator('#tradeMarket').fill('NQH27');
+  await workspace.getByRole('button', { name: 'Sync now' }).click();
+  assert.match(await workspace.locator('#syncStatus').innerText(), /Save or cancel your edits/);
+  assert.equal(await workspace.locator('#tradeMarket').inputValue(), 'NQH27');
+  const secondTab = await contextForAccount.newPage();
+  await secondTab.goto(site + '/');
+  await secondTab.evaluate(key => localStorage.removeItem(key), sessionKey);
+  await workspace.getByText('Signed out in another tab.').waitFor();
+  assert.equal(await workspace.locator('#tradeMarket').count(), 0);
+  await contextForAccount.close();
+
+  await page.goto(site + '/strategy-lab/');
+  const advanced = page.getByText('Advanced settings and chronological holdout', { exact: true });
+  await advanced.click();
+  assert.ok(await page.getByLabel('In-sample allocation (%)').isVisible());
+  await page.goto(site + '/risk/');
+  assert.equal(await page.locator('#riskResult').getAttribute('role'), 'status');
   await staticPage.close();
   console.log('Public UI passed at six widths in both themes, including keyboard drawer and homepage search.');
 } finally {
