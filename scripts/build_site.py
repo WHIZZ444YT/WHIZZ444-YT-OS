@@ -6,10 +6,13 @@ from pathlib import Path
 from html import escape
 from datetime import datetime
 from build_academy import academy_video_coverage, build_academy, verified_lesson_videos
+from build_ict_lab import build_ict_lab
+from build_public_futures import bookmarks_page, chart_page, daily_brief, personal_reminders, search_page, session_heatmap, social_discovery
 
 ROOT = Path(__file__).resolve().parents[1]
 DIST = ROOT / 'dist'
 SITE_URL = os.getenv('SITE_URL', '').rstrip('/')
+TERMINAL_CUTOVER = os.getenv('ICT_TERMINAL_CUTOVER') == '1'
 
 NAV_ITEMS = [
     ('Overview', '/'),
@@ -36,7 +39,6 @@ NAV_GROUPS = [
 ]
 
 AREA_ALIASES = {
-    '/markets/': '/futures-intelligence/',
     '/macro/': '/sessions/',
     '/tools/': '/risk/',
     '/sources/': '/data-health/',
@@ -53,6 +55,10 @@ AREA_LABELS = {
 }
 
 def current_area(path):
+    if path.startswith('/ict-lab/'):
+        return 'ICT Lab'
+    if path == '/charts/':
+        return 'Futures Charts'
     active = AREA_ALIASES.get(path, path)
     for label, href in NAV_ITEMS:
         if href == active:
@@ -80,13 +86,21 @@ def nav_markup(current='/'):
                 f'<span class="os-nav-symbol" aria-hidden="true">{symbol}</span>'
                 f'<span class="os-nav-label">{escape(label)}</span></a>'
             )
+        extra = {'LEARN': [('ICT Lab', '/ict-lab/', 'IL')],
+                 'WORKSPACE': [('Markets', '/markets/', 'MP'), ('Charts', '/charts/', 'CH'), ('Search', '/search/', 'SE')],
+                 'RESEARCH & RISK': [('Journal practice', '/ict-lab/practice/16/', 'JP')]}
+        for label, href, symbol in extra.get(group, []):
+            selected = current == href or (href == '/ict-lab/' and current.startswith(href)
+                                           and current != '/ict-lab/practice/16/')
+            attr = ' aria-current="page"' if selected else ''
+            items.append(f'<a class="os-nav-link{" is-active" if selected else ""}" href="{href}"{attr}>'
+                         f'<span class="os-nav-symbol" aria-hidden="true">{symbol}</span><span class="os-nav-label">{label}</span></a>')
         groups.append(f'<div class="os-nav-group"><span class="os-nav-group-label">{group}</span>{"".join(items)}</div>')
     return (
         '<aside class="os-sidebar" id="appSidebar" aria-label="Primary navigation">'
         '<a class="os-sidebar-brand" href="/" aria-label="Futures Intelligence OS overview">'
         '<span class="brand-mark">FI</span><span class="os-brand-copy"><b>FUTURES INTELLIGENCE OS</b><small>RESEARCH WORKSPACE</small></span></a>'
-        f'<nav class="os-sidebar-nav" aria-label="13 futures product areas">{"".join(groups)}</nav>'
-        '<a class="os-context-link" href="/ict-lab/" title="ICT Lab">ICT Lab</a>'
+        f'<nav class="os-sidebar-nav" aria-label="Futures product areas">{"".join(groups)}</nav>'
         '<div class="os-sidebar-foot"><span class="os-foot-dot"></span><span class="os-foot-copy">RESEARCH MODE · NO BROKER EXECUTION</span></div>'
         '</aside>'
     )
@@ -157,6 +171,7 @@ def futures_terminal_bundle():
             'officialPlaylists':academy_data.get('officialPlaylists'),
         },
         'playbook':playbook,
+        'checklist':load(ROOT/'ict-lab/checklist.json',[]),
         'snapshot':snapshot,
         'sources':source_data.get('sources',[]),
     }
@@ -181,7 +196,7 @@ def shell(title, description, body, canonical_path='/', extra_head='', right_pan
 <div class="os-topbar-start"><button class="os-sidebar-toggle" id="sidebarToggle" type="button" aria-expanded="true" aria-controls="appSidebar" aria-label="Collapse navigation"><span aria-hidden="true">☰</span></button><div class="os-topbar-heading"><span>FUTURES INTELLIGENCE OS</span><b>{area}</b></div></div>
 <div class="os-topbar-actions"><span class="os-mode-chip"><i></i> RESEARCH ONLY</span><button class="os-theme-toggle" id="osThemeToggle" type="button" aria-pressed="false" aria-label="Switch to light theme" title="Switch theme">☼</button><a class="os-workspace-link" href="/account/">Private workspace <span aria-hidden="true">↗</span></a></div>
 </header><main id="content" class="os-content">{content}</main>
-<footer class="os-footer"><div><b>Futures Intelligence OS</b><span>Exchange-listed futures research · ICT Futures education</span></div><div class="os-footer-links"><a href="/data-health/">Data Health &amp; Sources</a><a href="/status/">Platform status</a><a href="/docs/">Documentation</a><a href="/ict-futures/">ICT Futures terminal</a></div><small>Public-source frequency, freshness, contract verification and licensing boundaries apply. No broker execution is connected.</small></footer>
+<footer class="os-footer"><div><b>Futures Intelligence OS</b><span>Exchange-listed futures research · ICT Futures education</span></div><div class="os-footer-links"><a href="/data-health/">Data Health &amp; Sources</a><a href="/status/">Platform status</a><a href="/docs/">Documentation</a><a href="/charts/">Futures Charts</a></div><small>Public-source frequency, freshness, contract verification and licensing boundaries apply. No broker execution is connected.</small></footer>
 </div></div><script src="/assets/site-shell.js" defer></script></body></html>'''
 
 def page_intro(kicker, title, desc, stats=''):
@@ -350,7 +365,7 @@ def build():
     if DIST.exists(): shutil.rmtree(DIST)
     DIST.mkdir(parents=True)
     # Copy repository files except dev-only/legacy archive material.
-    for name in ['index.html','resources.json','icon.svg','manifest.webmanifest','sw.js','assets','ict-futures','ict-lab','futures-intelligence','docs','README.md','SECURITY.md','LICENSE','.well-known']:
+    for name in ['index.html','resources.json','icon.svg','manifest.webmanifest','sw.js','assets','ict-futures','futures-intelligence','docs','README.md','SECURITY.md','LICENSE','.well-known']:
         src=ROOT/name
         if not src.exists(): continue
         dst=DIST/name
@@ -358,16 +373,22 @@ def build():
         else: shutil.copy2(src,dst)
     obsolete_prediction_client = DIST/'assets/prediction-markets.js'
     if obsolete_prediction_client.exists(): obsolete_prediction_client.unlink()
+    mdata = load(ROOT/'ict-futures/data/market-universe.json',{}).get('markets',[])
+    shutil.copyfile(ROOT/'ict-lab/practice.js', DIST/'assets/ict-practice.mjs')
     ict_terminal=DIST/'ict-futures/index.html'
-    ict_html=ict_terminal.read_text(encoding='utf-8')
-    placeholder='__FUTURES_DATA_BUNDLE__'
-    if ict_html.count(placeholder)!=1:
-        raise ValueError('ICT terminal must contain one futures data bundle placeholder')
-    ict_terminal.write_text(ict_html.replace(placeholder,json_script(futures_terminal_bundle()),1),encoding='utf-8')
-    # Apply the shared app shell to the two standalone terminal applications after copying their sources.
-    wrap_standalone_shell(DIST/'futures-intelligence/index.html', '/futures-intelligence/', 'desk')
-    wrap_standalone_shell(DIST/'ict-futures/index.html', '/academy/', 'ict')
-        # Route SEO metadata and old hardcoded host cleanup in copied ICT child pages.
+    desk = DIST/'futures-intelligence/index.html'
+    write(desk, desk.read_text(encoding='utf-8').replace('<!-- DAILY_BRIEF -->', daily_brief(mdata, json_script), 1))
+    wrap_standalone_shell(desk, '/futures-intelligence/', 'desk')
+    if TERMINAL_CUTOVER:
+        write(DIST/'ict-futures/sw.js', (ROOT/'scripts/retire_terminal_worker.js').read_text(encoding='utf-8'))
+    else:
+        ict_html=ict_terminal.read_text(encoding='utf-8')
+        placeholder='__FUTURES_DATA_BUNDLE__'
+        if ict_html.count(placeholder)!=1:
+            raise ValueError('ICT terminal must contain one futures data bundle placeholder')
+        ict_terminal.write_text(ict_html.replace(placeholder,json_script(futures_terminal_bundle()),1),encoding='utf-8')
+        wrap_standalone_shell(ict_terminal, '/academy/', 'ict')
+    # Route SEO metadata and old hardcoded host cleanup in copied ICT child pages.
     for html in DIST.rglob('*.html'):
         if html == DIST/'index.html': continue
         s=html.read_text(encoding='utf-8', errors='replace')
@@ -385,6 +406,9 @@ def build():
         # Repair only the generated contract-page comparison sentence; never run this through scripts.
         if html.parent.name == 'markets' and 'Comparison discipline:' in s:
             s=re.sub(r'(<p><strong>Comparison discipline:</strong>\s*)\[&#x27;(.*?)&#x27;\](\s*</p>)',r'\1\2\3',s,flags=re.I|re.S)
+        if html.parent == DIST/'ict-futures/markets':
+            s=s.replace(f'../index.html?market={html.stem}#market-profile',
+                        f'/futures-intelligence/?market={html.stem}#fiSelectedMarket')
         html.write_text(s,encoding='utf-8')
     # The legacy child sitemap used the previous GitHub Pages domain; the root sitemap below owns all canonical URLs.
     for stale in [DIST/'ict-futures/sitemap.xml', DIST/'ict-futures/robots.txt']:
@@ -394,6 +418,8 @@ def build():
         if old_seo_file.exists(): old_seo_file.unlink()
     # Futures Command Center source is the maintained root index.html.
     home = (DIST/'index.html').read_text(encoding='utf-8')
+    home = re.sub(r'<aside class="os-sidebar" id="appSidebar".*?</aside>',
+                  lambda _: nav_markup('/'), home, count=1, flags=re.S)
     if SITE_URL:
         canonical = f'<link rel="canonical" href="{escape(SITE_URL + "/")}">'
         if 'rel="canonical"' not in home: home = home.replace('</head>', canonical + '</head>', 1)
@@ -404,10 +430,23 @@ def build():
 
     # Generate app routes from source datasets.
     resources = load(ROOT/'resources.json',{}).get('resources',[])
-    mdata = load(ROOT/'ict-futures/data/market-universe.json',{}).get('markets',[])
     academy_data = load(ROOT/'ict-futures/data/ict-academy.json',{})
     academy = academy_data.get('concepts',[])
     build_academy(DIST, academy_data, SITE_URL)
+    catalog = load(ROOT/'ict-lab/catalog.json')
+    lab_routes = build_ict_lab(ROOT, DIST, shell, write, academy, json_script, catalog)
+    write(DIST/'search/index.html', shell('Search | Futures Intelligence OS',
+          'Find public futures routes, Academy lessons and ICT Lab content.',
+          search_page(mdata, academy, catalog, NAV_ITEMS, json_script), '/search/',
+          '<link rel="stylesheet" href="/assets/ict-public.css"><script defer src="/assets/public-search.js"></script>'))
+    write(DIST/'charts/index.html', shell('Futures Charts | Futures Intelligence OS',
+          'Compare futures charts in TradingView.', chart_page(mdata), '/charts/',
+          '<link rel="stylesheet" href="/assets/ict-public.css"><script defer src="/assets/public-charts.js"></script>'))
+    bookmark_route = '/ict-futures/' if TERMINAL_CUTOVER else '/ict-futures/bookmarks/'
+    write(DIST/bookmark_route.lstrip('/')/'index.html',
+          shell('ICT Futures bookmarks', 'Public destinations for saved terminal bookmarks.',
+                bookmarks_page(mdata, json_script), bookmark_route,
+                '<meta name="robots" content="noindex,follow"><script defer src="/assets/ict-terminal-compat.js"></script>'))
     news = load(ROOT/'data/news-snapshot.json',{})
     lifecycle_data=public_contract_lifecycle_data(load(ROOT/'data/contract-lifecycle.json',{}))
     lifecycle_products={x.get('marketId'):x for x in lifecycle_data.get('products',[]) if x.get('marketId')}
@@ -513,18 +552,23 @@ def build():
     session_body=page_intro('Sessions & catalysts','Session engine & economic calendar','A timezone-aware view of ICT practitioner reference windows plus official BLS, EIA, CFTC, Federal Reserve, ECB, Bank of England, Bank of Canada, RBA and BEA schedule snapshots. Publisher schedules remain separate from exchange trading hours and licensed market data.')
     session_body+='<section class="sessions-summary" aria-label="Current calendar status"><article><span class="sessions-kicker">PUBLISHER FEEDS</span><strong id="sessionsFeedState">Checking official schedules…</strong><small id="sessionsFeedMeta">Each issuer feed reports its own retrieval time and coverage.</small></article><article><span class="sessions-kicker">DISPLAY TIMEZONE</span><strong id="sessionsClock">—</strong><small id="sessionsTimezoneLabel">Using your browser timezone</small></article><article><span class="sessions-kicker">SOURCE COVERAGE</span><strong>BLS · EIA · CFTC · FED · ECB · BOE · BOC · RBA · BEA</strong><small>Publisher-specific snapshots; ECB, FOMC and RBA entries may be date-only. BEA times are supplied as UTC. This is not a complete macro calendar.</small></article></section>'
     session_body+='<section class="content-section sessions-controls"><div><label for="sessionsTimezone">Display timezone</label><select id="sessionsTimezone"><option value="browser">Use this device</option><option value="Asia/Kolkata">Asia/Kolkata · IST</option><option value="America/New_York">America/New_York · ET</option><option value="Europe/London">Europe/London</option><option value="UTC">UTC</option></select></div><div><label for="sessionsRange">Calendar range</label><select id="sessionsRange"><option value="30">Next 30 days</option><option value="7">Next 7 days</option><option value="1">Next 24 hours</option><option value="all">All publisher rows</option></select></div><div><label for="sessionsFamily">Contract relevance</label><select id="sessionsFamily"><option value="all">All futures families</option>'+family_options+'<option value="unmapped">Unmapped / general</option></select></div><button class="primary-button" id="sessionsRefresh" type="button">Refresh official schedule</button><button class="sessions-secondary" id="sessionsExport" type="button" disabled>Export visible events (ICS)</button></section>'
-    session_body+='<section class="content-section"><div class="section-top"><div><p class="kicker">OFFICIAL ISSUER SCHEDULES</p><h2>Upcoming publisher releases</h2><p>Times and dates are source-attributed. ECB, FOMC and RBA entries are date-only when the publisher supplies no release time. BEA dates include publisher-supplied UTC times. No forecasts, actual values or exchange hours are inferred.</p></div><span class="sessions-result-count" id="sessionsResultCount">Loading…</span></div><p class="sessions-live-state" id="sessionsLiveState" role="status" aria-live="polite">Retrieving official publisher schedules.</p><div class="sessions-event-list" id="sessionsEventList"></div><div class="sessions-source-line"><a href="https://www.bls.gov/schedule/news_release/bls.ics" target="_blank" rel="noopener noreferrer">Open BLS iCalendar feed ↗</a><a href="https://www.bls.gov/schedule/" target="_blank" rel="noopener noreferrer">Verify BLS release schedule ↗</a><a href="https://www.eia.gov/petroleum/supply/weekly/schedule.php" target="_blank" rel="noopener noreferrer">Verify EIA WPSR schedule ↗</a><a href="https://www.cftc.gov/MarketReports/CommitmentsofTraders/ReleaseSchedule/index.htm" target="_blank" rel="noopener noreferrer">Verify CFTC COT schedule ↗</a><a href="https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm" target="_blank" rel="noopener noreferrer">Verify FOMC meeting dates ↗</a><a href="https://www.ecb.europa.eu/press/calendars/mgcgc/html/index.en.html" target="_blank" rel="noopener noreferrer">Verify ECB council dates ↗</a><a href="https://www.bankofengland.co.uk/monetary-policy/upcoming-mpc-dates" target="_blank" rel="noopener noreferrer">Verify Bank of England MPC dates ↗</a><a href="https://www.bankofcanada.ca/core-functions/monetary-policy/key-interest-rate/" target="_blank" rel="noopener noreferrer">Verify Bank of Canada dates ↗</a><a href="https://www.rba.gov.au/schedules-events/board-meeting-schedules.html" target="_blank" rel="noopener noreferrer">Verify RBA board dates ↗</a><a href="https://www.bea.gov/news/schedule" target="_blank" rel="noopener noreferrer">Verify BEA release schedule ↗</a><span id="sessionsRetrievedAt">Retrieval time: not yet available</span></div></section>'
-    session_body+='<section class="content-section"><div class="section-top"><div><p class="kicker">ICT REFERENCE PROFILE</p><h2>New York reference windows</h2><p>Times use the IANA <code>America/New_York</code> zone, so DST is applied by the runtime timezone database.</p></div><span class="sessions-reference-badge">PRACTITIONER CONVENTION</span></div><div class="sessions-reference-toolbar"><label for="sessionsWindowDate">Reference date (New York)<input id="sessionsWindowDate" type="date"></label><span id="sessionsWindowNow" class="sessions-note">Reference windows are not exchange trading hours or signals.</span></div><div class="sessions-window-list" id="sessionsWindowList"></div><p class="sessions-footnote">Window scope is not specified in the source at an individual-window level. Verify whether a convention applies to the selected contract. Cash open and the unverified CME maintenance reference are shown separately below.</p><div class="sessions-reference-points" id="sessionsReferencePoints"></div></section>'
+    session_body+='<section class="content-section" id="calendar"><div class="section-top"><div><p class="kicker">OFFICIAL ISSUER SCHEDULES</p><h2>Upcoming publisher releases</h2><p>Times and dates are source-attributed. ECB, FOMC and RBA entries are date-only when the publisher supplies no release time. BEA dates include publisher-supplied UTC times. No forecasts, actual values or exchange hours are inferred.</p></div><span class="sessions-result-count" id="sessionsResultCount">Loading…</span></div><p class="sessions-live-state" id="sessionsLiveState" role="status" aria-live="polite">Retrieving official publisher schedules.</p><div class="sessions-event-list" id="sessionsEventList"></div><div class="sessions-source-line"><a href="https://www.bls.gov/schedule/news_release/bls.ics" target="_blank" rel="noopener noreferrer">Open BLS iCalendar feed ↗</a><a href="https://www.bls.gov/schedule/" target="_blank" rel="noopener noreferrer">Verify BLS release schedule ↗</a><a href="https://www.eia.gov/petroleum/supply/weekly/schedule.php" target="_blank" rel="noopener noreferrer">Verify EIA WPSR schedule ↗</a><a href="https://www.cftc.gov/MarketReports/CommitmentsofTraders/ReleaseSchedule/index.htm" target="_blank" rel="noopener noreferrer">Verify CFTC COT schedule ↗</a><a href="https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm" target="_blank" rel="noopener noreferrer">Verify FOMC meeting dates ↗</a><a href="https://www.ecb.europa.eu/press/calendars/mgcgc/html/index.en.html" target="_blank" rel="noopener noreferrer">Verify ECB council dates ↗</a><a href="https://www.bankofengland.co.uk/monetary-policy/upcoming-mpc-dates" target="_blank" rel="noopener noreferrer">Verify Bank of England MPC dates ↗</a><a href="https://www.bankofcanada.ca/core-functions/monetary-policy/key-interest-rate/" target="_blank" rel="noopener noreferrer">Verify Bank of Canada dates ↗</a><a href="https://www.rba.gov.au/schedules-events/board-meeting-schedules.html" target="_blank" rel="noopener noreferrer">Verify RBA board dates ↗</a><a href="https://www.bea.gov/news/schedule" target="_blank" rel="noopener noreferrer">Verify BEA release schedule ↗</a><span id="sessionsRetrievedAt">Retrieval time: not yet available</span></div></section>'
+    session_body+='<section class="content-section" id="windows"><div class="section-top"><div><p class="kicker">ICT REFERENCE PROFILE</p><h2>New York reference windows</h2><p>Times use the IANA <code>America/New_York</code> zone, so DST is applied by the runtime timezone database.</p></div><span class="sessions-reference-badge">PRACTITIONER CONVENTION</span></div><div class="sessions-reference-toolbar"><label for="sessionsWindowDate">Reference date (New York)<input id="sessionsWindowDate" type="date"></label><span id="sessionsWindowNow" class="sessions-note">Reference windows are not exchange trading hours or signals.</span></div><div class="sessions-window-list" id="sessionsWindowList"></div><p class="sessions-footnote">Window scope is not specified in the source at an individual-window level. Verify whether a convention applies to the selected contract. Cash open and the unverified CME maintenance reference are shown separately below.</p><div class="sessions-reference-points" id="sessionsReferencePoints"></div></section>'
     session_body+='<section class="content-section sessions-exchange-note"><p class="kicker">EXCHANGE SCHEDULES</p><h2>Official product hours are not configured</h2><p>No verified CME/ICE holiday, early-close, maintenance-break or product-specific schedule feed is connected. Do not use the ICT reference windows as a substitute. Review the official exchange calendar and product specifications for the active contract.</p><div class="sessions-source-line"><a href="https://www.cmegroup.com/tools-information/holiday-calendar.html" target="_blank" rel="noopener noreferrer">CME holiday calendar ↗</a><a href="https://www.cmegroup.com/trading-hours.html" target="_blank" rel="noopener noreferrer">CME trading hours ↗</a><a href="https://www.ice.com/marketdata/reports/248" target="_blank" rel="noopener noreferrer">ICE trading hours and calendars ↗</a><a href="/data-health/">Review provider status →</a></div></section>'
+    session_body+=session_heatmap(mdata) + personal_reminders(mdata)
     session_body+=f'<script type="application/json" id="sessionsPageData">{json_script(session_page_data)}</script>'
-    write(DIST/'sessions/index.html',shell('Sessions & Calendar | Futures Intelligence OS','Timezone-aware ICT Futures reference windows and official BLS, EIA, CFTC, Federal Reserve, ECB, Bank of England, Bank of Canada, RBA and BEA schedules, with clear coverage and exchange-hours status.',session_body,'/sessions/','<link rel="stylesheet" href="/assets/sessions-page.css"><script defer src="/assets/session-time.js"></script><script defer src="/assets/sessions-page.js"></script>'))
+    write(DIST/'sessions/index.html',shell('Sessions & Calendar | Futures Intelligence OS','Timezone-aware ICT Futures reference windows and official BLS, EIA, CFTC, Federal Reserve, ECB, Bank of England, Bank of Canada, RBA and BEA schedules, with clear coverage and exchange-hours status.',session_body,'/sessions/','<link rel="stylesheet" href="/assets/sessions-page.css"><script defer src="/assets/session-time.js"></script><link rel="stylesheet" href="/assets/ict-public.css"><script defer src="/assets/publisher-schedules.js"></script><script defer src="/assets/legacy-reminders.js"></script><script defer src="/assets/sessions-page.js"></script>'))
 
     # Markets
-    cards=''.join(card(m.get('label',m.get('name',m.get('id','Market'))),m.get('role',m.get('note','Market context and research links.')),f"/ict-futures/markets/{m.get('id','')}.html",m.get('exchange','Market profile'),m.get('tier','')) for m in mdata)
+    cards=''.join(
+        f'<div data-market-profile="{escape(m["id"])}" data-tier="{escape(m["tier"])}">'
+        + card(m["label"],m["role"],f'/ict-futures/markets/{m["id"]}.html',m["exchange"],m["tier"])
+        + '</div>' for m in mdata)
+    market_filter='<form hidden class="ict-chart-controls"><label>Find a contract <input type="search" name="q"></label><label>Tier <select name="tier"><option value="">All</option><option>T1</option><option>T2</option><option>T3</option></select></label></form><p role="status"></p>'
     body=page_intro('Listed futures universe','Futures markets','Explore the 15 retained futures contract families. CME currency and Bitcoin futures remain in scope. Verify current exchange specifications before trading.')
-    body+=f'<section class="content-section"><div class="section-top"><div><span class="kicker">ICT futures universe</span><h2>Contract profiles</h2><p>15 futures families retained from the supplied 3.0 source dataset.</p></div><a class="text-link" href="/ict-futures/">Open full futures terminal →</a></div><div class="card-grid">{cards}</div></section>'
+    body+=f'<section class="content-section" data-market-profiles><div class="section-top"><div><span class="kicker">ICT futures universe</span><h2>Contract profiles</h2><p>15 futures families retained from the supplied 3.0 source dataset.</p></div><a class="text-link" href="/futures-intelligence/#universe">Open the Futures Desk →</a></div>{market_filter}<div class="card-grid">{cards}</div></section>'
     body+=f'<section class="content-section"><h2>Contract data quality rules</h2><p>Tick size, tick value, multiplier, expiry, first notice and session hours are reference values only until independently reconciled with the official exchange specification and date-stamped. No broker margin is inferred.</p></section>'
-    write(DIST/'markets/index.html',shell('Futures Markets | Futures Intelligence OS','Explore 15 futures families across equity-index, rates, currency, metals, energy and CME Bitcoin futures.',body,'/markets/'))
+    write(DIST/'markets/index.html',shell('Futures Markets | Futures Intelligence OS','Explore 15 futures families across equity-index, rates, currency, metals, energy and CME Bitcoin futures.',body,'/markets/','<link rel="stylesheet" href="/assets/ict-public.css"><script defer src="/assets/market-profiles.js"></script>'))
 
     # Part 2 ICT Futures Academy dashboard: canonical 82-lesson curriculum and nine preserved tutorials.
     program=academy_data.get('learningProgram',{})
@@ -667,7 +711,8 @@ def build():
     source_categories = load(ROOT/'resources.json',{}).get('categories',[])
     body=page_intro('Exchange and research references','Futures source directory','A reviewed directory of exchange, regulator, macro, futures-news and ICT education sources. Inclusion is not a licence grant or a promise of free real-time market data.',f'<div class="stats-row"><b>{len(resources)}</b><span>Futures-relevant sources</span><b>{len(source_categories)}</b><span>Categories</span></div>')
     body+='<div class="filter-row"><input id="resourceSearch" class="search-input" type="search" placeholder="Search futures exchanges, CFTC, macro or ICT sources"><select id="resourceCategory" class="search-input"><option value="">All categories</option></select><span id="resourceCount" class="muted"></span></div><div id="resourceCards" class="directory-grid"></div>'
-    write(DIST/'sources/index.html',shell('Futures Sources | Futures Intelligence OS','Reviewed futures exchange, regulator, macro, news and ICT education source directory.',body,'/sources/', '<script defer src="/assets/research-directory.js"></script>'))
+    body+=social_discovery(mdata, load(ROOT/'ict-futures/data/social-analysis-methods.json'), json_script)
+    write(DIST/'sources/index.html',shell('Futures Sources | Futures Intelligence OS','Reviewed futures exchange, regulator, macro, news and ICT education source directory.',body,'/sources/', '<link rel="stylesheet" href="/assets/ict-public.css"><script defer src="/assets/futures-social.js"></script><script defer src="/assets/research-directory.js"></script>'))
     write(DIST/'research/index.html',redirect_page('Research directory moved','/sources/'))
 
     # News room
@@ -678,7 +723,7 @@ def build():
     market_filter=''.join(f'<option value="{escape(str(m.get("id","")),quote=True)}">{escape(str(m.get("label","")))}</option>' for m in mdata)
     topic_values=['macro','policy','rates','inflation','employment','energy','metals','currencies','treasuries','positioning','exchange','geopolitics','supply','earnings']
     topic_filter=''.join(f'<option value="{topic}">{topic.title()}</option>' for topic in topic_values)
-    body+=f'<section class="content-section"><div class="section-top"><div><h2>Futures headlines</h2><p>Headline discovery only. Publisher publication time and full article text may be unavailable; use the original source.</p></div><button class="primary-button" id="refreshNews">Refresh snapshot</button></div><div class="filter-row"><select id="newsInstrument" class="search-input"><option value="">All contract families</option>{market_filter}</select><select id="newsTopic" class="search-input"><option value="all">All event types</option>{topic_filter}</select><select id="newsPublisher" class="search-input"><option value="">All publishers</option></select><select id="newsTime" class="search-input"><option value="72">GDELT seen · last 72 hours</option><option value="24">GDELT seen · last 24 hours</option><option value="6">GDELT seen · last 6 hours</option></select></div><p class="muted" id="newsSourceStatus">News source status not checked.</p><p class="small-text">Source attribution: <a href="https://www.gdeltproject.org/about.html" target="_blank" rel="noopener noreferrer">GDELT Project terms and citation ↗</a>. Publisher article rights remain separate; open each original source.</p><div class="news-grid" id="newsGrid"></div><p id="newsState" class="muted"></p></section><section class="content-section"><h2>Search external sources</h2><p>Use the ICT Futures terminal for contract-specific news and public research links. Headlines are discovery leads, not verified facts or trading signals.</p><a class="text-link" href="/ict-futures/#news">Open full Finance research desk →</a></section>'
+    body+=f'<section class="content-section"><div class="section-top"><div><h2>Futures headlines</h2><p>Headline discovery only. Publisher publication time and full article text may be unavailable; use the original source.</p></div><button class="primary-button" id="refreshNews">Refresh snapshot</button></div><div class="filter-row"><select id="newsInstrument" class="search-input"><option value="">All contract families</option>{market_filter}</select><select id="newsTopic" class="search-input"><option value="all">All event types</option>{topic_filter}</select><select id="newsPublisher" class="search-input"><option value="">All publishers</option></select><select id="newsTime" class="search-input"><option value="72">GDELT seen · last 72 hours</option><option value="24">GDELT seen · last 24 hours</option><option value="6">GDELT seen · last 6 hours</option></select></div><p class="muted" id="newsSourceStatus">News source status not checked.</p><p class="small-text">Source attribution: <a href="https://www.gdeltproject.org/about.html" target="_blank" rel="noopener noreferrer">GDELT Project terms and citation ↗</a>. Publisher article rights remain separate; open each original source.</p><div class="news-grid" id="newsGrid"></div><p id="newsState" class="muted"></p></section><section class="content-section"><h2>Search external sources</h2><p>Use the ICT Futures terminal for contract-specific news and public research links. Headlines are discovery leads, not verified facts or trading signals.</p><a class="text-link" href="/futures-intelligence/#daily-brief">Open Futures Desk brief →</a></section>'
     write(DIST/'news/index.html',shell('Futures News | Futures Intelligence OS','Futures news discovery with source traceability, retrieval times and provider status.',body,'/news/', '<script defer src="/assets/news-page.js"></script>'))
 
     # Volume & Open Interest: weekly futures-only CFTC OI, with exchange volume explicitly unavailable.
@@ -702,6 +747,12 @@ def build():
     body+='<section class="content-section"><div class="section-top"><div><h2>Model catalogue</h2><p>Open each lesson for its definition, conditions, use cases, invalidation and common mistakes.</p></div><a class="text-link" href="/academy/">Browse all Academy concepts ↗</a></div><div class="card-grid">'+model_cards+'</div></section>'
     body+='<p><a class="text-link" href="/ict-lab/?view=playbooks">Explore ICT Lab playbooks →</a></p>'
     body+='<section class="content-section"><h2>Performance evidence policy</h2><p>No model is labelled “best” until its rules are operationally defined and tested on timestamped historical data with commissions, slippage, contract rolls, survivorship controls and out-of-sample validation. The eight models have no audited win-rate, expectancy, profit-factor or drawdown ranking yet.</p></section>'
+    body+='<section class="content-section"><h2>Legacy terminal model variants</h2><p>Illustrative rules from the original playbook.</p>'
+    for model in playbook_data.get('models', []):
+        terms = ''.join(f'<dt>{label}</dt><dd>{escape(model[key])}</dd>' for label,key in
+                        [('Context','context'),('Entry','entry'),('Stop','stop'),('Target','target'),('Invalidation','invalidation')])
+        body+=f'<details><summary>{escape(model["name"])}</summary><dl>{terms}</dl></details>'
+    body+='</section>'
     write(DIST/'entry-models/index.html',shell('ICT Entry Models | Futures Intelligence OS','Eight ICT entry-model concepts with educational playbook links and no unsupported performance claims.',body,'/entry-models/'))
 
     # P4 Strategy Lab: deterministic signal-driven futures backtesting.
@@ -814,7 +865,7 @@ def build():
     body+='''<section class="content-section"><div class="section-top"><div><h2>Futures position size calculator</h2><p>Use a listed contract family and micro/standard profile, then enter the exact contract code and expiry from your source. Estimates are conditional because the contract records are only partially source-reviewed; lifecycle and effective-date fields remain incomplete.</p></div><span class="data-pill">CONDITIONAL ESTIMATE · NOT EXECUTION</span></div><div class="os-data-footnote"><b>Partial contract source review:</b> core contract units and outright tick sizes/values were checked against linked official exchange pages on 20 November 2026. The records do not yet establish an active expiry, first-notice date, delivery window or effective period. Check the linked source for your exact contract and month before using the estimate. USD-only; no FX conversion, margin or liquidation estimate. Remaining-loss fields are user-entered figures from the applicable account terms and platform; the site does not infer reset timezone or balance/equity basis.</div><div class="calc-grid"><label>Contract family<select id="contract"></select></label><label>Exact contract code<input id="exactContract" type="text" maxlength="32" placeholder="Exact code from your provider" required></label><label>Contract expiry date<input id="expiryDate" type="date" required></label><label>Account balance (USD)<input id="balance" type="text" inputmode="decimal" placeholder="Enter your balance" required></label><label>Risk per trade (%)<input id="riskPct" type="text" inputmode="decimal" placeholder="Enter your limit" required></label><label>Maximum contracts<input id="maxContracts" type="number" min="1" max="10000" step="1" placeholder="Enter a cap" required></label><label>Daily loss remaining (USD, optional)<input id="dailyLossRemaining" type="text" inputmode="decimal" placeholder="Use the current official account figure"></label><label>Maximum drawdown remaining (USD, optional)<input id="drawdownRemaining" type="text" inputmode="decimal" placeholder="Use the current official account figure"></label><label>Stop distance (ticks)<input id="stopTicks" type="number" min="1" max="1000000" step="1" placeholder="Enter stop distance" required></label><label>Target distance (ticks)<input id="targetTicks" type="number" min="1" max="1000000" step="1" placeholder="Enter target distance" required></label><label>Commission + other fees / contract / round turn (USD)<input id="commission" type="text" inputmode="decimal" placeholder="Enter all round-turn fees" required></label><label>Estimated spread (ticks / round turn)<input id="spreadTicks" type="number" min="0" max="1000000" step="1" placeholder="Enter 0 only if appropriate" required></label><label>Estimated slippage (ticks / round turn)<input id="slippageTicks" type="number" min="0" max="1000000" step="1" placeholder="Enter a conservative estimate" required></label><label>Cost source<input id="costSource" type="text" maxlength="160" placeholder="Broker schedule or documented estimate" required></label><label>Cost source date<input id="costAsOf" type="date" required></label><button id="calculateRisk" class="primary-button">Calculate conditional size</button></div><div id="riskResult" class="result-panel" aria-live="polite">Enter exact contract, expiry and cost assumptions to calculate a conditional estimate. Core tick facts are source-checked; the full contract record remains partial.</div><p class="fine-print">Tick value means dollars per exchange tick, not dollars per index point. Round-turn fees should include broker, exchange, clearing, NFA and routing costs. Spread and slippage are estimates supplied by you, not observed fills.</p></section>'''
     unverified_cards=''.join('<article class="os-data-footnote"><b>'+escape(str(x.get('label') or 'Unverified mention'))+' · UNVERIFIED</b><p>'+escape(str(x.get('reason') or 'No official rules verified.'))+'</p><p>Exact firm: NOT VERIFIED · Plan/stage/platform: NOT VERIFIED · Fees, drawdown, contract limits, eligibility and payout: NOT PUBLISHED</p></article>' for x in risk_rules.get('unverifiedMentions',[]))
     body+='<section class="content-section os-prop-firm-panel"><div class="section-top"><div><h2>Prop-firm rule registry</h2><p>Schema version '+escape(str(risk_rules.get('schemaVersion','unknown')))+' · reviewed '+escape(str(risk_rules.get('reviewedAt','not recorded')))+' · verified programs '+str(len(risk_rules.get('records',[])))+'</p></div><span class="os-state-chip warn">NO VERIFIED PROGRAMS</span></div><p>'+escape(str(risk_rules.get('verificationPolicy','Official current terms required.')))+' No numeric rule, fee, eligibility, payout or comparison is shown without an exact current official source.</p>'+unverified_cards+'<p class="os-data-footnote">No login credentials are requested or stored. Private account balances and remaining-loss allowances are entered in this browser only and are not sent to Supabase.</p></section>'
-    body+='<section class="content-section"><h2>Personal risk workflow</h2><div class="card-grid">'+card('Journal & watchlists','Review planned and completed trades in your private workspace.','/account/','Private workspace')+card('Pre-session checklist','Prepare a repeatable market plan and evidence checklist.','/ict-futures/#checklist','ICT Futures')+card('Contract verification','Check imported tick references and missing expiry fields.','/contract-specs/','Reference registry')+'</div></section>'
+    body+='<section class="content-section"><h2>Personal risk workflow</h2><div class="card-grid">'+card('Journal & watchlists','Review planned and completed trades in your private workspace.','/account/','Private workspace')+card('Pre-session checklist','Prepare a repeatable market plan and evidence checklist.','/ict-lab/practice/16/#local-journal','ICT Futures')+card('Contract verification','Check imported tick references and missing expiry fields.','/contract-specs/','Reference registry')+'</div></section>'
     write(DIST/'data/prop-firm-programs.json',json.dumps(risk_rules,ensure_ascii=False,indent=2)+'\n')
     write(DIST/'risk/index.html',shell('Risk & Prop Firms | Futures Intelligence OS','Conditional futures position sizing and versioned prop-firm rule verification status.',body,'/risk/', '<script type="module" defer src="/assets/risk-calculator.js"></script>'))
     write(DIST/'tools/index.html',redirect_page('Risk tools moved','/risk/'))
@@ -843,6 +894,7 @@ def build():
     # Sitemap only when canonical base exists, else create relative noindex sitemap not intended for submission.
     if SITE_URL:
         urls=['/','/ict-lab/','/futures-intelligence/','/markets/','/academy/','/entry-models/','/news/','/volume-open-interest/','/research/positioning/','/contract-specs/','/strategy-lab/','/risk/','/account/','/data-health/','/macro/','/status/','/docs/','/sources/','/ict-futures/']
+        urls += ['/charts/', *lab_routes]
         urls += [f'/ict-futures/markets/{p.name}' for p in (DIST/'ict-futures/markets').glob('*.html')]
         urls += [f'/ict-futures/academy/{p.name}' for p in (DIST/'ict-futures/academy').glob('*.html')]
         urls.append('/ict-futures/academy/tutorials/')

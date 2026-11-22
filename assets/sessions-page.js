@@ -185,23 +185,7 @@
       renderEvents(); button.disabled = false; button.textContent = "Refresh official schedule"; return;
     }
     try {
-      const feeds = [
-        { id: "BLS", path: "/api/v1/events" },
-        { id: "EIA", path: "/api/v1/events/eia" },
-        { id: "CFTC", path: "/api/v1/events/cftc" },
-        { id: "FOMC", path: "/api/v1/events/fomc" },
-        { id: "ECB", path: "/api/v1/events/ecb" },
-        { id: "BoE", path: "/api/v1/events/boe" },
-        { id: "BoC", path: "/api/v1/events/boc" },
-        { id: "RBA", path: "/api/v1/events/rba" },
-        { id: "BEA", path: "/api/v1/events/bea" }
-      ];
-      const settled = await Promise.allSettled(feeds.map(async feed => {
-        const response = await fetch(apiBase + feed.path, { headers: { Accept: "application/json" }, cache: "no-store", signal: AbortSignal.timeout(16000) });
-        const data = await response.json().catch(() => ({}));
-        if (!response.ok) throw new Error(`${feed.id}: ${data.error || `HTTP ${response.status}`}`);
-        return { ...feed, data };
-      }));
+      const settled = await window.loadPublisherSchedules(apiBase);
       const ready = settled.filter(result => result.status === "fulfilled").map(result => result.value);
       const failures = settled.filter(result => result.status === "rejected").map(result => String(result.reason?.message || "Provider request failed."));
       if (!ready.length) throw new Error(failures.join(" · ") || "No publisher calendar is available.");
@@ -209,10 +193,10 @@
       for (const feed of ready) for (const event of Array.isArray(feed.data.events) ? feed.data.events : []) merged.set(event.event_id, event);
       events = [...merged.values()].sort((a, b) => (Date.parse(a.scheduled_at_utc || "") || dateOrdinal(a.scheduled_date)) - (Date.parse(b.scheduled_at_utc || "") || dateOrdinal(b.scheduled_date)));
       const staleFeeds = ready.filter(feed => feed.data.status === "stale");
-      const incomplete = ready.length < feeds.length || staleFeeds.length > 0;
-      snapshot = { status: incomplete ? (ready.length < feeds.length ? "partial" : "stale") : "fresh", events, event_count: events.length, sources: ready.map(feed => ({ id: feed.id, status: feed.data.status, retrieved_at: feed.data.retrieved_at })) };
+      const incomplete = ready.length < settled.length || staleFeeds.length > 0;
+      snapshot = { status: incomplete ? (ready.length < settled.length ? "partial" : "stale") : "fresh", events, event_count: events.length, sources: ready.map(feed => ({ id: feed.id, status: feed.data.status, retrieved_at: feed.data.retrieved_at })) };
       const providerSummary = ready.map(feed => `${feed.id} ${String(feed.data.status || "unknown").toUpperCase()} · ${feed.data.event_count ?? feed.data.events?.length ?? 0} events`).join(" · ");
-      setFeedState(incomplete ? (ready.length < feeds.length ? "PARTIAL SOURCE COVERAGE" : "STALE PUBLISHER SNAPSHOT") : "OFFICIAL SCHEDULE SNAPSHOTS AVAILABLE", `${providerSummary} · these sources do not form a complete global macro calendar.`, incomplete ? "warn" : "");
+      setFeedState(incomplete ? (ready.length < settled.length ? "PARTIAL SOURCE COVERAGE" : "STALE PUBLISHER SNAPSHOT") : "OFFICIAL SCHEDULE SNAPSHOTS AVAILABLE", `${providerSummary} · these sources do not form a complete global macro calendar.`, incomplete ? "warn" : "");
       const retrievals = ready.map(feed => {
         const retrieved = feed.data.retrieved_at ? new Date(feed.data.retrieved_at) : null;
         const label = retrieved && !Number.isNaN(retrieved.getTime()) ? timeLabel(retrieved, zone()) : "not supplied";
@@ -262,7 +246,10 @@
   $("sessionsTimezone").value = "browser";
   $("sessionsTimezone").addEventListener("change", () => { updateClock(); renderEvents(); renderWindows(); });
   $("sessionsRange").addEventListener("change", renderEvents);
-  $("sessionsFamily").addEventListener("change", renderEvents);
+  const family = $("sessionsFamily");
+  const preset = new URLSearchParams(location.search).get("market");
+  if ([...family.options].some(option => option.value === preset)) family.value = preset;
+  family.addEventListener("change", renderEvents);
   $("sessionsWindowDate").addEventListener("change", renderWindows);
   $("sessionsRefresh").addEventListener("click", loadCalendar);
   $("sessionsExport").addEventListener("click", exportVisible);
