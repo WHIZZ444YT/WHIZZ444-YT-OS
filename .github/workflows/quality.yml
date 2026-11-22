@@ -8,7 +8,13 @@ permissions:
   contents: read
 jobs:
   validate:
+    strategy:
+      matrix:
+        cutover: ['0', '1']
     runs-on: ubuntu-latest
+    env:
+      ICT_TERMINAL_CUTOVER: ${{ matrix.cutover }}
+      SITE_URL: https://finance-intelligence-os-whizz444yt-7353.vercel.app
     steps:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
         with:
@@ -44,3 +50,11 @@ jobs:
         run: python3 scripts/validate.py
       - name: Internal link and anchor audit
         run: python3 scripts/audit_internal_links.py
+
+      - name: Compare clean standard and cutover route manifests
+        if: matrix.cutover == '0'
+        run: |
+          cp dist/route-manifest.json "$RUNNER_TEMP/standard-routes.json"
+          ICT_TERMINAL_CUTOVER=1 python3 scripts/build_site.py
+          python3 scripts/check_release_parity.py "$RUNNER_TEMP/standard-routes.json" dist/route-manifest.json
+
