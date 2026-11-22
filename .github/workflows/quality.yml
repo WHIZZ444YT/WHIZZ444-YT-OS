@@ -11,7 +11,7 @@ jobs:
     strategy:
       matrix:
         cutover: ['0', '1']
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     env:
       ICT_TERMINAL_CUTOVER: ${{ matrix.cutover }}
       SITE_URL: https://finance-intelligence-os-whizz444yt-7353.vercel.app
