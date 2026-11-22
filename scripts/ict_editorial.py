@@ -56,4 +56,3 @@ def featured_for(key, catalog, existing):
         {**featured[video], "explanation": explanation}
         for video, explanation in supplemental.items() if video not in by_id
     ]
-

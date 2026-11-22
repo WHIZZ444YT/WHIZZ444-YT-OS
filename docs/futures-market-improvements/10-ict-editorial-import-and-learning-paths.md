@@ -1,4 +1,4 @@
-# 10 � ICT editorial import and learning paths
+# 10 · ICT editorial import and learning paths
 
 ## Publication inventory
 
@@ -10,10 +10,10 @@ Migrate all supplied exact watch targets into the public content system. Keep on
 
 | Source and explanation | Public placement | Watch link |
 |---|---|---|
-| 2022 ICT Mentorship Episode 3 � Teach internal liquidity and MSS in context | C14, C08 | [Watch ICT Episode 3](https://www.youtube.com/watch?v=nQfHZ2DEJ8c) |
-| 2022 ICT Mentorship Episode 6 - Market Efficiency Paradigm & Institutional Order Flow � Connect imbalance and structure to the 2022 setup | C16, C08, C09, P01 | [Watch ICT Episode 6](https://www.youtube.com/watch?v=Bkt8B3kLATQ) |
-| 2022 ICT Mentorship Episode 14 � Compare source context with the specific named playbook | P01 and the existing Sweep + MSS model | [Watch ICT Episode 14](https://www.youtube.com/watch?v=NUdu1n-ML98) |
-| 2022 ICT Mentorship Episode 22 � Use the order-block/structure application after placement review | C21, C08, C09 | [Watch ICT Episode 22](https://www.youtube.com/watch?v=QKc_i90chVg) |
+| 2022 ICT Mentorship Episode 3 · Teach internal liquidity and MSS in context | C14, C08 | [Watch ICT Episode 3](https://www.youtube.com/watch?v=nQfHZ2DEJ8c) |
+| 2022 ICT Mentorship Episode 6 — Market Efficiency Paradigm & Institutional Order Flow · Connect imbalance and structure to the 2022 setup | C16, C08, C09, P01 | [Watch ICT Episode 6](https://www.youtube.com/watch?v=Bkt8B3kLATQ) |
+| 2022 ICT Mentorship Episode 14 · Compare source context with the specific named playbook | P01 and the existing Sweep + MSS model | [Watch ICT Episode 14](https://www.youtube.com/watch?v=NUdu1n-ML98) |
+| 2022 ICT Mentorship Episode 22 · Use the order-block/structure application after placement review | C21, C08, C09 | [Watch ICT Episode 22](https://www.youtube.com/watch?v=QKc_i90chVg) |
 
 Keep the official channel and playlist as public discovery shortcuts, with an explanation of their scope. Historical terminal YouTube search links stay in the discovery index where they are useful. Record observed upload metadata and chapter playback before labeling a new association as verified.
 
@@ -71,10 +71,10 @@ These targets are recorded as verified in the Academy data at the audited commit
 
 | Learning goal | Public path |
 |---|---|
-| First ICT workflow | Liquidity  Market Structure  FVG  P01 ICT 2022  Blind Replay  Journal |
-| Active NQ/ES learner | Daily Bias  NQ/ES SMT  Lower-Timeframe Confirmation  Futures Risk |
-| Contract foundations | Listed futures, contract/expiry vs continuous charts, tick math and session conventions  planner  sizing |
-| Practice review | Failed breakout, no-trade day and structurally invalid example  replay  grade decision, adherence and outcome separately |
+| First ICT workflow | Liquidity → Market Structure → FVG → P01 ICT 2022 → Blind Replay → Journal |
+| Active NQ/ES learner | Daily Bias → NQ/ES SMT → Lower-Timeframe Confirmation → Futures Risk |
+| Contract foundations | Listed futures, contract/expiry vs continuous charts, tick math and session conventions → planner → sizing |
+| Practice review | Failed breakout, no-trade day and structurally invalid example → replay → grade decision, adherence and outcome separately |
 
 Add an optional **Academy extensions** shelf for existing BOS, CHoCH terminology, CISD, HTF FVG, IPDA, weekly profiles and listed-futures foundations. Reuse existing slugs and distinguish concept definitions where terminology varies. Teach session boundaries, holiday gaps and contract-roll effects as prerequisites or annotated examples. Keep the 56-concept count tied to the approved Lab catalog. New lesson IDs require an explicit editorial decision, observable chart rules, source and distinct exercise.
 
@@ -84,7 +84,7 @@ Add an optional **Academy extensions** shelf for existing BOS, CHoCH terminology
 2. Give each card a one-sentence explanation before the watch link. On detail pages, record language, uploader, published title, source role, covered chart rule and expected chapter. Preserve all supplied timestamp URLs and check whether their segment explains the advertised concept.
 3. Track C34's partial open lesson, C55's source vs custom midnight anchors, C54's forex source, and P09's XAUUSD example. Provide clearly labeled NQ/ES teaching examples with rule-by-rule chart annotations.
 4. Disclose public video failures by module, C/P ID or mentor/episode. Keep a verified direct fallback, an alternate, or a visible written lesson. Retain unmatched source candidates in the editorial backlog with a concrete check owner and decision.
-5. Make sure each lesson has a "Practice next" destination. Test learning paths and source cards anonymously, by keyboard, in both themes and on phone.
+5. Make sure each lesson has a “Practice next” destination. Test learning paths and source cards anonymously, by keyboard, in both themes and on phone.
 
 Use the [final official ICT and mentor inventory](11-official-ict-scope-and-mentor-resources.md) and [31-slug coverage register](12-ict-video-gap-register-and-public-ux.md) when implementing source shelves and public mentor profiles.
 
@@ -97,4 +97,3 @@ The YouTube watch-page titles for Episodes 3, 6, 14 and 22 were observed on
 22 November 2026. These observations cover titles. The editorial reviewer still
 needs to record actual playback, embedding and chapter fit for each placement
 in the source-gap register.
-
