@@ -391,3 +391,20 @@ test('editorial paths, practice destinations and predecessor placements are publ
   assert.match(published(lab + 'learn/c34/index.html'), /Practice next/);
   assert.match(published(lab + 'playbooks/p01/index.html'), /Practice next/);
 });
+
+test('official ICT series, Charter lectures and mentor channel profiles remain distinct', () => {
+  const sources = published(lab + 'resources/index.html');
+  for (const title of ['2016 Core Mentorship', '2022 Mentorship', '2023 time macros', '2024 mentorship',
+    '2025 opening range', '2026 tape-reading']) assert.ok(sources.includes(title), title);
+  const playbooks = published(lab + 'playbooks/index.html');
+  assert.match(playbooks, /id="charter-lectures"/);
+  assert.equal([...playbooks.matchAll(/<h3>Charter Model \d+ /g)].length, 13);
+  for (let id = 1; id <= 10; id++) {
+    const mentor = published(lab + 'mentors/m' + String(id).padStart(2, '0') + '/index.html');
+    assert.match(mentor, /Visit YouTube channel/);
+    assert.match(mentor, /Best for this topic/);
+    assert.doesNotMatch(mentor, /<summary>Popular<\/summary>/);
+  }
+  assert.match(published(lab + 'mentors/m06/index.html'), /BYIzvNBH59c/);
+  assert.match(published(lab + 'learn/c45/index.html'), /TTrades Fractal Model/);
+});

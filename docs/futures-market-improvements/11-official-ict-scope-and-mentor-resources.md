@@ -81,3 +81,14 @@ Where the view snapshot is useful, show the number and its observation/source da
 | Original scope expansion | Add each indexed Charter model as an original source card under Playbooks. Stage a Lab conversion only after a written, falsifiable setup and instrument-specific fixture exist. |
 
 See the [source-gap register](12-ict-video-gap-register-and-public-ux.md) for the Academy gaps and open evidence checks.
+
+## Implementation evidence
+
+The public resource index now links the original series and the independent
+Charter index. The Playbooks shelf contains 13 numbered lectures alongside the
+10 Lab playbooks. Each approved mentor has a channel link and topic-first video
+order. Popular appears only when a mentor has at least two publisher-verified
+counts from the same observation date. The current registry has no qualifying
+cohort. A public handle link confirms a browsing destination only. Stable
+uploader IDs, playback, and exact placement reviews remain evidence gaps where
+the catalog does not provide them.

@@ -87,6 +87,13 @@ try {
     assert.ok(await staticPage.getByRole('heading', { level: 1 }).isVisible(), path);
     assert.ok(await staticPage.locator('[data-ict-view] p').count(), path);
   }
+  await page.goto(site + '/ict-lab/mentors/m06/');
+  const channel = page.getByRole('link', { name: 'Visit YouTube channel' });
+  await channel.focus();
+  assert.equal(await channel.getAttribute('href'), 'https://www.youtube.com/@Zeussy');
+  assert.ok(await page.getByRole('heading', { name: 'Best for this topic' }).isVisible());
+  await page.goto(site + '/ict-lab/playbooks/#charter-lectures');
+  assert.equal(await page.locator('#charter-lectures article').count(), 13);
   await staticPage.close();
   console.log('Public UI passed at six widths in both themes, including keyboard drawer and homepage search.');
 } finally {

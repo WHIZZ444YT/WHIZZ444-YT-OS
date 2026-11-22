@@ -5,6 +5,7 @@ import re
 from urllib.parse import parse_qs, urlsplit
 
 from ict_editorial import TERMINAL_PLACEMENTS, featured_for, learning_paths
+from ict_official_sources import CHARTER_INDEX, CREATOR_PLACEMENTS, MENTOR_FOLLOWUPS, OFFICIAL_SERIES, comparable_popular, creator_sources
 from ict_lesson_figures import IFVG, concept_diagrams
 from ict_specs import KNOWABLE, MODULES, PLAYBOOK_CONTEXT
 
@@ -163,6 +164,14 @@ def featured_index_link(key):
     return ""
 
 
+def creator_references(key, catalog):
+    refs = creator_sources(CREATOR_PLACEMENTS.get(key, ()), catalog)
+    if not refs:
+        return ""
+    scope = '<p>These creator study references have a separate editorial review from the Lab rules.</p>'
+    return '<details><summary>Creator study references</summary>' + scope + resource_list(refs, catalog) + '</details>'
+
+
 def concept_page(item, module, catalog, names, crosswalk):
     key = item["id"]
     links = crosswalk.academy_links(item["academy"])
@@ -205,7 +214,7 @@ def concept_page(item, module, catalog, names, crosswalk):
             '<p>Record the reference level or window, the confirming evidence, and the first time the label could be assigned. '
             'Identify which observable condition the look-alike misses.</p></details>'
             f'<h2>Watch</h2>{resource_list(featured_for(key, catalog, item["sources"]), catalog, 3, notes.get(key))}'
-            f'{crosswalk.media(key, item["sources"])}{featured_index_link(key)}'
+            f'{crosswalk.media(key, item["sources"])}{featured_index_link(key)}{creator_references(key, catalog)}'
             f'<h2>Continue learning</h2>{items([*adjacent, *links, link("Practice next", url("practice", MODULES[module["id"]][2]))])}</div>')
 
 
@@ -240,7 +249,7 @@ def playbook_page(item, catalog, crosswalk):
             f'<dt>Short</dt><dd>{escape(short)}</dd></dl>'
             f'<h2>Practice scenarios</h2><dl class="ict-scenarios">{scenarios}</dl>'
             f'{weekly_plan}{crosswalk.teaching(key)}<h2>Watch</h2>{resource_list(featured_for(key, catalog, item["sources"]), catalog, 3, media_note)}'
-            f'{crosswalk.media(key, item["sources"])}{featured_index_link(key)}'
+            f'{crosswalk.media(key, item["sources"])}{featured_index_link(key)}{creator_references(key, catalog)}'
             f'<h2>Related concepts</h2>{items([lesson_link(k) for k in item["concepts"]])}'
             f'{academy}<p>{link("Practice next", url("practice", 13))}</p>'
             f'<p>Record one primary playbook per trade. Record other concepts as secondary tags in the '
@@ -288,6 +297,12 @@ def build_ict_lab(root, dist, shell, write, academy, json_script, source, crossw
     clips = sum(p["type"] == "Clip" for p in podcasts)
     if (len(mentors), full, clips) != (10, 9, 2) or full + clips != len(podcasts):
         raise ValueError("ICT Lab must publish 10 mentors, 9 full episodes and 2 clips")
+    channels = [urlsplit(mentor["channel"] or "") for mentor in mentors]
+    if len({channel.path for channel in channels}) != len(mentors) or any(
+        channel.scheme != "https" or channel.netloc != "www.youtube.com" or not channel.path.startswith("/@")
+        for channel in channels
+    ):
+        raise ValueError("Each approved mentor needs a distinct public YouTube channel")
     for view, records in (("mentors", mentors), ("podcasts", podcasts)):
         if len({detail(view, x["id"]) for x in records}) != len(records):
             raise ValueError(f"Duplicate ICT Lab {view} route")
@@ -342,14 +357,17 @@ def build_ict_lab(root, dist, shell, write, academy, json_script, source, crossw
                                item["category"] + (" OSOK" if item["id"] == "P10" else ""), "playbook"))
         emit(detail("playbooks", item["id"]), "playbooks", item["title"], playbook_page(item, source, crosswalk), item["id"])
     charter = ""
+    if [entry["id"] for entry in source["charter"]] != list(range(1, 14)):
+        raise ValueError("Original Charter shelf must retain Models 1-13 in order")
     for item in source["charter"]:
         related = lesson_link("P10") if item["id"] == 9 else lesson_link("P01") if item["id"] == 13 else ""
         charter += (f'<article class="ict-card" data-ict-item data-category="charter"><h3>Charter Model {item["id"]} · '
                     f'{escape(item["title"])}</h3>{resource_list(item["sources"], source)}{related}</article>')
     emit(url("playbooks"), "playbooks", "ICT playbooks", search_form(url("playbooks"))
          + '<section class="ict-group" data-ict-group><h2>Lab playbooks</h2><div class="ict-grid">'
-         + "".join(play_cards) + '</div></section><section class="ict-group" data-ict-group><h2>Original ICT Charter sources</h2>'
-         + '<div class="ict-grid">' + charter + f'</div></section><p>{link("Compare Academy model variants", "/entry-models/")}</p>',
+         + "".join(play_cards) + '</div></section><section class="ict-group" id="charter-lectures" data-ict-group><h2>Original ICT Charter sources</h2>'
+         + '<p>Browse the ' + link("creator playlist", OFFICIAL_SERIES[2][2], True) + ' or the '
+         + link("independent lecture index", CHARTER_INDEX, True) + '.</p><div class="ict-grid">' + charter + f'</div></section><p>{link("Compare Academy model variants", "/entry-models/")}</p>',
          f"{len(plays)} Lab playbooks and {len(source['charter'])} separately attributed Charter lectures.")
 
     lab_cards = []
@@ -378,7 +396,7 @@ def build_ict_lab(root, dist, shell, write, academy, json_script, source, crossw
         emit(url("practice", key), "practice", item["title"],
              f'<div class="ict-reading"><section{practice_anchor} data-ict-practice="{key}" aria-label="Practice exercise">'
              '<p>Enable JavaScript for interactive practice. The tutorials below remain available.</p></section>'
-             f'{playbook_choices}{checklist}{practice_data}<h2>Watch</h2>{resource_list(item["sources"], source, 3)}</div>', item["description"],
+             f'{playbook_choices}{checklist}{practice_data}<h2>Watch</h2>{resource_list(item["sources"], source, 3)}{creator_references(key, source)}</div>', item["description"],
              ('<script defer src="/assets/publisher-schedules.js"></script>' if key == 12 else "")
              + '<script type="module" src="/assets/ict-practice.mjs"></script>')
     emit(url("practice"), "practice", "ICT practice labs", search_form(url("practice"))
@@ -396,11 +414,19 @@ def build_ict_lab(root, dist, shell, write, academy, json_script, source, crossw
             groups.setdefault(section, []).append(card(
                 title, detail(view, key), summary, " ".join(item.get(k, "") for k in ("type", "program", "guest")), show))
             if view == "mentors":
-                subsequent = f'<h2>More by topic</h2>{resource_list(item["sources"][1:], source)}' if item["sources"][1:] else ""
-                channel = (link("Visit YouTube channel", item["channel"], True) if item["channel"] else
-                           "Channel identity check pending. " +
-                           link("Open the upload and select its creator", item["sources"][0]["url"], True))
-                body = f'<h2>Start here</h2>{resource_list(item["sources"][:1], source)}{subsequent}<p>{channel}</p>'
+                refs = item["sources"] + creator_sources(MENTOR_FOLLOWUPS.get(key, ()), source, item["sources"])
+                subsequent = f'<h3>Follow-up videos</h3>{resource_list(refs[1:], source)}' if refs[1:] else ""
+                channel = link("Visit YouTube channel", item["channel"], True)
+                channel_note = ("<p>The channel opens separately. Upload-to-channel identity still needs review.</p>"
+                                if key == "M06" else "")
+                popular = comparable_popular(refs, source["videos"])
+                ranking = ('<details><summary>Popular</summary>' +
+                           '<ol>' + "".join(
+                               f'<li>{link(ref["label"], ref["url"], True)} '
+                               f'<small>{count:,} views observed {day}</small></li>'
+                               for ref, count, day in popular) + '</ol></details>') if popular else ""
+                body = (f'<p>{channel}</p>{channel_note}<h2>Best for this topic</h2>'
+                        f'{resource_list(refs[:1], source)}{subsequent}{ranking}')
             else:
                 identity_note = "<p>Guest identity still needs confirmation from the publisher.</p>" if key == "LF1VTFohH0U" else ""
                 topics = ', '.join(crosswalk.lab[key]["title"] for key in item["related"])
@@ -436,8 +462,18 @@ def build_ict_lab(root, dist, shell, write, academy, json_script, source, crossw
                  link("Official ICT playlists", "https://www.youtube.com/@InnerCircleTrader/playlists", True)]
     discovery.extend(link("Search YouTube for " + row["name"], row["videoSearch"], True) for row in academy
                      if row.get("videoSearch", "").startswith("https://www.youtube.com/results?"))
+    original_sources = ('<h2 id="original-sources">Original ICT source library</h2>'
+                        '<p>Browse creator lectures from ' + link("Michael J. Huddleston's ICT site", "https://theinnercircletrader.com/", True)
+                        + '. The Lab curriculum is the site’s teaching sequence.</p>'
+                        + items([f'<p>{escape(note)}</p>{link(title, href, True)}' for title, note, href in OFFICIAL_SERIES])
+                        + '<p>' + link("Practice P01", detail("playbooks", "P01")) + ' · '
+                        + link("See 2022 predecessor placements", ROOT_URL + "resources/#terminal-featured") + ' · '
+                        + link("Browse Charter Models 1-13", url("playbooks") + "#charter-lectures") + '</p>'
+                        + '<p>Compare session and first-gap rules in the Academy lessons on '
+                        + link("opening range gaps", "/ict-futures/academy/opening-range-gap.html") + ' and '
+                        + link("first-presented FVG", "/ict-futures/academy/fpfvg.html") + '.</p>')
     emit(ROOT_URL + "resources/", "learn", "ICT resource index",
-         '<div class="ict-reading"><h2>Supplied watch links</h2>' + resource_list(source["library"], source)
+         '<div class="ict-reading">' + original_sources + '<h2>Supplied watch links</h2>' + resource_list(source["library"], source)
          + '<h2 id="terminal-featured">Predecessor tutorial placements</h2>'
          + '<p>Compare each upload with the stated lesson rule. Playback and chapter fit are pending editorial review.</p>'
          + "".join(placement_sections)
