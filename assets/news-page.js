@@ -9,12 +9,11 @@
  if(contract && [...contract.options].some(option=>option.value===preset)) contract.value=preset;
  const knownPublishers=new Map();
  let pollHandle=null;
- function timeLabel(value){
-  if(!value)return 'not supplied';
-  const raw=String(value),match=/^(\d{4})(\d{2})(\d{2})T(\d{2})(\d{2})(\d{2})Z$/.exec(raw);
-  const iso=match?`${match[1]}-${match[2]}-${match[3]}T${match[4]}:${match[5]}:${match[6]}Z`:raw;
-  const date=new Date(iso);return Number.isFinite(date.getTime())?date.toLocaleString('en-IN',{timeZone:'Asia/Kolkata'}):raw;
- }
+ const presentation = window.FinanceProviderPresentation;
+ const timeLabel = presentation.timestamp;
+ let shownKey = null;
+ let requestNumber = 0;
+ const selectionKey = () => ['newsInstrument','newsTopic','newsPublisher','newsTime'].map(id => byId(id)?.value).join('|');
  function fillPublishers(items){
   const select=byId('newsPublisher');if(!select)return;
   for(const item of items){const name=item.publisher||item.domain;if(name)knownPublishers.set(name.toLowerCase(),name);}
@@ -23,7 +22,15 @@
   select.value=selected;
  }
  function render(data,statusSuffix=''){
-  const items=Array.isArray(data.articles)?data.articles:[];fillPublishers(items);
+  const seenUrls = new Set();
+  const items = (Array.isArray(data.articles) ? data.articles : []).filter(article => {
+   const url = valid(article.canonical_url || article.url);
+   if (url === '#') return true;
+   if (seenUrls.has(url)) return false;
+   seenUrls.add(url);
+   return true;
+  });
+  fillPublishers(items);
   grid.innerHTML=items.length?items.map(a=>{
    const topic=(a.topic_tags||[]).join(' · ')||'Unclassified';
    const contracts=(a.instrument_tags||a.markets||[]).map(x=>x.toUpperCase()).join(', ')||'No contract tag';
@@ -31,7 +38,8 @@
    return '<article class="news-card"><div class="news-meta">'+esc(a.publisher||a.domain||'Publisher unavailable')+' · '+esc(topic)+'</div><h3><a href="'+esc(valid(a.canonical_url||a.url))+'" target="_blank" rel="noopener noreferrer">'+esc(a.title)+'</a></h3><p>Contracts: '+esc(contracts)+' · Keyword relevance: '+esc(a.relevance_score??'not scored')+' (heuristic)</p><p>Publisher time: '+esc(timeLabel(a.published_at))+' · GDELT seen: '+esc(timeLabel(seen))+'</p><p>Fetched: '+esc(timeLabel(a.retrieved_at))+' · Verification: '+esc(a.verification_status||'unverified')+'</p></article>';
   }).join(''):'<p class="muted">No headlines match this filter in the current discovery snapshot. This does not mean there were no market events.</p>';
   const cache=data.cache_age_seconds===null||data.cache_age_seconds===undefined?'unknown':Math.floor(data.cache_age_seconds/60)+' min';
-  state.textContent='Returned '+items.length+' of '+(data.articleCount??items.length)+' record(s) · '+(data.status||'unknown')+' · fetched '+timeLabel(data.retrieved_at||data.lastCheckedAt)+' · cache age '+cache+(statusSuffix?' · '+statusSuffix:'')+' · sorted by GDELT seen time; publisher publication time is not supplied consistently.';
+  const stateName = {fresh:'ready', cached:'stale', stale:'stale', partial:'partial'}[data.status] || 'unavailable';
+  presentation.render(state, stateName, 'Returned '+items.length+' of '+(data.articleCount??items.length)+' record(s) · '+(data.status||'unknown')+' · fetched '+timeLabel(data.retrieved_at||data.lastCheckedAt)+' · cache age '+cache+(statusSuffix?' · '+statusSuffix:'')+' · sorted by GDELT seen time; publisher publication time is not supplied consistently.');
  }
  function queryParams(force=false){
   const params=new URLSearchParams();
@@ -48,7 +56,7 @@
   if(!base)throw new Error('API gateway is not configured.');
   const response=await fetch(base+'/api/v1/news?'+queryParams(force),{headers:{Accept:'application/json'},cache:'no-store'});
   const payload=await response.json().catch(()=>({}));
-  if(!response.ok)throw new Error(payload.error?.message||'News gateway HTTP '+response.status);
+  if(!response.ok)throw Object.assign(new Error(payload.error?.message||'News gateway HTTP '+response.status), {status: response.status});
   return payload;
  }
  async function loadSources(){
@@ -60,7 +68,22 @@
    label.textContent=source?`${source.publisher} · ${source.state} · last checked ${timeLabel(source.last_checked)} · rights: ${source.terms_status} · ${source.known_limitations.join(' ')}`:'No configured news collector source.';
   }catch{label.textContent='News source registry could not be reached. The displayed snapshot may be stale.';}
  }
- async function loadAndRender(){try{render(await loadSnapshot());}catch(error){grid.innerHTML='<p class="muted">News API unavailable.</p>';state.textContent=error.message;}}
+ async function loadAndRender(){
+  const key = selectionKey(), number = ++requestNumber;
+  presentation.render(state, 'loading', 'Fetching the selected news snapshot.');
+  try{
+   const snapshot = await loadSnapshot();
+   if(number !== requestNumber || key !== selectionKey()) return;
+   render(snapshot);
+   shownKey = key;
+  }catch(error){
+   if(number !== requestNumber || key !== selectionKey()) return;
+   const failure = presentation.failed(error.status);
+   if(shownKey !== key) grid.textContent = 'No saved snapshot is available for this selection.';
+   presentation.render(state, failure, (shownKey === key ? 'Showing the last successful snapshot. ' : '') + error.message);
+  }
+ }
+
  for(const id of ['newsInstrument','newsTopic','newsPublisher','newsTime'])byId(id)?.addEventListener('change',loadAndRender);
  btn?.addEventListener('click',async()=>{
   if(btn.disabled)return;

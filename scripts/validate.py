@@ -276,10 +276,10 @@ if dist.exists():
     ict_page=(dist/'ict-futures/index.html').read_text(errors='ignore')
     ok('Part 1 overview renders the shared shell, product destinations and core widget containers',
        all(f'href="{path}"' in overview for path in ['/search/','/charts/','/ict-lab/','/ict-lab/practice/16/']) and
-       all(x in overview for x in ['overviewContract','overviewNewsList','overviewCotSummary','overviewClockET','overviewCalendarTitle','overviewPrivateMetrics','overviewHealthBadge']))
+       all(x in overview for x in ['overviewContract','overviewNewsList','overviewCotSummary','overviewClockET','overviewCalendarTitle','overviewHealthDetail']))
     ok('Part 1 wraps both standalone terminals in the shared shell',all('data-os-shell' in x and 'id="appSidebar"' in x and 'id="sidebarToggle"' in x for x in [desk_page,ict_page]))
     ok('Part 1 loads dashboard and shared shell assets once',overview.count('overview-dashboard.js')==1 and (dist/'assets/overview-dashboard.js').exists() and (dist/'assets/site-shell.js').exists())
-    ok('Part 1 overview avoids fabricated quotes and economic release events','QUOTE NOT CONNECTED' in overview and 'NOT CONNECTED' in overview and 'calendar is not available' in overview.lower())
+    ok('Part 1 overview avoids fabricated quotes and economic release events','No licensed real-time or delayed quote feed' in overview and '/sessions/#calendar' in overview and 'overviewPrivateMetrics' not in overview)
     contract_page=(dist/'contract-specs/index.html').read_text(encoding='utf-8',errors='ignore')
     ok('Part 1 contract registry exposes all 15 partial families with official product and lifecycle references',contract_page.count('class="os-contract-spec-card"')==15 and contract_page.count('data-family=')==15 and 'PARTIAL · SOURCED CORE' in contract_page and 'SOURCED · CHECKED 2026-11-20' in contract_page and 'CME micro specification' in contract_page and 'contractSpecSearch' in contract_page and 'contractSpecExchange' in contract_page and 'Full lifecycle sign-off remains 0 / 15' in contract_page and 'https://www.cmegroup.com/tools-information/calendars/expiration-calendar.html' in contract_page and 'https://www.ice.com/products/194/US-Dollar-Index-Futures/expiry' in contract_page and 'NOT VERIFIED IN THIS RECORD' in contract_page and 'risk estimates remain conditional' in contract_page.lower() and 'Contract date display is rights-gated' in contract_page)
     lifecycle=readj(Path('dist/data/contract-lifecycle.json'))
@@ -381,11 +381,11 @@ if dist.exists():
        all(f'{path}</loc>' not in sitemap for path in ('/account/','/ict-futures/','/ict-futures/bookmarks/')))
     ok('Sitemap excludes retired research, prediction and archive routes',
        all(x not in sitemap for x in ['/prediction-markets/','/research/</loc>','/legacy/']))
-    ok('Part 1 redirect-only Sessions route is excluded from sitemap','/sessions/' not in sitemap)
+    ok('Public Sessions is included in the configured sitemap', (not __import__('os').getenv('SITE_URL')) or '/sessions/' in sitemap)
     if __import__('os').getenv('SITE_URL'):
         ok('Part 1 canonical routes are discoverable in the indexable sitemap',
            all(x in sitemap for x in ['/contract-specs/','/risk/','/futures-intelligence/','/academy/']) and
-           all(x not in sitemap for x in ['/sessions/','/tools/','/prediction-markets/','/legacy/']))
+           all(x not in sitemap for x in ['/tools/','/prediction-markets/','/legacy/']))
     else:
         ok('Part 1 local noindex build keeps sitemap empty','<url>' not in sitemap)
     ok('Service worker cache no longer references generic 73-instrument dataset',

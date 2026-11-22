@@ -201,7 +201,7 @@ class BuildTests(unittest.TestCase):
             self.assertIn(token,shell)
         for token in ['prefers-reduced-motion','os-app-shell','os-sidebar','os-contract-spec-card','os-state-chip','os-loading-state','os-error-state','--os-focus']:
             self.assertIn(token,css)
-        for token in ['overviewContract','overviewClockET','overviewClockLocal','overviewTimezone','overviewNewsList','overviewCotSummary','overviewPrivateMetrics','overviewHealthBadge','Promise.allSettled','/api/v1/news','/api/v1/cot?report=tff','/auth/v1/user','/rest/v1/watchlists','/rest/v1/journal_trades','America/New_York']:
+        for token in ['overviewContract','overviewClockET','overviewClockLocal','overviewTimezone','overviewNewsList','overviewCotSummary','Promise.allSettled','/api/v1/news','/api/v1/cot?report=tff','America/New_York']:
             self.assertIn(token,dashboard)
         self.assertNotIn('SUPABASE_SERVICE_ROLE_KEY',dashboard)
         self.assertNotIn('service_role',dashboard.lower())
@@ -213,9 +213,11 @@ class BuildTests(unittest.TestCase):
         source_loader=(ROOT/'assets/research-directory.js').read_text(encoding="utf-8")
         self.assertIn('The futures source directory is temporarily unavailable',source_loader)
         self.assertNotIn('main Finance OS research workspace',source_loader)
-        for token in ['overviewCalendarTitle','NOT CONNECTED','QUOTE NOT CONNECTED']:
+        for token in ['overviewCalendarTitle','Market snapshot','overviewStudyState']:
             self.assertIn(token,home)
-        self.assertIn('calendar is not available',home.lower())
+        self.assertIn('/sessions/#calendar',home)
+        self.assertNotIn('/auth/v1/user',dashboard)
+        self.assertNotIn('/rest/v1/watchlists',dashboard)
         self.assertIn('wrap_standalone_shell',builder)
         self.assertIn('os-ict-terminal',builder)
         self.assertIn('os-futures-desk',builder)
@@ -241,7 +243,7 @@ class BuildTests(unittest.TestCase):
         self.assertIn('https://www.cmegroup.com/tools-information/calendars/expiration-calendar.html',builder)
         self.assertIn('https://www.ice.com/products/194/US-Dollar-Index-Futures/expiry',builder)
         sitemap_urls=next(line for line in builder.splitlines() if 'urls=[' in line)
-        self.assertNotIn("'/sessions/',",sitemap_urls)
+        self.assertIn("'/sessions/',",sitemap_urls)
         shell_css=(ROOT/'assets/site-shell.css').read_text(encoding="utf-8")
         self.assertIn('body.os-ict-terminal .topbar{z-index:var(--os-z-topbar)',shell_css)
         self.assertIn("html = html.replace('<body>', '<body class=\"dark os-ict-terminal\">', 1)",builder)

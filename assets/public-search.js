@@ -12,8 +12,11 @@
     field.value = query;
     const words = normalize(query).split(' ').filter(Boolean);
     const matches = words.length ? searchable.filter(row => words.every(word => row.terms.includes(word))) : [];
-    status.textContent = words.length ? matches.length + ' matches' + (matches.length > 30 ? '. Showing the first 30.' : '.') : '';
-    results.replaceChildren(...matches.slice(0, 30).map(row => {
+    status.textContent = !words.length ? 'Enter a topic or browse the public pages below.'
+      : !matches.length ? 'No results. Try a symbol, lesson alias or tool name.'
+      : matches.length + (matches.length === 1 ? ' result.' : ' results.') + (matches.length > 30 ? ' Showing the first 30.' : '');
+    const groups = new Map(['Markets', 'Lessons', 'Tools', 'Sources'].map(name => [name, []]));
+    for (const row of matches.slice(0, 30)) {
       const item = document.createElement('li');
       const link = document.createElement('a');
       link.href = row.path;
@@ -25,7 +28,18 @@
         practice.textContent = 'Open Lab exercise';
         item.append(' · ', practice);
       }
-      return item;
+      const group = row.category === 'Contract profile' ? 'Markets'
+        : row.category === 'Practice' ? 'Tools' : groups.has(row.category) ? row.category : 'Lessons';
+      groups.get(group).push(item);
+    }
+    results.replaceChildren(...[...groups].filter(([, items]) => items.length).map(([group, items]) => {
+      const section = document.createElement('section');
+      const heading = document.createElement('h2');
+      heading.textContent = group;
+      const list = document.createElement('ul');
+      list.append(...items);
+      section.append(heading, list);
+      return section;
     }));
   }
   const query = () => new URLSearchParams(location.search).get('q') || '';
@@ -37,6 +51,11 @@
     else next.searchParams.delete('q');
     history.pushState(null, '', next);
     render(query());
+  });
+  root.querySelector('[data-clear-search]').addEventListener('click', () => {
+    field.value = '';
+    form.requestSubmit();
+    field.focus();
   });
   addEventListener('popstate', () => render(query()));
   render(query());

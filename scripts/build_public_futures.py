@@ -27,7 +27,7 @@ TERMINAL_ROUTES = {
 
 def market_options(markets, default=None):
     return "".join(
-        f'<option value="{escape(m["id"])}" data-symbol="{escape(m.get("chart", ""))}"{" selected" if m["id"] == default else ""}>'
+        f'<option value="{escape(m["id"])}" data-symbol="{escape(m.get("chart", ""))}" data-exchange="{escape(m["exchange"])}"{" selected" if m["id"] == default else ""}>'
         f'{escape(m["label"])}</option>' for m in markets
     )
 
@@ -50,10 +50,10 @@ def chart_page(markets):
 <p id="public-chart-status" role="status">Direct chart links are ready. Load previews to connect to TradingView.</p>
 <div class="ict-grid ict-chart-previews">
 <article class="ict-card" data-chart-slot><h2>{escape(nq["label"])}</h2>
-<p><a href="{escape(direct)}" target="_blank" rel="noopener noreferrer">Open chart on TradingView</a></p><div data-chart-mount></div></article>
+<p><a href="{escape(direct)}" target="_blank" rel="noopener noreferrer">Open chart on TradingView</a></p><p data-chart-context>Chart provider: TradingView. Delay and listed expiry are unconfirmed.</p><p><a data-chart-profile href="/markets/">Contract profile</a> · <a href="/sessions/">Sessions</a></p><div data-chart-mount></div></article>
 <article class="ict-card" data-chart-slot hidden><h2>Comparison chart</h2>
-<p><a href="https://www.tradingview.com/markets/futures/" target="_blank" rel="noopener noreferrer">Open comparison on TradingView</a></p><div data-chart-mount></div></article></div>
-<noscript><p>Enable JavaScript to change the selection or use the direct chart link above.</p></noscript>
+<p><a href="https://www.tradingview.com/markets/futures/" target="_blank" rel="noopener noreferrer">Open comparison on TradingView</a></p><p data-chart-context>Chart provider: TradingView. Delay and listed expiry are unconfirmed.</p><p><a data-chart-profile href="/markets/">Contract profile</a> · <a href="/sessions/">Sessions</a></p><div data-chart-mount></div></article></div>
+<noscript><p>Enable JavaScript to change the chart selection. The direct chart link above is available.</p></noscript>
 <p>Continuous symbols may contain roll adjustments or gaps. Match listed expiries and bar times when comparing swings. Use the linked lesson to assess SMT manually.</p>
 <p><a href="/markets/">Market profiles</a> · <a href="/volume-open-interest/">Volume and open interest</a> · <a href="/ict-lab/learn/c43/">Learn NQ/ES SMT</a></p></section>"""
 
@@ -128,10 +128,23 @@ def social_discovery(markets, social, json_script):
 
 
 def search_page(markets, academy, catalog, nav, json_script, crosswalk):
-    public = [*nav, ("Markets", "/markets/"), ("Futures charts", "/charts/"), ("ICT Lab", "/ict-lab/"),
-              ("Public social discovery", "/sources/#social-discovery"), ("Daily futures brief", "/futures-intelligence/#daily-brief"),
-              ("Academy and Lab crosswalk", "/academy/crosswalk/")]
-    rows = [{"title": label, "path": path, "category": "Product area", "keywords": ""}
+    extras = [("ICT Lab", "/ict-lab/"), ("Public social discovery", "/sources/#social-discovery"),
+              ("Daily futures brief", "/futures-intelligence/#daily-brief"), ("Academy and Lab crosswalk", "/academy/crosswalk/")]
+    unique = {}
+    for label, path in [*nav, *extras]:
+        if path not in {"/account/", "/search/", "/"}:
+            unique.setdefault(path, label)
+    public = [(label, path) for path, label in unique.items()]
+    def area(path):
+        if path.startswith(("/academy", "/ict-lab", "/entry-models")):
+            return "Lessons"
+        if path.startswith(("/markets", "/futures-intelligence", "/charts", "/contract-specs")):
+            return "Markets"
+        if path.startswith(("/sessions", "/risk", "/strategy-lab")):
+            return "Tools"
+        return "Sources"
+    rows = [{"title": label, "path": path, "category": area(path),
+             "keywords": "COT Commitments of Traders" if path == "/research/positioning/" else ""}
             for label, path in public]
     rows += [{"title": m["label"], "path": f'/ict-futures/markets/{m["id"]}.html',
               "category": "Contract profile", "keywords": " ".join([m["id"], m["exchange"], *m["drivers"]])}
@@ -157,6 +170,6 @@ def search_page(markets, academy, catalog, nav, json_script, crosswalk):
     return f"""<section class="ict-public" id="public-search"><header class="ict-hero"><h1>Search Futures Intelligence OS</h1>
 <p>Find a contract profile, lesson, playbook or public tool.</p></header>
 <form class="ict-search" action="/search/" hidden><label for="public-query">Search the site</label>
-<div><input type="search" name="q" id="public-query" maxlength="100"><button type="submit">Search</button></div></form>
-<p role="status"></p><ul data-results></ul><h2>Browse public pages</h2><ul>{links}</ul>
+<div><input type="search" name="q" id="public-query" maxlength="100"><button type="submit">Search</button><button type="button" data-clear-search>Clear</button></div></form>
+<p role="status"></p><div data-results></div><h2>Browse public pages</h2><ul>{links}</ul>
 <script type="application/json">{json_script(rows)}</script></section>"""

@@ -63,6 +63,17 @@ try {
   await page.getByRole('searchbox', { name: 'Search markets, lessons and tools' }).fill('FVG');
   await page.getByRole('search', { name: 'Global search' }).getByRole('button', { name: 'Search' }).click();
   assert.equal(new URL(page.url()).searchParams.get('q'), 'FVG');
+  await page.waitForURL(url => url.pathname === '/search/');
+  for (const value of ['NQ', 'FVG', 'IFVG', 'MSS', 'COT']) {
+    const query = page.getByRole('searchbox', { name: 'Search the site' });
+    await query.fill(value);
+    await query.press('Enter');
+    assert.ok(await page.locator('[data-results] a').count(), value);
+  }
+  await page.getByRole('button', { name: 'Clear', exact: true }).click();
+  assert.equal(new URL(page.url()).searchParams.has('q'), false);
+  await page.goBack();
+  assert.equal(await page.getByRole('searchbox', { name: 'Search the site' }).inputValue(), 'COT');
   await page.goto(site + '/ict-lab/?view=learn&id=C34&q=weekly+open');
   await page.waitForURL(url => url.pathname === '/ict-lab/learn/c34/');
   assert.equal(new URL(page.url()).searchParams.get('q'), 'weekly open');
@@ -165,6 +176,34 @@ try {
   }, null, 2) + '\n');
   console.log('Mobile lab metrics:', JSON.stringify(labResults));
   await perf.close();
+  const research = await browser.newPage();
+  let newsResponseStatus = 200;
+  await research.route('**/api/v1/news?*', route => route.fulfill({
+    status: newsResponseStatus,
+    headers: { 'access-control-allow-origin': '*' },
+    json: newsResponseStatus === 200 ? {
+      status: 'fresh', retrieved_at: '2026-11-22T08:00:00Z',
+      articles: [{ title: 'Fixture news', canonical_url: 'https://example.com/news' }],
+    } : { error: { message: 'Fixture provider unavailable' } },
+  }));
+  await research.goto(site + '/news/');
+  await research.getByRole('link', { name: 'Fixture news' }).waitFor();
+  for (const [code, state] of [[403, 'denied'], [429, 'limited'], [503, 'unavailable']]) {
+    newsResponseStatus = code;
+    await research.locator('#newsInstrument').dispatchEvent('change');
+    await research.locator('#newsState[data-provider-state="' + state + '"]').waitFor();
+    assert.ok(await research.getByRole('link', { name: 'Fixture news' }).isVisible());
+    assert.match(await research.locator('#newsState').innerText(), /last successful snapshot/);
+  }
+  const context = await (await research.request.get(site + '/data/market-context.json')).json();
+  assert.equal(context.schemaVersion, 1);
+  assert.equal(context.families.nq.series, 'continuous');
+  assert.equal(context.families.nq.delaySeconds, null);
+  for (const route of ['/futures-intelligence/', '/markets/', '/contract-specs/']) {
+    await research.goto(site + route);
+    await research.getByText(context.families.nq.summary, { exact: true }).first().waitFor();
+  }
+  await research.close();
   await staticPage.close();
   console.log('Public UI passed at six widths in both themes, including keyboard drawer and homepage search.');
 } finally {
