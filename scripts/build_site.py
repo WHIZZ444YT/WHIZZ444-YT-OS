@@ -7,6 +7,7 @@ from html import escape
 from datetime import datetime
 from build_academy import academy_video_coverage, build_academy, verified_lesson_videos
 from build_ict_lab import build_ict_lab
+from ict_crosswalk import IctCrosswalk, PUBLIC_MODELS
 from build_public_futures import bookmarks_page, chart_page, daily_brief, personal_reminders, search_page, session_heatmap, social_discovery
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -432,12 +433,20 @@ def build():
     resources = load(ROOT/'resources.json',{}).get('resources',[])
     academy_data = load(ROOT/'ict-futures/data/ict-academy.json',{})
     academy = academy_data.get('concepts',[])
-    build_academy(DIST, academy_data, SITE_URL)
     catalog = load(ROOT/'ict-lab/catalog.json')
-    lab_routes = build_ict_lab(ROOT, DIST, shell, write, academy, json_script, catalog)
+    playbook_data=load(ROOT/'ict-futures/data/ict-playbook.json',{})
+    crosswalk = IctCrosswalk(academy_data, catalog, playbook_data)
+    build_academy(DIST, academy_data, SITE_URL, crosswalk)
+    lab_routes = build_ict_lab(ROOT, DIST, shell, write, academy, json_script, catalog, crosswalk)
+    write(DIST/'academy/crosswalk/index.html', shell(
+        'Academy and Lab Crosswalk | Futures Intelligence OS',
+        'Find shared definitions, distinct models and Academy media gaps.',
+        page_intro('ICT curriculum', 'Academy and Lab crosswalk',
+                   'Move between Lab lessons, Academy references, and model variants.') +
+        '<section class="content-section">' + crosswalk.page() + '</section>', '/academy/crosswalk/'))
     write(DIST/'search/index.html', shell('Search | Futures Intelligence OS',
           'Find public futures routes, Academy lessons and ICT Lab content.',
-          search_page(mdata, academy, catalog, NAV_ITEMS, json_script), '/search/',
+          search_page(mdata, academy, catalog, NAV_ITEMS, json_script, crosswalk), '/search/',
           '<link rel="stylesheet" href="/assets/ict-public.css"><script defer src="/assets/public-search.js"></script>'))
     write(DIST/'charts/index.html', shell('Futures Charts | Futures Intelligence OS',
           'Compare futures charts in TradingView.', chart_page(mdata), '/charts/',
@@ -539,7 +548,6 @@ def build():
     write(DIST/'contract-specs/index.html',shell('Contract Specs & Expiry | Futures Intelligence OS','Futures contract reference registry with explicit verification status and expiry-data coverage.',body,'/contract-specs/'))
 
     # Session references are conventions; official publisher schedules are fetched through the edge gateway at runtime.
-    playbook_data=load(ROOT/'ict-futures/data/ict-playbook.json',{})
     session_records=playbook_data.get('sessions',[])
     session_page_data={
         'timezone':'America/New_York',
@@ -692,6 +700,7 @@ def build():
         })
     write(DIST/'academy/search-index.json',json.dumps({'version':2,'generatedAt':academy_data.get('generatedAt'),'count':len(academy_search_index),'lessons':academy_search_index},ensure_ascii=False,indent=2))
     body+='<section class="content-section"><h2>Evidence and source standards</h2><p><b>SOURCED</b> means a named source must support the exact claim. <b>CONVENTION</b> identifies community practice or editorial synthesis. <b>NO DATA</b> means independently audited public performance evidence was not located in the reviewed material. <b>HYPOTHESIS</b> is a testable interpretation. <b>TESTED</b> is reserved for a reproducible test with dataset, dates, costs, rules, sample size and out-of-sample results.</p><p>The 39-page playbook discloses limitations in its source review: some details were taken from search excerpts, and ICT original videos plus Reddit/Discord were not exhaustively reviewed. A channel/playlist or topic search is discovery, not a verified one-to-one video citation. Contract, tick, margin, session, roll and event values must be rechecked from current primary sources.</p><div class="source-notes"><a href="https://www.youtube.com/@InnerCircleTrader" target="_blank" rel="noopener noreferrer">Official ICT channel ↗</a><a href="https://www.youtube.com/@InnerCircleTrader/playlists" target="_blank" rel="noopener noreferrer">Official ICT playlists ↗</a><a href="https://www.cmegroup.com/markets.html" target="_blank" rel="noopener noreferrer">CME contract specifications ↗</a><a href="https://www.cmegroup.com/tools-information/calendars/expiration-calendar.html" target="_blank" rel="noopener noreferrer">CME expiry calendar ↗</a><a href="https://www.cmegroup.com/market-data/volume-open-interest.html" target="_blank" rel="noopener noreferrer">CME Volume &amp; Open Interest ↗</a><a href="https://www.cftc.gov/MarketReports/CommitmentsofTraders/index.htm" target="_blank" rel="noopener noreferrer">CFTC COT ↗</a></div></section>'
+    body+='<p><a class="text-link" href="/academy/crosswalk/">Review the Lab crosswalk and Academy video coverage</a></p>'
     write(DIST/'academy/index.html',shell('ICT Futures Academy | Futures Intelligence OS','82 source-traceable lessons, 10 curriculum tracks, nine guided tutorials, futures mechanics, search and current-version progress tracking.',body,'/academy/', '<link rel="stylesheet" href="/assets/academy-learning.css"><script defer src="/assets/academy-catalog.js"></script>'))
 
     # Macro indicators: official BLS historical observations via the edge gateway.
@@ -742,16 +751,20 @@ def build():
 
     # Entry model library. Educational records only; no performance ranking without verified backtests.
     entry_models=[c for c in academy if c.get('category')=='Entry Models']
-    model_cards=''.join(card(c.get('name','Entry model'),c.get('definition',''),f"/ict-futures/academy/{c.get('id','')}.html",c.get('level','ICT concept'),'PLAYBOOK') for c in entry_models)
+    model_cards = []
+    for model in entry_models:
+        slug = model['id']
+        related, role, note = PUBLIC_MODELS[slug]
+        video_status = 'Mapped Academy video' if slug in crosswalk.covered else 'Exact model video needed'
+        model_cards.append(
+            '<article>' + card(model['name'], model['definition'], f'/ict-futures/academy/{slug}.html', role, video_status)
+            + '<p>' + escape(note) + '</p><p>' + ' · '.join(crosswalk.lab_links(related.split())) + '</p></article>')
     body=page_intro('ICT playbook library','Entry Models','Eight preserved entry-model concepts from the ICT Academy source catalogue. These are educational playbooks, not a ranked signal service or evidence of a profitable edge.',f'<div class="stats-row"><b>{len(entry_models)}</b><span>Model concepts</span><b>0</b><span>Verified model performance rankings</span></div>')
-    body+='<section class="content-section"><div class="section-top"><div><h2>Model catalogue</h2><p>Open each lesson for its definition, conditions, use cases, invalidation and common mistakes.</p></div><a class="text-link" href="/academy/">Browse all Academy concepts ↗</a></div><div class="card-grid">'+model_cards+'</div></section>'
-    body+='<p><a class="text-link" href="/ict-lab/?view=playbooks">Explore ICT Lab playbooks →</a></p>'
+    body+='<section class="content-section"><div class="section-top"><div><h2>Model catalogue</h2><p>Open each lesson for its definition, conditions, use cases, invalidation and common mistakes.</p></div><a class="text-link" href="/academy/crosswalk/">View the Academy and Lab crosswalk ↗</a></div><div class="card-grid">'+''.join(model_cards)+'</div></section>'
+    body+='<p><a class="text-link" href="/ict-lab/playbooks/">Explore ICT Lab playbooks →</a></p>'
     body+='<section class="content-section"><h2>Performance evidence policy</h2><p>No model is labelled “best” until its rules are operationally defined and tested on timestamped historical data with commissions, slippage, contract rolls, survivorship controls and out-of-sample validation. The eight models have no audited win-rate, expectancy, profit-factor or drawdown ranking yet.</p></section>'
     body+='<section class="content-section"><h2>Legacy terminal model variants</h2><p>Illustrative rules from the original playbook.</p>'
-    for model in playbook_data.get('models', []):
-        terms = ''.join(f'<dt>{label}</dt><dd>{escape(model[key])}</dd>' for label,key in
-                        [('Context','context'),('Entry','entry'),('Stop','stop'),('Target','target'),('Invalidation','invalidation')])
-        body+=f'<details><summary>{escape(model["name"])}</summary><dl>{terms}</dl></details>'
+    body+=crosswalk.model_cards(playbook_data['models'])
     body+='</section>'
     write(DIST/'entry-models/index.html',shell('ICT Entry Models | Futures Intelligence OS','Eight ICT entry-model concepts with educational playbook links and no unsupported performance claims.',body,'/entry-models/'))
 
@@ -894,7 +907,7 @@ def build():
     # Sitemap only when canonical base exists, else create relative noindex sitemap not intended for submission.
     if SITE_URL:
         urls=['/','/ict-lab/','/futures-intelligence/','/markets/','/academy/','/entry-models/','/news/','/volume-open-interest/','/research/positioning/','/contract-specs/','/strategy-lab/','/risk/','/account/','/data-health/','/macro/','/status/','/docs/','/sources/','/ict-futures/']
-        urls += ['/charts/', *lab_routes]
+        urls += ['/charts/', '/academy/crosswalk/', *lab_routes]
         urls += [f'/ict-futures/markets/{p.name}' for p in (DIST/'ict-futures/markets').glob('*.html')]
         urls += [f'/ict-futures/academy/{p.name}' for p in (DIST/'ict-futures/academy').glob('*.html')]
         urls.append('/ict-futures/academy/tutorials/')

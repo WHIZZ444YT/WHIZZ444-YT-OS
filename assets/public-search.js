@@ -19,6 +19,12 @@
       link.href = row.path;
       link.textContent = row.title;
       item.append(link, ' · ' + row.category);
+      if (row.practicePath) {
+        const practice = document.createElement('a');
+        practice.href = row.practicePath;
+        practice.textContent = 'Open Lab exercise';
+        item.append(' · ', practice);
+      }
       return item;
     }));
   }

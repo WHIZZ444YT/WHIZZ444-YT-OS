@@ -42,11 +42,16 @@ def concept_diagrams(key):
         return figure("Valid inversion · synthetic NQ 5-minute closes, gap boundaries set before the test", IFVG, IFVG_MARKS) + figure(
             "Look-alike · synthetic NQ 5-minute closes", [20014, 20011, 20013, 20012, 20014],
             [(1, "Existing bullish gap"), (3, "Wick low 20009, close 20012. Close-through condition remains unmet")])
-    if key == "C43":
+    if key in {"C41", "C43"}:
         return figure("NQ · synthetic 5-minute series · 09:30 ET and 09:45 ET lows", [20012, 20020, 20017, 20008, 20018],
                       [(0, "09:30 swing low"), (3, "09:45 lower low")]) + figure(
             "ES · same date and timestamps · synthetic 5-minute series", [5000, 5008, 5005, 5002, 5009],
             [(0, "09:30 swing low"), (3, "09:45 higher low")])
+    if key == "C42":
+        return figure("NQ · synthetic 5-minute series · 09:30 and 09:45 ET highs", [20020, 20010, 20014, 20027, 20015],
+                      [(0, "09:30 high"), (3, "09:45 higher high")]) + figure(
+            "ES · same date and timestamps · synthetic 5-minute series", [5008, 5001, 5004, 5006, 5003],
+            [(0, "09:30 high"), (3, "09:45 lower high")])
     if key in {"C46", "C47", "C48", "C49", "C50"}:
         return figure("One synthetic MMXM price path across C46–C50", MMXM, MMXM_MARKS)
     return ""

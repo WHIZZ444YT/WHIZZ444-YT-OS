@@ -86,6 +86,41 @@ test('original Lab view, id and search parameters resolve with history replaceme
   }
 });
 
+test('the crosswalk distinguishes shared concepts, separate variants and exact Academy video gaps', () => {
+  const page = published('academy/crosswalk/index.html');
+  assert.match(page, /51 of 82 Academy lessons.*4 of 8 Entry Models/);
+  assert.match(page, /31 Academy video gaps/);
+  assert.equal([...page.matchAll(/<tr><th scope="row"><a href="\/ict-lab\/learn\/c\d\d\//g)].length, 56);
+  const bsl = published('ict-futures/academy/bsl.html');
+  assert.match(bsl, /Continue in ICT Lab/);
+  assert.match(bsl, /href="\/ict-lab\/learn\/c01\/"/);
+  const labBsl = published('ict-lab/learn/c01/index.html');
+  assert.match(labBsl, /A label for potential buy stops and breakout orders/);
+  assert.match(labBsl, /From the Academy lesson/);
+  assert.match(labBsl, /href="\/ict-futures\/academy\/bsl.html"/);
+  assert.match(published('ict-lab/learn/c04/index.html'), /linked Academy convention additionally requires a close back inside/);
+  assert.match(published('ict-lab/learn/c27/index.html'), /02:00–05:00 ET/);
+  assert.match(published('ict-lab/learn/c28/index.html'), /08:30–11:00 ET/);
+
+  const gaps = published('ict-lab/learn/c35/index.html');
+  assert.match(gaps, /watch\?v=-M-RAtxB-bE/);
+  assert.match(gaps, /watch\?v=Sh-bDHWNpsk/);
+  assert.equal([...gaps.matchAll(/watch\?v=WKKnlIIkBTk/g)].length, 1);
+  assert.match(gaps, /NWOG \(supplied above\)/);
+  const buy = published('ict-lab/playbooks/p08/index.html');
+  assert.match(buy, /1vsIPazjfGQ/);
+  const sell = published('ict-lab/playbooks/p09/index.html');
+  assert.match(sell, /0R61Y6Pn74Q/);
+  assert.match(sell, /Lab-authored synthetic NQ/);
+  assert.match(sell, /XAUUSD/);
+  const modelIndex = published('entry-models/index.html');
+  assert.match(modelIndex, /FVG Continuation · Distinct variant/);
+  assert.match(modelIndex, /Judas \+ MSS · Overlapping setup/);
+  assert.match(modelIndex, /href="\/ict-futures\/academy\/ifvg-reversal-model.html"/);
+  assert.match(published('ict-futures/academy/ifvg-reversal-model.html'), /Continue in ICT Lab[\s\S]+\/ict-lab\/playbooks\/p07\//);
+  assert.match(published('search/index.html'), /"path": "\/ict-futures\/academy\/bsl.html"[^}]*"practicePath": "\/ict-lab\/learn\/c01\/"/);
+});
+
 test('terminal bookmarks preserve real public fragments and allowlisted market context', () => {
   const legacy = ['top', 'dashboard', 'daily-brief', 'markets', 'market-profile', 'charts', 'learning', 'academy', 'sessions',
     'playbook', 'calendar', 'news', 'social', 'positioning', 'risk', 'journal', 'checklist', 'sources'];
