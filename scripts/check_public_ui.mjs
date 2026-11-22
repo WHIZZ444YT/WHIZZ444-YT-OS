@@ -227,7 +227,7 @@ try {
     await research.getByText(context.families.nq.summary, { exact: true }).first().waitFor();
   }
   await research.close();
-  const workspace = await browser.newPage();
+  const workspace = await browser.newPage({ serviceWorkers: 'block' });
   await workspace.route('**/assets/runtime-config.js', route => route.fulfill({
     contentType: 'application/javascript',
     body: `window.FINANCE_OS_CONFIG = { supabaseUrl: '${site}/__workspace-fixture', supabaseAnonKey: 'public-fixture' };`,
@@ -253,6 +253,9 @@ try {
     expires_at: Math.floor(Date.now() / 1000) + 3600,
   })), sessionKey);
   await workspace.reload();
+  await workspace.waitForFunction(() => document.querySelector('#tab-overview h3') || document.querySelector('#accountMessage.error'));
+  assert.equal(await workspace.locator('#accountMessage.error').count(), 0,
+    await workspace.locator('#accountMessage').first().textContent());
   await workspace.getByRole('heading', { name: 'Performance overview' }).waitFor();
   await workspace.getByRole('button', { name: 'Trade journal', exact: true }).click();
   await workspace.locator('#tradeMarket').fill('NQH27');
