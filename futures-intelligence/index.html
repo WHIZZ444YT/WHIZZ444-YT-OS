@@ -8,20 +8,20 @@
 <link rel="stylesheet" href="/assets/site-shell.css">
 <link rel="stylesheet" href="/assets/futures-intelligence.css">
 <script defer src="/assets/runtime-config.js"></script>
-<script defer src="/assets/futures-intelligence.js"></script>
+<link rel="stylesheet" href="/assets/ict-public.css"><script defer src="/assets/publisher-schedules.js"></script><script defer src="/assets/futures-brief.js"></script><script defer src="/assets/futures-intelligence.js"></script>
 </head>
 <body>
 <a class="skip" href="#content">Skip to content</a>
 <header class="site-head"><div class="head-inner">
 <a class="brand" href="/"><span class="brand-mark">FI</span><span>FUTURES INTELLIGENCE OS<small>Listed futures · ICT research</small></span></a>
 <nav class="topnav" aria-label="Futures Intelligence OS areas"><a href="/">Overview</a><a href="/markets/">Futures Markets</a><a href="/volume-open-interest/">Volume &amp; OI</a><a href="/news/">News Intelligence</a><a href="/macro/">Macro Calendar</a><a href="/research/positioning/">COT &amp; Positioning</a><a href="/academy/">ICT Academy</a><a href="/entry-models/">Entry Models</a><a href="/strategy-lab/">Strategy Lab</a><a href="/tools/">Risk &amp; Journal</a><a href="/data-health/">Sources &amp; Data Health</a></nav>
-<a class="fi-ict-link" href="/ict-futures/#learning">ICT Learning ↗</a><button class="menu-toggle" id="menuToggle" aria-expanded="false" aria-controls="mobileNav">Menu</button>
+<a class="fi-ict-link" href="/ict-lab/learn/">ICT Learning ↗</a><button class="menu-toggle" id="menuToggle" aria-expanded="false" aria-controls="mobileNav">Menu</button>
 </div><nav class="mobile-nav" id="mobileNav"><a href="/">Overview</a><a href="/markets/">Futures Markets</a><a href="/volume-open-interest/">Volume &amp; OI</a><a href="/news/">News Intelligence</a><a href="/macro/">Macro Calendar</a><a href="/research/positioning/">COT &amp; Positioning</a><a href="/academy/">ICT Academy</a><a href="/entry-models/">Entry Models</a><a href="/strategy-lab/">Strategy Lab</a><a href="/tools/">Risk &amp; Journal</a><a href="/data-health/">Sources &amp; Data Health</a></nav></header>
 <main id="content" class="fi-main">
 <section class="fi-hero">
 <div class="fi-hero-copy"><p class="fi-kicker">FUTURES-ONLY · CONTRACT-AWARE · SOURCE-TRACEABLE</p><div class="fi-title-row"><h1>Futures Intelligence</h1><span class="fi-live-indicator"><i></i> PUBLIC DATA MODE</span></div>
 <p class="fi-subtitle">A research control room for futures markets. Combine contract context, macro releases, CFTC positioning and market-moving headlines — without confusing public snapshots for licensed real-time prices.</p>
-<div class="fi-hero-actions"><a href="#universe" class="fi-btn primary">Explore futures universe <span>↓</span></a><a href="/ict-futures/" class="fi-btn ghost">Open ICT Futures Terminal ↗</a></div></div>
+<div class="fi-hero-actions"><a href="#universe" class="fi-btn primary">Explore futures universe <span>↓</span></a><a href="/charts/" class="fi-btn ghost">Open Futures Charts ↗</a></div></div>
 <div class="fi-hero-aside"><div class="fi-clock-label">LOCAL RESEARCH CLOCK</div><div id="fiClock" class="fi-clock">--:--:--</div><div id="fiDate" class="fi-date">Loading local time…</div><div class="fi-clock-divider"></div><div class="fi-data-state"><span>Market quotes</span><b class="state-neutral">Not licensed</b></div><div class="fi-data-state"><span>Research feeds</span><b id="fiOverallStatus">Connecting…</b></div><div class="fi-data-state"><span>API checked</span><b id="fiLastChecked">—</b></div></div>
 </section>
 <section class="fi-stat-grid" aria-label="Platform coverage">
@@ -34,12 +34,13 @@
 <div class="fi-filter-row" id="fiTierFilters"><button class="fi-filter active" data-tier="ALL">All markets</button><button class="fi-filter" data-tier="T1">Tier 1 · Primary</button><button class="fi-filter" data-tier="T2">Tier 2 · Context</button><button class="fi-filter" data-tier="T3">Tier 3 · Optional</button></div>
 <div class="fi-contract-grid" id="fiContractGrid"><div class="fi-loading">Loading contract universe…</div></div>
 </section>
+<!-- DAILY_BRIEF -->
 <section class="fi-selected-market" id="fiSelectedMarket"><div class="fi-selected-head"><div><p class="fi-eyebrow">SELECTED CONTRACT</p><h2 id="fiSelectedTitle">Nasdaq-100 E-mini · NQ / MNQ</h2><p id="fiSelectedRole">Select a market family to inspect contract context.</p></div><a id="fiSelectedSpecs" class="fi-source-link" href="https://www.cmegroup.com/" target="_blank" rel="noopener">Official exchange source ↗</a></div>
 <div class="fi-market-detail-grid">
 <div class="fi-detail-box"><span>CONTRACT REFERENCE</span><strong id="fiSpecLine">Tick and multiplier details loading</strong><small id="fiMicroLine">Verify current contract month and specification.</small></div>
 <div class="fi-detail-box"><span>KEY DRIVERS</span><div id="fiDrivers" class="fi-chip-list"></div></div>
 <div class="fi-detail-box"><span>RELATED MARKETS</span><div id="fiRelated" class="fi-chip-list"></div></div>
-<div class="fi-detail-box"><span>ICT / EXECUTION CONTEXT</span><p id="fiProfile">Contract-specific context loads with the selected market.</p><a id="fiTerminalLink" href="/ict-futures/" class="fi-inline-link">Open full ICT contract profile ↗</a></div>
+<div class="fi-detail-box"><span>ICT / EXECUTION CONTEXT</span><p id="fiProfile">Contract-specific context loads with the selected market.</p><a id="fiTerminalLink" href="/markets/" class="fi-inline-link">Open full ICT contract profile ↗</a></div>
 </div>
 <p class="fi-footnote">Contract specifications, active expiry, first notice, last trade, tick values and broker margin must be verified against the current exchange and broker before any calculation. Dataset profiles may be marked unverified.</p></section>
 <section class="fi-two-col">
@@ -54,5 +55,5 @@
 <div class="fi-source-row"><a href="https://publicreporting.cftc.gov/" target="_blank" rel="noopener">CFTC PRE official source ↗</a><a href="/research/positioning/">Open full COT dashboard ↗</a></div></section>
 <section class="fi-disclaimer"><div><b>Research integrity</b><p>Every displayed feed should retain its provider, retrieval time, data-as-of timestamp, and freshness state. Public APIs are used where available. CME/ICE real-time quotes, full-depth order books, redistribution rights, professional newswires and licensed intraday datasets require separate commercial permissions and are not presented as free.</p></div><a href="/status/">Provider status & system documentation ↗</a></section>
 </main>
-<footer class="site-footer"><div><b>Futures Intelligence OS</b><p>Research and education workspace. Not a broker, exchange feed, investment adviser or execution terminal.</p></div><div class="footer-links"><a href="/status/">System status</a><a href="/docs/">Documentation</a><a href="/ict-futures/">ICT Futures</a><a href="/account/">Private workspace</a></div><small>Source timestamps, provenance and licensing limits apply to all external data.</small></footer>
+<footer class="site-footer"><div><b>Futures Intelligence OS</b><p>Research and education workspace. Not a broker, exchange feed, investment adviser or execution terminal.</p></div><div class="footer-links"><a href="/status/">System status</a><a href="/docs/">Documentation</a><a href="/ict-lab/">ICT Lab</a><a href="/account/">Private workspace</a></div><small>Source timestamps, provenance and licensing limits apply to all external data.</small></footer>
 </body></html>
