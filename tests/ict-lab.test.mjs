@@ -52,6 +52,8 @@ test('the five Lab views and all 93 detail pages contain public HTML without scr
   assert.match(inversion, /C16 · Fair value gap/);
   assert.match(inversion, /C09 · Displacement/);
   assert.match(inversion, /Look-alike · synthetic NQ/);
+  assert.match(inversion, /Worked inversion · separate synthetic NQ example/);
+  assert.doesNotMatch(inversion, /sample 7, price 20006/);
   assert.match(inversion, /Playback: unchecked/);
   assert.match(published(lab + 'learn/c54/index.html'), /Forex source · Futures adaptation/);
   assert.match(published(lab + 'learn/c55/index.html'), /Watch-page check: 2026-11-22/);
@@ -84,6 +86,16 @@ test('original Lab view, id and search parameters resolve with history replaceme
   for (const [query, expected] of cases) {
     assert.deepEqual(route('ict-public.js', '/ict-lab/', query, '', details), expected ? [origin + expected] : []);
   }
+});
+
+test('the release manifest records stable routes, bookmarks and source revisions', () => {
+  const manifest=json('route-manifest.json');
+  assert.equal(manifest.bookmarkDispatcher,'/'+base);
+  assert.equal(manifest.terminalFragments.checklist,'/ict-lab/practice/16/#local-journal');
+  assert.equal(manifest.labQuery.details.learn.C17,'/ict-lab/learn/c17/');
+  assert.ok(manifest.routes['/ict-lab/practice/16/'].anchors.includes('local-journal'));
+  assert.equal(manifest.routes['/account/'].indexable,false);
+  assert.match(manifest.sourceSha256['ict-lab/catalog.json'],/^[a-f0-9]{64}$/);
 });
 
 test('the crosswalk distinguishes shared concepts, separate variants and exact Academy video gaps', () => {
