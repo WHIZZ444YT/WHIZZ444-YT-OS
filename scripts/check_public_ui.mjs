@@ -54,7 +54,7 @@ try {
   assert.equal(await toggle.getAttribute('aria-expanded'), 'false');
   assert.equal(await page.locator('.os-main-column').evaluate(node => node.inert), false);
   await toggle.press('Enter');
-  await page.getByRole('button', { name: 'Close navigation', exact: true }).click();
+  await page.getByRole('dialog').getByRole('button', { name: 'Close navigation', exact: true }).click();
   assert.equal(await toggle.getAttribute('aria-expanded'), 'false');
   await page.goto(site + '/');
   await page.keyboard.press('Tab');
