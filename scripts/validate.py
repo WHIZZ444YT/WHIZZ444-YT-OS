@@ -283,9 +283,22 @@ if dist.exists():
     contract_page=(dist/'contract-specs/index.html').read_text(encoding='utf-8',errors='ignore')
     ok('Part 1 contract registry exposes all 15 partial families with official product and lifecycle references',contract_page.count('class="os-contract-spec-card"')==15 and contract_page.count('data-family=')==15 and 'PARTIAL · SOURCED CORE' in contract_page and 'SOURCED · CHECKED 2026-11-20' in contract_page and 'CME micro specification' in contract_page and 'contractSpecSearch' in contract_page and 'contractSpecExchange' in contract_page and 'Full lifecycle sign-off remains 0 / 15' in contract_page and 'https://www.cmegroup.com/tools-information/calendars/expiration-calendar.html' in contract_page and 'https://www.ice.com/products/194/US-Dollar-Index-Futures/expiry' in contract_page and 'NOT VERIFIED IN THIS RECORD' in contract_page and 'risk estimates remain conditional' in contract_page.lower() and 'Contract date display is rights-gated' in contract_page)
     lifecycle=readj(Path('dist/data/contract-lifecycle.json'))
-    lifecycle_coverage=lifecycle.get('coverage') or {}
-    ok('Part 3 lifecycle data is hidden unless public-display rights are explicitly reviewed',lifecycle.get('rightsStatus')=='not-approved' and lifecycle_coverage.get('familyCount')==15 and lifecycle_coverage.get('familiesWithCurrentOrFutureRows')==0 and lifecycle_coverage.get('contractMonthRows')==0 and not lifecycle.get('products') and 'Contract date display is rights-gated' in contract_page)
-    ok('Part 3 public JSON contains no unlicensed lifecycle rows',lifecycle.get('sourceFiles')==[] and lifecycle.get('coverage',{}).get('contractMonthRows')==0 and all('contractMonths' not in p for p in lifecycle.get('products',[])))
+    from build_site import contract_lifecycle_table, public_contract_lifecycle_data
+    lifecycle_source=readj(Path('data/contract-lifecycle.json'))
+    expected=public_contract_lifecycle_data(lifecycle_source,{row['id'] for row in contract_rows})
+    ok('Part 3 lifecycle publication matches the configured rights state',
+       lifecycle==expected and lifecycle.get('rightsStatus')==lifecycle_source.get('rightsStatus')
+       and 'Contract date display is rights-gated' in contract_page)
+    if expected['rightsStatus']=='approved-public-display':
+        snapshot_date=expected['cmeSourceBusinessDate']
+        ok('Part 3 authorized lifecycle HTML matches the public snapshot',
+           contract_page.count('DATED SNAPSHOT')==len(expected['products'])
+           and all(contract_lifecycle_table(product,snapshot_date) in contract_page for product in expected['products']))
+    else:
+        ok('Part 3 unconfigured lifecycle HTML and JSON publish zero rows',
+           not lifecycle.get('sourceFiles') and not lifecycle.get('products')
+           and lifecycle.get('coverage',{}).get('contractMonthRows')==0
+           and contract_page.count('No lifecycle dates are licensed and configured for public display')==len(contract_rows))
     voi_page=(dist/'volume-open-interest/index.html').read_text(encoding='utf-8',errors='ignore')
     ok('Part 6 page separates weekly CFTC history from rights-gated exchange observations',all(x in voi_page for x in ['Weekly open-interest history','Authorized exchange observations','exchangeObservationState','exchangeObservationRows','aria-live="polite"','RIGHTS-GATED']))
     ok('Part 1 first-class calendar route preserves the timezone-aware ICT tools','id="sessionsEventList"' in (dist/'sessions/index.html').read_text(errors='ignore') and ('id="personal-reminders"' in session_page if TERMINAL_CUTOVER else 'renderSessions' in ict_page))
@@ -355,6 +368,14 @@ if dist.exists():
        'Polymarket' not in active_ict and 'Kalshi' not in active_ict and
        'Stocktwits' not in active_ict and 'SEC EDGAR — Form 4' not in active_ict)
     sitemap=(dist/'sitemap.xml').read_text(errors='ignore')
+    from build_route_manifest import route_manifest
+    from os import getenv
+    manifest=readj(Path('dist/route-manifest.json'))
+    ok('Route manifest matches generated pages, cutover mode, bookmarks and source hashes',
+       manifest==route_manifest(ROOT,dist,cutover=TERMINAL_CUTOVER,
+                                commit=getenv('VERCEL_GIT_COMMIT_SHA') or getenv('GITHUB_SHA')))
+    ok('Sitemap omits private workspace and terminal compatibility routes',
+       all(f'{path}</loc>' not in sitemap for path in ('/account/','/ict-futures/','/ict-futures/bookmarks/')))
     ok('Sitemap excludes retired research, prediction and archive routes',
        all(x not in sitemap for x in ['/prediction-markets/','/research/</loc>','/legacy/']))
     ok('Part 1 redirect-only Sessions route is excluded from sitemap','/sessions/' not in sitemap)

@@ -4,9 +4,11 @@ from __future__ import annotations
 import json, os, shutil, re
 from pathlib import Path
 from html import escape
-from datetime import datetime
+from datetime import date, datetime, timezone
+from import_authorized_contract_lifecycle import validate_snapshot
 from build_academy import academy_video_coverage, build_academy, verified_lesson_videos
 from build_ict_lab import build_ict_lab
+from build_route_manifest import route_manifest
 from ict_crosswalk import IctCrosswalk, PUBLIC_MODELS
 from build_public_futures import bookmarks_page, chart_page, daily_brief, personal_reminders, search_page, session_heatmap, social_discovery
 
@@ -258,26 +260,25 @@ def contract_lifecycle_table(product, snapshot_date):
     )
 
 
-def public_contract_lifecycle_data(source):
+def public_contract_lifecycle_data(source, family_ids=None, *, as_of=None):
     """Apply a fail-closed rights gate and allowlist the fields sent to the public site."""
     source = source if isinstance(source, dict) else {}
-    products = source.get('products') if isinstance(source.get('products'), list) else []
-    coverage = source.get('coverage') if isinstance(source.get('coverage'), dict) else {}
+    if family_ids is None:
+        family_ids = {row['id'] for row in load(ROOT/'ict-futures/data/market-universe.json', {})['markets']}
+    today = as_of or datetime.now(timezone.utc).date()
     rights_review_date = source.get('rightsReviewDate')
-    try:
-        valid_review_date = datetime.strptime(str(rights_review_date), '%Y-%m-%d').strftime('%Y-%m-%d') == rights_review_date
-    except (TypeError, ValueError):
-        valid_review_date = False
-    ready = (
-        source.get('rightsStatus') == 'approved-public-display'
-        and valid_review_date
-        and coverage.get('familyCount') == 15
-        and coverage.get('familiesWithCurrentOrFutureRows') == 15
-        and len(products) == 15
-        and len({p.get('marketId') for p in products if isinstance(p, dict)}) == 15
-        and all(isinstance(p, dict) and p.get('contractMonths') for p in products)
-    )
-    if not ready:
+    normalized = None
+    if source.get('rightsStatus') == 'approved-public-display' and len(family_ids) == 15:
+        try:
+            reviewed = date.fromisoformat(rights_review_date)
+            expires = date.fromisoformat(source.get('rightsValidThrough'))
+            if reviewed.isoformat() == rights_review_date and expires.isoformat() == source['rightsValidThrough'] and reviewed <= today <= expires:
+                checked = validate_snapshot(source, family_ids, today, require_fresh=False)
+                if source.get('coverage') == checked['coverage']:
+                    normalized = checked
+        except (TypeError, ValueError):
+            pass
+    if normalized is None:
         return {
             'schemaVersion': 1,
             'status': 'not-configured',
@@ -302,7 +303,7 @@ def public_contract_lifecycle_data(source):
         'settlementMethod', 'sourceBusinessDate', 'sourceFile', 'sourceUrl',
     )
     public_products = []
-    for product in products:
+    for product in normalized['products']:
         row_list = product.get('contractMonths') or []
         public_products.append({
             **{field: product.get(field) for field in product_fields if field in product},
@@ -326,7 +327,7 @@ def public_contract_lifecycle_data(source):
         'cmeSourceBusinessDate': source.get('cmeSourceBusinessDate'),
         'sourceFiles': public_sources,
         'settlementCodeSource': source.get('settlementCodeSource'),
-        'coverage': {key: coverage.get(key) for key in ('familyCount', 'familiesWithCurrentOrFutureRows', 'contractMonthRows')},
+        'coverage': normalized['coverage'],
         'limitations': [str(value) for value in (source.get('limitations') or []) if isinstance(value, str)],
         'products': public_products,
     }
@@ -912,12 +913,16 @@ def build():
         urls += [f'/ict-futures/academy/{p.name}' for p in (DIST/'ict-futures/academy').glob('*.html')]
         urls.append('/ict-futures/academy/tutorials/')
         urls += [f'/ict-futures/academy/tutorials/{p.name}' for p in (DIST/'ict-futures/academy/tutorials').glob('*.html') if p.name != 'index.html']
-        xml='<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">'+''.join(f'<url><loc>{escape(SITE_URL+u)}</loc></url>' for u in urls)+'</urlset>'
+        excluded = {'/account/', '/ict-futures/'}
+        xml='<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">'+''.join(f'<url><loc>{escape(SITE_URL+u)}</loc></url>' for u in sorted(set(urls)-excluded))+'</urlset>'
         write(DIST/'sitemap.xml',xml)
         write(DIST/'robots.txt',f'User-agent: *\nAllow: /\nSitemap: {SITE_URL}/sitemap.xml\n')
     else:
         write(DIST/'robots.txt','User-agent: *\nDisallow: /\n')
         write(DIST/'sitemap.xml','<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"></urlset>')
+    manifest = route_manifest(ROOT, DIST, cutover=TERMINAL_CUTOVER,
+                              commit=os.getenv('VERCEL_GIT_COMMIT_SHA') or os.getenv('GITHUB_SHA'))
+    write(DIST/'route-manifest.json', json.dumps(manifest, ensure_ascii=False, indent=2)+'\n')
     print(f'Built {DIST} | resources={len(resources)} | futures={len(mdata)} | academy={len(academy)} | site_url={SITE_URL or "local/noindex"}')
 
 if __name__ == '__main__': build()

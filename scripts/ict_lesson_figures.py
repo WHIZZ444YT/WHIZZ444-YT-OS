@@ -20,9 +20,6 @@ def figure(title, values, marks):
 
 
 IFVG = [20014, 20011, 20013, 20005, 20008, 20011, 20006]
-IFVG_MARKS = [(1, "The existing bullish FVG is 20010–20012"),
-              (3, "A completed close falls below 20010"),
-              (5, "First return to the gap from below")]
 MMXM = [100, 104, 101, 104, 101, 97, 94, 99, 97, 102, 100, 105]
 MMXM_MARKS = [(1, "Original consolidation"), (5, "First-side delivery"),
               (6, "Reversal candidate"), (9, "Opposite-side delivery"),
@@ -39,9 +36,12 @@ def concept_diagrams(key):
         return figure("Continuation · synthetic close sequence", [100, 108, 105, 110, 112], [(2, "Pullback"), (3, "Close above prior high")]) + figure(
             "Reversal · synthetic close sequence", [100, 108, 105, 103, 98], [(2, "Same pullback"), (4, "Close below prior low")])
     if key == "C17":
-        return figure("Valid inversion · synthetic NQ 5-minute closes, gap boundaries set before the test", IFVG, IFVG_MARKS) + figure(
-            "Look-alike · synthetic NQ 5-minute closes", [20014, 20011, 20013, 20012, 20014],
-            [(1, "Existing bullish gap"), (3, "Wick low 20009, close 20012. Close-through condition remains unmet")])
+        return figure("Worked inversion · separate synthetic NQ example", [20145, 20140, 20143, 20134, 20137, 20140, 20142],
+                      [(1, "The existing bullish FVG is 20139–20141"),
+                       (3, "A completed close falls below 20139"),
+                       (5, "First later return from below")]) + figure(
+            "Look-alike · synthetic NQ 5-minute closes", [20145, 20140, 20143, 20140, 20144],
+            [(1, "Existing bullish gap"), (3, "Wick low 20138, close 20140. Close-through condition remains unmet")])
     if key in {"C41", "C43"}:
         return figure("NQ · synthetic 5-minute series · 09:30 ET and 09:45 ET lows", [20012, 20020, 20017, 20008, 20018],
                       [(0, "09:30 swing low"), (3, "09:45 lower low")]) + figure(
