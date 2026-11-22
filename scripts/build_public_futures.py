@@ -1,6 +1,5 @@
 """Public futures routes and the compatibility document for terminal bookmarks."""
 from html import escape
-import re
 from urllib.parse import urlencode
 
 
@@ -126,26 +125,32 @@ def social_discovery(markets, social, json_script):
 <script type="application/json">{json_script(social)}</script></section>"""
 
 
-def search_page(markets, academy, catalog, nav, json_script):
+def search_page(markets, academy, catalog, nav, json_script, crosswalk):
     public = [*nav, ("Markets", "/markets/"), ("Futures charts", "/charts/"), ("ICT Lab", "/ict-lab/"),
-              ("Public social discovery", "/sources/#social-discovery"), ("Daily futures brief", "/futures-intelligence/#daily-brief")]
+              ("Public social discovery", "/sources/#social-discovery"), ("Daily futures brief", "/futures-intelligence/#daily-brief"),
+              ("Academy and Lab crosswalk", "/academy/crosswalk/")]
     rows = [{"title": label, "path": path, "category": "Product area", "keywords": ""}
             for label, path in public]
     rows += [{"title": m["label"], "path": f'/ict-futures/markets/{m["id"]}.html',
               "category": "Contract profile", "keywords": " ".join([m["id"], m["exchange"], *m["drivers"]])}
              for m in markets]
-    def normal(title):
-        return re.sub(r"[\W_]+", "", title.casefold())
-    lab_placements = {(slug, normal(row["title"])) for row in catalog["concepts"] for slug in row["academy"]}
-    rows += [{"title": row["name"], "path": f'/ict-futures/academy/{row["id"]}.html',
-              "category": "Academy", "keywords": row["id"]}
-             for row in academy if (row["id"], normal(row["name"])) not in lab_placements]
+    shared = {row["academy"][0]: row for row in catalog["concepts"] if crosswalk.shared_steps(row)}
+    for row in academy:
+        slug = row["id"]
+        result = {"title": row["name"], "path": f'/ict-futures/academy/{slug}.html',
+                  "category": "Academy", "keywords": slug}
+        if slug in shared:
+            lesson = shared[slug]
+            result["keywords"] += f' {lesson["id"]} {lesson["title"]} {lesson["aliases"]}'
+            result["practicePath"] = f'/ict-lab/learn/{lesson["id"].lower()}/'
+        rows.append(result)
+    shared_ids = {lesson["id"] for lesson in shared.values()}
     for section, category, items in (("learn", "Concept", catalog["concepts"]),
                                      ("playbooks", "Playbook", catalog["playbooks"]),
                                      ("practice", "Practice", catalog["practice"])):
         rows += [{"title": row["title"], "path": f'/ict-lab/{section}/{str(row["id"]).lower()}/',
                   "category": category, "keywords": f'{row["id"]} {row.get("aliases", "")}'}
-                 for row in items]
+                 for row in items if row["id"] not in shared_ids]
     links = "".join(f'<li><a href="{escape(path)}">{escape(label)}</a></li>' for label, path in public)
     return f"""<section class="ict-public" id="public-search"><header class="ict-hero"><h1>Search Futures Intelligence OS</h1>
 <p>Find a contract profile, lesson, playbook or public tool.</p></header>

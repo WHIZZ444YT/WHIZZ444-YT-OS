@@ -189,7 +189,7 @@ def academy_video_coverage(academy):
     }
 
 
-def render_lesson(concept, all_concepts, site_url="", academy=None):
+def render_lesson(concept, all_concepts, site_url="", academy=None, crosswalk=None):
     academy = academy or {}
     learning = concept.get("learning") or {}
     curriculum = concept.get("curriculum") or {}
@@ -334,6 +334,7 @@ def render_lesson(concept, all_concepts, site_url="", academy=None):
     canonical_url = escape((site_url.rstrip("/") + f"/ict-futures/academy/{concept.get('id')}.html") if site_url else "", quote=True)
     title = str(concept.get("name") or "ICT lesson")
     definition = str(concept.get("definition") or "")
+    lab_paths = crosswalk.lab_sidebar(concept["id"]) if crosswalk else ""
 
     return f'''<!doctype html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
@@ -346,7 +347,7 @@ def render_lesson(concept, all_concepts, site_url="", academy=None):
 <script type="application/json" id="academyQuizData">{_json_for_script(quiz_payload)}</script>
 <script>window.si = window.si || function () {{ (window.siq = window.siq || []).push(arguments); }};</script><script defer src="/_vercel/speed-insights/script.js"></script>
 </head><body>
-<header class="academy-top"><a href="/academy/">← All ICT lessons</a><span>FINANCE INTELLIGENCE OS · ICT FUTURES ACADEMY</span><a href="/ict-futures/">Futures terminal ↗</a></header>
+<header class="academy-top"><a href="/academy/">← All ICT lessons</a><span>FINANCE INTELLIGENCE OS · ICT FUTURES ACADEMY</span><a href="/ict-lab/">ICT Lab ↗</a></header>
 <main class="academy-page" data-academy-lesson="{escape(concept.get('id',''), quote=True)}" data-content-version="{int(content_version)}">
 <header class="lesson-hero"><div><div class="lesson-tags"><span>{escape(str(track.get('name') or concept.get('category') or 'ICT'))}</span><span>{escape(str(concept.get('level') or 'Study'))}</span><span>{escape(str(learning.get('durationMinutes',20)))} min read</span><span>{escape(str(content_version))} · content version</span></div>
 <p class="eyebrow">LESSON {escape(str(concept.get('id') or '').upper())} · {escape(str(acronym))}</p><h1>{escape(title)}</h1><p class="lead">{escape(definition)}</p>
@@ -355,6 +356,7 @@ def render_lesson(concept, all_concepts, site_url="", academy=None):
 <aside class="evidence-card"><span class="eyebrow">SOURCE / EVIDENCE LABEL</span><strong>{escape(str(evidence))}</strong><p>{escape(str(source_caution))}</p>
 <div class="evidence-card-foot"><span class="eyebrow">TRACK</span><b>{escape(str(track.get('name') or curriculum.get('trackId') or 'Not assigned'))}</b></div></aside></header>
 {_progress_markup(concept.get('id',''), 'Lesson progress', content_version)}
+{lab_paths}
 {_section(1,'CONCEPT IDENTITY','Definition and purpose','<p class="lesson-body-copy">'+escape(definition)+'</p><div class="lesson-purpose"><b>What question does this answer?</b><p>'+escape(str(use_case))+'</p><div class="lesson-pill-row">'+purpose_html+'</div></div>')}
 {_section(2,'FUTURES-SPECIFIC CONTEXT','Instrument families and sessions','<h3>Relevant contract families</h3><div class="lesson-pill-row">'+family_html+'</div><h3>Session context</h3><div class="lesson-pill-row">'+session_html+'</div><div class="data-message warn">'+escape(" · ".join(futures_context.get("limitations") or []))+'</div>')}
 {_section(3,'PREREQUISITES AND TIMEFRAME ROLE','What to study before this lesson','<div class="related-lessons">'+("".join(prerequisites) or '<span class="small-note">No prerequisite lesson is assigned.</span>')+'</div><h3>Framework timeframe roles</h3><div class="lesson-pill-row">'+timeframe_html+'</div><p>'+escape(str(curriculum.get("timeframeRoleNote") or curriculum.get("timeframeRole",{}).get("note") or ""))+'</p><p class="small-note">'+escape(str(learning.get("prerequisites") or ""))+'</p>')}
@@ -533,7 +535,7 @@ def validate_academy(academy):
     return {"concepts": len(concepts), "tracks": len(tracks), "tutorials": len(tutorials), "preserved": len(preserved)}
 
 
-def build_academy(dist: Path, academy: dict, site_url=""):
+def build_academy(dist: Path, academy: dict, site_url="", crosswalk=None):
     validate_academy(academy)
     concepts = academy.get("concepts") or []
     root = dist / "ict-futures" / "academy"
@@ -545,7 +547,7 @@ def build_academy(dist: Path, academy: dict, site_url=""):
         slug = re.sub(r"[^a-z0-9-]", "", str(concept.get("id") or "").lower())
         if not slug:
             continue
-        (root / f"{slug}.html").write_text(render_lesson(concept, concepts, site_url, academy), encoding="utf-8")
+        (root / f"{slug}.html").write_text(render_lesson(concept, concepts, site_url, academy, crosswalk), encoding="utf-8")
     program = academy.get("learningProgram") or {}
     tutorials = program.get("tutorials") or []
     for tutorial in tutorials:
@@ -560,5 +562,5 @@ def build_academy(dist: Path, academy: dict, site_url=""):
         + '</p><span class="card-cta">Open tutorial →</span></a>'
         for t in tutorials
     )
-    tutorial_index = f'''<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>ICT Guided Tutorials — Finance Intelligence OS</title><meta name="description" content="Nine guided chart exercises, replay workflows and evidence-led review assignments for ICT futures study.">{f'<link rel="canonical" href="{escape(site_url.rstrip("/")+"/ict-futures/academy/tutorials/")}">' if site_url else '<meta name="robots" content="noindex,follow">'}<link rel="stylesheet" href="/assets/site-shell.css"><link rel="stylesheet" href="/assets/academy-learning.css"><script>window.si = window.si || function () {{ (window.siq = window.siq || []).push(arguments); }};</script><script defer src="/_vercel/speed-insights/script.js"></script></head><body><header class="academy-top"><a href="/academy/">← Academy dashboard</a><span>ICT GUIDED TUTORIALS</span><a href="/ict-futures/">Futures terminal ↗</a></header><main class="academy-page"><header class="lesson-hero"><div><p class="eyebrow">PRACTICE WORKBOOKS</p><h1>Guided ICT tutorials</h1><p class="lead">Nine preserved study paths with practical tasks, chart-replay workflows, deliverables and review criteria. Completion is not evidence of strategy performance.</p></div></header><section class="tutorial-grid">{tutorial_cards}</section></main></body></html>'''
+    tutorial_index = f'''<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>ICT Guided Tutorials — Finance Intelligence OS</title><meta name="description" content="Nine guided chart exercises, replay workflows and evidence-led review assignments for ICT futures study.">{f'<link rel="canonical" href="{escape(site_url.rstrip("/")+"/ict-futures/academy/tutorials/")}">' if site_url else '<meta name="robots" content="noindex,follow">'}<link rel="stylesheet" href="/assets/site-shell.css"><link rel="stylesheet" href="/assets/academy-learning.css"><script>window.si = window.si || function () {{ (window.siq = window.siq || []).push(arguments); }};</script><script defer src="/_vercel/speed-insights/script.js"></script></head><body><header class="academy-top"><a href="/academy/">← Academy dashboard</a><span>ICT GUIDED TUTORIALS</span><a href="/ict-lab/">ICT Lab ↗</a></header><main class="academy-page"><header class="lesson-hero"><div><p class="eyebrow">PRACTICE WORKBOOKS</p><h1>Guided ICT tutorials</h1><p class="lead">Nine preserved study paths with practical tasks, chart-replay workflows, deliverables and review criteria. Completion is not evidence of strategy performance.</p></div></header><section class="tutorial-grid">{tutorial_cards}</section></main></body></html>'''
     (tutorials_root / "index.html").write_text(tutorial_index, encoding="utf-8")
