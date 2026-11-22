@@ -227,14 +227,14 @@ try {
     await research.getByText(context.families.nq.summary, { exact: true }).first().waitFor();
   }
   await research.close();
-  const workspace = await browser.newPage({ serviceWorkers: 'block' });
+  const contextForAccount = await browser.newContext({ serviceWorkers: 'block' });
+  const workspace = await contextForAccount.newPage();
   await workspace.route('**/assets/runtime-config.js', route => route.fulfill({
     contentType: 'application/javascript',
     body: `window.FINANCE_OS_CONFIG = { supabaseUrl: '${site}/__workspace-fixture', supabaseAnonKey: 'public-fixture' };`,
   }));
   await workspace.goto(site + '/account/');
   await workspace.getByRole('heading', { name: 'Sign in to your private workspace' }).waitFor();
-  const contextForAccount = workspace.context();
   await contextForAccount.route(url => url.pathname.startsWith('/__workspace-fixture/'), route => {
     const request = route.request();
     const pathname = new URL(request.url()).pathname;
