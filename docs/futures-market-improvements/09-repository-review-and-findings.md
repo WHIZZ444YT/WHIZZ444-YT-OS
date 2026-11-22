@@ -29,3 +29,16 @@ Review baseline is [main at 2caa3521](https://github.com/WHIZZ444YT/WHIZZ444-YT-
 | Release dependencies | A complete ICT learning release can ship with labeled samples and functional public tools. Live/redistributed provider data, verified lifecycle dates and numerical firm terms have separate entitlement and source gates. |
 
 Within the implementation backlog, R01/R05/R09/R11 define the public experience. R02/R06/R08 should be addressed before public cutover. R03/R04 must pass before any authorized lifecycle rollout. R07/R10 improve discoverability and release clarity.
+
+## Implementation follow-up
+
+| Findings | Evidence and remaining work |
+|---|---|
+| R01, R06 | The cutover build contains the public bookmark dispatcher and retires the scoped worker. The public shell allowlist and stale-cache unit scenarios are in Document 07. A real installed-client upgrade and live promotion still require release evidence. |
+| R02 | The clean builder is the publication path. CI compares a rebuilt artifact by path and SHA-256. See the [upload guide](../../GITHUB-UPLOAD-GUIDE.md) for the tracked-output decision. |
+| R03, R04 | The lifecycle fixture suite covers approved and unapproved publication, invalid calendar months and conflicting contract-month records. Provider approval remains independent. |
+| R05 | Static Lab details and real links are generated. Chromium exercises the legacy query redirect, alias filtering, browser history and written pages with JavaScript disabled. |
+| R07, R09 | Document 08 introduced the product README, shared theme, responsive screenshots and drawer keyboard checks. |
+| R08 | The generated sitemap omits account and terminal compatibility entries. Live production SEO parity remains a release check. |
+| R10 | Public documentation is an explicit allowlist. The help index and Strategy Lab rule cards remain available, and the help index links to the source repository for operator documentation. |
+| R11 | Playback, supplied chapter coverage and placement evidence remain open by record in the [source-gap register](12-ict-video-gap-register-and-public-ux.md). |

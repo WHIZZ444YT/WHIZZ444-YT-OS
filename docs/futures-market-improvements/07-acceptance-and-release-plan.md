@@ -1,10 +1,10 @@
-# 07 · Acceptance and release plan
+# 07 � Acceptance and release plan
 
 ## Test matrix
 
 | Area | Required evidence |
 |---|---|
-| Curriculum | Exactly one record per C01–C56 and P01–P10; 10 concept modules; six ordered practice IDs 11–16; 10 approved mentors, nine full episodes and two excerpts; catalog counts match page/search counts |
+| Curriculum | Exactly one record per C01-C56 and P01-P10; 10 concept modules; six ordered practice IDs 11-16; 10 approved mentors, nine full episodes and two excerpts; catalog counts match page/search counts |
 | Assignment | C53 in 05, C54/C56 in 06, C55 in 07, C51/C52 in 08. Validate the one-to-many Academy crosswalk and all related links |
 | Public accessibility | Direct unsigned access from home, one phone-width and one desktop breakpoint, light/dark, keyboard-only navigation, skip and focus order, focused drawer/Escape, semantic headings, screen-reader labeling and reduced motion |
 | Navigation | Test direct loads and refreshes of C/P/lab pages and legacy Academy paths; all terminal hash targets after standalone renderer retirement; legacy Lab query URLs; Back/Forward after search; alias cases FVG, iFVG/IFVG, MSS, BSL, CBDR and OSOK; no-JavaScript written detail; useful unknown-ID behavior |
@@ -40,3 +40,24 @@ Baseline commands are defined in [Quality](../../.github/workflows/quality.yml) 
 ## Final ICT source and mentor gates
 
 Use the [official source inventory](11-official-ict-scope-and-mentor-resources.md) and [source-gap register](12-ict-video-gap-register-and-public-ux.md). Validate the separate 13-entry Charter source shelf, ten mentor profiles with channel links, and the public Popular filter's evidence rules. Compare claimed tutorial coverage against the exact lesson, instrument and chapter. Keep pending items visible by ID until media and browser acceptance are recorded.
+
+## Collecting release evidence
+
+The quality workflow validates both terminal modes. Its parity step compares the
+route and anchor manifests from two clean builds of the same source revision.
+The tagged release also runs the Node suite and the parity check.
+
+Use the following checklist in the implementation PR for evidence that needs a
+running deployment. Record the tested URL and commit with each result.
+
+| Evidence | What to attach |
+|---|---|
+| Public preview and production | Preview and production deployment IDs, deployed Git SHA, alias, and HTTP results for the manifest routes. Include deep links to Charts, Sessions, Journal practice and Lab and verify robots, sitemap and canonical URLs. |
+| Browser acceptance | Phone-width and desktop screenshots in both themes, keyboard and reduced-motion checks, anonymous C/P/lab deep links and legacy bookmark navigation. |
+| Offline and private workspace | Before and after upgrade results for existing worker clients, offline navigation with a clean profile, sign-out on a shared browser, and attachment isolation across two dedicated test accounts. |
+| Media | Per-video and per-placement observations in the source-gap register. Record direct playback, chapter meaning and embeds separately. Leave unresolved IDs open with an owner. |
+| Rollback and Worker | Previously verified Vercel deployment ID and the separate Worker version and traffic split, with runtime smoke outcomes if applicable. |
+
+Use the acceptance matrix above to record pass, fail, blocked, or an explicit
+release decision for each area before promotion.
+

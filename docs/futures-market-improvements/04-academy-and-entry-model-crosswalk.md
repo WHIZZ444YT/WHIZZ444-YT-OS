@@ -146,3 +146,11 @@ The Academy curriculum has these 31 slugs without a verified curriculum video re
 - `futures-volume-open-interest`
 
 The wider Lab inventory still needs a recorded watch/availability, embedded-player and precise-chapter check. Report by C/P/lab ID or podcast/mentor name and video ID. Legacy source coverage is a separate measure from supplied Lab link presence.
+
+## Published crosswalk
+
+The build publishes the Academy and Lab crosswalk at `/academy/crosswalk/` and exposes reciprocal links from Lab lessons, Academy lessons and the Entry Models index. Shared definitions and compatible Academy identification steps use the existing Academy records. Lab-specific conventions retain their own rules. Global search groups a shared definition under its Academy result and includes a link to the corresponding Lab exercise.
+
+The crosswalk computes Academy video coverage from the reviewed source records. It keeps the 31 open Academy entries distinct from supplied Lab media links. C35 retains its supplied opening-gap sources alongside the exact NDOG reference, with one NWOG watch URL. P01 carries Episode 14 as an application, P08 carries the exact NQ example, and P09 labels the XAUUSD source next to a synthetic NQ illustration.
+
+The 22 November 2026 spot check retrieved the watch-page title for the Academy inversion-FVG upload. The sampled Zeussy and podcast pages provided insufficient metadata for independent channel, guest or clip verification. Their supplied links remain in the Lab. Playback, embedding and precise chapter checks remain open.
