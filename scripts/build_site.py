@@ -452,11 +452,14 @@ def build():
     write(DIST/'charts/index.html', shell('Futures Charts | Futures Intelligence OS',
           'Compare futures charts in TradingView.', chart_page(mdata), '/charts/',
           '<link rel="stylesheet" href="/assets/ict-public.css"><script defer src="/assets/public-charts.js"></script>'))
-    bookmark_route = '/ict-futures/' if TERMINAL_CUTOVER else '/ict-futures/bookmarks/'
-    write(DIST/bookmark_route.lstrip('/')/'index.html',
-          shell('ICT Futures bookmarks', 'Public destinations for saved terminal bookmarks.',
-                bookmarks_page(mdata, json_script), bookmark_route,
-                '<meta name="robots" content="noindex,follow"><script defer src="/assets/ict-terminal-compat.js"></script>'))
+    bookmark_routes = ['/ict-futures/bookmarks/']
+    if TERMINAL_CUTOVER:
+        bookmark_routes.append('/ict-futures/')
+    for bookmark_route in bookmark_routes:
+        write(DIST/bookmark_route.lstrip('/')/'index.html',
+              shell('ICT Futures bookmarks', 'Public destinations for saved terminal bookmarks.',
+                    bookmarks_page(mdata, json_script), bookmark_route,
+                    '<meta name="robots" content="noindex,follow"><script defer src="/assets/ict-terminal-compat.js"></script>'))
     news = load(ROOT/'data/news-snapshot.json',{})
     lifecycle_data=public_contract_lifecycle_data(load(ROOT/'data/contract-lifecycle.json',{}))
     lifecycle_products={x.get('marketId'):x for x in lifecycle_data.get('products',[]) if x.get('marketId')}

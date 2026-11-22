@@ -53,13 +53,24 @@ jobs:
         run: python3 scripts/build_site.py
       - name: Run unit tests
         run: python3 -m unittest discover -s tests -v
+      - name: Run Node tests
+        run: node --test tests/*.mjs
       - name: Run structural and security validation
         env:
           SITE_URL: https://finance-intelligence-os-whizz444yt-7353.vercel.app
         run: python3 scripts/validate.py
       - name: Audit internal links
         run: python3 scripts/audit_internal_links.py
+      - name: Compare clean standard and cutover route manifests
+        env:
+          SITE_URL: https://finance-intelligence-os-whizz444yt-7353.vercel.app
+        run: |
+          cp dist/route-manifest.json "$RUNNER_TEMP/standard-routes.json"
+          ICT_TERMINAL_CUTOVER=1 python3 scripts/build_site.py
+          python3 scripts/check_release_parity.py "$RUNNER_TEMP/standard-routes.json" dist/route-manifest.json
       - name: Publish GitHub Release
         env:
           GH_TOKEN: ${{ github.token }}
         run: gh release create "${GITHUB_REF_NAME}" --title "Finance Intelligence OS ${GITHUB_REF_NAME}" --generate-notes --verify-tag
+
+
