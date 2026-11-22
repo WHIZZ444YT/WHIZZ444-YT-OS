@@ -38,11 +38,14 @@ def learning_paths(link, lesson, practice, concepts):
             lesson("C04", concepts["C04"]["title"]), lesson("P01", "Compare invalid and no-trade examples"),
             link("Commit a replay decision", practice(13)), link("Review decision, adherence and outcome", practice(16)))),
     )
+    def path_card(title, steps):
+        return (f'<article class="ict-card"><h3>{escape(title)}</h3><ol>'
+                + "".join(f'<li>{step}</li>' for step in steps) + '</ol></article>')
     return ('<section class="ict-group" aria-labelledby="learning-paths"><h2 id="learning-paths">Learning paths</h2>'
-            '<div class="ict-grid">' + "".join(
-                f'<article class="ict-card"><h3>{escape(title)}</h3><ol>'
-                + "".join(f'<li>{step}</li>' for step in steps) + '</ol></article>'
-                for title, steps in paths) + '</div></section>')
+            '<p>Suggested starting path</p>' + path_card(*paths[0])
+            + '<details><summary>Explore more learning paths</summary><div class="ict-grid">'
+            + "".join(path_card(title, steps) for title, steps in paths[1:]) + '</div></details></section>')
+
 
 
 def featured_for(key, catalog, existing):

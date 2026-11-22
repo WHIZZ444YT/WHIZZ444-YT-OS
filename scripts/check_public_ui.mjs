@@ -176,6 +176,29 @@ try {
   }, null, 2) + '\n');
   console.log('Mobile lab metrics:', JSON.stringify(labResults));
   await perf.close();
+  await page.goto(site + '/ict-lab/resources/#watch-library');
+  const resourceClass = page.getByLabel('Source class');
+  const evidenceStatus = page.getByLabel('Evidence status');
+  await resourceClass.selectOption('original');
+  await evidenceStatus.selectOption('metadata-observed');
+  const visibleResources = page.locator('[data-ict-item]:visible');
+  assert.ok(await visibleResources.count());
+  assert.equal(await page.locator('[data-ict-item]:visible:not([data-category="original"])').count(), 0);
+  await page.reload();
+  assert.equal(await resourceClass.inputValue(), 'original');
+  assert.equal(await evidenceStatus.inputValue(), 'metadata-observed');
+  await page.goBack();
+  assert.equal(await evidenceStatus.inputValue(), '');
+  await staticPage.goto(site + '/ict-lab/resources/');
+  assert.ok(await staticPage.getByRole('navigation', { name: 'Resource sections' }).isVisible());
+  assert.equal(await staticPage.locator('[data-ict-item]').count(), 100);
+  await page.goto(site + '/ict-lab/practice/');
+  assert.match(await page.locator('[data-ict-practice-progress]').innerText(), /this browser/);
+  for (const path of ['/ict-lab/learn/c17/', '/ict-lab/learn/c45/', '/ict-lab/playbooks/p01/']) {
+    await page.goto(site + path);
+    assert.ok(await page.getByRole('navigation', { name: 'Breadcrumb' }).isVisible());
+    assert.equal(await page.getByRole('link', { name: 'Practice next', exact: true }).count(), 1);
+  }
   const research = await browser.newPage();
   let newsResponseStatus = 200;
   await research.route('**/api/v1/news?*', route => route.fulfill({

@@ -43,7 +43,7 @@ def _items(values, ordered=False):
 def _section(number, kicker, title, body, class_name=""):
     cls = "lesson-section" + ((" " + class_name) if class_name else "")
     return (
-        f'<section class="{cls}"><div class="section-head"><span>{number:02d}</span>'
+        f'<section id="study-section-{number}" class="{cls}"><div class="section-head"><span>{number:02d}</span>'
         f'<div><p class="eyebrow">{escape(kicker)}</p><h2>{escape(title)}</h2></div></div>'
         f'{body}</section>'
     )
@@ -358,6 +358,8 @@ def render_lesson(concept, all_concepts, site_url="", academy=None, crosswalk=No
 <div class="lesson-hero-links"><a href="/academy/">Open Academy curriculum →</a>{official_portal}</div></div>
 <aside class="evidence-card"><span class="eyebrow">SOURCE / EVIDENCE LABEL</span><strong>{escape(str(evidence))}</strong><p>{escape(str(source_caution))}</p>
 <div class="evidence-card-foot"><span class="eyebrow">TRACK</span><b>{escape(str(track.get('name') or curriculum.get('trackId') or 'Not assigned'))}</b></div></aside></header>
+<nav class="academy-lesson-outline" aria-label="Lesson contents"><a href="#study-section-1">Objective</a>
+<a href="#study-section-4">Rule</a><a href="#study-section-5">Examples</a><a href="#study-section-17">Practice next</a><a href="#study-section-16">Sources</a></nav>
 {_progress_markup(concept.get('id',''), 'Lesson progress', content_version)}
 {lab_paths}
 {_section(1,'CONCEPT IDENTITY','Definition and purpose','<p class="lesson-body-copy">'+escape(definition)+'</p><div class="lesson-purpose"><b>What question does this answer?</b><p>'+escape(str(use_case))+'</p><div class="lesson-pill-row">'+purpose_html+'</div></div>')}

@@ -97,3 +97,9 @@
  .academy-catalog-card,.progress-track span{transition:none}
 }
 
+
+/* Keep long Academy lessons easy to scan without changing the chart and source layouts. */
+.academy-lesson-outline {display:flex; gap:.75rem; flex-wrap:wrap; margin-block:1rem}
+.academy-lesson-outline a {padding-block:.4rem; min-height:24px}
+.academy-page .lesson-section {scroll-margin-block-start:1rem}
+.academy-page .lesson-body-copy, .academy-page .exercise-task {max-width:74ch}
