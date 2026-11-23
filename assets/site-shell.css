@@ -557,8 +557,8 @@ body {font-size: var(--os-body-size)}
 }
 .os-main-column .fi-detail-box :is(strong, .fi-inline-link) {color: var(--os-ink)}
 
-.os-main-column .academy-video-status {color: #344b59}
-.os-main-column .academy-video-status[data-video-status="VERIFIED"] {color: #23664f}
+.os-main-column .academy-catalog-card .academy-video-status {color: #344b59}
+.os-main-column .academy-catalog-card .academy-video-status[data-video-status="VERIFIED"] {color: #23664f}
 .os-main-column .fi-detail-box .fi-chip {
   background: var(--os-bg);
   color: var(--os-ink);
