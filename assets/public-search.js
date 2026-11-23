@@ -49,7 +49,7 @@
     const next = new URL(location.href);
     if (field.value.trim()) next.searchParams.set('q', field.value.trim());
     else next.searchParams.delete('q');
-    history.pushState(null, '', next);
+    if (next.href !== location.href) history.pushState(null, '', next);
     render(query());
   });
   root.querySelector('[data-clear-search]').addEventListener('click', () => {

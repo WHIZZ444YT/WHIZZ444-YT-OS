@@ -467,7 +467,10 @@ def build():
         '<section class="content-section">' + crosswalk.page() + '</section>', '/academy/crosswalk/'))
     write(DIST/'search/index.html', shell('Search | Futures Intelligence OS',
           'Find public futures routes, Academy lessons and ICT Lab content.',
-          search_page(mdata, academy, catalog, NAV_ITEMS, json_script, crosswalk), '/search/',
+          search_page(mdata, academy, catalog, [
+              (group.title(), [(NAV_DISPLAY.get(label, label), dict(NAV_ITEMS)[label]) for label in labels])
+              for group, labels in NAV_GROUPS if group not in {'WORKSPACE', 'ACCOUNT'}
+          ], json_script, crosswalk), '/search/',
           '<link rel="stylesheet" href="/assets/ict-public.css"><script defer src="/assets/public-search.js"></script>'))
     write(DIST/'charts/index.html', shell('Futures Charts | Futures Intelligence OS',
           'Compare futures charts in TradingView.', chart_page(mdata), '/charts/',
