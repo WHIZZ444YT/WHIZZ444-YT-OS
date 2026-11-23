@@ -7,7 +7,7 @@ from html import escape
 from datetime import date, datetime, timezone
 from import_authorized_contract_lifecycle import validate_snapshot
 from build_academy import build_academy, verified_lesson_videos
-from build_ict_lab import build_ict_lab
+from build_ict_lab import build_ict_lab, card as ict_card
 from build_route_manifest import route_manifest
 from ict_crosswalk import IctCrosswalk, PUBLIC_MODELS
 from public_market_context import build_market_context, market_context_text
@@ -675,23 +675,37 @@ def build():
     write(DIST/'prediction-markets/index.html',redirect_page('This product area has been retired','/'))
 
     # Entry model library. Educational records only; no performance ranking without verified backtests.
-    entry_models=[c for c in academy if c.get('category')=='Entry Models']
-    model_cards = []
-    for model in entry_models:
-        slug = model['id']
-        related, role, note = PUBLIC_MODELS[slug]
-        video_status = 'Mapped Academy video' if slug in crosswalk.covered else 'Exact model video needed'
-        model_cards.append(
-            '<article>' + card(model['name'], model['definition'], f'/ict-futures/academy/{slug}.html', role, video_status)
-            + '<p>' + escape(note) + '</p><p>' + ' · '.join(crosswalk.lab_links(related.split())) + '</p></article>')
-    body=page_intro('ICT playbook library','Entry Models','Eight preserved entry-model concepts from the ICT Academy source catalogue. These are educational playbooks, not a ranked signal service or evidence of a profitable edge.',f'<div class="stats-row"><b>{len(entry_models)}</b><span>Model concepts</span><b>0</b><span>Verified model performance rankings</span></div>')
-    body+='<section class="content-section"><div class="section-top"><div><h2>Model catalogue</h2><p>Open each lesson for its definition, conditions, use cases, invalidation and common mistakes.</p></div><a class="text-link" href="/academy/crosswalk/">View the Academy and Lab crosswalk ↗</a></div><div class="card-grid">'+''.join(model_cards)+'</div></section>'
-    body+='<p><a class="text-link" href="/ict-lab/playbooks/">Explore ICT Lab playbooks →</a></p>'
-    body+='<section class="content-section"><h2>Performance evidence policy</h2><p>No model is labelled “best” until its rules are operationally defined and tested on timestamped historical data with commissions, slippage, contract rolls, survivorship controls and out-of-sample validation. The eight models have no audited win-rate, expectancy, profit-factor or drawdown ranking yet.</p></section>'
-    body+='<section class="content-section"><h2>Legacy terminal model variants</h2><p>Illustrative rules from the original playbook.</p>'
-    body+=crosswalk.model_cards(playbook_data['models'])
-    body+='</section>'
-    write(DIST/'entry-models/index.html',shell('ICT Entry Models | Futures Intelligence OS','Eight ICT entry-model concepts with educational playbook links and no unsupported performance claims.',body,'/entry-models/'))
+    playbooks = catalog["playbooks"]
+    model_cards = [
+        ict_card(f'{model["id"]} · {model["title"]}', f'/academy/playbooks/{model["id"].lower()}/',
+                 model["summary"], category="playbook", label=model["category"],
+                 badge="Video sources" if model["sources"] else "")
+        for model in playbooks
+    ]
+    reference_cards = []
+    for slug, (related, role, note) in PUBLIC_MODELS.items():
+        model = crosswalk.academy[slug]
+        video_status = "Mapped Academy video" if slug in crosswalk.covered else "Exact model video needed"
+        reference_cards.append(
+            '<div class="ict-model-reference">'
+            + ict_card(model["name"], f'/ict-futures/academy/{slug}.html', model["definition"],
+                       label=role, badge=video_status)
+            + f'<p>{escape(note)}</p><p>' + " · ".join(crosswalk.lab_links(related.split()))
+            .replace('/ict-lab/', '/academy/') + '</p></div>')
+    body = page_intro('ICT playbook library', 'Entry Models',
+                      f'Explore {len(playbooks)} Academy playbooks with entry rules, invalidation, practice examples and source videos.')
+    body += ('<section class="content-section ict-public ict-academy ict-entry-models">'
+             '<div class="section-top"><h2>ICT Academy playbooks</h2>'
+             '<a class="text-link" href="/academy/playbooks/">Open Academy playbooks</a></div>'
+             '<div class="ict-grid">' + ''.join(model_cards) + '</div>'
+             '<details class="ict-model-history"><summary>Earlier models and setup comparisons</summary>'
+             '<p>Compare how each earlier lesson defines its setup against the linked Academy playbook.</p>'
+             '<div class="ict-grid">' + ''.join(reference_cards) + '</div>'
+             '<h3>Original terminal variants</h3>' + crosswalk.model_cards(playbook_data['models'])
+             + '</details></section>')
+    write(DIST/'entry-models/index.html', shell('ICT Entry Models | Futures Intelligence OS',
+          'ICT Academy entry playbooks, source videos and earlier setup comparisons.', body, '/entry-models/',
+          '<link rel="stylesheet" href="/assets/ict-public.css">'))
 
     # P4 Strategy Lab: deterministic signal-driven futures backtesting.
     body=page_intro('Research & validation','Strategy Lab','Run a reproducible, cost-aware backtest from timestamped bars for one exact futures expiry and explicit candle-close signals. The engine does not fabricate ICT signals or publish strategy rankings.')

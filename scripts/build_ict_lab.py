@@ -126,10 +126,17 @@ def search_form(action):
             '<p role="status" data-ict-search-status hidden></p>')
 
 
-def card(title, href, summary, searchable="", category="", *, evidence=""):
+def card(title, href, summary, searchable="", category="", *, evidence="", label="", badge=""):
+    label = label or {
+        "concept": "Concept", "playbook": "Playbook", "original": "Original ICT",
+        "creator": "Creator source", "other": "Reference", "Full episode": "Full episode", "Clip": "Clip",
+    }.get(category, "")
+    meta = (f'<div class="ict-card-meta"><span>{escape(label)}</span>'
+            + (f'<span class="ict-card-badge">{escape(badge)}</span>' if badge else '') + '</div>') if label or badge else ''
     return (f'<article class="ict-card ict-card-link" data-ict-item data-search="{escape(searchable, quote=True)}" '
-            f'data-category="{escape(category, quote=True)}" data-evidence="{escape(evidence, quote=True)}"><h3>{link(title, href)}</h3>'
-            f'<p>{escape(summary)}</p></article>')
+            f'data-category="{escape(category, quote=True)}" data-evidence="{escape(evidence, quote=True)}">'
+            f'{meta}<h3>{link(title, href)}</h3><p>{escape(summary)}</p>'
+            '<span class="ict-card-cta" aria-hidden="true">Open module →</span></article>')
 
 
 def example_table(title, headings, rows):

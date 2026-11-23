@@ -134,3 +134,45 @@
 @media (hover: hover) and (prefers-reduced-motion: no-preference) {
   .ict-academy .ict-card-link:hover {transform: translateY(-2px)}
 }
+
+/* The Academy and Entry Models use the same navy and teal card treatment. */
+.ict-academy {--ict-card-bg: #142437; --ict-card-border: #2b4054; --ict-card-accent: #90dbd5}
+.os-light .ict-academy {--ict-card-bg: #f6fafc; --ict-card-border: #bacbd8; --ict-card-accent: #08756f}
+.ict-academy .ict-card {background: var(--ict-card-bg); border-color: var(--ict-card-border)}
+.ict-academy .ict-card h3 {margin-block-end: .4rem}
+.ict-academy .ict-card h3 a {color: inherit}
+.ict-academy .ict-card-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: .35rem .65rem;
+  color: var(--ict-card-accent);
+  font-size: .72rem;
+  font-weight: 750;
+  letter-spacing: .09em;
+  text-transform: uppercase;
+}
+.ict-academy .ict-card-badge {
+  border: 1px solid var(--ict-card-border);
+  border-radius: 999px;
+  padding: .2rem .55rem;
+  color: var(--ict-muted);
+  font-weight: 500;
+  letter-spacing: 0;
+  text-transform: none;
+}
+.ict-academy .ict-card-cta {
+  margin-block-start: auto;
+  padding-block-start: .6rem;
+  color: var(--ict-card-accent);
+  font-size: .83rem;
+  font-weight: 750;
+}
+.ict-entry-models .ict-grid {grid-template-columns: repeat(2, minmax(0, 1fr))}
+.ict-model-history {margin-block-start: 1.35rem; padding-block-start: 1rem; border-block-start: 1px solid var(--ict-card-border)}
+.ict-model-history summary {cursor: pointer; font-weight: 650}
+.ict-model-reference > p {margin-block: .55rem}
+@media (max-width: 640px) {
+  .ict-entry-models .ict-grid {grid-template-columns: 1fr}
+}
