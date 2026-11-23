@@ -131,6 +131,8 @@ import {PRACTICE_KEY, FIXTURE_DATE, FIXTURE_START, closedBarTime, readAttempt, a
       const correct=v.decision==='Wait'&&Number(v.invalidation)===20012;
       save('ifvg',{fixture:'EDU-NQ-IFVG-01',decisionBar,correct,...v});
       controls.hidden=true;
+      const workedCharts=document.querySelector('[data-ifvg-worked]');
+      if(workedCharts)workedCharts.hidden=false;
       review.replaceChildren();
       add(review,'h3','After saving your decision');
       chart(review,'NQ',bars,'IFVG',[

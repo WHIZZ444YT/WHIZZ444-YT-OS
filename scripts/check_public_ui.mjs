@@ -40,6 +40,69 @@ try {
     }
   }
 
+  await page.setViewportSize({ width: 768, height: 900 });
+  await page.goto(site + '/');
+  const sourcesRail = page.getByRole('complementary', { name: 'Data sources' });
+  const railWidth = (await sourcesRail.boundingBox()).width;
+  assert.ok(Math.abs((await sourcesRail.locator('section').boundingBox()).width - railWidth) <= 1);
+  const sourceLibrary = sourcesRail.getByRole('link', { name: /Browse reviewed futures sources/ });
+  await sourceLibrary.click();
+  assert.equal(new URL(page.url()).pathname, '/sources/');
+
+  await page.setViewportSize({ width: 1024, height: 900 });
+  await page.goto(site + '/');
+  const sidebarMarket = page.getByRole('navigation', { name: 'Futures product areas' })
+    .getByRole('link', { name: 'Markets', exact: true });
+  await page.getByRole('button', { name: 'Collapse navigation' }).click();
+  assert.equal(await sidebarMarket.locator('.os-nav-label').isVisible(), false);
+  await page.getByRole('button', { name: 'Expand navigation' }).click();
+  assert.equal(await sidebarMarket.locator('.os-nav-label').isVisible(), true);
+
+  await page.goto(site + '/academy/crosswalk/');
+  assert.equal(await page.locator('#appSidebar [aria-current]').getAttribute('aria-current'), 'location');
+  assert.equal(await page.locator('#appSidebar [aria-current]').getAttribute('href'), '/academy/');
+
+  await page.goto(site + '/charts/?market=nq&comparison=nq&interval=15');
+  const charts = page.locator('#public-chart-controls');
+  const market = charts.locator('select[name="market"]');
+  const comparison = charts.locator('select[name="comparison"]');
+  const comparisonChart = page.locator('[data-chart-slot]').nth(1);
+  assert.equal(await comparison.inputValue(), '');
+  assert.equal(await comparison.locator('option[value="nq"]').evaluate(option => option.disabled), true);
+  assert.equal(await comparisonChart.isVisible(), false);
+  await comparison.selectOption('es');
+  assert.equal(await comparisonChart.isVisible(), true);
+  await market.selectOption('es');
+  assert.equal(await comparison.inputValue(), '');
+  assert.equal(await comparisonChart.isVisible(), false);
+  await page.goBack();
+  assert.equal(await comparison.inputValue(), 'es');
+  assert.equal(await comparisonChart.isVisible(), true);
+
+  await page.goto(site + '/ict-lab/learn/c17/');
+  const worked = page.locator('[data-ifvg-worked]');
+  const saveDecision = page.getByRole('button', { name: 'Save decision and reveal chart' });
+  assert.equal(await worked.isVisible(), false);
+  await page.locator('[data-ifvg-practice] select[name="decision"]').selectOption('Wait');
+  await page.getByLabel('Short invalidation price').fill('20012');
+  await page.evaluate(() => {
+    window.originalStorageSet = Storage.prototype.setItem;
+    Storage.prototype.setItem = () => { throw new Error('Fixture storage error'); };
+  });
+  await saveDecision.click();
+  assert.equal(await worked.isVisible(), false);
+  await page.evaluate(() => { Storage.prototype.setItem = window.originalStorageSet; });
+  await saveDecision.click();
+  await page.getByRole('heading', { name: 'After saving your decision' }).waitFor();
+  assert.equal(await worked.isVisible(), true);
+
+  for (const [width, path] of [[320, '/ict-futures/'], [851, '/status/'], [1120, '/ict-futures/']]) {
+    await page.setViewportSize({ width, height: 844 });
+    await page.goto(site + path);
+    assert.ok(await page.evaluate(() =>
+      document.documentElement.scrollWidth <= document.documentElement.clientWidth + 1), path + ' at ' + width);
+  }
+
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto(site + '/');
   const toggle = page.getByRole('button', { name: 'Open navigation' });

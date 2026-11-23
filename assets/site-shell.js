@@ -91,7 +91,11 @@
   scrim?.addEventListener('click', closeDrawer);
   closeButton?.addEventListener('click', closeDrawer);
   sidebar.addEventListener('click', event => {
-    if (mobileQuery.matches && event.target.closest('a')) { drawerOpen = false; renderNav(); }
+    const link = event.target.closest('a[href]');
+    if (drawerOpen && link && !event.defaultPrevented && !event.metaKey &&
+        !event.ctrlKey && !event.shiftKey && !event.altKey && link.target !== '_blank') {
+      closeDrawer();
+    }
   });
   document.addEventListener('keydown', event => {
     if (event.key === 'Escape' && drawerOpen) { event.preventDefault(); closeDrawer(); return; }
@@ -105,9 +109,10 @@
   });
   mobileQuery.addEventListener?.('change', () => {
     const focusWasInDrawer = sidebar.contains(document.activeElement);
+    const focusWasOnClose = document.activeElement === closeButton;
     drawerOpen = false;
     renderNav();
-    if (mobileQuery.matches && focusWasInDrawer) toggle.focus();
+    if ((mobileQuery.matches && focusWasInDrawer) || focusWasOnClose) toggle.focus();
   });
   renderTheme();
   renderNav();

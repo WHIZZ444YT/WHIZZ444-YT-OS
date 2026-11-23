@@ -82,6 +82,8 @@ def current_area(path):
 
 def nav_markup(current='/'):
     active = AREA_ALIASES.get(current, current)
+    if current.startswith('/academy/'):
+        active = '/academy/'
     links = {label: href for label, href in NAV_ITEMS}
     groups = []
     for group, labels in NAV_GROUPS:
@@ -99,9 +101,10 @@ def nav_markup(current='/'):
                 'COT & Positioning':'CT','Contract Specs & Expiry':'SP','Strategy Lab':'SL',
                 'Risk & Prop Firms':'RK','Journal & Watchlists':'JW','Data Health & Sources':'DH'
             }[label]
-            current_attr = ' aria-current="page"' if is_active else ''
+            current_state = 'page' if current == href else 'location'
+            current_attr = f' aria-current="{current_state}"' if is_active else ''
             items.append(
-                f'<a class="os-nav-link{" is-active" if is_active else ""}" href="{href}"{current_attr} title="{escape(visible_label)}">'
+                f'<a class="os-nav-link{" is-active" if is_active else ""}" href="{href}"{current_attr} aria-label="{escape(visible_label)}" title="{escape(visible_label)}">'
                 f'<span class="os-nav-symbol" aria-hidden="true">{symbol}</span>'
                 f'<span class="os-nav-label">{escape(visible_label)}</span></a>'
             )
@@ -929,7 +932,7 @@ def build():
     rows=''.join(f'<tr><td><b>{escape(a)}</b><small>{escape(b)}</small></td><td>{escape(c)}</td></tr>' for a,b,c in status_rows)
     body=page_intro('Platform operations','System status & integrations','This page deliberately reports verified account and runtime state. Configuration files in the repository are not evidence that a remote service has been provisioned or deployed.')
     body+='<p class="small-text">Platform and COT configuration were manually checked on 19 November 2026. This status page is a dated snapshot; provider availability changes independently. See <a href="/data-health/">Data Health &amp; Sources</a> for live endpoint checks and each response’s data-as-of time.</p>'
-    body+=f'<section class="content-section"><table class="status-table"><thead><tr><th>Service</th><th>Verified state</th></tr></thead><tbody>{rows}</tbody></table></section>'
+    body+=f'<section class="content-section"><div class="table-wrap" role="region" aria-label="Platform service status" tabindex="0"><table class="status-table"><thead><tr><th>Service</th><th>Verified state</th></tr></thead><tbody>{rows}</tbody></table></div></section>'
     body+='<section class="content-section"><h2>Data state definitions</h2><p><span class="data-pill">LIVE API</span> received from a provider at request time · <span class="data-pill">SNAPSHOT</span> stored response · <span class="data-pill">DELAYED</span> provider-labelled delay · <span class="data-pill">OFFICIAL LINK</span> publisher page · <span class="data-pill">SEARCH LINK</span> provider search query · <span class="data-pill">STALE</span> retained last-known data · <span class="data-pill">UNAVAILABLE</span> no usable response.</p></section>'
     write(DIST/'status/index.html',shell('System Status | Futures Intelligence OS','Verified setup status for GitHub, Vercel, Supabase, Builder.io and Cloudflare.',body,'/status/'))
     body = page_intro('Site guide', 'Help & documentation',

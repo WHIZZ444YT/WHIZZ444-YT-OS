@@ -216,7 +216,8 @@ def concept_page(item, module, catalog, names, crosswalk):
                     '<p>The original bullish gap spans 20010–20012. Use a completed close below 20010 for a breach. '
                     'A later candle must return from below. For this exercise, invalidate the short idea at or above 20012.</p>'
                     '<p>Use the submitted chart to assess the first eligible retest.</p></section>'
-                    '<details><summary>Review both worked charts</summary>' + diagrams + '</details>')
+                    '<details data-ifvg-worked hidden><summary>Review both worked charts</summary>' + diagrams + '</details>'
+                    '<noscript><p>Enable JavaScript to save a decision and review these charts.</p></noscript>')
     scope = f'<p class="ict-muted">{escape(item["scope"])}</p>' if item.get("scope") else ""
     clocks = ('<p>New York and India time examples for 08:30 ET: 18:00 IST on 2026-06-02 '
               'and 19:00 IST on 2026-01-06. Use the date-aware '
