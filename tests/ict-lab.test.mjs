@@ -126,6 +126,10 @@ test('the crosswalk distinguishes shared concepts, separate variants and exact A
   assert.match(sell, /Lab-authored synthetic NQ/);
   assert.match(sell, /XAUUSD/);
   const modelIndex = published('entry-models/index.html');
+  const primaryModels = modelIndex.split('class="ict-model-history"')[0];
+  assert.equal([...primaryModels.matchAll(/href="\/academy\/playbooks\/p\d+\/"/g)].length, 10);
+  assert.doesNotMatch(primaryModels, /href="\/ict-futures\/academy\//);
+  assert.match(primaryModels, /class="ict-card-meta"/);
   assert.match(modelIndex, /FVG Continuation · Distinct variant/);
   assert.match(modelIndex, /Judas \+ MSS · Overlapping setup/);
   assert.match(modelIndex, /href="\/ict-futures\/academy\/ifvg-reversal-model.html"/);
