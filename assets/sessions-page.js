@@ -187,8 +187,8 @@
     try {
       const settled = await window.loadPublisherSchedules(apiBase);
       const ready = settled.filter(result => result.status === "fulfilled").map(result => result.value);
-      const failures = settled.filter(result => result.status === "rejected").map(result => String(result.reason?.message || "Provider request failed."));
-      if (!ready.length) throw new Error(failures.join(" · ") || "No publisher calendar is available.");
+      const failedCount = settled.length - ready.length;
+      if (!ready.length) throw new Error("Publisher schedules are temporarily unavailable. Refresh to retry or use the official issuer links below.");
       const merged = new Map();
       for (const feed of ready) for (const event of Array.isArray(feed.data.events) ? feed.data.events : []) merged.set(event.event_id, event);
       events = [...merged.values()].sort((a, b) => (Date.parse(a.scheduled_at_utc || "") || dateOrdinal(a.scheduled_date)) - (Date.parse(b.scheduled_at_utc || "") || dateOrdinal(b.scheduled_date)));
@@ -204,7 +204,7 @@
         return `${feed.id}: ${label} · source time basis ${sourceZone}`;
       });
       $("sessionsRetrievedAt").textContent = `Publisher retrievals: ${retrievals.join(" · ")}`;
-      $("sessionsLiveState").textContent = incomplete ? `${failures.join(" · ") || "At least one publisher snapshot is stale."} Verify every event at its issuer before relying on the schedule.` : "Official BLS, EIA, CFTC, Federal Reserve, ECB, Bank of England, Bank of Canada, RBA and BEA schedules are included. ECB, FOMC and RBA entries are date-only; BEA dates include publisher-supplied UTC times. Verify issuer revisions. Forecasts and actual values are not supplied.";
+      $("sessionsLiveState").textContent = incomplete ? `${failedCount ? `${failedCount} of ${settled.length} publisher feeds could not be loaded.` : "At least one publisher snapshot is stale."} Verify every event at its issuer before relying on the schedule.` : "Official BLS, EIA, CFTC, Federal Reserve, ECB, Bank of England, Bank of Canada, RBA and BEA schedules are included. ECB, FOMC and RBA entries are date-only; BEA dates include publisher-supplied UTC times. Verify issuer revisions. Forecasts and actual values are not supplied.";
       $("sessionsLiveState").dataset.tone = incomplete ? "warn" : "";
     } catch (error) {
       snapshot = null; events = [];

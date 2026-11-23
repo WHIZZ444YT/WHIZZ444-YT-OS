@@ -308,15 +308,22 @@ def build_ict_lab(root, dist, shell, write, academy, json_script, source, crossw
     assets = '<link rel="stylesheet" href="/assets/ict-public.css"><script src="/assets/ict-public.js" defer></script>'
 
     def emit(path, view, title, body, subtitle="", extra=""):
-        tabs = "".join('<a href="{}"{}>{}</a>'.format(
-            url(key), ' aria-current="page"' if key == view else "", label)
-            for key, label in VIEWS.items())
-        crumbs = link("ICT Lab", ROOT_URL)
-        if view and path not in (ROOT_URL, url(view)):
-            crumbs += ' <span aria-hidden="true">/</span> ' + link(VIEWS[view], url(view))
+        tabs = ""
+        breadcrumbs = ""
+        if path != ROOT_URL:
+            links = []
+            for key, label in VIEWS.items():
+                state = "page" if path == url(key) else "location"
+                current = f' aria-current="{state}"' if key == view else ""
+                links.append(f'<a href="{url(key)}"{current}>{escape(label)}</a>')
+            tabs = '<nav class="ict-tabs" aria-label="ICT Lab sections">' + "".join(links) + '</nav>'
+            crumbs = link("ICT Lab", ROOT_URL)
+            if view and path != url(view):
+                crumbs += ' <span aria-hidden="true">/</span> ' + link(VIEWS[view], url(view))
+            breadcrumbs = f'<nav class="ict-breadcrumbs" aria-label="Breadcrumb">{crumbs}</nav>'
         html = (f'<section class="ict-public" data-ict-view="{view}"><header class="ict-hero">'
-                f'<nav class="ict-breadcrumbs" aria-label="Breadcrumb">{crumbs}</nav><h1>{escape(title)}</h1>'
-                f'<p>{escape(subtitle)}</p></header><nav class="ict-tabs" aria-label="ICT Lab sections">{tabs}</nav>'
+                f'{breadcrumbs}<h1>{escape(title)}</h1>'
+                f'<p>{escape(subtitle)}</p></header>{tabs}'
                 f'{body}</section>')
         write(dist / path.lstrip("/") / "index.html", shell(f"{title} | ICT Lab", subtitle or title, html,
                                                               path, assets + extra))

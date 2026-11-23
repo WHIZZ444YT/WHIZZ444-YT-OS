@@ -127,14 +127,13 @@ def social_discovery(markets, social, json_script):
 <script type="application/json">{json_script(social)}</script></section>"""
 
 
-def search_page(markets, academy, catalog, nav, json_script, crosswalk):
-    extras = [("ICT Lab", "/ict-lab/"), ("Public social discovery", "/sources/#social-discovery"),
-              ("Daily futures brief", "/futures-intelligence/#daily-brief"), ("Academy and Lab crosswalk", "/academy/crosswalk/")]
-    unique = {}
-    for label, path in [*nav, *extras]:
-        if path not in {"/account/", "/search/", "/"}:
-            unique.setdefault(path, label)
-    public = [(label, path) for path, label in unique.items()]
+def search_page(markets, academy, catalog, nav_groups, json_script, crosswalk):
+    groups = [*nav_groups, ("Quick links", [
+        ("Public social discovery", "/sources/#social-discovery"),
+        ("Daily futures brief", "/futures-intelligence/#daily-brief"),
+        ("Academy and Lab crosswalk", "/academy/crosswalk/"),
+    ])]
+    public = [row for _, links in groups for row in links]
     def area(path):
         if path.startswith(("/academy", "/ict-lab", "/entry-models")):
             return "Lessons"
@@ -166,10 +165,13 @@ def search_page(markets, academy, catalog, nav, json_script, crosswalk):
         rows += [{"title": row["title"], "path": f'/ict-lab/{section}/{str(row["id"]).lower()}/',
                   "category": category, "keywords": f'{row["id"]} {row.get("aliases", "")}'}
                  for row in items if row["id"] not in shared_ids]
-    links = "".join(f'<li><a href="{escape(path)}">{escape(label)}</a></li>' for label, path in public)
+    directory = []
+    for group, links in groups:
+        items = "".join(f'<li><a href="{escape(path)}">{escape(label)}</a></li>' for label, path in links)
+        directory.append(f'<section class="ict-card"><h3>{escape(group)}</h3><ul>{items}</ul></section>')
     return f"""<section class="ict-public" id="public-search"><header class="ict-hero"><h1>Search Futures Intelligence OS</h1>
 <p>Find a contract profile, lesson, playbook or public tool.</p></header>
-<form class="ict-search" action="/search/" hidden><label for="public-query">Search the site</label>
-<div><input type="search" name="q" id="public-query" maxlength="100"><button type="submit">Search</button><button type="button" data-clear-search>Clear</button></div></form>
-<p role="status"></p><div data-results></div><h2>Browse public pages</h2><ul>{links}</ul>
+<form class="ict-search" action="/search/" role="search" aria-label="Site search" hidden><label for="public-query">Search the site</label>
+<div><input type="search" name="q" id="public-query" maxlength="100" placeholder="Try NQ, FVG or COT"><button type="submit">Search</button><button type="button" class="ict-clear-search" data-clear-search>Clear</button></div></form>
+<p role="status"></p><div data-results></div><nav aria-labelledby="search-directory-title"><h2 id="search-directory-title">Browse public pages</h2><div class="ict-grid">{"".join(directory)}</div></nav>
 <script type="application/json">{json_script(rows)}</script></section>"""

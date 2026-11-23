@@ -526,3 +526,42 @@ body {font-size: var(--os-body-size)}
 @media (max-width: 400px) {
   .os-topbar-heading > span {display: none}
 }
+
+/* Shared-shell surfaces used by the Academy, research and workspace pages. */
+.os-main-column :is(.academy-track-card, .academy-tutorial-card, .academy-catalog-card,
+  .academy-progress-summary, .economic-provider-card, .voi-metric, .cot-chart,
+  .strategy-panel, .strategy-file-zone, .account-auth-card, .account-benefit-grid article, .cot-chart .empty-state) {
+  background: var(--os-surface);
+  color: var(--os-ink);
+  border-color: var(--os-line-strong);
+}
+.os-main-column :is(.academy-track-card, .academy-tutorial-card, .academy-catalog-card,
+  .economic-provider-card, .strategy-panel) h3,
+.os-main-column :is(.academy-progress-summary strong, .strategy-file-zone label,
+  .cot-controls label, .account-auth-card small, .strategy-form-grid label, .account-form label, .voi-metric strong) {
+  color: var(--os-ink);
+}
+.os-main-column :is(.academy-card-top .badge, .cot-chart .empty-state,
+  .voi-metric span, .voi-metric small, .strategy-help, .strategy-sync-status,
+  .sessions-live-state, .account-benefit-grid span, .academy-progress-summary span) {
+  color: var(--os-muted);
+}
+.os-main-column :is(.cot-controls, .cot-actions, .ict-chart-controls) .secondary-button {
+  background: var(--os-surface);
+  color: var(--os-blue);
+  border-color: var(--os-line-strong);
+}
+.os-main-column .fi-detail-box {
+  background: var(--os-surface);
+  color: var(--os-ink);
+}
+.os-main-column .fi-detail-box :is(strong, .fi-inline-link) {color: var(--os-ink)}
+
+.os-main-column .academy-catalog-card .academy-video-status {color: #344b59}
+.os-main-column .academy-catalog-card .academy-video-status[data-video-status="VERIFIED"] {color: #23664f}
+.os-main-column .fi-detail-box .fi-chip {
+  background: var(--os-bg);
+  color: var(--os-ink);
+}
+.os-main-column .sessions-live-state[data-tone="error"] {color: var(--os-negative)!important}
+.os-main-column .sessions-live-state[data-tone="warn"] {color: var(--os-warning)!important}

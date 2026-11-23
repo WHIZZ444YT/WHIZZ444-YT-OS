@@ -137,6 +137,44 @@ try {
   assert.equal(new URL(page.url()).searchParams.has('q'), false);
   await page.goBack();
   assert.equal(await page.getByRole('searchbox', { name: 'Search the site' }).inputValue(), 'COT');
+  await page.goto(site + '/search/');
+  const directory = page.getByRole('navigation', { name: 'Browse public pages' });
+  const directoryLinks = await directory.getByRole('link').evaluateAll(links => links.map(link => link.href));
+  assert.equal(new Set(directoryLinks).size, directoryLinks.length);
+  assert.equal(await directory.getByRole('link', { name: 'Futures Desk', exact: true }).getAttribute('href'), '/futures-intelligence/');
+  assert.equal(await directory.getByRole('link', { name: 'Markets', exact: true }).getAttribute('href'), '/markets/');
+
+  await page.goto(site + '/ict-lab/');
+  const labViews = ['learn', 'playbooks', 'practice', 'podcasts', 'mentors'];
+  for (const view of labViews) {
+    const destination = '/ict-lab/' + view + '/';
+    const entry = page.locator('main a[href="' + destination + '"]');
+    assert.equal(await entry.count(), 1);
+    await entry.click();
+    assert.equal(new URL(page.url()).pathname, destination);
+    assert.equal(await page.getByRole('navigation', { name: 'ICT Lab sections' })
+      .locator('[aria-current="page"]').getAttribute('href'), destination);
+    await page.goBack();
+  }
+
+  for (const theme of ['dark', 'light']) {
+    await page.evaluate(value => localStorage.setItem('fios.theme.preference.v1', value), theme);
+    await page.goto(site + '/academy/');
+    const tutorial = page.locator('.academy-tutorial-card').first();
+    const contrast = await tutorial.evaluate(card => {
+      const luminance = color => color.match(/\d+/g).slice(0, 3).map(Number)
+        .map(channel => channel / 255)
+        .map(channel => channel <= 0.04045 ? channel / 12.92 : ((channel + 0.055) / 1.055) ** 2.4)
+        .reduce((sum, channel, index) => sum + channel * [0.2126, 0.7152, 0.0722][index], 0);
+      const background = luminance(getComputedStyle(card).backgroundColor);
+      return [...card.querySelectorAll('h3, a')].map(text => {
+        const foreground = luminance(getComputedStyle(text).color);
+        return (Math.max(background, foreground) + 0.05) / (Math.min(background, foreground) + 0.05);
+      });
+    });
+    assert.ok(contrast.every(ratio => ratio >= 4.5), theme + ' Academy tutorial contrast: ' + contrast);
+  }
+
   await page.goto(site + '/ict-lab/?view=learn&id=C34&q=weekly+open');
   await page.waitForURL(url => url.pathname === '/ict-lab/learn/c34/');
   assert.equal(new URL(page.url()).searchParams.get('q'), 'weekly open');
