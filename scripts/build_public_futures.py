@@ -50,9 +50,9 @@ def chart_page(markets):
 <p id="public-chart-status" role="status">Direct chart links are ready. Load previews to connect to TradingView.</p>
 <div class="ict-grid ict-chart-previews">
 <article class="ict-card" data-chart-slot><h2>{escape(nq["label"])}</h2>
-<p><a href="{escape(direct)}" target="_blank" rel="noopener noreferrer">Open chart on TradingView</a></p><p data-chart-context>Chart provider: TradingView. Delay and listed expiry are unconfirmed.</p><p><a data-chart-profile href="/markets/">Contract profile</a> · <a href="/sessions/">Sessions</a></p><div data-chart-mount></div></article>
+<p><a class="site-link-action" href="{escape(direct)}" target="_blank" rel="noopener noreferrer">Open chart on TradingView</a></p><p data-chart-context>Chart provider: TradingView. Delay and listed expiry are unconfirmed.</p><p><a data-chart-profile href="/markets/">Contract profile</a> · <a href="/sessions/">Sessions</a></p><div data-chart-mount></div></article>
 <article class="ict-card" data-chart-slot hidden><h2>Comparison chart</h2>
-<p><a href="https://www.tradingview.com/markets/futures/" target="_blank" rel="noopener noreferrer">Open comparison on TradingView</a></p><p data-chart-context>Chart provider: TradingView. Delay and listed expiry are unconfirmed.</p><p><a data-chart-profile href="/markets/">Contract profile</a> · <a href="/sessions/">Sessions</a></p><div data-chart-mount></div></article></div>
+<p><a class="site-link-action" href="https://www.tradingview.com/markets/futures/" target="_blank" rel="noopener noreferrer">Open comparison on TradingView</a></p><p data-chart-context>Chart provider: TradingView. Delay and listed expiry are unconfirmed.</p><p><a data-chart-profile href="/markets/">Contract profile</a> · <a href="/sessions/">Sessions</a></p><div data-chart-mount></div></article></div>
 <noscript><p>Enable JavaScript to change the chart selection. The direct chart link above is available.</p></noscript>
 <p>Continuous symbols may contain roll adjustments or gaps. Match listed expiries and bar times when comparing swings. Use the linked lesson to assess SMT manually.</p>
 <p><a href="/markets/">Market profiles</a> · <a href="/volume-open-interest/">Volume and open interest</a> · <a href="/ict-lab/learn/c43/">Learn NQ/ES SMT</a></p></section>"""

@@ -39,7 +39,7 @@ def learning_paths(link, lesson, practice, concepts):
             link("Commit a replay decision", practice(13)), link("Review decision, adherence and outcome", practice(16)))),
     )
     def path_card(title, steps):
-        return (f'<article class="ict-card"><h3>{escape(title)}</h3><ol>'
+        return (f'<article class="ict-card"><h3>{escape(title)}</h3><ol class="ict-path-steps">'
                 + "".join(f'<li>{step}</li>' for step in steps) + '</ol></article>')
     return ('<section class="ict-group" aria-labelledby="learning-paths"><h2 id="learning-paths">Learning paths</h2>'
             '<p>Suggested starting path</p>' + path_card(*paths[0])
