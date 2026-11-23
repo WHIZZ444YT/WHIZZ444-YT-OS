@@ -428,7 +428,11 @@ test('Academy video library covers every Lab video and preserves supplied watch 
   const watchSection = library.split('id="watch-library"')[1].split('id="terminal-featured"')[0];
   const rendered = new Set([...watchSection.matchAll(/data-search="([^"]+)"/g)].map(match => match[1]));
   assert.deepEqual(rendered, new Set(Object.keys(catalog.videos)));
-  for (const ref of catalog.library) assert.ok(watchSection.includes(ref.url.replaceAll('&', '&amp;')));
+  for (const ref of catalog.library) {
+    const video = published('academy/videos/' + ref.id + '/index.html');
+    assert.ok(video.includes(ref.url.replaceAll('&', '&amp;')), ref.url);
+    assert.match(video, /Watch on YouTube/);
+  }
   assert.match(published('academy/index.html'), /href="\/academy\/videos\/"/);
   assert.match(published(lab + 'resources/index.html'), /location.search \+ location.hash/);
 });

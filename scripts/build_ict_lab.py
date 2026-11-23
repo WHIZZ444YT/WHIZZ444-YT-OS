@@ -126,9 +126,9 @@ def search_form(action):
             '<p role="status" data-ict-search-status hidden></p>')
 
 
-def card(title, href, summary, searchable="", category=""):
-    return (f'<article class="ict-card" data-ict-item data-search="{escape(searchable, quote=True)}" '
-            f'data-category="{escape(category, quote=True)}"><h3>{link(title, href)}</h3>'
+def card(title, href, summary, searchable="", category="", *, evidence=""):
+    return (f'<article class="ict-card ict-card-link" data-ict-item data-search="{escape(searchable, quote=True)}" '
+            f'data-category="{escape(category, quote=True)}" data-evidence="{escape(evidence, quote=True)}"><h3>{link(title, href)}</h3>'
             f'<p>{escape(summary)}</p></article>')
 
 
@@ -326,14 +326,14 @@ def build_ict_lab(root, dist, shell, write, academy, json_script, source, crossw
                 f'{breadcrumbs}<h1>{escape(title)}</h1>'
                 f'<p>{escape(subtitle)}</p></header>{tabs}'
                 f'{body}</section>')
-        if path != ACADEMY_VIDEOS:
+        if not path.startswith(ACADEMY_VIDEOS):
             write(dist / path.lstrip("/") / "index.html", shell(f"{title} | ICT Lab", subtitle or title, html,
                                                                   path, assets + extra))
         routes.append(path)
 
         if path == ROOT_URL:
             return
-        academy_path = path if path == ACADEMY_VIDEOS else "/academy/" + path.removeprefix(ROOT_URL)
+        academy_path = path if path.startswith(ACADEMY_VIDEOS) else "/academy/" + path.removeprefix(ROOT_URL)
         sections = [("/academy/" + key + "/", label) for key, label in VIEWS.items()]
         sections.append((ACADEMY_VIDEOS, "Video library"))
         links = []
@@ -345,16 +345,22 @@ def build_ict_lab(root, dist, shell, write, academy, json_script, source, crossw
                 + "".join(links) + '</nav>')
         academy_body = re.sub(r'((?:href|action)=")/ict-lab/(learn|playbooks|practice|podcasts|mentors)/',
                               r'\1/academy/\2/', body if academy_content is None else academy_content)
+        watch_jump = ""
+        for watch_heading in ('<h2 id="lesson-sources">Watch</h2>', '<h2>Watch</h2>'):
+            if watch_heading in academy_body:
+                academy_body = academy_body.replace(watch_heading, '<h2 id="lesson-sources">Watch</h2>', 1)
+                watch_jump = '<p class="ict-watch-jump">' + link("Jump to video links", "#lesson-sources") + '</p>'
+                break
         heading = page_intro("ICT Academy", title, subtitle)
-        layout = (heading + f'<section class="content-section ict-public" data-ict-view="{view}">'
-                  + menu + academy_body + '</section>')
+        layout = (heading + f'<section class="content-section ict-public ict-academy" data-ict-view="{view}">'
+                  + menu + watch_jump + academy_body + '</section>')
         write(dist / academy_path.lstrip("/") / "index.html",
               shell(f"{title} | ICT Academy", subtitle or title, layout, academy_path, assets + extra))
         if path == url("learn"):
             home_menu = menu.replace('href="/academy/learn/" aria-current="page"',
                                      'href="/academy/" aria-current="page"')
             intro = page_intro("Education library", "ICT Futures Academy", subtitle)
-            home = (intro + '<section class="content-section ict-public" data-ict-view="learn">'
+            home = (intro + '<section class="content-section ict-public ict-academy" data-ict-view="learn">'
                     + home_menu + academy_body + '</section>')
             write(dist / "academy/index.html",
                   shell("ICT Futures Academy | Futures Intelligence OS", subtitle, home, "/academy/", assets))
@@ -621,12 +627,40 @@ def build_ict_lab(root, dist, shell, write, academy, json_script, source, crossw
             watch_links.setdefault(video["url"], {"id": video_id, "label": video["title"],
                                                   "url": video["url"], "seconds": None})
 
+    refs_by_video = {video_id: [] for video_id in source["videos"]}
+    for ref in watch_links.values():
+        refs_by_video[ref["id"]].append(ref)
+    video_topics = {video_id: [] for video_id in refs_by_video}
+    for topic in (*concepts, *plays, *labs, *podcasts):
+        for video_id in {ref["id"] for ref in topic["sources"]}:
+            video_topics[video_id].append((topic["title"], topic.get("summary") or topic.get("definition") or ""))
+    source_classes = {"original ict": "original", "creator explanation": "creator", "independent supplement": "creator"}
+    video_cards = []
+    for video_id, refs in refs_by_video.items():
+        video = source["videos"][video_id]
+        title = video.get("publishedTitle") or video["title"]
+        topics = video_topics[video_id]
+        role = video.get("role") or "Source role unconfirmed"
+        metadata = " · ".join(filter(None, (video.get("uploader"), role)))
+        explanation = next((ref["explanation"] for ref in refs if ref.get("explanation")), "")
+        summary = explanation or next((desc for _, desc in topics if desc), "") or video.get("coverageNote") or metadata
+        video_path = ACADEMY_VIDEOS + video_id + "/"
+        video_cards.append(card(title, video_path, summary, video_id, source_classes.get(role.lower(), "other"),
+                                evidence=verification(video)))
+        context = '<p><strong>Related Academy topics</strong> ' + escape(", ".join(name for name, _ in topics)) + '</p>' if topics else ""
+        watch = ('<div class="ict-watch-panel"><h2>Watch</h2>'
+                 + '<p>' + link("Watch on YouTube", video["url"], True) + '</p>'
+                 + '<details><summary>Chapter links and source details</summary>' + resource_list(refs, source)
+                 + '</details></div>')
+        emit(video_path, "", title, '<article class="ict-reading"><p>' + escape(summary) + '</p>'
+             + context + watch + '</article>', metadata)
+
     emit(ACADEMY_VIDEOS, "", "ICT Academy video library",
          '<div class="ict-reading">' + resource_nav + original_sources
          + f'<h2 id="watch-library">Watch catalogue</h2><p>{len(source["videos"])} videos with {len(watch_links)} distinct watch links.</p>'
          + f'<p>{link("Podcast guide", url("podcasts"))} · {link("Mentor guide", url("mentors"))}</p>'
          + search_form(ACADEMY_VIDEOS)
-         + watch_filters + resource_list(list(watch_links.values()), source, searchable=True)
+         + watch_filters + '<div class="ict-grid ict-video-grid">' + "".join(video_cards) + '</div>'
          + '<h2 id="terminal-featured">Predecessor tutorial placements</h2>'
          + '<p>Compare each upload with the stated lesson rule. Playback and chapter fit are pending editorial review.</p>'
          + "".join(placement_sections)
