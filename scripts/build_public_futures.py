@@ -129,6 +129,7 @@ def social_discovery(markets, social, json_script):
 
 def search_page(markets, academy, catalog, nav_groups, json_script, crosswalk):
     groups = [*nav_groups, ("Quick links", [
+        ("ICT Academy video library", "/academy/videos/"),
         ("Public social discovery", "/sources/#social-discovery"),
         ("Daily futures brief", "/futures-intelligence/#daily-brief"),
         ("Academy and Lab crosswalk", "/academy/crosswalk/"),

@@ -275,7 +275,7 @@ if dist.exists():
     desk_page=(dist/'futures-intelligence/index.html').read_text(errors='ignore')
     ict_page=(dist/'ict-futures/index.html').read_text(errors='ignore')
     ok('Part 1 overview renders the shared shell, product destinations and core widget containers',
-       all(f'href="{path}"' in overview for path in ['/search/','/charts/','/ict-lab/','/ict-lab/practice/16/']) and
+       all(f'href="{path}"' in overview for path in ['/search/','/charts/','/academy/','/ict-lab/practice/16/']) and
        all(x in overview for x in ['overviewContract','overviewNewsList','overviewCotSummary','overviewClockET','overviewCalendarTitle','overviewHealthDetail']))
     ok('Part 1 wraps both standalone terminals in the shared shell',all('data-os-shell' in x and 'id="appSidebar"' in x and 'id="sidebarToggle"' in x for x in [desk_page,ict_page]))
     ok('Part 1 loads dashboard and shared shell assets once',overview.count('overview-dashboard.js')==1 and (dist/'assets/overview-dashboard.js').exists() and (dist/'assets/site-shell.js').exists())
