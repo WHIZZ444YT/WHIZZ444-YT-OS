@@ -409,8 +409,8 @@ test('official ICT series, Charter lectures and mentor channel profiles remain d
   assert.match(published(lab + 'learn/c45/index.html'), /TTrades Fractal Model/);
 });
 
-test('public evidence keeps all 31 Academy gaps distinct from verified mappings', () => {
-  const resources = published('academy/videos/index.html');
+test('archived evidence keeps all 31 Academy gaps distinct from verified mappings', () => {
+  const resources = published('ict-lab/video-evidence/index.html');
   assert.equal([...resources.matchAll(/id="gap-[a-z0-9-]+"/g)].length, 31);
   assert.match(resources, /51 of 82 Academy lessons have recorded mappings/);
   assert.match(resources, /id="gap-cbdr"[\s\S]*?Exact coverage open/);
@@ -425,7 +425,7 @@ test('public evidence keeps all 31 Academy gaps distinct from verified mappings'
 test('Academy video library covers every Lab video and preserves supplied watch variants', () => {
   const catalog = JSON.parse(readFileSync(new URL('../ict-lab/catalog.json', import.meta.url), 'utf8'));
   const library = published('academy/videos/index.html');
-  const watchSection = library.split('id="watch-library"')[1].split('id="academy-video-gaps"')[0];
+  const watchSection = library.split('id="watch-library"')[1].split('id="terminal-featured"')[0];
   const rendered = new Set([...watchSection.matchAll(/data-search="([^"]+)"/g)].map(match => match[1]));
   assert.deepEqual(rendered, new Set(Object.keys(catalog.videos)));
   for (const ref of catalog.library) assert.ok(watchSection.includes(ref.url.replaceAll('&', '&amp;')));
