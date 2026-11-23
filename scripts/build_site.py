@@ -457,7 +457,7 @@ def build():
     playbook_data=load(ROOT/'ict-futures/data/ict-playbook.json',{})
     crosswalk = IctCrosswalk(academy_data, catalog, playbook_data)
     build_academy(DIST, academy_data, SITE_URL, crosswalk)
-    lab_routes = build_ict_lab(ROOT, DIST, shell, write, academy, json_script, catalog, crosswalk, mdata)
+    lab_routes = build_ict_lab(ROOT, DIST, shell, write, academy, json_script, catalog, crosswalk, mdata, page_intro)
     write(DIST/'academy/crosswalk/index.html', shell(
         'Academy and Lab Crosswalk | Futures Intelligence OS',
         'Find shared definitions, distinct models and Academy media gaps.',
@@ -703,8 +703,16 @@ def build():
     body=page_intro('Education library','ICT Futures Academy',
         'A prerequisite-based futures learning library with 82 concept lessons, 9 preserved guided tutorials and 10 study tracks. Includes futures mechanics, ICT concept chains, contract-roll context, replay practice and explicit evidence limits.',
         f'<div class="stats-row"><b>{len(academy)}</b><span>Concept lessons</span><b>{len(tutorials)}</b><span>Guided tutorials</span><b>{len(tracks)}</b><span>Learning tracks</span></div>')
-    body+='<section class="content-section"><h2>Study and practice</h2><div class="card-grid">'+card('Video library', 'Search ICT lectures, podcast episodes, and mentor videos with source details.', '/academy/videos/', 'Watch')+card('Study paths', 'Work through curated ICT concepts and exercises.', '/ict-lab/learn/', 'Learn')+card('Practice labs', 'Apply the rules in replay, planning and review exercises.', '/ict-lab/practice/', 'Practice')+'</div></section>'
-    body+='<p><a class="text-link" href="/ict-lab/playbooks/">Browse ICT playbooks →</a></p>'
+    academy_sections = (
+        ('Study paths & concepts', 'Follow the Lab learning paths and explore 56 concepts in 10 modules.', '/academy/learn/', 'Learn'),
+        ('Playbooks', 'Compare entry, invalidation and review rules alongside the original lectures.', '/academy/playbooks/', 'Apply'),
+        ('Practice labs', 'Work through chart annotation, replay, planning, testing and journaling.', '/academy/practice/', 'Practice'),
+        ('Podcasts', 'Browse full episodes and clips by program, guest or topic.', '/academy/podcasts/', 'Listen'),
+        ('Mentors', 'Find creator profiles, suggested videos and related lessons.', '/academy/mentors/', 'Explore'),
+        ('Video library', 'Search ICT lectures, podcast episodes and mentor videos with source details.', '/academy/videos/', 'Watch'),
+    )
+    body+=('<section class="content-section"><h2>Study and practice</h2><div class="card-grid">'
+           + ''.join(card(*section) for section in academy_sections) + '</div></section>')
     body+='<section class="academy-progress-summary"><strong data-academy-global-progress>0 / 82 lessons completed</strong><span id="academyProgressMeta">Previous completions are retained when lesson content is revised; current-version completion requires the updated practice and checks.</span></section>'
     body+=f'<p class="small-note" role="status"><strong>VIDEO COVERAGE: {escape(video_coverage["status"])}</strong> · {video_coverage["coveredCount"]} of {video_coverage["eligibleCount"]} lessons have exact verified video mappings ({video_coverage["coveragePercent"]}%). <a href="/ict-futures/academy/video-coverage.json">View coverage register ↗</a></p>'
     body+='<section class="content-section"><div class="section-top"><div><h2>Guided practice tutorials</h2><p>Nine preserved workbooks with chart-replay workflows, deliverables and review criteria.</p></div><a class="text-link" href="/ict-futures/academy/tutorials/">Open all tutorials →</a></div><div class="academy-course-grid">'+''.join(tutorial_cards)+'</div></section>'

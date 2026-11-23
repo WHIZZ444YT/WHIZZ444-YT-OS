@@ -283,7 +283,7 @@ def playbook_page(item, catalog, crosswalk):
             f'{link("practice journal", url("practice", 16))}.</p></div>')
 
 
-def build_ict_lab(root, dist, shell, write, academy, json_script, source, crosswalk, markets):
+def build_ict_lab(root, dist, shell, write, academy, json_script, source, crosswalk, markets, page_intro):
     validate_sources(source)
     for row in source["concepts"] + source["playbooks"]:
         videos = {placement["id"] for placement in row["sources"]}
@@ -326,9 +326,32 @@ def build_ict_lab(root, dist, shell, write, academy, json_script, source, crossw
                 f'{breadcrumbs}<h1>{escape(title)}</h1>'
                 f'<p>{escape(subtitle)}</p></header>{tabs}'
                 f'{body}</section>')
-        write(dist / path.lstrip("/") / "index.html", shell(f"{title} | ICT Lab", subtitle or title, html,
-                                                              path, assets + extra))
+        if path != ACADEMY_VIDEOS:
+            write(dist / path.lstrip("/") / "index.html", shell(f"{title} | ICT Lab", subtitle or title, html,
+                                                                  path, assets + extra))
         routes.append(path)
+
+        if path == ROOT_URL:
+            return
+        academy_path = path if path == ACADEMY_VIDEOS else "/academy/" + path.removeprefix(ROOT_URL)
+        sections = [("/academy/" + key + "/", label) for key, label in VIEWS.items()]
+        sections.append((ACADEMY_VIDEOS, "Video library"))
+        links = []
+        for href, label in sections:
+            state = ' aria-current="page"' if academy_path == href else (
+                ' aria-current="location"' if academy_path.startswith(href) else "")
+            links.append(f'<a href="{href}"{state}>{escape(label)}</a>')
+        menu = ('<nav aria-label="ICT Academy sections" class="ict-tabs">'
+                + link("Academy overview", "/academy/") + "".join(links) + '</nav>')
+        academy_body = re.sub(r'((?:href|action)=")/ict-lab/(learn|playbooks|practice|podcasts|mentors)/',
+                              r'\1/academy/\2/', body)
+        heading = page_intro("ICT Academy", title, subtitle)
+        layout = (heading + f'<section class="content-section ict-public" data-ict-view="{view}">'
+                  + menu + academy_body + '</section>')
+        write(dist / academy_path.lstrip("/") / "index.html",
+              shell(f"{title} | ICT Academy", subtitle or title, layout, academy_path, assets + extra))
+        if academy_path not in routes:
+            routes.append(academy_path)
 
     full = sum(p["type"] == "Full episode" for p in podcasts)
     clips = sum(p["type"] == "Clip" for p in podcasts)
