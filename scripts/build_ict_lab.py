@@ -70,7 +70,7 @@ def timecode(seconds):
     return f"{hours}:{minutes:02d}:{secs:02d}" if hours else f"{minutes}:{secs:02d}"
 
 
-def resource_list(sources, catalog, limit=None, coverage=None, *, searchable=False):
+def resource_list(sources, catalog, limit=None, coverage=None):
     rendered, seen = [], set()
     for rank, source in enumerate(sources, 1):
         video = catalog["videos"][source["id"]]
@@ -95,19 +95,7 @@ def resource_list(sources, catalog, limit=None, coverage=None, *, searchable=Fal
                         + f'<small>{escape(meta)}</small>'
                         + '<details class="ict-video-evidence"><summary>Source details</summary>'
                         + items([escape(value) for value in evidence if value]) + '</details>')
-    if searchable:
-        labels = {
-            "original ict": "original",
-            "creator explanation": "creator",
-            "independent supplement": "creator",
-        }
-        return "<ul>" + "".join(
-            f'<li data-ict-item data-category="{labels.get(str(catalog["videos"][ref["id"]].get("role", "")).lower(), "other")}" '
-            f'data-evidence="{escape(verification(catalog["videos"][ref["id"]]), quote=True)}" '
-            f'data-search="{escape(ref["id"], quote=True)}">{body}</li>'
-            for ref, body in zip(sources, rendered)
-        ) + "</ul>"
-    return items(rendered)
+    return '<ul class="ict-source-cards">' + "".join(f"<li>{body}</li>" for body in rendered) + "</ul>"
 
 
 def filter_control(label, options):
@@ -413,10 +401,14 @@ def build_ict_lab(root, dist, shell, write, academy, json_script, source, crossw
                  f'{key} · Module {module["id"]:02} · {module["title"]}',
                  '<script type="module" src="/assets/ict-practice.mjs"></script>' if key == "C17" else "",
                  academy_content=concept_page(item, module, source, names, crosswalk, legacy=False))
+        preparation = [
+            lesson_link(key, f"{key} · {names[key]}") for key in prerequisites
+        ]
+        preparation.append(link(f"Related Practice {practice}", url("practice", practice)))
         rows.append(f'<section class="ict-group" data-ict-group><h2>{module["id"]:02} · {escape(module["title"])}</h2>'
-                    f'<p>{len(module["concepts"])} concepts. {escape(goal)}</p><p>Prerequisites · '
-                    + (" · ".join(lesson_link(key, f"{key} · {names[key]}") for key in prerequisites) if prerequisites else "Start here")
-                    + ' · ' + link(f"Related Practice {practice}", url("practice", practice)) + '</p>'
+                    f'<p>{len(module["concepts"])} concepts. {escape(goal)}</p>'
+                    '<nav class="ict-link-grid" aria-label="Prerequisites and related practice">'
+                    + "".join(preparation) + '</nav>'
                     + resource_list(module["sources"], source) + '<div class="ict-grid">' + "".join(cards) + "</div></section>")
     module_rows = list(rows)
     extension_slugs = set("bos choch cisd htf-fvg liquidity-run liquidity-void weekly-profiles mean-threshold ipda fpfvg opening-range-gap smt-fx-metals".split())
@@ -601,16 +593,19 @@ def build_ict_lab(root, dist, shell, write, academy, json_script, source, crossw
     original_sources = ('<h2 id="original-sources">Original ICT source library</h2>'
                         '<p>Browse creator lectures from ' + link("Michael J. Huddleston's ICT site", "https://theinnercircletrader.com/", True)
                         + '. The Lab curriculum is the site’s teaching sequence.</p>'
-                        + items([f'<p>{escape(note)}</p>{link(title, href, True)}' for title, note, href in OFFICIAL_SERIES])
-                        + '<p>' + link("Practice P01", detail("playbooks", "P01")) + ' · '
-                        + link("See 2022 predecessor placements", ACADEMY_VIDEOS + "#terminal-featured") + ' · '
-                        + link("Browse Charter Models 1-13", url("playbooks") + "#charter-lectures") + '</p>')
+                        + '<div class="ict-series-grid">' + "".join(
+                            f'<article class="ict-card ict-card-link"><h3>{link(title, href, True)}</h3>'
+                            f'<p>{escape(note)}</p><span class="ict-card-cta" aria-hidden="true">Open source →</span></article>'
+                            for title, note, href in OFFICIAL_SERIES) + '</div>'
+                        + '<div class="ict-link-grid">' + link("Practice P01", detail("playbooks", "P01"))
+                        + link("See 2022 predecessor placements", ACADEMY_VIDEOS + "#terminal-featured")
+                        + link("Browse Charter Models 1-13", url("playbooks") + "#charter-lectures") + '</div>')
     resource_links = (
         ("Original lectures", "#original-sources"), ("Watch catalogue and filters", "#watch-library"),
         ("Predecessor placements", "#terminal-featured"),
         ("Discovery", "#resource-discovery"),
     )
-    resource_nav = '<nav aria-label="Resource sections">' + items([link(label, href) for label, href in resource_links]) + '</nav>'
+    resource_nav = '<nav class="ict-link-grid" aria-label="Resource sections">' + "".join(link(label, href) for label, href in resource_links) + '</nav>'
     watch_filters = filter_control("Source class", (("original", "Original ICT"), ("creator", "Creator or independent"), ("other", "Other or unconfirmed")))
     watch_filters += ('<div data-ict-evidence-wrap hidden><label for="ict-evidence">Evidence status</label> '
                       '<select id="ict-evidence" data-ict-evidence><option value="">All</option>'

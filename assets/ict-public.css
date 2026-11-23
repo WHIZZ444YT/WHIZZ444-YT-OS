@@ -176,3 +176,55 @@
 @media (max-width: 640px) {
   .ict-entry-models .ict-grid {grid-template-columns: 1fr}
 }
+
+.ict-academy :is(.ict-link-grid, .ict-series-grid, .ict-path-steps, .ict-source-cards) {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 13rem), 1fr));
+  gap: .65rem;
+  padding: 0;
+  margin-block: .8rem 1rem;
+  list-style: none;
+}
+.ict-academy .ict-path-steps {counter-reset: academy-step}
+.ict-academy .ict-path-steps > li {counter-increment: academy-step}
+.ict-academy .ict-path-steps > li > a::before {
+  content: counter(academy-step, decimal-leading-zero);
+  color: var(--ict-card-accent);
+  font-variant-numeric: tabular-nums;
+  font-size: .78rem;
+  font-weight: 750;
+}
+.ict-academy :is(.ict-link-grid > a, .ict-path-steps > li > a, .ict-source-cards > li > a, .ict-lesson-outline > a) {
+  display: flex;
+  align-items: center;
+  gap: .65rem;
+  min-height: 44px;
+  padding: .55rem .75rem;
+  border: 1px solid var(--ict-card-border);
+  border-radius: 8px;
+  background: var(--ict-card-bg);
+  color: var(--ict-text);
+  font-weight: 650;
+  text-decoration: none;
+}
+.ict-academy :is(.ict-link-grid > a, .ict-path-steps > li > a, .ict-source-cards > li > a, .ict-lesson-outline > a)::after {
+  content: "→" / "";
+  margin-inline-start: auto;
+  color: var(--ict-card-accent);
+}
+.ict-academy .ict-source-cards > li > a[target="_blank"]::after {content: "↗" / ""}
+.ict-academy :is(.ict-link-grid > a, .ict-path-steps > li > a, .ict-source-cards > li > a, .ict-lesson-outline > a):hover {
+  border-color: var(--ict-card-accent);
+  text-decoration: none;
+}
+.ict-academy .ict-source-cards {grid-template-columns: repeat(auto-fit, minmax(min(100%, 17rem), 1fr))}
+.ict-academy .ict-source-cards > li {
+  margin: 0;
+  padding: .75rem;
+  border: 1px solid var(--ict-card-border);
+  border-radius: 12px;
+  background: var(--ict-card-bg);
+}
+.ict-academy .ict-source-cards > li > small {margin-block-start: .55rem}
+.ict-academy .ict-source-cards > li > a {background: var(--ict-surface); color: var(--ict-card-accent)}
+.ict-academy .ict-lesson-outline {display: flex; flex-wrap: wrap; align-items: center; gap: .4rem}

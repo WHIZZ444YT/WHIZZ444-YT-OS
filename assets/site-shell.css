@@ -565,3 +565,28 @@ body {font-size: var(--os-body-size)}
 }
 .os-main-column .sessions-live-state[data-tone="error"] {color: var(--os-negative)!important}
 .os-main-column .sessions-live-state[data-tone="warn"] {color: var(--os-warning)!important}
+
+/* Shared actions for navigation and source shelves. */
+.os-app-shell :is(.site-link-action, .source-notes > a, .os-context-links > a, .os-footer-links > a) {
+  display: inline-flex;
+  align-items: center;
+  gap: .55rem;
+  min-height: 44px;
+  padding: .45rem .7rem;
+  border: 1px solid var(--os-line-strong);
+  border-radius: 8px;
+  background: var(--os-surface);
+  color: var(--os-blue);
+  font-size: .84rem;
+  font-weight: 650;
+  text-decoration: none;
+  overflow-wrap: anywhere;
+}
+.os-app-shell :is(.site-link-action, .source-notes > a, .os-context-links > a, .os-footer-links > a):hover {
+  border-color: currentColor;
+  text-decoration: none;
+}
+.os-app-shell :is(.site-link-action, .source-notes > a, .os-context-links > a, .os-footer-links > a):focus-visible {
+  outline: 3px solid var(--os-focus);
+  outline-offset: 2px;
+}

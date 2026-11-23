@@ -362,7 +362,7 @@ test('Practice preserves journal evidence, before-retest decisions, and backtest
 });
 
 test('lesson and playbook contracts are visible without running scripts', () => {
-  assert.match(published('ict-lab/learn/index.html'), /Prerequisites · [\s\S]*Related Practice 11/);
+  assert.match(published('ict-lab/learn/index.html'), /aria-label="Prerequisites and related practice"[\s\S]*Related Practice 11/);
   const c34 = published('ict-lab/learn/c34/index.html');
   for (const period of ['DAY','WEEK','MONTH']) assert.match(c34, new RegExp('EDU-OPEN-01-' + period));
   assert.match(c34, /Friday to Monday/);
