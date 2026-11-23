@@ -24,7 +24,6 @@ PUBLIC_DOCS = {
 NAV_ITEMS = [
     ('Overview', '/'),
     ('Search', '/search/'),
-    ('ICT Lab', '/ict-lab/'),
     ('Markets', '/markets/'),
     ('Charts', '/charts/'),
     ('Macro', '/macro/'),
@@ -45,7 +44,7 @@ NAV_ITEMS = [
 
 NAV_GROUPS = [
     ('WORKSPACE', ['Overview', 'Search']),
-    ('LEARN', ['ICT Lab', 'ICT Academy', 'Entry Models']),
+    ('LEARN', ['ICT Academy', 'Entry Models']),
     ('MARKETS', ['Futures Markets', 'Markets', 'Charts', 'Contract Specs & Expiry']),
     ('RESEARCH', ['Futures News', 'Macro', 'COT & Positioning', 'Volume & Open Interest', 'Data Health & Sources']),
     ('TOOLS', ['Sessions & Calendar', 'Strategy Lab', 'Risk & Prop Firms', 'Journal practice']),
@@ -70,8 +69,8 @@ AREA_LABELS = {
 }
 
 def current_area(path):
-    if path.startswith('/ict-lab/'):
-        return 'ICT Lab'
+    if path.startswith('/academy/') or (path.startswith('/ict-lab/') and path != '/ict-lab/practice/16/'):
+        return 'ICT Academy'
     if path == '/charts/':
         return 'Futures Charts'
     active = AREA_ALIASES.get(path, path)
@@ -82,7 +81,9 @@ def current_area(path):
 
 def nav_markup(current='/'):
     active = AREA_ALIASES.get(current, current)
-    if current.startswith('/academy/'):
+    if current.startswith(('/academy/', '/ict-futures/academy/')) or (
+        current.startswith('/ict-lab/') and current != '/ict-lab/practice/16/'
+    ):
         active = '/academy/'
     links = {label: href for label, href in NAV_ITEMS}
     groups = []
@@ -90,12 +91,10 @@ def nav_markup(current='/'):
         items = []
         for label in labels:
             href = links[label]
-            is_active = active == href or (
-                href == '/ict-lab/' and active.startswith(href) and active != '/ict-lab/practice/16/'
-            )
+            is_active = active == href
             visible_label = NAV_DISPLAY.get(label, label)
             symbol = {
-                'Search':'SE','ICT Lab':'IL','Markets':'MK','Charts':'CH','Macro':'MA','Journal practice':'JP',
+                'Search':'SE','Markets':'MK','Charts':'CH','Macro':'MA','Journal practice':'JP',
                 'Overview':'OV','Futures Markets':'FD','ICT Academy':'AC','Entry Models':'EM',
                 'Sessions & Calendar':'SC','Futures News':'NW','Volume & Open Interest':'OI',
                 'COT & Positioning':'CT','Contract Specs & Expiry':'SP','Strategy Lab':'SL',
@@ -704,7 +703,8 @@ def build():
     body=page_intro('Education library','ICT Futures Academy',
         'A prerequisite-based futures learning library with 82 concept lessons, 9 preserved guided tutorials and 10 study tracks. Includes futures mechanics, ICT concept chains, contract-roll context, replay practice and explicit evidence limits.',
         f'<div class="stats-row"><b>{len(academy)}</b><span>Concept lessons</span><b>{len(tutorials)}</b><span>Guided tutorials</span><b>{len(tracks)}</b><span>Learning tracks</span></div>')
-    body+='<p><a class="text-link" href="/ict-lab/">Open ICT Lab lessons and practice →</a></p>'
+    body+='<section class="content-section"><h2>Study and practice</h2><div class="card-grid">'+card('Video library', 'Search ICT lectures, podcast episodes, and mentor videos with source details.', '/academy/videos/', 'Watch')+card('Study paths', 'Work through curated ICT concepts and exercises.', '/ict-lab/learn/', 'Learn')+card('Practice labs', 'Apply the rules in replay, planning and review exercises.', '/ict-lab/practice/', 'Practice')+'</div></section>'
+    body+='<p><a class="text-link" href="/ict-lab/playbooks/">Browse ICT playbooks →</a></p>'
     body+='<section class="academy-progress-summary"><strong data-academy-global-progress>0 / 82 lessons completed</strong><span id="academyProgressMeta">Previous completions are retained when lesson content is revised; current-version completion requires the updated practice and checks.</span></section>'
     body+=f'<p class="small-note" role="status"><strong>VIDEO COVERAGE: {escape(video_coverage["status"])}</strong> · {video_coverage["coveredCount"]} of {video_coverage["eligibleCount"]} lessons have exact verified video mappings ({video_coverage["coveragePercent"]}%). <a href="/ict-futures/academy/video-coverage.json">View coverage register ↗</a></p>'
     body+='<section class="content-section"><div class="section-top"><div><h2>Guided practice tutorials</h2><p>Nine preserved workbooks with chart-replay workflows, deliverables and review criteria.</p></div><a class="text-link" href="/ict-futures/academy/tutorials/">Open all tutorials →</a></div><div class="academy-course-grid">'+''.join(tutorial_cards)+'</div></section>'

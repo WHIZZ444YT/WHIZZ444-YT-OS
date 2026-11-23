@@ -13,6 +13,7 @@ from ict_specs import KNOWABLE, MODULES, PLAYBOOK_CONTEXT
 
 
 ROOT_URL = "/ict-lab/"
+ACADEMY_VIDEOS = "/academy/videos/"
 VIEWS = {"learn": "Learn", "playbooks": "Playbooks", "practice": "Practice",
          "podcasts": "Podcasts", "mentors": "Mentors"}
 
@@ -182,7 +183,7 @@ def concept_fixture(item):
 
 def featured_index_link(key):
     if any(key in placements for placements in TERMINAL_PLACEMENTS.values()):
-        return f'<p>{link("See all predecessor sources for this lesson", ROOT_URL + "resources/#placement-" + key.lower())}</p>'
+        return f'<p>{link("See all predecessor sources for this lesson", ACADEMY_VIDEOS + "#placement-" + key.lower())}</p>'
     return ""
 
 
@@ -317,7 +318,7 @@ def build_ict_lab(root, dist, shell, write, academy, json_script, source, crossw
                 current = f' aria-current="{state}"' if key == view else ""
                 links.append(f'<a href="{url(key)}"{current}>{escape(label)}</a>')
             tabs = '<nav class="ict-tabs" aria-label="ICT Lab sections">' + "".join(links) + '</nav>'
-            crumbs = link("ICT Lab", ROOT_URL)
+            crumbs = link("ICT Academy", "/academy/")
             if view and path != url(view):
                 crumbs += ' <span aria-hidden="true">/</span> ' + link(VIEWS[view], url(view))
             breadcrumbs = f'<nav class="ict-breadcrumbs" aria-label="Breadcrumb">{crumbs}</nav>'
@@ -349,7 +350,7 @@ def build_ict_lab(root, dist, shell, write, academy, json_script, source, crossw
                   ("practice", f"{len(labs)} labs for rehearsal and review"),
                   ("podcasts", f"{full} full episodes and {clips} clips"),
                   ("mentors", f"{len(mentors)} YouTube channels")]
-    emit(ROOT_URL, "", "Study futures with ICT Lab", '<div class="ict-grid">'
+    emit(ROOT_URL, "", "ICT Academy study and practice", '<div class="ict-grid">'
          + "".join(card(VIEWS[k], url(k), description) for k, description in home_cards) + "</div>"
          + f'<script type="application/json" id="ict-legacy-details">{json_script(legacy_details)}</script>',
          "Learn the concepts, compare playbooks, and test your decisions on clearly labeled practice samples.")
@@ -380,16 +381,16 @@ def build_ict_lab(root, dist, shell, write, academy, json_script, source, crossw
     extensions = [card(c.get("name", c["id"]), f'/ict-futures/academy/{c["id"]}.html', c.get("definition", ""),
                        c["id"], "extension") for c in academy if c.get("id") in extension_slugs]
     rows.append('<section class="ict-group" data-ict-group><h2>Academy extensions</h2>'
-                '<p><a href="/academy/crosswalk/">See shared lessons and source coverage</a> · <a href="/ict-lab/resources/#academy-video-gaps">Review exact video gaps</a></p><div class="ict-grid">'
+                '<p><a href="/academy/crosswalk/">See shared lessons and source coverage</a> · <a href="/academy/videos/#academy-video-gaps">Review exact video gaps</a></p><div class="ict-grid">'
                 + "".join(extensions) + "</div></section>")
     original_cards = [
-        card(title, ROOT_URL + "resources/#original-sources", note, "official original ICT " + title, "original")
+        card(title, ACADEMY_VIDEOS + "#original-sources", note, "official original ICT " + title, "original")
         for title, note, _ in OFFICIAL_SERIES
     ]
     rows.append('<section class="ict-group" data-ict-group><h2>Original ICT lectures</h2>'
                 '<div class="ict-grid">' + "".join(original_cards) + '</div>'
                 + resource_list(source["featured"], source)
-                + f'<p>{link("Browse the complete resource index", ROOT_URL + "resources/")}</p></section>')
+                + f'<p>{link("Browse the complete resource index", ACADEMY_VIDEOS + "")}</p></section>')
     learn_filters = filter_control("Learning resources", (
         ("concept", "All concepts"), ("extension", "Academy extensions"), ("original", "Original ICT sources")))
     emit(url("learn"), "learn", "Learn ICT", paths + search_form(url("learn")) + learn_filters + "".join(rows),
@@ -549,7 +550,7 @@ def build_ict_lab(root, dist, shell, write, academy, json_script, source, crossw
                         + '. The Lab curriculum is the site’s teaching sequence.</p>'
                         + items([f'<p>{escape(note)}</p>{link(title, href, True)}' for title, note, href in OFFICIAL_SERIES])
                         + '<p>' + link("Practice P01", detail("playbooks", "P01")) + ' · '
-                        + link("See 2022 predecessor placements", ROOT_URL + "resources/#terminal-featured") + ' · '
+                        + link("See 2022 predecessor placements", ACADEMY_VIDEOS + "#terminal-featured") + ' · '
                         + link("Browse Charter Models 1-13", url("playbooks") + "#charter-lectures") + '</p>'
                         + '<p>Compare session and first-gap rules in the Academy lessons on '
                         + link("opening range gaps", "/ict-futures/academy/opening-range-gap.html") + ' and '
@@ -564,10 +565,31 @@ def build_ict_lab(root, dist, shell, write, academy, json_script, source, crossw
     watch_filters += ('<div data-ict-evidence-wrap hidden><label for="ict-evidence">Evidence status</label> '
                       '<select id="ict-evidence" data-ict-evidence><option value="">All</option>'
                       '<option value="metadata-observed">Metadata observed</option><option value="unconfirmed">Unconfirmed</option></select></div>')
-    emit(ROOT_URL + "resources/", "learn", "ICT resource index",
+    def placements(node):
+        if isinstance(node, dict):
+            if node.get("id") in source["videos"] and {"seconds", "label", "url"} <= node.keys():
+                yield node
+            for value in node.values():
+                yield from placements(value)
+        elif isinstance(node, list):
+            for value in node:
+                yield from placements(value)
+
+    watch_links = {ref["url"]: ref for ref in source["library"]}
+    for ref in placements({key: value for key, value in source.items() if key != "videos"}):
+        watch_links.setdefault(ref["url"], ref)
+    included = {ref["id"] for ref in watch_links.values()}
+    for video_id, video in source["videos"].items():
+        if video_id not in included:
+            watch_links.setdefault(video["url"], {"id": video_id, "label": video["title"],
+                                                  "url": video["url"], "seconds": None})
+
+    emit(ACADEMY_VIDEOS, "", "ICT Academy video library",
          '<div class="ict-reading">' + resource_nav + original_sources
-         + '<h2 id="watch-library">Supplied watch links</h2>' + search_form(ROOT_URL + "resources/")
-         + watch_filters + resource_list(source["library"], source, searchable=True)
+         + f'<h2 id="watch-library">Watch catalogue</h2><p>{len(source["videos"])} videos with {len(watch_links)} distinct watch links.</p>'
+         + f'<p>{link("Podcast guide", url("podcasts"))} · {link("Mentor guide", url("mentors"))}</p>'
+         + search_form(ACADEMY_VIDEOS)
+         + watch_filters + resource_list(list(watch_links.values()), source, searchable=True)
          + gap_register(root, crosswalk, source, link)
          + '<h2 id="terminal-featured">Predecessor tutorial placements</h2>'
          + '<p>Compare each upload with the stated lesson rule. Playback and chapter fit are pending editorial review.</p>'
@@ -577,5 +599,13 @@ def build_ict_lab(root, dist, shell, write, academy, json_script, source, crossw
              for row in source["academySources"])
          + '<h2 id="resource-discovery">Discovery shortcuts</h2><p>Use publisher links and topic searches to find candidates. Playback and chapter coverage need a separate review.</p>'
          + '<details><summary>Browse channels, playlists and Academy searches</summary>' + items(discovery) + '</details></div>',
-         "Resources retain their original time offsets. Playback and embedding can vary.")
+         "Browse the combined ICT video catalog. Original time offsets and source evidence are preserved.")
+    target = escape(ACADEMY_VIDEOS, quote=True)
+    write(dist / "ict-lab/resources/index.html",
+          '<!doctype html><html lang="en"><head><meta charset="utf-8">'
+          '<meta name="robots" content="noindex,follow"><title>ICT Academy video library</title>'
+          f'<link rel="canonical" href="{target}"></head><body>'
+          f'<p>The video library is now in ICT Academy. <a href="{target}">Open the video library</a>.</p>'
+          f'<script>location.replace({json_script(ACADEMY_VIDEOS)} + location.search + location.hash);</script>'
+          '</body></html>')
     return routes

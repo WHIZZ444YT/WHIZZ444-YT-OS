@@ -381,7 +381,7 @@ test('editorial paths, practice destinations and predecessor placements are publ
   for (const path of ['First ICT workflow', 'Active NQ/ES learner', 'Contract foundations', 'Practice review']) {
     assert.ok(learn.includes(path), path);
   }
-  const resources = published(lab + 'resources/index.html');
+  const resources = published('academy/videos/index.html');
   for (const id of ['c14', 'c08', 'c16', 'c09', 'p01', 'c21', 'liquidity-sweep-mss-model']) {
     assert.ok(resources.includes('id="placement-' + id + '"'), id);
   }
@@ -393,7 +393,7 @@ test('editorial paths, practice destinations and predecessor placements are publ
 });
 
 test('official ICT series, Charter lectures and mentor channel profiles remain distinct', () => {
-  const sources = published(lab + 'resources/index.html');
+  const sources = published('academy/videos/index.html');
   for (const title of ['2016 Core Mentorship', '2022 Mentorship', '2023 time macros', '2024 mentorship',
     '2025 opening range', '2026 tape-reading']) assert.ok(sources.includes(title), title);
   const playbooks = published(lab + 'playbooks/index.html');
@@ -410,7 +410,7 @@ test('official ICT series, Charter lectures and mentor channel profiles remain d
 });
 
 test('public evidence keeps all 31 Academy gaps distinct from verified mappings', () => {
-  const resources = published(lab + 'resources/index.html');
+  const resources = published('academy/videos/index.html');
   assert.equal([...resources.matchAll(/id="gap-[a-z0-9-]+"/g)].length, 31);
   assert.match(resources, /51 of 82 Academy lessons have recorded mappings/);
   assert.match(resources, /id="gap-cbdr"[\s\S]*?Exact coverage open/);
@@ -420,4 +420,15 @@ test('public evidence keeps all 31 Academy gaps distinct from verified mappings'
   assert.match(learn, /<option value="original">Original ICT sources/);
   assert.match(published(lab + 'playbooks/index.html'), /<option value="academy">Academy model variants/);
   assert.match(published(lab + 'mentors/m06/index.html'), /Matching lessons/);
+});
+
+test('Academy video library covers every Lab video and preserves supplied watch variants', () => {
+  const catalog = JSON.parse(readFileSync(new URL('../ict-lab/catalog.json', import.meta.url), 'utf8'));
+  const library = published('academy/videos/index.html');
+  const watchSection = library.split('id="watch-library"')[1].split('id="academy-video-gaps"')[0];
+  const rendered = new Set([...watchSection.matchAll(/data-search="([^"]+)"/g)].map(match => match[1]));
+  assert.deepEqual(rendered, new Set(Object.keys(catalog.videos)));
+  for (const ref of catalog.library) assert.ok(watchSection.includes(ref.url.replaceAll('&', '&amp;')));
+  assert.match(published('academy/index.html'), /href="\/academy\/videos\/"/);
+  assert.match(published(lab + 'resources/index.html'), /location.search \+ location.hash/);
 });

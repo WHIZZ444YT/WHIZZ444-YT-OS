@@ -187,7 +187,7 @@ try {
   assert.equal(await page.getByRole('link', { name: 'Practice next' }).count(), 1);
   await page.goBack();
   await page.getByRole('link', { name: 'Browse the complete resource index' }).click();
-  await page.waitForURL(site + '/ict-lab/resources/');
+  await page.waitForURL(site + '/academy/videos/');
   assert.ok(await page.getByRole('heading', { name: 'Predecessor tutorial placements' }).isVisible());
   await page.goBack();
   const labSearch = page.locator('[data-ict-search]');
@@ -223,7 +223,7 @@ try {
   await page.goto(site + '/ict-lab/playbooks/?format=academy');
   assert.ok(await page.getByRole('heading', { name: 'Academy model variants' }).isVisible());
   assert.equal(await page.locator('#charter-lectures').isVisible(), false);
-  await page.goto(site + '/ict-lab/resources/#academy-video-gaps');
+  await page.goto(site + '/academy/videos/#academy-video-gaps');
   assert.equal(await page.locator('#academy-video-gaps article').count(), 31);
   await page.goto(site + '/ict-lab/mentors/m06/');
   const channel = page.getByRole('link', { name: 'Visit YouTube channel' });
@@ -277,7 +277,7 @@ try {
   }, null, 2) + '\n');
   console.log('Mobile lab metrics:', JSON.stringify(labResults));
   await perf.close();
-  await page.goto(site + '/ict-lab/resources/#watch-library');
+  await page.goto(site + '/academy/videos/#watch-library');
   const resourceClass = page.getByLabel('Source class');
   const evidenceStatus = page.getByLabel('Evidence status');
   await resourceClass.selectOption('original');
@@ -290,9 +290,11 @@ try {
   assert.equal(await evidenceStatus.inputValue(), 'metadata-observed');
   await page.goBack();
   assert.equal(await evidenceStatus.inputValue(), '');
-  await staticPage.goto(site + '/ict-lab/resources/');
+  await staticPage.goto(site + '/academy/videos/');
   assert.ok(await staticPage.getByRole('navigation', { name: 'Resource sections' }).isVisible());
-  assert.equal(await staticPage.locator('[data-ict-item]').count(), 100);
+  assert.ok(await staticPage.locator('[data-ict-item]').count() >= 127);
+  await page.goto(site + '/ict-lab/resources/?q=opening#watch-library');
+  await page.waitForURL(site + '/academy/videos/?q=opening#watch-library');
   await page.goto(site + '/ict-lab/practice/');
   assert.match(await page.locator('[data-ict-practice-progress]').innerText(), /this browser/);
   for (const path of ['/ict-lab/learn/c17/', '/ict-lab/learn/c45/', '/ict-lab/playbooks/p01/']) {
