@@ -13,6 +13,13 @@
     }
   }
 
+  function syncComparison() {
+    for (const option of comparison.options) {
+      option.disabled = option.value !== '' && option.value === market.value;
+    }
+    if (comparison.value === market.value) comparison.value = '';
+  }
+
   function update(mount = false) {
     const selected = [market, comparison];
     slots.forEach((slot, i) => {
@@ -54,9 +61,13 @@
       : 'Direct chart links are ready. Load previews to connect to TradingView.';
   }
   form.addEventListener('change', () => {
+    syncComparison();
     const next = new URL(location.href);
-    next.search = new URLSearchParams(new FormData(form));
-    history.pushState(null, '', next);
+    for (const field of [market, comparison, interval]) {
+      if (field.value) next.searchParams.set(field.name, field.value);
+      else next.searchParams.delete(field.name);
+    }
+    if (next.href !== location.href) history.pushState(null, '', next);
     update();
   });
   form.addEventListener('submit', event => {
@@ -65,9 +76,11 @@
   });
   addEventListener('popstate', () => {
     applySelection(new URLSearchParams(location.search));
+    syncComparison();
     update();
   });
   applySelection(params);
+  syncComparison();
   form.inert = false;
   update();
 })();
