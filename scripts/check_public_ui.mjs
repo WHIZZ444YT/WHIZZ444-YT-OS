@@ -144,6 +144,25 @@ try {
   assert.equal(await directory.getByRole('link', { name: 'Futures Desk', exact: true }).getAttribute('href'), '/futures-intelligence/');
   assert.equal(await directory.getByRole('link', { name: 'Markets', exact: true }).getAttribute('href'), '/markets/');
 
+  await page.goto(site + '/academy/');
+  for (const section of ['learn', 'playbooks', 'practice', 'podcasts', 'mentors', 'videos']) {
+    const path = '/academy/' + section + '/';
+    const entry = page.locator('main a[href="' + path + '"]');
+    assert.equal(await entry.count(), 1);
+    await entry.click();
+    assert.equal(new URL(page.url()).pathname, path);
+    assert.ok(await page.locator('main .page-hero h1').isVisible());
+    assert.equal(await page.getByRole('navigation', { name: 'ICT Academy sections' })
+      .locator('[aria-current="page"]').getAttribute('href'), path);
+    await page.goBack();
+  }
+  await page.goto(site + '/academy/learn/');
+  await page.locator('main a[href="/academy/learn/c17/"]').first().click();
+  await page.getByRole('button', { name: 'Save decision and reveal chart' }).waitFor();
+  assert.equal(await page.locator('[data-ifvg-worked]').isVisible(), false);
+  assert.equal(await page.getByRole('navigation', { name: 'ICT Academy sections' })
+    .locator('[aria-current="location"]').getAttribute('href'), '/academy/learn/');
+
   await page.goto(site + '/ict-lab/');
   const labViews = ['learn', 'playbooks', 'practice', 'podcasts', 'mentors'];
   for (const view of labViews) {
