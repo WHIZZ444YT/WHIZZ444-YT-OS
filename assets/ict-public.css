@@ -86,3 +86,20 @@
   color: var(--ict-text);
   border-color: var(--ict-line);
 }
+
+/* Keep the Academy watch catalogue scannable at desktop and phone widths. */
+.ict-reading:has(> #watch-library) {max-width: none}
+.ict-reading:has(> #watch-library) > ul:has(> [data-ict-item]) {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 17rem), 1fr));
+  gap: .8rem;
+  padding: 0;
+  list-style: none;
+}
+.ict-reading:has(> #watch-library) > ul > [data-ict-item] {
+  margin: 0;
+  padding: 1rem;
+  border: 1px solid var(--ict-line);
+  border-radius: 12px;
+  background: var(--ict-surface);
+}

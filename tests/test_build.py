@@ -455,8 +455,8 @@ class BuildTests(unittest.TestCase):
         self.assertIn('VERIFIED LESSON VIDEO',(ROOT/'dist/ict-futures/academy/market-structure.html').read_text(encoding="utf-8"))
         self.assertIn('VIDEO NEEDED',(ROOT/'dist/ict-futures/academy/ifvg-reversal-model.html').read_text(encoding="utf-8"))
         academy=(ROOT/'dist/academy/index.html').read_text(encoding="utf-8")
-        self.assertIn('VIDEO COVERAGE: PARTIAL',academy)
-        self.assertIn('/assets/academy-learning.css',academy)
+        self.assertIn('/academy/videos/',academy)
+        self.assertNotIn('VIDEO COVERAGE: PARTIAL',academy)
 
     def test_part2_new_independent_video_mappings_keep_exact_scopes_and_segments(self):
         data=json.loads((ROOT/'ict-futures/data/ict-academy.json').read_text(encoding='utf-8'))

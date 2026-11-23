@@ -145,9 +145,12 @@ try {
   assert.equal(await directory.getByRole('link', { name: 'Markets', exact: true }).getAttribute('href'), '/markets/');
 
   await page.goto(site + '/academy/');
-  for (const section of ['learn', 'playbooks', 'practice', 'podcasts', 'mentors', 'videos']) {
+  assert.ok(await page.locator('main a[href="/academy/learn/c17/"]').first().isVisible());
+  assert.equal(await page.locator('main .academy-progress-summary, main .academy-tutorial-card').count(), 0);
+  assert.equal(await page.locator('main a[href^="/ict-futures/academy/"]').count(), 0);
+  for (const section of ['playbooks', 'practice', 'podcasts', 'mentors', 'videos']) {
     const path = '/academy/' + section + '/';
-    const entry = page.locator('main a[href="' + path + '"]');
+    const entry = page.getByRole('navigation', { name: 'ICT Academy sections' }).locator('a[href="' + path + '"]');
     assert.equal(await entry.count(), 1);
     await entry.click();
     assert.equal(new URL(page.url()).pathname, path);
@@ -174,24 +177,6 @@ try {
     assert.equal(await page.getByRole('navigation', { name: 'ICT Lab sections' })
       .locator('[aria-current="page"]').getAttribute('href'), destination);
     await page.goBack();
-  }
-
-  for (const theme of ['dark', 'light']) {
-    await page.evaluate(value => localStorage.setItem('fios.theme.preference.v1', value), theme);
-    await page.goto(site + '/academy/');
-    const tutorial = page.locator('.academy-tutorial-card').first();
-    const contrast = await tutorial.evaluate(card => {
-      const luminance = color => color.match(/\d+/g).slice(0, 3).map(Number)
-        .map(channel => channel / 255)
-        .map(channel => channel <= 0.04045 ? channel / 12.92 : ((channel + 0.055) / 1.055) ** 2.4)
-        .reduce((sum, channel, index) => sum + channel * [0.2126, 0.7152, 0.0722][index], 0);
-      const background = luminance(getComputedStyle(card).backgroundColor);
-      return [...card.querySelectorAll('h3, a')].map(text => {
-        const foreground = luminance(getComputedStyle(text).color);
-        return (Math.max(background, foreground) + 0.05) / (Math.min(background, foreground) + 0.05);
-      });
-    });
-    assert.ok(contrast.every(ratio => ratio >= 4.5), theme + ' Academy tutorial contrast: ' + contrast);
   }
 
   await page.goto(site + '/ict-lab/?view=learn&id=C34&q=weekly+open');
@@ -242,7 +227,7 @@ try {
   await page.goto(site + '/ict-lab/playbooks/?format=academy');
   assert.ok(await page.getByRole('heading', { name: 'Academy model variants' }).isVisible());
   assert.equal(await page.locator('#charter-lectures').isVisible(), false);
-  await page.goto(site + '/academy/videos/#academy-video-gaps');
+  await page.goto(site + '/ict-lab/video-evidence/#academy-video-gaps');
   assert.equal(await page.locator('#academy-video-gaps article').count(), 31);
   await page.goto(site + '/ict-lab/mentors/m06/');
   const channel = page.getByRole('link', { name: 'Visit YouTube channel' });

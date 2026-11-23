@@ -18,20 +18,20 @@ TERMINAL_PLACEMENTS = {
 
 
 def learning_paths(link, lesson, practice, concepts):
-    academy = "/ict-futures/academy/"
+
     paths = (
         ("First ICT workflow", (
-            lesson("C01", "Liquidity"), link("Market structure", academy + "market-structure.html"),
+            lesson("C01", "Liquidity"), lesson("C08", "Market structure shift"),
             lesson("C16", "Fair value gaps"), lesson("P01", "ICT 2022 playbook"),
             link("Blind replay", practice(13)), link("Journal", practice(16)))),
         ("Active NQ/ES learner", (
             lesson("C37", "Daily bias"), lesson("C41", "Bullish SMT"), lesson("C42", "Bearish SMT"),
             lesson("C45", "Lower-timeframe confirmation"), link("Futures risk", practice(15)))),
         ("Contract foundations", (
-            link("Listed futures", academy + "listed-futures-market-basics.html"),
-            link("Expiry and roll", academy + "futures-expiry-first-notice-and-roll.html"),
-            link("Continuous charts", academy + "continuous-contract-mapping.html"),
-            link("Tick math", academy + "contract-specs-and-tick-math.html"),
+            link("Listed futures", "/markets/"),
+            link("Expiry and roll", "/contract-specs/"),
+            link("Continuous charts", "/charts/"),
+            link("Tick math", practice(15)),
             link("Sessions and holiday schedules", "/sessions/"),
             link("Session planner", practice(12)), link("Position sizing", practice(15)))),
         ("Practice review", (

@@ -195,9 +195,9 @@ def creator_references(key, catalog):
     return '<details><summary>Creator study references</summary>' + scope + resource_list(refs, catalog) + '</details>'
 
 
-def concept_page(item, module, catalog, names, crosswalk):
+def concept_page(item, module, catalog, names, crosswalk, *, legacy=True):
     key = item["id"]
-    links = crosswalk.academy_links(item["academy"])
+    links = crosswalk.academy_links(item["academy"]) if legacy else []
     adjacent = [lesson_link(other, f"{other} · {names[other]}") for other in module["concepts"] if other != key][:3]
     if key == "C17":
         adjacent = [lesson_link("C16", "C16 · Fair value gap"), lesson_link("C09", "C09 · Displacement"),
@@ -208,7 +208,7 @@ def concept_page(item, module, catalog, names, crosswalk):
         "C55": "The linked source teaches its own structural anchors and projections. The midnight formula here is a separately labeled Lab rule.",
         "C56": "Compare the two reference opens on the same New York date. Identify the intended bar before applying the rule in an exercise.",
     }
-    shared_steps = crosswalk.shared_steps(item)
+    shared_steps = crosswalk.shared_steps(item) if legacy else []
     shared = '<h3>From the Academy lesson</h3>' + items([escape(step) for step in shared_steps]) if shared_steps else ""
     diagrams = concept_diagrams(key)
     if key == "C17":
@@ -224,14 +224,14 @@ def concept_page(item, module, catalog, names, crosswalk):
               'and 19:00 IST on 2026-01-06. Use the date-aware '
               + link("Session & Bias Planner", url("practice", 12)) + ' for a different date.</p>'
               if module["id"] == 6 else "")
-    return (f'<div class="ict-reading">{scope}<p>{escape(crosswalk.definition(item))}</p>'
+    return (f'<div class="ict-reading">{scope}<p>{escape(crosswalk.definition(item) if legacy else item["definition"])}</p>'
             f'<p class="ict-muted">{escape(item["aliases"] or "No additional alias recorded")}</p>'
             f'<nav class="ict-lesson-outline" aria-label="Lesson contents">{link("Rule", "#lesson-rule")} · '
             f'{link("Examples", "#lesson-examples")} · {link("Practice", "#lesson-practice")} · {link("Sources", "#lesson-sources")}</nav>'
             f'<h2 id="lesson-rule">What to mark</h2><p>{escape(item["rule"])}</p>' 
             f'<p class="ict-muted">Lab Rule · {escape(key)} v1</p><h3>When the label becomes knowable</h3>'
             f'<p>{escape(KNOWABLE.get(key, "Wait until the observable evidence in the rule is complete. Any condition that requires a close becomes knowable after that bar closes."))}</p>'
-            f'{shared}{crosswalk.teaching(key)}'
+            f'{shared}{crosswalk.teaching(key) if legacy else ""}'
             f'<h2 id="lesson-examples">Compare the examples</h2><dl class="ict-scenarios"><dt>Valid</dt><dd>{escape(item["example"])}</dd>'
             f'<dt>Invalid look-alike</dt><dd>{escape(item["lookalike"])}</dd></dl>'
             f'<p class="ict-muted">{escape(notes.get(key, "The examples are written teaching scenarios."))}</p>'
@@ -241,18 +241,18 @@ def concept_page(item, module, catalog, names, crosswalk):
             'Identify which observable condition the look-alike misses.</p></details>'
             f'<p>{link("Practice next", url("practice", MODULES[module["id"]][2]))}</p>'
             f'<h2 id="lesson-sources">Watch</h2>{resource_list(featured_for(key, catalog, item["sources"]), catalog, 3, notes.get(key))}'
-            f'{crosswalk.media(key, item["sources"])}{featured_index_link(key)}{creator_references(key, catalog)}'
+            f'{crosswalk.media(key, item["sources"]) if legacy else ""}{featured_index_link(key)}{creator_references(key, catalog)}'
             f'<h2>Continue learning</h2>{items([*adjacent, *links])}</div>')
 
 
-def playbook_page(item, catalog, crosswalk):
+def playbook_page(item, catalog, crosswalk, *, legacy=True):
     rule_labels = ["Prerequisites", "Entry trigger", "Stop and invalidation", "Target", "Skip conditions", "Expiration"]
     examples = ["Valid", "Invalid", "No trade"]
     blocks = "".join(f'<dt>{label}</dt><dd>{escape(value)}</dd>' for label, value in zip(rule_labels, item["rules"]))
     scenarios = "".join(f'<dt>{label}</dt><dd>{escape(value)}</dd>' for label, value in zip(examples, item["examples"]))
     key = item["id"]
     session, eligible, long, short = PLAYBOOK_CONTEXT[key]
-    academy = crosswalk.playbook_academy(key)
+    academy = crosswalk.playbook_academy(key) if legacy else ""
     media_note = {
         "P04": "The short is a worked example. Follow the Lab’s stated entry and expiration rules in the exercise.",
         "P07": "The Dhesi walkthrough is applied context. Chapter fit and playback need separate review.",
@@ -275,8 +275,8 @@ def playbook_page(item, catalog, crosswalk):
             f'<h2>Direction-specific examples</h2><dl class="ict-scenarios"><dt>Long</dt><dd>{escape(long)}</dd>'
             f'<dt>Short</dt><dd>{escape(short)}</dd></dl>'
             f'<h2>Practice scenarios</h2><dl class="ict-scenarios">{scenarios}</dl>'
-            f'{weekly_plan}{crosswalk.teaching(key)}<h2>Watch</h2>{resource_list(featured_for(key, catalog, item["sources"]), catalog, 3, media_note)}'
-            f'{crosswalk.media(key, item["sources"])}{featured_index_link(key)}{creator_references(key, catalog)}'
+            f'{weekly_plan}{crosswalk.teaching(key) if legacy else ""}<h2>Watch</h2>{resource_list(featured_for(key, catalog, item["sources"]), catalog, 3, media_note)}'
+            f'{crosswalk.media(key, item["sources"]) if legacy else ""}{featured_index_link(key)}{creator_references(key, catalog)}'
             f'<h2>Related concepts</h2>{items([lesson_link(k) for k in item["concepts"]])}'
             f'{academy}<p>{link("Practice next", url("practice", 13))}</p>'
             f'<p>Record one primary playbook per trade. Record other concepts as secondary tags in the '
@@ -308,7 +308,7 @@ def build_ict_lab(root, dist, shell, write, academy, json_script, source, crossw
     routes = []
     assets = '<link rel="stylesheet" href="/assets/ict-public.css"><script src="/assets/ict-public.js" defer></script>'
 
-    def emit(path, view, title, body, subtitle="", extra=""):
+    def emit(path, view, title, body, subtitle="", extra="", *, academy_content=None):
         tabs = ""
         breadcrumbs = ""
         if path != ROOT_URL:
@@ -342,14 +342,22 @@ def build_ict_lab(root, dist, shell, write, academy, json_script, source, crossw
                 ' aria-current="location"' if academy_path.startswith(href) else "")
             links.append(f'<a href="{href}"{state}>{escape(label)}</a>')
         menu = ('<nav aria-label="ICT Academy sections" class="ict-tabs">'
-                + link("Academy overview", "/academy/") + "".join(links) + '</nav>')
+                + "".join(links) + '</nav>')
         academy_body = re.sub(r'((?:href|action)=")/ict-lab/(learn|playbooks|practice|podcasts|mentors)/',
-                              r'\1/academy/\2/', body)
+                              r'\1/academy/\2/', body if academy_content is None else academy_content)
         heading = page_intro("ICT Academy", title, subtitle)
         layout = (heading + f'<section class="content-section ict-public" data-ict-view="{view}">'
                   + menu + academy_body + '</section>')
         write(dist / academy_path.lstrip("/") / "index.html",
               shell(f"{title} | ICT Academy", subtitle or title, layout, academy_path, assets + extra))
+        if path == url("learn"):
+            home_menu = menu.replace('href="/academy/learn/" aria-current="page"',
+                                     'href="/academy/" aria-current="page"')
+            intro = page_intro("Education library", "ICT Futures Academy", subtitle)
+            home = (intro + '<section class="content-section ict-public" data-ict-view="learn">'
+                    + home_menu + academy_body + '</section>')
+            write(dist / "academy/index.html",
+                  shell("ICT Futures Academy | Futures Intelligence OS", subtitle, home, "/academy/", assets))
         if academy_path not in routes:
             routes.append(academy_path)
 
@@ -390,12 +398,14 @@ def build_ict_lab(root, dist, shell, write, academy, json_script, source, crossw
             emit(detail("learn", key), "learn", item["title"],
                  concept_page(item, module, source, names, crosswalk),
                  f'{key} · Module {module["id"]:02} · {module["title"]}',
-                 '<script type="module" src="/assets/ict-practice.mjs"></script>' if key == "C17" else "")
+                 '<script type="module" src="/assets/ict-practice.mjs"></script>' if key == "C17" else "",
+                 academy_content=concept_page(item, module, source, names, crosswalk, legacy=False))
         rows.append(f'<section class="ict-group" data-ict-group><h2>{module["id"]:02} · {escape(module["title"])}</h2>'
                     f'<p>{len(module["concepts"])} concepts. {escape(goal)}</p><p>Prerequisites · '
                     + (" · ".join(lesson_link(key, f"{key} · {names[key]}") for key in prerequisites) if prerequisites else "Start here")
                     + ' · ' + link(f"Related Practice {practice}", url("practice", practice)) + '</p>'
                     + resource_list(module["sources"], source) + '<div class="ict-grid">' + "".join(cards) + "</div></section>")
+    module_rows = list(rows)
     extension_slugs = set("bos choch cisd htf-fvg liquidity-run liquidity-void weekly-profiles mean-threshold ipda fpfvg opening-range-gap smt-fx-metals".split())
     extension_slugs.update(c["id"] for c in academy if c["id"] in {
         "listed-futures-market-basics", "contract-specs-and-tick-math", "futures-expiry-first-notice-and-roll",
@@ -404,26 +414,30 @@ def build_ict_lab(root, dist, shell, write, academy, json_script, source, crossw
     extensions = [card(c.get("name", c["id"]), f'/ict-futures/academy/{c["id"]}.html', c.get("definition", ""),
                        c["id"], "extension") for c in academy if c.get("id") in extension_slugs]
     rows.append('<section class="ict-group" data-ict-group><h2>Academy extensions</h2>'
-                '<p><a href="/academy/crosswalk/">See shared lessons and source coverage</a> · <a href="/academy/videos/#academy-video-gaps">Review exact video gaps</a></p><div class="ict-grid">'
+                '<p><a href="/academy/crosswalk/">See shared lessons and source coverage</a> · <a href="/ict-lab/video-evidence/#academy-video-gaps">Review exact video gaps</a></p><div class="ict-grid">'
                 + "".join(extensions) + "</div></section>")
     original_cards = [
         card(title, ACADEMY_VIDEOS + "#original-sources", note, "official original ICT " + title, "original")
         for title, note, _ in OFFICIAL_SERIES
     ]
-    rows.append('<section class="ict-group" data-ict-group><h2>Original ICT lectures</h2>'
+    original_shelf = ('<section class="ict-group" data-ict-group><h2>Original ICT lectures</h2>'
                 '<div class="ict-grid">' + "".join(original_cards) + '</div>'
                 + resource_list(source["featured"], source)
                 + f'<p>{link("Browse the complete resource index", ACADEMY_VIDEOS + "")}</p></section>')
+    rows.append(original_shelf)
     learn_filters = filter_control("Learning resources", (
         ("concept", "All concepts"), ("extension", "Academy extensions"), ("original", "Original ICT sources")))
     emit(url("learn"), "learn", "Learn ICT", paths + search_form(url("learn")) + learn_filters + "".join(rows),
-         f"{len(concepts)} concepts across {len(modules)} modules. Browse by module or search a topic.")
+         f"{len(concepts)} concepts across {len(modules)} modules. Browse by module or search a topic.",
+         academy_content=search_form(url("learn")) + filter_control("Learning resources", (
+             ("concept", "Concepts"), ("original", "Original ICT sources"))) + paths + "".join(module_rows) + original_shelf)
 
     play_cards = []
     for item in plays:
         play_cards.append(card(f'{item["id"]} · {item["title"]}', detail("playbooks", item["id"]), item["summary"],
                                item["category"] + (" OSOK" if item["id"] == "P10" else ""), "playbook"))
-        emit(detail("playbooks", item["id"]), "playbooks", item["title"], playbook_page(item, source, crosswalk), item["id"])
+        emit(detail("playbooks", item["id"]), "playbooks", item["title"], playbook_page(item, source, crosswalk), item["id"],
+             academy_content=playbook_page(item, source, crosswalk, legacy=False))
     charter = ""
     if [entry["id"] for entry in source["charter"]] != list(range(1, 14)):
         raise ValueError("Original Charter shelf must retain Models 1-13 in order")
@@ -438,14 +452,19 @@ def build_ict_lab(root, dist, shell, write, academy, json_script, source, crossw
     ]
     play_filters = filter_control("Playbook sources", (
         ("playbook", "Lab playbooks"), ("academy", "Academy model variants"), ("charter", "Original ICT Charter")))
+    play_shelf = ('<section class="ict-group" data-ict-group><h2>Lab playbooks</h2><div class="ict-grid">'
+                  + "".join(play_cards) + '</div></section>')
+    charter_shelf = ('<section class="ict-group" id="charter-lectures" data-ict-group><h2>Original ICT Charter sources</h2>'
+                     + '<p>Browse the ' + link("creator playlist", OFFICIAL_SERIES[2][2], True) + ' or the '
+                     + link("independent lecture index", CHARTER_INDEX, True) + '.</p><div class="ict-grid">'
+                     + charter + '</div></section>')
     emit(url("playbooks"), "playbooks", "ICT playbooks", search_form(url("playbooks")) + play_filters
-         + '<section class="ict-group" data-ict-group><h2>Lab playbooks</h2><div class="ict-grid">'
-         + "".join(play_cards) + '</div></section>'
-         + '<section class="ict-group" data-ict-group><h2>Academy model variants</h2><div class="ict-grid">'
-         + "".join(academy_models) + '</div></section><section class="ict-group" id="charter-lectures" data-ict-group><h2>Original ICT Charter sources</h2>'
-         + '<p>Browse the ' + link("creator playlist", OFFICIAL_SERIES[2][2], True) + ' or the '
-         + link("independent lecture index", CHARTER_INDEX, True) + '.</p><div class="ict-grid">' + charter + f'</div></section><p>{link("Compare Academy model variants", "/entry-models/")}</p>',
-         f"{len(plays)} Lab playbooks and {len(source['charter'])} separately attributed Charter lectures.")
+         + play_shelf + '<section class="ict-group" data-ict-group><h2>Academy model variants</h2><div class="ict-grid">'
+         + "".join(academy_models) + '</div></section>' + charter_shelf
+         + f'<p>{link("Compare Academy model variants", "/entry-models/")}</p>',
+         f"{len(plays)} Lab playbooks and {len(source['charter'])} separately attributed Charter lectures.",
+         academy_content=search_form(url("playbooks")) + filter_control("Playbook sources", (
+             ("playbook", "Lab playbooks"), ("charter", "Original ICT Charter"))) + play_shelf + charter_shelf)
 
     lab_cards = []
     contracts = {}
@@ -558,7 +577,7 @@ def build_ict_lab(root, dist, shell, write, academy, json_script, source, crossw
             placements.setdefault(key, {})[video] = explanation
     placement_sections = []
     for key, sources in placements.items():
-        destination = (link("Liquidity Sweep + MSS", "/ict-futures/academy/" + key + ".html")
+        destination = (link("Liquidity Sweep + MSS", detail("playbooks", "P01"))
                        if key == "liquidity-sweep-mss-model" else lesson_link(key))
         refs = [{**ref, "explanation": sources[ref["id"]]}
                 for ref in source["featured"] if ref["id"] in sources]
@@ -566,22 +585,17 @@ def build_ict_lab(root, dist, shell, write, academy, json_script, source, crossw
                                   + resource_list(refs, source) + '</section>')
     discovery = [link("Official ICT channel", "https://www.youtube.com/@InnerCircleTrader", True),
                  link("Official ICT playlists", "https://www.youtube.com/@InnerCircleTrader/playlists", True)]
-    discovery.extend(link("Search YouTube for " + row["name"], row["videoSearch"], True) for row in academy
-                     if row.get("videoSearch", "").startswith("https://www.youtube.com/results?"))
     original_sources = ('<h2 id="original-sources">Original ICT source library</h2>'
                         '<p>Browse creator lectures from ' + link("Michael J. Huddleston's ICT site", "https://theinnercircletrader.com/", True)
                         + '. The Lab curriculum is the site’s teaching sequence.</p>'
                         + items([f'<p>{escape(note)}</p>{link(title, href, True)}' for title, note, href in OFFICIAL_SERIES])
                         + '<p>' + link("Practice P01", detail("playbooks", "P01")) + ' · '
                         + link("See 2022 predecessor placements", ACADEMY_VIDEOS + "#terminal-featured") + ' · '
-                        + link("Browse Charter Models 1-13", url("playbooks") + "#charter-lectures") + '</p>'
-                        + '<p>Compare session and first-gap rules in the Academy lessons on '
-                        + link("opening range gaps", "/ict-futures/academy/opening-range-gap.html") + ' and '
-                        + link("first-presented FVG", "/ict-futures/academy/fpfvg.html") + '.</p>')
+                        + link("Browse Charter Models 1-13", url("playbooks") + "#charter-lectures") + '</p>')
     resource_links = (
         ("Original lectures", "#original-sources"), ("Watch catalogue and filters", "#watch-library"),
-        ("Academy evidence gaps", "#academy-video-gaps"), ("Predecessor placements", "#terminal-featured"),
-        ("Academy supplements", "#academy-supplements"), ("Discovery", "#resource-discovery"),
+        ("Predecessor placements", "#terminal-featured"),
+        ("Discovery", "#resource-discovery"),
     )
     resource_nav = '<nav aria-label="Resource sections">' + items([link(label, href) for label, href in resource_links]) + '</nav>'
     watch_filters = filter_control("Source class", (("original", "Original ICT"), ("creator", "Creator or independent"), ("other", "Other or unconfirmed")))
@@ -613,16 +627,16 @@ def build_ict_lab(root, dist, shell, write, academy, json_script, source, crossw
          + f'<p>{link("Podcast guide", url("podcasts"))} · {link("Mentor guide", url("mentors"))}</p>'
          + search_form(ACADEMY_VIDEOS)
          + watch_filters + resource_list(list(watch_links.values()), source, searchable=True)
-         + gap_register(root, crosswalk, source, link)
          + '<h2 id="terminal-featured">Predecessor tutorial placements</h2>'
          + '<p>Compare each upload with the stated lesson rule. Playback and chapter fit are pending editorial review.</p>'
          + "".join(placement_sections)
-         + '<h2 id="academy-supplements">Academy supplements</h2>' + "".join(
-             f'<h3>{", ".join(escape(slug) for slug in row["lessons"])}</h3>{resource_list(row["sources"], source)}'
-             for row in source["academySources"])
          + '<h2 id="resource-discovery">Discovery shortcuts</h2><p>Use publisher links and topic searches to find candidates. Playback and chapter coverage need a separate review.</p>'
-         + '<details><summary>Browse channels, playlists and Academy searches</summary>' + items(discovery) + '</details></div>',
+         + '<details><summary>Browse ICT channels and playlists</summary>' + items(discovery) + '</details></div>',
          "Browse the combined ICT video catalog. Original time offsets and source evidence are preserved.")
+    write(dist / "ict-lab/video-evidence/index.html",
+          shell("Archived Academy video evidence", "Historical video evidence records.",
+                '<div class="ict-public">' + gap_register(root, crosswalk, source, link) + '</div>',
+                "/ict-lab/video-evidence/", assets))
     target = escape(ACADEMY_VIDEOS, quote=True)
     write(dist / "ict-lab/resources/index.html",
           '<!doctype html><html lang="en"><head><meta charset="utf-8">'
