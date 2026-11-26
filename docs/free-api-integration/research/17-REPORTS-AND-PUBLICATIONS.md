@@ -10,7 +10,7 @@ Out of scope for implementation of this workstream are unrelated product upgrade
 
 ## Repository audit evidence and gaps
 
-**Status** — Proposed route. Related source registry/adapters already exist where shown below.
+**Status** — Static link-only directory available from Research navigation. Maintain publication entries in the top-level `reports` array of `resources.json`. Each entry has a stable ID, title, topic, publisher and official HTTPS URL. Update the exact publisher host allowlist in `scripts/build_reports.py` when onboarding a publisher. Verify the page title and final destination on the publisher site before changing an entry. Rolling indexes show release dates on the publisher site. The directory has no credential or API setup.
 
 - [`scripts/build_site.py`](https://github.com/WHIZZ444YT/WHIZZ444-YT-OS/blob/e791f37da39209f3ac6c50ebf2f960101f618efb/scripts/build_site.py)
 - [`ict-futures/data/source-directory.json`](https://github.com/WHIZZ444YT/WHIZZ444-YT-OS/blob/e791f37da39209f3ac6c50ebf2f960101f618efb/ict-futures/data/source-directory.json)
@@ -60,7 +60,7 @@ Preserve direct source links and readable empty states. Show a precise status be
 
 - [FOMC statements and minutes](https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm), [Fed H.4.1](https://www.federalreserve.gov/releases/h41/) and [ECB press releases](https://www.ecb.europa.eu/press/pr/date/html/index.en.html).
 - [BLS releases](https://www.bls.gov/bls/news-release/home.htm) and [BEA release schedule](https://www.bea.gov/news/schedule).
-- [EIA Weekly Petroleum Status Report](https://www.eia.gov/petroleum/supply/weekly/), [OPEC](https://www.opec.org/) and [USDA WASDE](https://www.usda.gov/oce/commodity-markets/wasde).
+- [EIA Weekly Petroleum Status Report](https://www.eia.gov/petroleum/supply/weekly/), [OPEC Monthly Oil Market Report](https://www.opec.org/monthly-oil-market-report.html) and [USDA WASDE](https://www.usda.gov/oce/commodity-markets/wasde).
 - [CFTC COT](https://www.cftc.gov/MarketReports/CommitmentsofTraders/index.htm), [Treasury rates](https://home.treasury.gov/resource-center/data-chart-center/interest-rates) and [IMF publications](https://www.imf.org/en/Publications).
 - [SEC EDGAR](https://www.sec.gov/edgar/search/) for issuer filings context and [Cboe VIX historical context](https://www.cboe.com/tradable_products/vix/vix_historical_data/). Keep both clearly outside exchange-listed futures observations.
 
