@@ -1,3 +1,4 @@
+import { fetchTreasuryYields, treasuryYieldSource } from "./treasury-yields.mjs";
 import { fetchJsonWithRetry } from "./provider-http.mjs";
 
 const USER_AGENT = "FinanceIntelligenceOS/2.0 public economic research";
@@ -253,6 +254,12 @@ export async function fetchEconomicProvider(provider, env) {
     case "eia": return await fetchEia(env);
     case "fred": return await fetchFred(env);
     case "us_treasury": return await fetchTreasury();
+    case "treasury-yield": {
+      const result = await fetchTreasuryYields();
+      return {...snapshot("US Treasury Daily Par Yields","daily-par-curves",result.records,treasuryYieldSource,result.requestCount,
+        ["Nominal and real curves are separate. Spreads use matching curve and date only."]),
+        status:result.status};
+    }
     case "ecb": return await fetchEcb();
     default: throw new Error("Unsupported economic data provider");
   }
@@ -262,6 +269,7 @@ export const ECONOMIC_PROVIDER_CONFIG = {
   bea: { label: "Bureau of Economic Analysis", credential: "BEA_API_KEY", ttlSeconds: 21600, cadence: "quarterly / release-driven" },
   eia: { label: "Energy Information Administration", credential: "EIA_API_KEY", ttlSeconds: 21600, cadence: "weekly" },
   fred: { label: "Federal Reserve Economic Data", credential: "FRED_API_KEY", ttlSeconds: 21600, cadence: "series-specific" },
+  "treasury-yield": { label: "US Treasury daily nominal and real par yields", credential: null, ttlSeconds: 43200, cadence: "business days" },
   us_treasury: { label: "US Treasury Fiscal Data", credential: null, ttlSeconds: 43200, cadence: "monthly for average interest rates" },
   ecb: { label: "European Central Bank Data Portal", credential: null, ttlSeconds: 21600, cadence: "daily business-day reference data" }
 };

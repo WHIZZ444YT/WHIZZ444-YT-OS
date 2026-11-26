@@ -59,7 +59,39 @@
   card.appendChild(footer);
   return card;
  }
+ function renderRates(payload, grouping) {
+  const target = $(grouping ? "treasuryCurves" : "nyFedFunding");
+  if (!target) return;
+  target.replaceChildren();
+  const summary = document.createElement("p");
+  summary.textContent = (payload?.status || "Unavailable") + " · retrieved " +
+    (payload?.retrievedAt ? new Date(payload.retrievedAt).toLocaleString() : "unavailable");
+  target.append(summary);
+  const list = document.createElement("ul");
+  if (grouping) {
+   for (const [prefix,label] of [["nominal:","Nominal"],["real:","Real (TIPS)"]]) {
+    const rows = (payload?.records || []).filter(row=>row.series_id.startsWith(prefix));
+    const latest = rows.map(row=>row.observation_date).sort().at(-1);
+    const dated = rows.filter(row=>row.observation_date===latest);
+    const item = document.createElement("li");
+    item.textContent = label + " · " + (latest || "unavailable") + (dated.length ? " · " +
+     dated.map(row=>row.series_name+": "+(Number.isFinite(row.value)?fmt(row.value)+" "+row.unit:"unavailable")).join(" · ") : "");
+    list.append(item);
+   }
+  } else {
+   for (const rate of (payload?.rates || []).filter(row=>["SOFR","EFFR","OBFR","TGCR","BGCR"].includes(row.type))) {
+    const item = document.createElement("li");
+    item.textContent=rate.type+" · "+(Number.isFinite(rate.percentRate)?fmt(rate.percentRate)+"%":"unavailable")+
+     " · effective "+(rate.effectiveDate||"unavailable");
+    list.append(item);
+   }
+  }
+  if(list.children.length)target.append(list);
+  else summary.textContent="Funding rates unavailable. Open the official source below.";
+ }
  async function load(){
+  const rateRequests = Promise.allSettled([request("/api/v1/economic/treasury-yield"),request("/api/v1/macro/funding")])
+   .then(results=>results.forEach((result,index)=>renderRates(result.status==="fulfilled"?result.value:null,index===0)));
   $("economicRefresh").disabled=true;$("economicRefresh").textContent="Checking providers…";
   $("economicState").textContent="Requesting independent historical observations through the Cloudflare gateway.";
   $("economicProviders").innerHTML='<div class="loading-state">Loading BEA, EIA, FRED, Treasury and ECB snapshots…</div>';
@@ -67,11 +99,14 @@
   $("economicProviders").innerHTML="";
   results.forEach((r,i)=>{
    const p=providers[i];
-   $("economicProviders").appendChild(renderProvider(p,r.status==="fulfilled"?r.value:null,r.status==="rejected"?(r.reason?.message||"Provider unavailable"):null));
+   const card=renderProvider(p,r.status==="fulfilled"?r.value:null,r.status==="rejected"?(r.reason?.message||"Provider unavailable"):null);
+   if(p.id==="us_treasury"&&$("treasuryMonthly"))$("treasuryMonthly").replaceChildren(card);
+   else $("economicProviders").appendChild(card);
   });
   const available=results.filter(r=>r.status==="fulfilled"&&["fresh","partial","stale"].includes(r.value?.status)).length;
   const missing=results.filter(r=>r.status==="fulfilled"&&r.value?.status==="not-configured").length;
   $("economicState").textContent=available+" of "+providers.length+" providers returned historical data; "+missing+" require credentials. Missing values remain blank, not zero. A successful provider fetch and a successful Supabase write are reported separately.";
+  await rateRequests;
   $("economicRefresh").disabled=false;$("economicRefresh").textContent="Refresh economic providers";
  }
  $("economicRefresh")?.addEventListener("click",load);
