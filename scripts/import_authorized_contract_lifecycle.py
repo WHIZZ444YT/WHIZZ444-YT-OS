@@ -23,6 +23,7 @@ MARKETS_PATH = ROOT / "ict-futures" / "data" / "market-universe.json"
 DEFAULT_OUTPUT = ROOT / "data" / "contract-lifecycle.json"
 MAX_INPUT_BYTES = 30_000_000
 MAX_RIGHTS_BYTES = 100_000
+MONTH_CODES = 'FGHJKMNQUVXZ'
 DATE_FIELDS = (
     "maturityDate", "firstTradeDate", "lastTradeDate", "firstNoticeDate",
     "lastNoticeDate", "firstDeliveryDate", "lastDeliveryDate", "finalSettlementDate",
@@ -90,6 +91,7 @@ def validate_snapshot(snapshot: dict, family_ids: set[str], as_of: date, *, requ
     products = snapshot.get("products")
     if not isinstance(products, list) or {p.get("marketId") for p in products if isinstance(p, dict)} != family_ids or len(products) != len(family_ids):
         raise ValueError("Source snapshot must contain one product record for each of the 15 configured families.")
+    registry = {row["id"]: row for row in json.loads(MARKETS_PATH.read_text(encoding="utf-8"))["markets"]}
     seen_ids: set[str] = set()
     total_rows = 0
     for product in products:
@@ -97,7 +99,14 @@ def validate_snapshot(snapshot: dict, family_ids: set[str], as_of: date, *, requ
         if market_id in seen_ids:
             raise ValueError(f"Duplicate product family: {market_id}")
         seen_ids.add(market_id)
-        _official_url(product.get("specificationUrl"), f"{market_id}.specificationUrl")
+        family = registry.get(market_id)
+        if family is None:
+            raise ValueError(f"{market_id} is missing from the active registry.")
+        spec = _official_url(product.get("specificationUrl"), f"{market_id}.specificationUrl")
+        if spec.rstrip('/') != family["specsUrl"].rstrip('/'):
+            raise ValueError(f"{market_id} must use its registry specification URL.")
+        venue_domain = "ice.com" if family["exchange"] == "ICE US" else "cmegroup.com"
+        roots = {market_id.upper(), (family.get("microSpec") or {}).get("symbol", "")} - {""}
         rows = product.get("contractMonths")
         if not isinstance(rows, list) or not rows or len(rows) > 1000:
             raise ValueError(f"{market_id} must have between one and 1,000 listed contract rows.")
@@ -112,6 +121,10 @@ def validate_snapshot(snapshot: dict, family_ids: set[str], as_of: date, *, requ
             if (not isinstance(month, str) or not re.fullmatch(r"[0-9]{6}", month)
                     or int(month[:4]) < 1 or not 1 <= int(month[4:]) <= 12):
                 raise ValueError(f"{market_id}/{symbol} has an invalid YYYYMM contractMonth.")
+            suffix = MONTH_CODES[int(month[4:]) - 1]
+            year = month[:4]
+            if symbol not in {root + suffix + year[-digits:] for root in roots for digits in (1, 2, 4)}:
+                raise ValueError(f"{market_id}/{symbol} does not match the configured product and contractMonth.")
             key = (symbol, month)
             if key in seen_rows:
                 raise ValueError(f"{market_id} contains a duplicate contract row: {symbol} {month}.")
@@ -121,9 +134,16 @@ def validate_snapshot(snapshot: dict, family_ids: set[str], as_of: date, *, requ
             last_trade = _iso_date(row.get("lastTradeDate"), f"{market_id}/{symbol}/{month}.lastTradeDate", required=True)
             if last_trade < source_date:
                 raise ValueError(f"{market_id}/{symbol}/{month} is expired at the source business date.")
-            _official_url(row.get("sourceUrl"), f"{market_id}/{symbol}/{month}.sourceUrl")
+            source_url = _official_url(row.get("sourceUrl"), f"{market_id}/{symbol}/{month}.sourceUrl")
+            host = urlparse(source_url).hostname
+            if host != venue_domain and not host.endswith("." + venue_domain):
+                raise ValueError(f"{market_id}/{symbol} must cite its exchange publisher.")
             for field in DATE_FIELDS:
                 _iso_date(row.get(field), f"{market_id}/{symbol}/{month}.{field}")
+            for first, last in (("firstTradeDate", "lastTradeDate"), ("firstNoticeDate", "lastNoticeDate"),
+                                ("firstDeliveryDate", "lastDeliveryDate")):
+                if row.get(first) and row.get(last) and row[first] > row[last]:
+                    raise ValueError(f"{market_id}/{symbol} has reversed {first} and {last}.")
             total_rows += 1
     normalized = dict(snapshot)
     normalized["coverage"] = {
