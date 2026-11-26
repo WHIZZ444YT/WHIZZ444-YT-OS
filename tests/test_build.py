@@ -1,10 +1,32 @@
 import json, os, re, subprocess, sys, unittest
 from pathlib import Path
+from tempfile import TemporaryDirectory
+from unittest.mock import patch
 ROOT=Path(__file__).resolve().parents[1]
 sys.path.insert(0,str(ROOT/'scripts'))
 from build_academy import academy_video_coverage
+import build_site
 from build_site import TERMINAL_CUTOVER, futures_terminal_bundle
 class BuildTests(unittest.TestCase):
+    def test_preview_runtime_config_isolated_and_elevated_override_rejected(self):
+        with TemporaryDirectory() as directory, patch.object(build_site, 'DIST', Path(directory)):
+            path = Path(directory)/'assets/runtime-config.js'
+            path.parent.mkdir()
+            path.write_text('// production-default-placeholder', encoding='utf-8')
+            with patch.dict(os.environ, {'VERCEL_ENV':'preview', 'INGEST_TOKEN':'server-only-placeholder'}, clear=True):
+                build_site.write_public_runtime_config()
+            config = path.read_text(encoding='utf-8')
+            self.assertIn('"apiBase": ""', config)
+            self.assertIn('"supabaseUrl": ""', config)
+            self.assertNotIn('production-default-placeholder', config)
+            self.assertNotIn('server-only-placeholder', config)
+            with patch.dict(os.environ, {'VERCEL_ENV':'preview', 'PUBLIC_FINANCE_OS_API_BASE':'https://preview.example/'}, clear=True):
+                build_site.write_public_runtime_config()
+            self.assertIn('"apiBase": "https://preview.example"', path.read_text(encoding='utf-8'))
+            with patch.dict(os.environ, {'PUBLIC_SUPABASE_ANON_KEY':'sb_secret_fixture'}, clear=True):
+                with self.assertRaisesRegex(ValueError,'publishable key'):
+                    build_site.write_public_runtime_config()
+
     def test_futures_sources_and_archived_baselines(self):
         active=json.loads((ROOT/'resources.json').read_text(encoding="utf-8"))
         ict_sources=json.loads((ROOT/'ict-futures/data/source-directory.json').read_text(encoding="utf-8"))

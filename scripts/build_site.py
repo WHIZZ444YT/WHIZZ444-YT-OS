@@ -377,6 +377,38 @@ def wrap_standalone_shell(path, current_path, kind):
 
 
 
+def write_public_runtime_config():
+    path = DIST/'assets/runtime-config.js'
+    fields = {
+        'PUBLIC_SUPABASE_URL': 'supabaseUrl',
+        'PUBLIC_SUPABASE_ANON_KEY': 'supabaseAnonKey',
+        'PUBLIC_FINANCE_OS_API_BASE': 'apiBase',
+    }
+    preview = os.getenv('VERCEL_ENV') == 'preview'
+    public_values = {}
+    for variable, field in fields.items():
+        value = os.getenv(variable)
+        if value is None and not preview:
+            continue
+        value = (value or '').strip()
+        if field == 'supabaseAnonKey' and value:
+            if not re.fullmatch(r'sb_publishable_[A-Za-z0-9_-]+', value):
+                raise ValueError(f'{variable} must contain a Supabase publishable key.')
+        elif value and not re.fullmatch(r'https://[A-Za-z0-9.-]+(?::[0-9]+)?/?', value):
+            raise ValueError(f'{variable} must contain an HTTPS origin.')
+        public_values[field] = value.rstrip('/')
+    if not public_values:
+        return
+    if preview:
+        public_values.update(builderConfigured=False, accountDeletionEnabled=False)
+    runtime = '' if preview else path.read_text(encoding='utf-8')
+    config = json.dumps(public_values)
+    if not preview:
+        config = '{...window.FINANCE_OS_CONFIG, ...' + config + '}'
+    write(path, runtime + '\nwindow.FINANCE_OS_CONFIG = Object.freeze(' + config + ');\n'
+          'window.FINANCE_OS_API_BASE = window.FINANCE_OS_CONFIG.apiBase;\n')
+
+
 def build():
     if DIST.exists(): shutil.rmtree(DIST)
     DIST.mkdir(parents=True)
@@ -387,6 +419,7 @@ def build():
         dst=DIST/name
         if src.is_dir(): shutil.copytree(src,dst,dirs_exist_ok=True)
         else: shutil.copy2(src,dst)
+    write_public_runtime_config()
     for name in sorted(PUBLIC_DOCS):
         target = DIST/name
         target.parent.mkdir(parents=True, exist_ok=True)
@@ -799,11 +832,50 @@ def build():
     # Independent provider and snapshot health dashboard.
     body=page_intro('Operational transparency','Sources & Data Health','Test the edge gateway and inspect each provider response independently. A successful cached API response is not necessarily a fresh upstream collection, and a configured credential is not proof of a healthy data feed.')
     body+='<section class="health-summary"><div><span class="status-pill warn">PROVIDER CHECKS</span><h2 id="healthHeadline">Connecting to the gateway…</h2><p id="healthLatency">Checks have not completed.</p></div><button id="healthRefresh" class="primary-button">Recheck providers</button></section>'
+    body+='<p><a href="/data-health/integrations/">API keys and integration setup</a></p>'
     body+='<p id="healthUpdated" class="muted">Provider states are loading.</p><section id="healthGrid" class="health-grid"><div class="loading-state">Checking independent provider endpoints…</div></section>'
     body+='<section class="content-section" id="provider-registry"><h2>Provider capabilities and terms</h2><p>Access, licensing and snapshot freshness are checked separately. <a href="/sources/">Browse official source links</a>.</p><div id="providerRegistry" aria-live="polite">Provider registry has not loaded.</div></section>'
     body+='<section class="content-section"><h2>How to read the status</h2><div class="health-legend"><span><i class="legend-dot good"></i> Fresh / partial response</span><span><i class="legend-dot warn"></i> Cached, not yet fetched or not configured</span><span><i class="legend-dot bad"></i> Unavailable / failed request</span></div><p>“Fresh” describes the gateway snapshot status reported by that API response. It does not mean exchange-real-time data. “Available on request” indicates a route or public provider capability, not a completed provider fetch. Supabase ingestion and Builder administration remain disabled unless the required server-side secrets are configured.</p></section>'
     body+='<section class="content-section"><h2>Source registry</h2><p>Prefer primary exchange, regulator, statistical agency and central-bank sources. Contract specification and market-data redistribution terms must be verified separately.</p><div class="source-notes"><a href="https://www.cftc.gov/MarketReports/CommitmentsofTraders/index.htm" target="_blank" rel="noopener noreferrer">CFTC ↗</a><a href="https://www.bls.gov/developers/" target="_blank" rel="noopener noreferrer">BLS ↗</a><a href="https://fred.stlouisfed.org/docs/api/fred/" target="_blank" rel="noopener noreferrer">FRED ↗</a><a href="https://www.bea.gov/developers" target="_blank" rel="noopener noreferrer">BEA ↗</a><a href="https://www.eia.gov/opendata/" target="_blank" rel="noopener noreferrer">EIA ↗</a><a href="https://www.cmegroup.com/market-data.html" target="_blank" rel="noopener noreferrer">CME market data ↗</a><a href="https://www.ice.com/market-data" target="_blank" rel="noopener noreferrer">ICE market data ↗</a></div></section>'
     write(DIST/'data-health/index.html',shell('Sources & Data Health | Futures Intelligence OS','Independent gateway and provider snapshot health checks with provenance and freshness limitations.',body,'/data-health/', '<script defer src="/assets/provider-presentation.js"></script><script defer src="/assets/data-health.js"></script>'))
+    integrations_path = '/data-health/integrations/'
+    integrations = [
+        ('BLS', 'BLS_API_KEY', 'Optional. Public BLS v1 remains available without a key.',
+         'https://data.bls.gov/registrationEngine/'),
+        ('BEA', 'BEA_API_KEY', 'Required for BEA observations. The BEA calendar remains public.',
+         'https://apps.bea.gov/API/signup/'),
+        ('EIA', 'EIA_API_KEY', 'Required for EIA observations. The EIA schedule remains public.',
+         'https://www.eia.gov/opendata/'),
+        ('FRED', 'FRED_API_KEY', 'Series-specific reuse approval is required before activation. Use official references while approval is pending.',
+         'https://fred.stlouisfed.org/docs/api/api_key.html'),
+    ]
+    integration_rows = ''.join(
+        f'<li data-credential="{escape(key)}"><b>{escape(name)}</b> · <code>{escape(key)}</code>'
+        f'<p>{escape(note)} <a href="{escape(url)}">Official registration or documentation</a></p>'
+        '<p data-credential-status>Gateway status unchecked.</p></li>'
+        for name, key, note, url in integrations
+    )
+    setup = page_intro('Data Health', 'API keys and integration setup',
+                       'Review owner setup steps and safe configuration status.')
+    setup += ('<section class="content-section"><h2>Provider credentials</h2>'
+              '<p>Status describes the selected Worker environment. A configured key may still fail upstream validation.</p>'
+              f'<ul id="providerCredentials" aria-live="polite">{integration_rows}</ul></section>')
+    setup += ('<section class="content-section"><h2>Set up a provider</h2><ol>'
+              '<li>Confirm dataset use terms before requesting access.</li>'
+              '<li>Register with the provider and store the key as a secret on the intended Cloudflare Worker.</li>'
+              '<li>Verify on your preview environment. Check the provider status after a scheduled or authorized refresh.</li>'
+              '</ol><p>CFTC, Treasury Fiscal Data and ECB public sources use anonymous access. '
+              '<a href="/data-health/#provider-registry">Open Data Health and the provider registry</a>.</p></section>')
+    setup += ('<section class="content-section"><h2>Platform credentials</h2>'
+              '<p>Set only public frontend origins and the Supabase publishable key in the matching Vercel environment. '
+              'Keep the Supabase server secret, ingestion token and Builder credentials in Cloudflare secrets. '
+              'Use a separate preview Worker and Supabase project for integration tests.</p>'
+              '<p><a href="https://developers.cloudflare.com/workers/configuration/secrets/">Cloudflare secret setup</a> · '
+              '<a href="https://github.com/WHIZZ444YT/WHIZZ444-YT-OS/blob/main/docs/ENVIRONMENT.md">Repository setup and rotation guide</a></p></section>')
+    write(DIST/'data-health/integrations/index.html',
+          shell('API Keys & Integration Setup | Futures Intelligence OS',
+                'Provider credential requirements and owner setup instructions.', setup, integrations_path,
+                '<script defer src="/assets/integration-setup.js"></script>'))
 
     # Risk & Prop Firms. Keep /tools/ as a compatibility redirect.
     risk_rules=load(ROOT/'data/prop-firm-programs.json',{})
@@ -850,7 +922,7 @@ def build():
 
     # Sitemap only when canonical base exists, else create relative noindex sitemap not intended for submission.
     if SITE_URL:
-        urls=['/','/ict-lab/','/futures-intelligence/','/markets/','/sessions/','/academy/','/entry-models/','/news/','/volume-open-interest/','/research/positioning/','/contract-specs/','/strategy-lab/','/risk/','/account/','/data-health/','/macro/','/status/','/docs/','/sources/','/ict-futures/']
+        urls=['/','/ict-lab/','/futures-intelligence/','/markets/','/sessions/','/academy/','/entry-models/','/news/','/volume-open-interest/','/research/positioning/','/contract-specs/','/strategy-lab/','/risk/','/account/','/data-health/','/data-health/integrations/','/macro/','/status/','/docs/','/sources/','/ict-futures/']
         urls += ['/charts/', '/academy/crosswalk/', *lab_routes]
         urls += [f'/ict-futures/markets/{p.name}' for p in (DIST/'ict-futures/markets').glob('*.html')]
         urls += [f'/ict-futures/academy/{p.name}' for p in (DIST/'ict-futures/academy').glob('*.html')]
