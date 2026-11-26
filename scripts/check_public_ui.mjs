@@ -166,6 +166,38 @@ try {
   assert.match(await noScripts.getByRole('link',{name:'Open chart on TradingView'}).getAttribute('href'),/CME_MINI%3ANQ1/);
   await noScripts.close();
 
+  const calendarPage = await browser.newPage({ viewport: {width:390,height:844}, timezoneId:"UTC" });
+  await calendarPage.route("**/assets/runtime-config.js", route => route.fulfill({
+    contentType:"application/javascript",body:"window.FINANCE_OS_CONFIG={apiBase:location.origin};"
+  }));
+  await calendarPage.route("**/api/v1/events**", route => {
+    const path = new URL(route.request().url()).pathname;
+    if (path.endsWith("/bea")) return route.fulfill({status:503,json:{status:"unavailable"}});
+    const rows = path.endsWith("/fomc") ? [{
+      event_id:"date",title:"Fixture committee meeting",scheduled_date:"2099-11-02",scheduled_end_date:"2099-11-03",
+      date_only:true,scheduled_timezone:"America/New_York",schedule_status:"tentative"
+    }] : path === "/api/v1/events" ? [{
+      event_id:"timed",title:"Fixture payroll release",scheduled_at_utc:"2099-11-06T13:30:00Z",
+      scheduled_date:"2099-11-06",scheduled_timezone:"America/New_York",schedule_status:"scheduled"
+    }] : [];
+    return route.fulfill({json:{status:"fresh",events:rows}});
+  });
+  await calendarPage.goto(site + "/sessions/#calendar");
+  await calendarPage.locator("#sessionsRange").selectOption("all");
+  await calendarPage.getByText("Fixture payroll release").waitFor();
+  assert.match(await calendarPage.locator("#sessionsFeedState").innerText(),/PARTIAL/);
+  await calendarPage.locator("#sessionsPublisher").selectOption("FOMC");
+  const meeting = calendarPage.locator(".sessions-event-card");
+  assert.equal(await meeting.count(),1);
+  assert.match(await meeting.innerText(),/date only/i);
+  assert.match(await meeting.innerText(),/Tentative/);
+  assert.doesNotMatch(await meeting.innerText(),/Asia\/Kolkata:/);
+  await calendarPage.locator("#sessionsPublisher").selectOption("BLS");
+  assert.match(await meeting.innerText(),/Asia\/Kolkata:/);
+  assert.match(await meeting.innerText(),/America\/New_York:/);
+  assert.equal(await calendarPage.locator("#windows").count(),1);
+  await calendarPage.close();
+
   await page.goto(site + '/ict-lab/learn/c17/');
   const worked = page.locator('[data-ifvg-worked]');
   const saveDecision = page.getByRole('button', { name: 'Save decision and reveal chart' });
