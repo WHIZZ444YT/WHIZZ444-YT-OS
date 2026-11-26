@@ -365,5 +365,98 @@
       "description": "Official API access documentation. Search coverage and history depend on the API tier and permissions.",
       "type": "api"
     }
+  ],
+  "reports": [
+    {
+      "id": "fomc",
+      "publisher": "Federal Reserve Board",
+      "topic": "Monetary policy",
+      "title": "FOMC statements and minutes",
+      "url": "https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm"
+    },
+    {
+      "id": "fed-h41",
+      "publisher": "Federal Reserve Board",
+      "topic": "Rates and liquidity",
+      "title": "Factors Affecting Reserve Balances (H.4.1)",
+      "url": "https://www.federalreserve.gov/releases/h41/default.htm"
+    },
+    {
+      "id": "ecb-releases",
+      "publisher": "European Central Bank",
+      "topic": "Monetary policy",
+      "title": "ECB press releases",
+      "url": "https://www.ecb.europa.eu/press/pubbydate/html/index.en.html?name_of_publication=Press%20release"
+    },
+    {
+      "id": "bls-releases",
+      "publisher": "Bureau of Labor Statistics",
+      "topic": "US economy",
+      "title": "BLS news releases",
+      "url": "https://www.bls.gov/newsroom/home.htm"
+    },
+    {
+      "id": "bea-releases",
+      "publisher": "Bureau of Economic Analysis",
+      "topic": "US economy",
+      "title": "BEA release schedule",
+      "url": "https://www.bea.gov/news/schedule"
+    },
+    {
+      "id": "eia-wpsr",
+      "publisher": "Energy Information Administration",
+      "topic": "Energy",
+      "title": "Weekly Petroleum Status Report",
+      "url": "https://www.eia.gov/petroleum/supply/weekly/"
+    },
+    {
+      "id": "opec-momr",
+      "publisher": "OPEC",
+      "topic": "Energy",
+      "title": "Monthly Oil Market Report",
+      "url": "https://www.opec.org/monthly-oil-market-report.html"
+    },
+    {
+      "id": "cftc-cot",
+      "publisher": "Commodity Futures Trading Commission",
+      "topic": "Positioning",
+      "title": "Commitments of Traders reports",
+      "url": "https://www.cftc.gov/MarketReports/CommitmentsofTraders/index.htm"
+    },
+    {
+      "id": "treasury-rates",
+      "publisher": "U.S. Department of the Treasury",
+      "topic": "Rates and liquidity",
+      "title": "Treasury Interest Rate Statistics",
+      "url": "https://home.treasury.gov/policy-issues/financing-the-government/interest-rate-statistics"
+    },
+    {
+      "id": "usda-wasde",
+      "publisher": "U.S. Department of Agriculture",
+      "topic": "Agriculture",
+      "title": "World Agricultural Supply and Demand Estimates (WASDE)",
+      "url": "https://esmis.nal.usda.gov/publication/world-agricultural-supply-and-demand-estimates"
+    },
+    {
+      "id": "imf-publications",
+      "publisher": "International Monetary Fund",
+      "topic": "Global economy",
+      "title": "IMF publications",
+      "url": "https://www.imf.org/en/publications"
+    },
+    {
+      "id": "sec-edgar",
+      "publisher": "U.S. Securities and Exchange Commission",
+      "topic": "Related context",
+      "title": "EDGAR issuer filings search",
+      "url": "https://www.sec.gov/edgar/search/"
+    },
+    {
+      "id": "cboe-vix",
+      "publisher": "Cboe Global Markets",
+      "topic": "Related context",
+      "title": "VIX Index historical data",
+      "url": "https://www.cboe.com/tradable-products/vix/vix-historical-data/"
+    }
   ]
 }

@@ -9,6 +9,7 @@ from import_authorized_contract_lifecycle import validate_snapshot
 from build_academy import build_academy, verified_lesson_videos
 from build_ict_lab import build_ict_lab
 from build_route_manifest import route_manifest
+from build_reports import reports_markup
 from ict_crosswalk import IctCrosswalk, PUBLIC_MODELS
 from public_market_context import build_market_context, market_context_text
 from build_public_futures import bookmarks_page, chart_page, daily_brief, overview_ticker, personal_reminders, search_page, session_heatmap, social_discovery
@@ -33,6 +34,7 @@ NAV_ITEMS = [
     ('Entry Models', '/entry-models/'),
     ('Sessions & Calendar', '/sessions/'),
     ('Futures News', '/news/'),
+    ('Reports & Publications', '/research/reports/'),
     ('Volume & Open Interest', '/volume-open-interest/'),
     ('COT & Positioning', '/research/positioning/'),
     ('Contract Specs & Expiry', '/contract-specs/'),
@@ -46,7 +48,7 @@ NAV_GROUPS = [
     ('WORKSPACE', ['Overview', 'Search']),
     ('LEARN', ['ICT Academy', 'Entry Models']),
     ('MARKETS', ['Futures Markets', 'Markets', 'Charts', 'Contract Specs & Expiry']),
-    ('RESEARCH', ['Futures News', 'Macro', 'COT & Positioning', 'Volume & Open Interest', 'Data Health & Sources']),
+    ('RESEARCH', ['Futures News', 'Reports & Publications', 'Macro', 'COT & Positioning', 'Volume & Open Interest', 'Data Health & Sources']),
     ('TOOLS', ['Sessions & Calendar', 'Strategy Lab', 'Risk & Prop Firms', 'Journal practice']),
     ('ACCOUNT', ['Journal & Watchlists']),
 ]
@@ -96,7 +98,7 @@ def nav_markup(current='/'):
             symbol = {
                 'Search':'SE','Markets':'MK','Charts':'CH','Macro':'MA','Journal practice':'JP',
                 'Overview':'OV','Futures Markets':'FD','ICT Academy':'AC','Entry Models':'EM',
-                'Sessions & Calendar':'SC','Futures News':'NW','Volume & Open Interest':'OI',
+                'Sessions & Calendar':'SC','Futures News':'NW','Reports & Publications':'RP','Volume & Open Interest':'OI',
                 'COT & Positioning':'CT','Contract Specs & Expiry':'SP','Strategy Lab':'SL',
                 'Risk & Prop Firms':'RK','Journal & Watchlists':'JW','Data Health & Sources':'DH'
             }[label]
@@ -529,7 +531,8 @@ def build():
     (DIST/'index.html').write_text(home, encoding='utf-8')
 
     # Generate app routes from source datasets.
-    resources = load(ROOT/'resources.json',{}).get('resources',[])
+    source_catalog = load(ROOT/'resources.json',{})
+    resources = source_catalog.get('resources',[])
     academy_data = load(ROOT/'ict-futures/data/ict-academy.json',{})
     academy = academy_data.get('concepts',[])
     catalog = load(ROOT/'ict-lab/catalog.json')
@@ -751,13 +754,22 @@ def build():
     write(DIST/'research/positioning/index.html',shell('CFTC COT Positioning | Futures Intelligence OS','Fetch official CFTC Public Reporting Environment futures-only TFF and Disaggregated positioning datasets.',body,'/research/positioning/', '<script defer src="/assets/cot-page.js"></script>'))
 
     # Futures-only source directory. Root resources.json is the reviewed public allowlist.
-    source_categories = load(ROOT/'resources.json',{}).get('categories',[])
+    source_categories = source_catalog.get('categories',[])
     body=page_intro('Exchange and research references','Futures source directory','A reviewed directory of exchange, regulator, macro, futures-news and ICT education sources. Inclusion is not a licence grant or a promise of free real-time market data.',f'<div class="stats-row"><b>{len(resources)}</b><span>Futures-relevant sources</span><b>{len(source_categories)}</b><span>Categories</span></div>')
     body+='<div class="filter-row"><input id="resourceSearch" class="search-input" type="search" placeholder="Search futures exchanges, CFTC, macro or ICT sources"><select id="resourceCategory" class="search-input"><option value="">All categories</option></select><span id="resourceCount" class="muted"></span></div><div id="resourceCards" class="directory-grid"></div>'
     body+='<p><a href="/data-health/#provider-registry">Review provider capabilities and terms</a></p>'
     body+=social_discovery(mdata, load(ROOT/'ict-futures/data/social-analysis-methods.json'), json_script)
     write(DIST/'sources/index.html',shell('Futures Sources | Futures Intelligence OS','Reviewed futures exchange, regulator, macro, news and ICT education source directory.',body,'/sources/', '<link rel="stylesheet" href="/assets/ict-public.css"><script defer src="/assets/futures-social.js"></script><script defer src="/assets/research-directory.js"></script>'))
     write(DIST/'research/index.html',redirect_page('Research directory moved','/sources/'))
+
+    reports_route = '/research/reports/'
+    reports_body = page_intro('Official sources', 'Reports & Publications',
+                              'Find official releases on monetary policy, the economy, energy and futures positioning.')
+    reports_body += reports_markup(source_catalog.get('reports'))
+    write(DIST/'research/reports/index.html',
+          shell('Reports & Publications | Futures Intelligence OS',
+                'Official publisher links for macro and futures research.', reports_body, reports_route,
+                '<script defer src="/assets/reports-page.js"></script>'))
 
     # News room
     articles=news.get('articles',[]) if isinstance(news,dict) else []
@@ -1002,7 +1014,7 @@ def build():
         urls=['/','/ict-lab/','/futures-intelligence/','/markets/','/sessions/','/academy/','/entry-models/','/news/','/volume-open-interest/','/research/positioning/','/contract-specs/','/strategy-lab/','/risk/','/account/','/data-health/','/data-health/integrations/','/macro/','/macro/energy/','/macro/global/','/status/','/docs/','/sources/','/ict-futures/']
         if agriculture_navigation:
             urls.append('/macro/agriculture/')
-        urls += ['/charts/', '/academy/crosswalk/', *lab_routes]
+        urls += [reports_route, '/charts/', '/academy/crosswalk/', *lab_routes]
         urls += [f'/ict-futures/markets/{p.name}' for p in (DIST/'ict-futures/markets').glob('*.html')]
         urls += [f'/ict-futures/academy/{p.name}' for p in (DIST/'ict-futures/academy').glob('*.html')]
         urls.append('/ict-futures/academy/tutorials/')

@@ -8,6 +8,21 @@ from build_academy import academy_video_coverage
 import build_site
 from build_site import TERMINAL_CUTOVER, futures_terminal_bundle
 class BuildTests(unittest.TestCase):
+    def test_official_reports_catalog_and_publisher_validation(self):
+        from build_reports import reports_markup
+
+        reports = json.loads((ROOT/'resources.json').read_text(encoding='utf-8'))['reports']
+        markup = reports_markup(reports)
+        self.assertEqual(markup.count('data-report-topic='), len(reports))
+        self.assertIn('Release dates on publisher site', markup)
+        self.assertIn('href="/data-health/#provider-registry"', markup)
+        for url in ('http://www.federalreserve.gov/report', 'https://www.federalreserve.gov.example.org/',
+                    'https://www.federalreserve.gov@external.example/'):
+            with self.subTest(url=url), self.assertRaisesRegex(ValueError, 'publisher HTTPS'):
+                reports_markup([{**reports[0], 'url': url}])
+        with self.assertRaisesRegex(ValueError, 'title'):
+            reports_markup([{**reports[0], 'title': '  '}])
+
     def test_agriculture_reference_requires_opt_in(self):
         with TemporaryDirectory() as directory, patch.object(build_site, 'DIST', Path(directory)):
             page = Path(directory) / 'macro/agriculture/index.html'
