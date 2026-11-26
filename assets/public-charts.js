@@ -5,6 +5,9 @@
   const slots = [...document.querySelectorAll('[data-chart-slot]')];
   const status = document.querySelector('#public-chart-status');
   const params = new URLSearchParams(location.search);
+  const widgets = window.FinanceTradingViewWidgets;
+  const dispose = [];
+  let previewsRequested = false;
   function applySelection(params) {
     const defaults = {market: 'nq', comparison: '', interval: '15'};
     for (const field of [market, comparison, interval]) {
@@ -21,12 +24,16 @@
   }
 
   function update(mount = false) {
+    previewsRequested = mount;
+    let mounted = 0;
     const selected = [market, comparison];
     slots.forEach((slot, i) => {
       const option = selected[i].selectedOptions[0];
       const symbol = option?.dataset.symbol;
       slot.hidden = !symbol;
       const mountPoint = slot.querySelector('[data-chart-mount]');
+      dispose[i]?.();
+      dispose[i] = undefined;
       mountPoint.replaceChildren();
       if (!symbol) return;
       slot.querySelector('h2').textContent = option.textContent;
@@ -40,24 +47,18 @@
       const profile = slot.querySelector('[data-chart-profile]');
       if (profile) profile.href = '/ict-futures/markets/' + encodeURIComponent(option.value) + '.html';
       if (!mount) return;
-      const embed = new URL('https://s.tradingview.com/widgetembed/');
-      embed.search = new URLSearchParams({
-        symbol, interval: interval.value, locale: 'en', style: '1',
-        theme: document.body.classList.contains('os-light') ? 'light' : 'dark',
-        allow_symbol_change: 'false', enable_publishing: 'false'
-      });
-      const frame = document.createElement('iframe');
-      frame.src = embed.href;
-      frame.title = option.textContent + ' TradingView chart';
-      frame.loading = 'lazy';
-      frame.allowFullscreen = true;
-      frame.referrerPolicy = 'origin';
-      const fallback = document.createElement('p');
-      fallback.textContent = 'If the preview is blocked or unavailable, open the direct TradingView chart above.';
-      mountPoint.append(frame);
-      if (context) mountPoint.append(fallback);
+      if (option.dataset.preview !== "pilot") {
+        mountPoint.textContent = "Hosted coverage has not been verified for this symbol. Use the direct chart link.";
+        return;
+      }
+      mounted++;
+      dispose[i] = widgets.mount(mountPoint, "chart", {
+        autosize:true, symbol, interval:interval.value, theme:widgets.theme(),
+        locale:"en", style:"1", timezone:"America/New_York", allow_symbol_change:false, save_image:false,
+        calendar:false, details:false, hotlist:false
+      }, option.textContent + " chart", external.href);
     });
-    status.textContent = mount ? 'Provider previews requested. Use the direct links if an embed is unavailable.'
+    status.textContent = mount ? (mounted ? 'Provider previews requested. TradingView controls coverage and delay.' : 'No hosted preview for these selections. Direct chart links are ready.')
       : 'Direct chart links are ready. Load previews to connect to TradingView.';
   }
   form.addEventListener('change', () => {
@@ -79,6 +80,7 @@
     syncComparison();
     update();
   });
+  widgets.onThemeChange(() => { if (previewsRequested) update(true); });
   applySelection(params);
   syncComparison();
   form.inert = false;
