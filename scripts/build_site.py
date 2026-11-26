@@ -55,6 +55,36 @@ NAV_GROUPS = [
 
 NAV_DISPLAY = {'Futures Markets': 'Futures Desk', 'Journal & Watchlists': 'Account'}
 
+def agriculture_enabled():
+    return os.getenv('PUBLIC_AGRICULTURE_REFERENCE') == '1'
+
+
+def navigation_children(path):
+    if path == '/macro/':
+        children = [('Energy Intelligence', '/macro/energy/'), ('Global Macro & Liquidity', '/macro/global/')]
+        if agriculture_enabled():
+            children.append(('Agriculture Intelligence', '/macro/agriculture/'))
+        return children
+    if path == '/data-health/':
+        return [('Integration Setup', '/data-health/integrations/')]
+    return []
+
+
+def public_navigation_groups():
+    links = dict(NAV_ITEMS)
+    groups = []
+    for group, labels in NAV_GROUPS:
+        if group in {'WORKSPACE', 'ACCOUNT'}:
+            continue
+        destinations = []
+        for label in labels:
+            path = links[label]
+            destinations.append((NAV_DISPLAY.get(label, label), path))
+            destinations.extend(navigation_children(path))
+        groups.append((group.title(), destinations))
+    return groups
+
+
 AREA_ALIASES = {
     '/tools/': '/risk/',
     '/sources/': '/data-health/',
@@ -79,6 +109,9 @@ def current_area(path):
     for label, href in NAV_ITEMS:
         if href == active:
             return label
+        for child_label, child_path in navigation_children(href):
+            if child_path == path:
+                return child_label
     return AREA_LABELS.get(path, 'Futures Research')
 
 def nav_markup(current='/'):
@@ -93,7 +126,9 @@ def nav_markup(current='/'):
         items = []
         for label in labels:
             href = links[label]
+            children = navigation_children(href)
             is_active = active == href
+            has_active_child = any(path == current for _, path in children)
             visible_label = NAV_DISPLAY.get(label, label)
             symbol = {
                 'Search':'SE','Markets':'MK','Charts':'CH','Macro':'MA','Journal practice':'JP',
@@ -105,10 +140,19 @@ def nav_markup(current='/'):
             current_state = 'page' if current == href else 'location'
             current_attr = f' aria-current="{current_state}"' if is_active else ''
             items.append(
-                f'<a class="os-nav-link{" is-active" if is_active else ""}" href="{href}"{current_attr} aria-label="{escape(visible_label)}" title="{escape(visible_label)}">'
+                f'<a class="os-nav-link{" is-active" if is_active or has_active_child else ""}" href="{href}"{current_attr} aria-label="{escape(visible_label)}" title="{escape(visible_label)}">'
                 f'<span class="os-nav-symbol" aria-hidden="true">{symbol}</span>'
                 f'<span class="os-nav-label">{escape(visible_label)}</span></a>'
             )
+            if children:
+                child_links = []
+                for child_label, child_path in children:
+                    child_current = ' aria-current="page"' if current == child_path else ''
+                    child_links.append(
+                        f'<li><a class="os-nav-link os-nav-child" href="{child_path}"{child_current}>'
+                        f'{escape(child_label)}</a></li>'
+                    )
+                items.append('<ul class="os-nav-children">' + ''.join(child_links) + '</ul>')
         groups.append(f'<div class="os-nav-group"><span class="os-nav-group-label">{group}</span>{"".join(items)}</div>')
     return (
         '<aside class="os-sidebar" id="appSidebar" aria-label="Primary navigation">'
@@ -117,7 +161,7 @@ def nav_markup(current='/'):
         '<span class="brand-mark">FI</span><span class="os-brand-copy"><b>FUTURES INTELLIGENCE OS</b><small>RESEARCH WORKSPACE</small></span></a>'
         f'<nav class="os-sidebar-nav" aria-label="Futures product areas">{"".join(groups)}</nav>'
         '<div class="os-sidebar-foot"><span class="os-foot-dot"></span><span class="os-foot-copy">RESEARCH MODE · NO BROKER EXECUTION</span></div>'
-        '</aside>'
+        '</aside><noscript><a class="os-static-navigation" href="/search/">Browse public pages</a></noscript>'
     )
 
 
@@ -418,7 +462,7 @@ def write_public_runtime_config():
 
 
 def build_agriculture_reference():
-    if os.getenv('PUBLIC_AGRICULTURE_REFERENCE') != '1':
+    if not agriculture_enabled():
         return ''
 
     route = '/macro/agriculture/'
@@ -548,10 +592,7 @@ def build():
         '<section class="content-section">' + crosswalk.page() + '</section>', '/academy/crosswalk/'))
     write(DIST/'search/index.html', shell('Search | Futures Intelligence OS',
           'Find public futures routes, Academy lessons and ICT Lab content.',
-          search_page(mdata, academy, catalog, [
-              (group.title(), [(NAV_DISPLAY.get(label, label), dict(NAV_ITEMS)[label]) for label in labels])
-              for group, labels in NAV_GROUPS if group not in {'WORKSPACE', 'ACCOUNT'}
-          ], json_script, crosswalk), '/search/',
+          search_page(mdata, academy, catalog, public_navigation_groups(), json_script, crosswalk), '/search/',
           '<link rel="stylesheet" href="/assets/ict-public.css"><script defer src="/assets/public-search.js"></script>'))
     write(DIST/'charts/index.html', shell('Futures Charts | Futures Intelligence OS',
           'Compare futures charts in TradingView.', chart_page(mdata), '/charts/',

@@ -10,7 +10,7 @@ Out of scope for implementation of this workstream are unrelated product upgrade
 
 ## Repository audit evidence and gaps
 
-**Status** — Existing repository building blocks verified in source. Proposed changes and production verification remain pending.
+**Status** — The shared sidebar and search directory list Energy and Global under Macro, Reports under Research and Integration Setup under Data Health. Agriculture uses the same build flag for navigation, search, page generation and sitemap. The route manifest follows generated output. On mobile without JavaScript, Browse public pages opens the static search directory.
 
 - [`scripts/build_site.py`](https://github.com/WHIZZ444YT/WHIZZ444-YT-OS/blob/e791f37da39209f3ac6c50ebf2f960101f618efb/scripts/build_site.py)
 - [`scripts/build_route_manifest.py`](https://github.com/WHIZZ444YT/WHIZZ444-YT-OS/blob/e791f37da39209f3ac6c50ebf2f960101f618efb/scripts/build_route_manifest.py)

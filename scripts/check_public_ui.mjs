@@ -8,7 +8,7 @@ const { chromium } = createRequire(join(dependencies, 'package.json'))('playwrig
 const site = 'http://127.0.0.1:8798';
 const cases = [
   ['home', '/'], ['learn', '/ict-lab/learn/'],
-  ['c34', '/ict-lab/learn/c34/'], ['charts', '/charts/'],
+  ['c34', '/ict-lab/learn/c34/'], ['charts', '/charts/'], ['reports', '/research/reports/'],
 ];
 
 await mkdir(output, { recursive: true });
@@ -95,6 +95,13 @@ try {
   assert.equal(await sidebarMarket.locator('.os-nav-label').isVisible(), false);
   await page.getByRole('button', { name: 'Expand navigation' }).click();
   assert.equal(await sidebarMarket.locator('.os-nav-label').isVisible(), true);
+
+  await page.goto(site + '/macro/energy/');
+  const activeResearch = page.locator('#appSidebar [aria-current]');
+  assert.equal(await activeResearch.getAttribute('href'), '/macro/energy/');
+  assert.equal(await activeResearch.getAttribute('aria-current'), 'page');
+  assert.equal(await page.locator('#appSidebar a[href="/macro/agriculture/"]').count(), 0);
+  assert.equal(await page.evaluate(() => getComputedStyle(document.documentElement).scrollBehavior), 'auto');
 
   await page.goto(site + '/academy/crosswalk/');
   assert.equal(await page.locator('#appSidebar [aria-current]').getAttribute('aria-current'), 'location');
@@ -232,6 +239,16 @@ try {
   assert.match(await energy.locator("#energySeries").innerText(),/Billion cubic feet/);
   assert.ok(await energy.evaluate(()=>document.documentElement.scrollWidth<=document.documentElement.clientWidth+1));
   await energy.close();
+
+  const staticNavigation = await browser.newPage({javaScriptEnabled:false, viewport:{width:320,height:844}});
+  await staticNavigation.goto(site + '/macro/');
+  assert.equal(await staticNavigation.locator('#sidebarToggle').isVisible(), false);
+  await staticNavigation.getByRole('link', {name:'Browse public pages', exact:true}).click();
+  await staticNavigation.getByRole('link', {name:'Integration Setup', exact:true}).click();
+  assert.equal(new URL(staticNavigation.url()).pathname, '/data-health/integrations/');
+  await staticNavigation.goBack();
+  await staticNavigation.getByRole('link', {name:'Global Macro & Liquidity', exact:true}).waitFor();
+  await staticNavigation.close();
 
   const staticEnergy = await browser.newPage({javaScriptEnabled:false});
   await staticEnergy.goto(site + "/macro/energy/");

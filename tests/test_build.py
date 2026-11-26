@@ -23,6 +23,19 @@ class BuildTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, 'title'):
             reports_markup([{**reports[0], 'title': '  '}])
 
+    def test_research_navigation_and_search_share_enabled_destinations(self):
+        route = '/macro/agriculture/'
+        for flag in ('0', '1'):
+            with patch.dict(os.environ, {'PUBLIC_AGRICULTURE_REFERENCE': flag}):
+                nav = build_site.nav_markup('/macro/energy/')
+                search = dict(build_site.public_navigation_groups())
+                self.assertIn('href="/macro/energy/" aria-current="page"', nav)
+                self.assertIn(('Global Macro & Liquidity', '/macro/global/'), search['Research'])
+                self.assertIn(('Integration Setup', '/data-health/integrations/'), search['Research'])
+                self.assertEqual(f'href="{route}"' in nav, flag == '1')
+                self.assertEqual(any(path == route for _, path in search['Research']), flag == '1')
+                self.assertFalse(any(path == '/account/' for group in search.values() for _, path in group))
+
     def test_agriculture_reference_requires_opt_in(self):
         with TemporaryDirectory() as directory, patch.object(build_site, 'DIST', Path(directory)):
             page = Path(directory) / 'macro/agriculture/index.html'
