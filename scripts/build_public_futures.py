@@ -78,12 +78,15 @@ def daily_brief(markets, json_script):
 <label>Contract <select name="market">{market_options(markets)}</select></label>
 <label>Horizon <select name="horizon"><option value="1">Today in New York</option><option value="7" selected>7 calendar days</option><option value="30">30 calendar days</option></select></label>
 <button class="primary-button" type="submit">Load snapshots</button>
-<button class="secondary-button" type="button" data-export-brief>Export brief JSON</button>
+<button class="secondary-button" type="button" data-export-brief>Export local research plan</button>
 </form>
 <p role="status">Snapshot status appears when the brief loads.</p>
+<p><a data-brief-chart href="/charts/">Charts</a> · <a data-brief-profile href="/markets/">Contract profile</a> · <a href="/data-health/">Data Health</a></p>
 <div class="card-grid"><article><h3>Contract context</h3><p data-brief-context>Read the <a href="/markets/">contract profiles</a>.</p></article>
-<article><h3>Matched headlines</h3><ul data-brief-news><li><a href="/news/">Browse futures news</a></li></ul></article>
-<article><h3>Publisher events</h3><ul data-brief-events><li><a href="/sessions/#calendar">Check official schedules</a></li></ul></article></div>
+<article><h3>Matched headlines</h3><ul data-brief-news><li><a href="/news/">Browse futures news</a></li></ul><p><a href="/news/">Open full news</a></p></article>
+<article><h3>Publisher events</h3><ul data-brief-events><li><a href="/sessions/#calendar">Check official schedules</a></li></ul><p><a href="/sessions/#calendar">Open full calendar</a></p></article>
+<article><h3>Funding rates</h3><p data-brief-funding>Funding snapshot has not been loaded.</p><a href="/macro/">Open Macro</a></article>
+<article><h3>COT positioning</h3><p data-brief-cot>Positioning snapshot has not been loaded.</p><a href="/research/positioning/">Open COT &amp; Positioning</a></article></div>
 <h3>Preparation checklist</h3><ul><li>Mark previous day, week and relevant session levels.</li><li>Check official release calendars and active contract expiry.</li><li>Record the conditions that would invalidate or cancel a setup.</li></ul>
 <script type="application/json">{json_script(profiles)}</script></section>"""
 

@@ -6,7 +6,7 @@
 <meta name="keywords" content="futures research, ICT futures, CME futures, NQ, ES, Gold futures, crude oil futures, currency futures, Bitcoin futures, CFTC COT">
 <meta property="og:type" content="website"><meta property="og:title" content="Futures Intelligence OS"><meta property="og:description" content="Contract-aware futures research and ICT Futures learning."><meta name="twitter:card" content="summary">
 <link rel="manifest" href="/manifest.webmanifest"><link rel="icon" href="/icon.svg" type="image/svg+xml"><link rel="stylesheet" href="/assets/site-shell.css">
-<script defer src="/assets/runtime-config.js"></script><script defer src="/assets/overview-dashboard.js"></script>
+<script defer src="/assets/runtime-config.js"></script><script defer src="/assets/publisher-schedules.js"></script><script defer src="/assets/research-preview.js"></script><script defer src="/assets/overview-dashboard.js"></script>
 <title>Futures Intelligence OS — Futures Command Center</title>
 </head>
 <body class="os-dark">
@@ -22,6 +22,10 @@
 <header class="os-topbar"><div class="os-topbar-start"><button class="os-sidebar-toggle" id="sidebarToggle" type="button" aria-expanded="true" aria-controls="appSidebar" aria-label="Collapse navigation"><span aria-hidden="true">☰</span></button><div class="os-topbar-heading"><span>FUTURES INTELLIGENCE OS</span><b>Overview</b></div></div><div class="os-topbar-actions"><a class="os-global-search" href="/search/">Search</a><span class="os-mode-chip"><i></i> RESEARCH ONLY</span><button class="os-theme-toggle" id="osThemeToggle" type="button" aria-pressed="false" aria-label="Switch to light theme" title="Switch theme">☼</button><a class="os-workspace-link" href="/account/">Private workspace ↗</a></div></header>
 <main id="content" tabindex="-1" class="os-content">
 <div class="os-overview-header"><div><p class="os-eyebrow">FUTURES-ONLY · CONTRACT-AWARE · SOURCE-TRACEABLE</p><h1>Futures Command Center</h1><p>One workspace for listed futures markets, ICT Futures study, macro and positioning context, reproducible testing and private trade preparation.</p></div><div class="os-overview-updated" id="overviewUpdated">Data checks have not run yet.</div></div>
+<section class="os-widget" aria-labelledby="overviewPrimaryMarkets">
+<h2 id="overviewPrimaryMarkets">Priority futures markets</h2>
+<div class="os-primary-markets"><article><h3><a href="/futures-intelligence/?market=nq#daily-brief">NQ · Nasdaq-100</a></h3><p>CME · Contract family</p><a href="/charts/?market=nq">Charts</a> · <a href="/ict-futures/markets/nq.html">Contract profile</a></article><article><h3><a href="/futures-intelligence/?market=es#daily-brief">ES · S&amp;P 500</a></h3><p>CME · Contract family</p><a href="/charts/?market=es">Charts</a> · <a href="/ict-futures/markets/es.html">Contract profile</a></article><article><h3><a href="/futures-intelligence/?market=gc#daily-brief">GC · Gold</a></h3><p>COMEX · Contract family</p><a href="/charts/?market=gc">Charts</a> · <a href="/ict-futures/markets/gc.html">Contract profile</a></article><article><h3><a href="/futures-intelligence/?market=cl#daily-brief">CL · WTI crude oil</a></h3><p>NYMEX · Contract family</p><a href="/charts/?market=cl">Charts</a> · <a href="/ict-futures/markets/cl.html">Contract profile</a></article></div>
+</section>
 <div class="os-home-actions">
 <a class="primary-button" href="/academy/">Start learning</a>
 <a class="os-home-secondary" href="/futures-intelligence/">Open Futures Desk</a>
@@ -50,7 +54,7 @@
 <div class="os-filter-line"><label class="os-field-compact" for="overviewTimezone">Display timezone<select class="os-timezone-select" id="overviewTimezone"></select></label></div>
 <div class="os-source-attribution">Session high / low and range: <span class="os-state-chip warn">INTRADAY DATA NOT CONNECTED</span></div>
 </section>
-<section class="os-widget" aria-labelledby="overviewCalendarTitle"><h2 id="overviewCalendarTitle">Economic releases</h2><p>Check upcoming releases in your timezone.</p><a href="/sessions/#calendar">Open economic calendar</a></section>
+<section class="os-widget" aria-labelledby="overviewCalendarTitle"><h2 id="overviewCalendarTitle">Economic releases</h2><p id="overviewCalendarState">Publisher releases have not been checked.</p><ul id="overviewEvents"></ul><a href="/sessions/#calendar">Open economic calendar</a></section>
 </div>
 <section class="os-widget" aria-labelledby="overviewNewsTitle">
 <div class="os-widget-head"><div><h2 id="overviewNewsTitle">Futures news</h2><p>Contract/topic-matched articles from the available discovery snapshot.</p></div><span id="overviewNewsBadge" class="os-state-chip neutral">NOT CHECKED</span></div>
@@ -58,6 +62,7 @@
 <div class="os-source-attribution" id="overviewNewsAttribution">Source: GDELT discovery index · Not a complete or licensed newswire.</div>
 <div class="os-widget-actions"><a href="/news/">Open Futures News →</a><button id="overviewNewsRefresh" type="button">Refresh snapshot</button></div>
 </section>
+<section class="os-widget"><h2>US funding rates</h2><p id="overviewFunding">Funding snapshot has not been checked.</p><a href="/macro/">Open Macro</a></section>
 <section class="os-widget" aria-labelledby="overviewCotTitle">
 <div class="os-widget-head"><div><h2 id="overviewCotTitle">COT positioning summary</h2><p>Futures-only CFTC report, with its weekly publication cadence.</p></div><span id="overviewCotBadge" class="os-state-chip neutral">NOT CHECKED</span></div>
 <div id="overviewCotSummary" class="os-cot-summary"><div><span>Report date</span><b>—</b></div><div><span>Report type</span><b>TFF</b></div><div><span>Rows returned</span><b>—</b></div></div>

@@ -568,3 +568,7 @@ body {font-size: var(--os-body-size)}
 }
 .os-main-column .sessions-live-state[data-tone="error"] {color: var(--os-negative)!important}
 .os-main-column .sessions-live-state[data-tone="warn"] {color: var(--os-warning)!important}
+
+.os-primary-markets{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,12rem),1fr));gap:12px}
+.os-primary-markets article{min-width:0;border:1px solid var(--os-line);border-radius:8px;padding:12px}
+.os-primary-markets h3,.os-primary-markets p{margin:0 0 4px}

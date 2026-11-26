@@ -4,7 +4,7 @@
     ['FOMC', '/api/v1/events/fomc'], ['ECB', '/api/v1/events/ecb'], ['BoE', '/api/v1/events/boe'],
     ['BoC', '/api/v1/events/boc'], ['RBA', '/api/v1/events/rba'], ['BEA', '/api/v1/events/bea'],
   ];
-  window.loadPublisherSchedules = apiBase => Promise.allSettled(feeds.map(async ([id, path]) => {
+  window.loadPublisherSchedules = (apiBase, publishers) => Promise.allSettled(feeds.filter(([id]) => !publishers || publishers.includes(id)).map(async ([id, path]) => {
     const response = await fetch(apiBase + path, {
       headers: { Accept: 'application/json' }, cache: 'no-store', signal: AbortSignal.timeout(16000),
     });
