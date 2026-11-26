@@ -572,3 +572,18 @@ body {font-size: var(--os-body-size)}
 .os-primary-markets{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,12rem),1fr));gap:12px}
 .os-primary-markets article{min-width:0;border:1px solid var(--os-line);border-radius:8px;padding:12px}
 .os-primary-markets h3,.os-primary-markets p{margin:0 0 4px}
+
+/* Research subroutes share the parent sidebar group. */
+.os-nav-children {list-style: none; padding: 0 0 0 1.25rem; margin: 0 0 .25rem}
+.os-nav-child {padding-inline-start: .65rem; border-inline-start: 1px solid var(--os-line-strong)}
+.os-nav-child[aria-current="page"] {color: #fff; background: #23445a}
+.os-app-shell.sidebar-collapsed .os-nav-children {display: none}
+.os-static-navigation {display: none}
+.os-app-shell:not(.nav-enhanced) :is(.os-sidebar-toggle, .os-theme-toggle) {display: none}
+@media (max-width: 850px) {
+  .os-app-shell:not(.nav-enhanced) .os-sidebar {display: none}
+  .os-static-navigation {display: inline-flex; align-items: center; min-block-size: 44px; margin-inline: 1rem}
+}
+@media (prefers-reduced-motion: reduce) {
+  html {scroll-behavior: auto}
+}

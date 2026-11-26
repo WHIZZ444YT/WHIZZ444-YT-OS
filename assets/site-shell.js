@@ -116,4 +116,5 @@
   });
   renderTheme();
   renderNav();
+  shell.classList.add('nav-enhanced');
 })();
