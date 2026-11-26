@@ -1,6 +1,6 @@
 import { officialNewsSnapshot, refreshOfficialNews } from "./official-news.mjs";
 import { providerRegistry } from "./provider-registry.mjs";
-import { ECONOMIC_PROVIDER_CONFIG, fetchEconomicProvider } from "./economic-providers.js";
+import { approvedFredSeries, ECONOMIC_PROVIDER_CONFIG, fetchEconomicProvider } from "./economic-providers.js";
 import { filterNewsArticles, marketDataStatus, NEWS_SOURCE_REGISTRY, newsResponseEnvelope, validateNewsQuery, classifyNewsTopics, keywordRelevanceScore } from "./news-contracts.mjs";
 import { nextProviderCircuitState, providerCircuitIsOpen } from "./provider-http.mjs";
 import { COT_DATASETS, asFiniteNumber, cotResponseEnvelope, cotSourceColumns, normalizeCotRows, validateCotQuery } from "./cot-contracts.mjs";
@@ -391,6 +391,8 @@ export default {
    const provider=String(url.searchParams.get("provider")||"").toLowerCase();
    if(!Object.prototype.hasOwnProperty.call(ECONOMIC_PROVIDER_CONFIG,provider))return json({error:"A supported provider is required."},400,cors);
    const seriesId=String(url.searchParams.get("series_id")||"").trim();
+   const fredScope=provider==="fred"?approvedFredSeries(env):null;
+   if(fredScope&&(!fredScope.length||(seriesId&&!fredScope.includes(seriesId))))return json({status:"reference-only",observations:[]},200,{...cors,"Cache-Control":"no-store"});
    if(seriesId.length>160)return json({error:"series_id is too long."},400,cors);
    const startDate=String(url.searchParams.get("start_date")||"");
    const endDate=String(url.searchParams.get("end_date")||"");
@@ -405,13 +407,15 @@ export default {
    const query=new URLSearchParams({select:"provider,dataset_id,series_id,series_name,country_code,frequency,observation_date,value,unit,data_as_of,published_at,vintage_start,vintage_end,retrieved_at,source_url,freshness_status"});
    query.set("provider","eq."+provider);
    if(seriesId)query.set("series_id","eq."+seriesId);
+   else if(fredScope)query.set("series_id","in.("+fredScope.join(",")+")");
    if(startDate&&endDate)query.set("and","(observation_date.gte."+startDate+",observation_date.lte."+endDate+")");
    else if(startDate)query.set("observation_date","gte."+startDate);
    else if(endDate)query.set("observation_date","lte."+endDate);
    query.set("order","series_id.asc,observation_date.asc");
    query.set("limit",String(limit));query.set("offset",String(offset));
    try{
-    const observations=await supabaseRequest(env,"economic_observations","GET",query.toString());
+    const rows=await supabaseRequest(env,"economic_observations","GET",query.toString());
+    const observations=fredScope&&Array.isArray(rows)?rows.filter(row=>fredScope.includes(row.series_id)):rows;
     return json({schemaVersion:1,status:"fresh",provider,seriesId:seriesId||null,count:Array.isArray(observations)?observations.length:0,limit,offset,observations:Array.isArray(observations)?observations:[],source:"Supabase economic_observations",retrievedAt:new Date().toISOString()},200,{...cors,"Cache-Control":"public, max-age=60, s-maxage=120"});
    }catch{
     return json({status:"unavailable",provider,observations:[],error:"Historical data could not be retrieved."},502,{...cors,"Cache-Control":"no-store"});
@@ -467,6 +471,7 @@ async function getEconomicProviderState(env,provider){
  const cfg=ECONOMIC_PROVIDER_CONFIG[provider];
  const credentialRequired=cfg?.credential||null;
  const persistenceStatus=env.SUPABASE_URL&&supabaseAdminKey(env)?"ready":"not-configured";
+ if(provider==="fred"&&!approvedFredSeries(env).length)return{status:"reference-only",lastSuccessAt:null,persistenceStatus};
  if(credentialRequired&&!env[credentialRequired]){
   return{status:"not-configured",credentialRequired,lastAttemptAt:null,lastSuccessAt:null,persistenceStatus};
  }
@@ -482,6 +487,8 @@ async function getEconomicProviderState(env,provider){
 async function getEconomicData(provider,env){
  const cfg=ECONOMIC_PROVIDER_CONFIG[provider];
  const empty={schemaVersion:1,provider,providerId:provider,dataAsOf:null,retrievedAt:null,records:[],series:[],sourceUrl:null};
+ const fredScope=provider==="fred"?approvedFredSeries(env):null;
+ if(fredScope&&!fredScope.length)return {...empty,status:"reference-only",sourceUrl:"https://fred.stlouisfed.org/"};
  if(cfg.credential&&!env[cfg.credential]){
   return {...empty,status:"not-configured",credentialRequired:cfg.credential};
  }
@@ -496,6 +503,12 @@ async function getEconomicData(provider,env){
     delete safeSnapshot.details;
     delete safeSnapshot.error;
     safeSnapshot.records=(Array.isArray(snapshot.records)?snapshot.records:[]).map(({raw_payload,...record})=>record);
+    if(fredScope){
+     safeSnapshot.records=safeSnapshot.records.filter(row=>fredScope.includes(row.series_id));
+     safeSnapshot.series=(snapshot.series||[]).filter(row=>fredScope.includes(row.seriesId));
+     safeSnapshot.seriesResults=(snapshot.seriesResults||[]).filter(row=>fredScope.includes(row.seriesId));
+     safeSnapshot.dataAsOf=safeSnapshot.records.map(row=>row.observation_date).sort().at(-1)||null;
+    }
     if(snapshot.persistence){
      safeSnapshot.persistence={status:snapshot.persistence.status,rowsUpserted:snapshot.persistence.rowsUpserted};
     }
@@ -586,6 +599,7 @@ async function persistEconomicSnapshot(env,snapshot){
  }
 }
 async function ingestEconomicProvider(provider,env){
+ if(provider==="fred"&&!approvedFredSeries(env).length)return {status:"reference-only",records:[],series:[]};
  const cfg=ECONOMIC_PROVIDER_CONFIG[provider],started=Date.now();
   const priorState=env.SNAPSHOTS?await env.SNAPSHOTS.get("economic-provider:"+provider,"json"):null;
   const pausedUntil=Date.parse(priorState?.retryAt||"");
@@ -637,12 +651,12 @@ async function ingestEconomicProvider(provider,env){
 }
 async function scheduledEconomicIngestion(env){
  if(!env.SNAPSHOTS)return;
- const jobs=Object.entries(ECONOMIC_PROVIDER_CONFIG);
+ const jobs=Object.entries(ECONOMIC_PROVIDER_CONFIG).filter(([provider])=>provider!=="fred"||approvedFredSeries(env).length);
  await Promise.allSettled(jobs.map(async([provider,cfg])=>{
   const previous=await env.SNAPSHOTS.get(economicCacheKey(provider),"json");
   const at=Date.parse(previous?.retrievedAt||"");
   if(!Number.isFinite(at)||Date.now()-at>cfg.ttlSeconds*1000)return await ingestEconomicProvider(provider,env);
-  if(previous.persistence?.status==="failed"&&env.SUPABASE_URL&&supabaseAdminKey(env)&&(!cfg.credential||env[cfg.credential])){
+  if(provider!=="fred"&&previous.persistence?.status==="failed"&&env.SUPABASE_URL&&supabaseAdminKey(env)&&(!cfg.credential||env[cfg.credential])){
    const persistence=await persistEconomicSnapshot(env,previous);
    const remaining=Math.max(60,Math.ceil((at+cfg.ttlSeconds*2000-Date.now())/1000));
    const current=await env.SNAPSHOTS.get(economicCacheKey(provider),"json");
@@ -741,16 +755,18 @@ async function fetchCot(report,variant="futures-only",market="",contractMarketCo
  return snapshot;
 }
 const BLS_SERIES=[
- {id:"CUUR0000SA0",label:"CPI-U · All items",unit:"Index (1982-84=100)",marketContext:"Inflation context; not a tradable price."},
- {id:"CUUR0000SA0L1E",label:"CPI-U · All items less food and energy",unit:"Index (1982-84=100)",marketContext:"Core consumer-price index."},
- {id:"LNS14000000",label:"Unemployment rate",unit:"Percent",marketContext:"US labour-market context."},
- {id:"CES0000000001",label:"Total nonfarm payroll employment",unit:"Thousands of jobs",marketContext:"US employment context; seasonally adjusted series."},
- {id:"WPUFD4",label:"PPI · Final demand",unit:"Index (Nov 2009=100)",marketContext:"Producer-price inflation context."}
+ {id:"CUSR0000SA0",label:"CPI-U · All items",unit:"Index (1982–84=100)",adjustment:"Seasonally adjusted",priceIndex:true},
+ {id:"CUSR0000SA0L1E",label:"CPI-U · Less food and energy",unit:"Index (1982–84=100)",adjustment:"Seasonally adjusted",priceIndex:true},
+ {id:"WPSFD4",label:"PPI · Final demand",unit:"Index (Nov 2009=100)",adjustment:"Seasonally adjusted",priceIndex:true},
+ {id:"LNS14000000",label:"Unemployment rate",unit:"Percent",adjustment:"Seasonally adjusted"},
+ {id:"CES0000000001",label:"Total nonfarm payroll employment",unit:"Thousands of jobs",adjustment:"Seasonally adjusted"},
+ {id:"CES0500000003",label:"Average hourly earnings · Total private",unit:"USD per hour",adjustment:"Seasonally adjusted"},
+ {id:"JTS000000000000000JOL",label:"JOLTS · Total nonfarm job openings",unit:"Thousands of openings",adjustment:"Seasonally adjusted"}
 ];
 async function fetchBls(env){
  const year=new Date().getUTCFullYear();
  const registered=Boolean(env.BLS_API_KEY);
- const body={seriesid:BLS_SERIES.map(s=>s.id),startyear:String(year-4),endyear:String(year)};
+ const body={seriesid:BLS_SERIES.map(s=>s.id),startyear:String(year-(registered?4:2)),endyear:String(year)};
  if(registered)body.registrationkey=env.BLS_API_KEY;
  const endpoint=registered?"https://api.bls.gov/publicAPI/v2/timeseries/data/":"https://api.bls.gov/publicAPI/v1/timeseries/data/";
  let data=null,lastError=null;
@@ -778,7 +794,7 @@ async function fetchBls(env){
  }
  if(lastError||!data)throw lastError||new Error("BLS returned no response");
  const byId=new Map((data.Results?.series||[]).map(s=>[s.seriesID,s.data||[]]));
- const series=BLS_SERIES.map(meta=>({...meta,observations:(byId.get(meta.id)||[]).filter(o=>/^M\d{2}$/.test(o.period||"")).slice(0,36).map(o=>({year:o.year,period:o.period,periodName:o.periodName,value:Number(o.value),footnotes:o.footnotes||[]}))}));
+ const series=BLS_SERIES.map(meta=>({...meta,observations:(byId.get(meta.id)||[]).filter(o=>/^M\d{2}$/.test(o.period||"")).slice(0,36).map(o=>({year:o.year,period:o.period,periodName:o.periodName,value:o.value!==null&&o.value!==undefined&&String(o.value).trim()!==""&&Number.isFinite(Number(o.value))?Number(o.value):null,footnotes:o.footnotes||[]}))}));
  const periods=series.flatMap(s=>s.observations.slice(0,1).map(o=>String(o.year)+"-"+o.period)).sort();
  return{schemaVersion:1,status:"fresh",provider:"US Bureau of Labor Statistics Public Data API "+(registered?"v2":"v1"),retrievedAt:new Date().toISOString(),dataAsOf:periods.at(-1)||null,access:registered?"registered API v2; up to 500 daily queries":"unregistered API v1; up to 25 daily queries",series,notes:["BLS returns published historical series, not live market prices.","Series definitions and units are distinct; do not compare different index bases.","BLS data do not replace the issuer release calendar or timestamps.",registered?"Registered API v2 is authenticated by a server-side Worker secret.":"Configure BLS_API_KEY in Cloudflare Worker secrets to use registered API v2 and its higher daily query limit."]};
 }

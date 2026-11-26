@@ -38,7 +38,7 @@ test("economic reads serve fresh and bounded stale snapshots without upstream ca
   assert.equal(old.status, 503);
   assert.deepEqual((await old.json()).records, []);
   assert.equal((await send("/api/v1/economic/ecb", {})).status, 503);
-  assert.equal((await (await send("/api/v1/economic/fred", env)).json()).status, "not-configured");
+  assert.equal((await (await send("/api/v1/economic/fred", env)).json()).status, "reference-only");
   assert.equal(network.mock.callCount(), 0);
   assert.equal(write.mock.callCount(), 2);
 });
@@ -201,4 +201,36 @@ test("partial persistence replays a current snapshot without refetching or dupli
   assert.equal(reader.persistence.status,"stored");
   assert.equal(reader.persistence.runId,undefined);
   assert.equal(reader.records[0].raw_payload,undefined);
+});
+
+test("BEA selects only metadata-verified GDP and PCE and preserves missing index levels", async t => {
+  const calls = [];
+  t.mock.method(globalThis,"fetch",async input=>{
+    const url=new URL(input);
+    const table=url.searchParams.get("TableName");
+    calls.push(table);
+    const row=table==="T10101"
+      ? {LineNumber:"1",SeriesCode:"A191RL",LineDescription:"Gross domestic product",CL_UNIT:"Percent",TimePeriod:"2026Q3",DataValue:"2.5"}
+      : {LineNumber:"1",SeriesCode:"DPCERG",LineDescription:"Personal consumption expenditures (PCE)",CL_UNIT:"Index",TimePeriod:"2026M09",DataValue:"(NA)"};
+    return Response.json({BEAAPI:{Results:{Data:[row,{...row,LineNumber:"999"}]}}});
+  });
+  const env={SNAPSHOTS:snapshotStore(),INGEST_TOKEN:secret,BEA_API_KEY:"fixture-key"};
+  await send("/api/v1/ingest",env,{method:"POST",headers:{Authorization:"Bearer "+secret},body:'{"provider":"bea"}'});
+  const {records}=await (await send("/api/v1/economic/bea",env)).json();
+  assert.deepEqual(calls.sort(),["T10101","T20804"]);
+  assert.equal(records.length,2);
+  assert.ok(records.some(row=>row.value===2.5&&row.unit.includes("annualized QoQ")));
+  assert.ok(records.some(row=>row.value===null&&row.unit.includes("Index level")));
+});
+
+test("FRED default and narrow revision approvals hide legacy cached rows", async () => {
+  const env={FRED_API_KEY:"fixture-key",SNAPSHOTS:snapshotStore({
+    "economic:fred:v1":{status:"fresh",retrievedAt:new Date().toISOString(),records:[
+      {series_id:"DFF",value:1,observation_date:"2026-11-01"},
+      {series_id:"DGS10",value:2,observation_date:"2026-11-01"}
+    ]}
+  })};
+  assert.deepEqual((await (await send("/api/v1/economic/fred",env)).json()).records,[]);
+  env.FRED_APPROVED_SERIES="DFF,UNKNOWN";
+  assert.deepEqual((await (await send("/api/v1/economic/fred",env)).json()).records.map(row=>row.series_id),["DFF"]);
 });

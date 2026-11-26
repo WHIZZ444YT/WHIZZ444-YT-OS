@@ -9,13 +9,23 @@
    const r=await fetch(api+'/api/v1/macro'+(force?'?refresh=1':''),{headers:{Accept:'application/json'}});const d=await r.json();if(!r.ok){const detail=d.error||d.lastError||`BLS API gateway returned HTTP ${r.status}`;throw new Error(detail);}if(!Array.isArray(d.series))throw new Error('Provider did not return a series array.');
    root.innerHTML='';
    for(const s of d.series){
-    const obs=(s.observations||[]).slice(0,24);const max=Math.max(...obs.map(x=>x.value).filter(Number.isFinite));const min=Math.min(...obs.map(x=>x.value).filter(Number.isFinite));
+    const obs=(s.observations||[]).slice().sort((a,b)=>(b.year+b.period).localeCompare(a.year+a.period)).slice(0,24);const max=Math.max(...obs.map(x=>x.value).filter(Number.isFinite));const min=Math.min(...obs.map(x=>x.value).filter(Number.isFinite));
     const last=obs[0];const card=document.createElement('article');card.className='macro-card';
     const title=document.createElement('h3');title.textContent=s.label;card.appendChild(title);
-    const latest=document.createElement('div');latest.className='macro-latest';latest.textContent=last?`${Number(last.value).toLocaleString(undefined,{maximumFractionDigits:3})} ${s.unit}`:'No observations';card.appendChild(latest);
+    const latest=document.createElement('div');latest.className='macro-latest';latest.textContent=Number.isFinite(last?.value)?`${last.value.toLocaleString(undefined,{maximumFractionDigits:3})} ${s.unit}`:'Value unavailable';card.appendChild(latest);
     const period=document.createElement('div');period.className='macro-period';period.textContent=last?`${last.periodName} ${last.year}`:'Data period unavailable';card.appendChild(period);
+    if(s.adjustment){const basis=document.createElement('p');basis.textContent=s.adjustment;card.appendChild(basis);}
+    if(s.priceIndex){
+     const month=o=>Number(o.year)*12+Number(o.period.slice(1));
+     const change=lag=>{
+      const prior=last&&obs.find(row=>month(last)-month(row)===lag);
+      if(!Number.isFinite(last?.value)||!Number.isFinite(prior?.value)||prior.value===0)return 'unavailable';
+      return ((last.value/prior.value-1)*100).toFixed(2)+'%';
+     };
+     const changes=document.createElement('p');changes.textContent='MoM '+change(1)+' · YoY '+change(12);card.appendChild(changes);
+    }
     const bars=document.createElement('div');bars.className='macro-bars';
-    obs.slice().reverse().forEach(o=>{const b=document.createElement('span');b.title=`${o.periodName} ${o.year}: ${o.value}`;const range=max-min;const pct=range?((o.value-min)/range)*85+15:50;b.style.height=`${pct}%`;bars.appendChild(b);});card.appendChild(bars);
+    obs.slice().reverse().filter(o=>Number.isFinite(o.value)).forEach(o=>{const b=document.createElement('span');b.title=`${o.periodName} ${o.year}: ${o.value}`;const range=max-min;const pct=range?((o.value-min)/range)*85+15:50;b.style.height=`${pct}%`;bars.appendChild(b);});card.appendChild(bars);
     const note=document.createElement('p');note.textContent=s.marketContext||'';card.appendChild(note);
     root.appendChild(card);
    }

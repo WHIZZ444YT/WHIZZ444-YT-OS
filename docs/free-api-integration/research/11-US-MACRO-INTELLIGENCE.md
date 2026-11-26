@@ -56,6 +56,13 @@ Preserve direct source links and readable empty states. Show a precise status be
 
 
 
+## Implementation record
+
+- `/macro/#us-economy` shows official BLS inflation, jobs, wages and openings with explicit seasonal basis. Derived price-index changes use exact one- and twelve-month comparisons and show unavailable when an observation is missing. Registered BLS remains optional.
+- BEA requests fixed NIPA tables T10101 and T20804 and checks the returned line, series code, label and unit. GDP is the published annualized QoQ rate. Headline PCE is a monthly adjusted index level. One available BEA series can still display if the other request fails. Release dates remain linked separately.
+- FRED is reference-only by default, including previously cached rows and the public history route. Configure a comma-separated `FRED_APPROVED_SERIES` subset only after per-series review. A migration closes direct browser reads of FRED rows. Apply it through the normal Supabase rollout to enforce the database-side boundary.
+- Macro history keeps observation period, vintage and retrieval separate. Equal observation dates select the newest supplied vintage, then retrieval time. Missing values remain unavailable.
+
 ## Future file changes and implementation sequence
 
 **Dependencies** — [04 · Database and data contracts](../foundation/04-DATABASE-AND-DATA-CONTRACTS.md) · [09 · Economic calendar](../research/09-ECONOMIC-CALENDAR.md)
@@ -75,7 +82,7 @@ Preserve direct source links and readable empty states. Show a precise status be
 - Integration evidence includes a deterministic fixture, rebuild/validation where applicable, and a preview check of the affected UI including mobile, disabled credentials, blocked data and fallback links.
 - Disable the affected dataset, route flag or widget first if activation fails, restore last reviewed configuration/static build/Worker version, and invalidate any prohibited cached data. Retain permitted database history and prefer corrective additive migrations.
 
-- [ ] Scope and dependency evidence recorded.
+- [x] Scope and dependency evidence recorded.
 - [ ] Relevant data rights, owner actions and fallback verified per dataset.
 - [ ] Target routes and existing compatibility checked.
 - [ ] Unit, integration and applicable live preview results reported.

@@ -11,7 +11,7 @@
  ];
  const esc=v=>String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
  const fmt=v=>v===null||v===undefined||v===""?"—":Number(v).toLocaleString("en-US",{maximumFractionDigits:4});
- const statusName=s=>({fresh:"Fresh",partial:"Partial",stale:"Stale snapshot",unavailable:"Unavailable","not-configured":"Credential required","not-yet-fetched":"Not fetched"}[String(s||"").toLowerCase()]||String(s||"Unknown").replaceAll("-"," "));
+ const statusName=s=>({"reference-only":"Reference only",fresh:"Fresh",partial:"Partial",stale:"Stale snapshot",unavailable:"Unavailable","not-configured":"Credential required","not-yet-fetched":"Not fetched"}[String(s||"").toLowerCase()]||String(s||"Unknown").replaceAll("-"," "));
  const tone=s=>["fresh","partial"].includes(String(s||"").toLowerCase())?"good":["stale","not-yet-fetched","not-configured"].includes(String(s||"").toLowerCase())?"warn":"bad";
  async function request(path){
   const response=await fetch(API+path,{headers:{Accept:"application/json"},signal:AbortSignal.timeout(25000),cache:"no-store"});
@@ -26,14 +26,16 @@
   head.innerHTML='<div><span class="health-kicker">HISTORICAL DATA PROVIDER</span><h3>'+esc(provider.name)+'</h3></div><span class="status-pill '+tone(status)+'">'+esc(statusName(status))+'</span>';
   card.appendChild(head);
   const desc=document.createElement("p");desc.className="economic-provider-desc";desc.textContent=provider.desc;card.appendChild(desc);
-  if(error){
+  if(status==="reference-only"){
+   const note=document.createElement("p");note.textContent="Use the official source. Individual series require reuse approval before display.";card.appendChild(note);
+  }else if(error){
    const note=document.createElement("div");note.className="health-note";note.textContent=error;card.appendChild(note);
   }else if(status==="not-configured"){
    const note=document.createElement("div");note.className="health-note";note.textContent=(data.credentialRequired||"Provider credential")+" is missing from the Cloudflare Worker. No data has been fabricated.";card.appendChild(note);
   }else{
    const records=Array.isArray(data.records)?data.records.slice():[];
    const latestBySeries=new Map();
-   records.sort((a,b)=>String(b.observation_date).localeCompare(String(a.observation_date))).forEach(row=>{
+   records.sort((a,b)=>String(b.observation_date).localeCompare(String(a.observation_date)) || String(b.vintage_start||"").localeCompare(String(a.vintage_start||"")) || String(b.retrieved_at||"").localeCompare(String(a.retrieved_at||""))).forEach(row=>{
     if(!latestBySeries.has(row.series_id))latestBySeries.set(row.series_id,row);
    });
    const grid=document.createElement("div");grid.className="economic-latest-grid";
