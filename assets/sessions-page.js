@@ -7,6 +7,11 @@
   let snapshot = null;
   try { pageData = JSON.parse($("sessionsPageData")?.textContent || "{}"); } catch { pageData = {}; }
   const deviceZone = (() => { try { return Intl.DateTimeFormat().resolvedOptions().timeZone || "Asia/Kolkata"; } catch { return "Asia/Kolkata"; } })();
+  const eastern = "America/New_York";
+  const india = "Asia/Kolkata";
+  const validZone = value => {
+    try { new Intl.DateTimeFormat("en", {timeZone:value}); return value; } catch { return null; }
+  };
   const zone = () => $("sessionsTimezone").value === "browser" ? deviceZone : $("sessionsTimezone").value;
   const todayIn = timeZone => {
     const fields = new Intl.DateTimeFormat("en-CA", { timeZone, year: "numeric", month: "2-digit", day: "2-digit" }).formatToParts(new Date());
@@ -52,8 +57,10 @@
     const now = Date.now();
     const range = $("sessionsRange").value;
     const selected = $("sessionsFamily").value;
+    const publisher = $("sessionsPublisher").value;
     const visible = events.filter(event => {
       if (event.schedule_status === "cancelled") return false;
+      if (publisher !== "all" && event.publisher_id !== publisher) return false;
       const at = Date.parse(event.scheduled_at_utc || "");
       const dateOnly = Boolean(event.date_only || !Number.isFinite(at));
       let age = 0;
@@ -62,10 +69,10 @@
         const date = dateOrdinal(event.scheduled_date);
         const lastDate = dateOrdinal(event.scheduled_end_date);
         const inclusiveEnd = Number.isFinite(lastDate) ? lastDate : date;
-        if (!Number.isFinite(date) || inclusiveEnd < todaySource) return false;
+        if (!Number.isFinite(date) || (range !== "all" && inclusiveEnd < todaySource)) return false;
         age = Math.max(0, (date - todaySource) / 86400000);
       } else {
-        if (at < now) return false;
+        if (range !== "all" && at < now) return false;
         age = at - now;
       }
       if (range === "1" && (dateOnly ? age > 1 : age > 86400000)) return false;
@@ -95,12 +102,19 @@
       const card = addClass("article", "sessions-event-card");
       const scheduled = Date.parse(event.scheduled_at_utc || "");
       const time = addClass("div", "sessions-event-time");
-      if (Number.isFinite(scheduled)) {
+      if (!event.date_only && Number.isFinite(scheduled)) {
         time.textContent = timeLabel(new Date(scheduled), zone());
-        const sourceZone = event.scheduled_timezone || "source timezone not supplied";
-        time.append(addClass("small", "", `${sourceZone}: ${clockLabel(new Date(scheduled), sourceZone)}`));
+        const sourceZone = validZone(event.scheduled_timezone || "");
+        const bases = new Set([eastern, india, sourceZone].filter(Boolean));
+        bases.delete(zone());
+        for (const basis of bases) {
+          time.append(addClass("small", "", `${basis}: ${timeLabel(new Date(scheduled), basis)}`));
+        }
       } else if (event.date_only) {
-        time.textContent = `${dateLabel(event.scheduled_date, "UTC")} · date only`;
+        const start = dateLabel(event.scheduled_date);
+        const end = event.scheduled_end_date && event.scheduled_end_date !== event.scheduled_date
+          ? ` – ${dateLabel(event.scheduled_end_date)}` : "";
+        time.textContent = `${start}${end} · date only`;
         const sourceZone = event.scheduled_timezone ? ` Publisher calendar timezone: ${event.scheduled_timezone}.` : "";
         time.append(addClass("small", "", `The publisher did not provide a release time.${sourceZone}`));
       } else {
@@ -108,13 +122,15 @@
         time.append(addClass("small", "", "The local schedule time could not be resolved safely. Verify the issuer calendar."));
       }
       const detail = addClass("div", "sessions-event-detail");
-      detail.append(addClass("span", "", "Scheduled · no forecast or actual value supplied"));
+      detail.append(addClass("span", "", (event.schedule_status === "tentative" ? "Tentative" : "Scheduled") + " · no forecast or actual value supplied"));
       if (event.period_label) detail.append(addClass("small", "sessions-event-note", event.period_label));
       if (event.schedule_note) detail.append(addClass("small", "sessions-event-note", event.schedule_note));
+      if (event.source_sequence > 0) detail.append(addClass("small", "sessions-event-note", `Publisher sequence: ${event.source_sequence}`));
       if (event.source_revision) detail.append(addClass("small", "sessions-event-note", `Source revision metadata: ${event.source_revision}`));
       const source = document.createElement("a"); source.href = /^https:\/\//i.test(event.source_url || "") ? event.source_url : "https://www.bls.gov/schedule/"; source.target = "_blank"; source.rel = "noopener noreferrer"; source.textContent = `${event.publisher_id || "Publisher"} source ↗`; detail.append(document.createElement("br"), source);
       const title = addClass("h3", "sessions-event-title", event.title || "Untitled publisher event");
       const tags = addClass("div", "sessions-event-tags");
+      if (event.event_type) tags.append(addClass("span", "sessions-tag", String(event.event_type).replace(/[_-]/g, " ")));
       const publisher = String(event.publisher_id || "").toUpperCase();
       tags.append(addClass("span", "sessions-tag official", publisher ? `OFFICIAL ${publisher} SCHEDULE` : "OFFICIAL PUBLISHER SCHEDULE"));
       tags.append(addClass("span", "sessions-tag", event.schedule_time_resolution === "date-only" ? "DATE ONLY" : event.timezone_basis === "source-calendar-policy" ? "TIME FROM PUBLISHER POLICY" : "TIMEZONE-SPECIFIC"));
@@ -186,17 +202,21 @@
     }
     try {
       const settled = await window.loadPublisherSchedules(apiBase);
-      const ready = settled.filter(result => result.status === "fulfilled").map(result => result.value);
+      const ready = settled.filter(result => result.status === "fulfilled" &&
+        ["fresh","partial","cached","stale","empty"].includes(result.value.data.status) && Array.isArray(result.value.data.events))
+        .map(result => result.value);
       const failedCount = settled.length - ready.length;
       if (!ready.length) throw new Error("Publisher schedules are temporarily unavailable. Refresh to retry or use the official issuer links below.");
       const merged = new Map();
-      for (const feed of ready) for (const event of Array.isArray(feed.data.events) ? feed.data.events : []) merged.set(event.event_id, event);
+      for (const feed of ready) for (const event of Array.isArray(feed.data.events) ? feed.data.events : []) if (event?.event_id) merged.set(`${feed.id}:${event.event_id}`, {...event,publisher_id:feed.id});
       events = [...merged.values()].sort((a, b) => (Date.parse(a.scheduled_at_utc || "") || dateOrdinal(a.scheduled_date)) - (Date.parse(b.scheduled_at_utc || "") || dateOrdinal(b.scheduled_date)));
       const staleFeeds = ready.filter(feed => feed.data.status === "stale");
-      const incomplete = ready.length < settled.length || staleFeeds.length > 0;
-      snapshot = { status: incomplete ? (ready.length < settled.length ? "partial" : "stale") : "fresh", events, event_count: events.length, sources: ready.map(feed => ({ id: feed.id, status: feed.data.status, retrieved_at: feed.data.retrieved_at })) };
+      const partialFeeds = ready.some(feed => feed.data.status === "partial");
+      const partialCoverage = ready.length < settled.length || partialFeeds;
+      const incomplete = partialCoverage || staleFeeds.length > 0;
+      snapshot = { status: incomplete ? (partialCoverage ? "partial" : "stale") : "fresh", events, event_count: events.length, sources: ready.map(feed => ({ id: feed.id, status: feed.data.status, retrieved_at: feed.data.retrieved_at })) };
       const providerSummary = ready.map(feed => `${feed.id} ${String(feed.data.status || "unknown").toUpperCase()} · ${feed.data.event_count ?? feed.data.events?.length ?? 0} events`).join(" · ");
-      setFeedState(incomplete ? (ready.length < settled.length ? "PARTIAL SOURCE COVERAGE" : "STALE PUBLISHER SNAPSHOT") : "OFFICIAL SCHEDULE SNAPSHOTS AVAILABLE", `${providerSummary} · these sources do not form a complete global macro calendar.`, incomplete ? "warn" : "");
+      setFeedState(incomplete ? (partialCoverage ? "PARTIAL SOURCE COVERAGE" : "STALE PUBLISHER SNAPSHOT") : "OFFICIAL SCHEDULE SNAPSHOTS AVAILABLE", `${providerSummary} · these sources do not form a complete global macro calendar.`, incomplete ? "warn" : "");
       const retrievals = ready.map(feed => {
         const retrieved = feed.data.retrieved_at ? new Date(feed.data.retrieved_at) : null;
         const label = retrieved && !Number.isNaN(retrieved.getTime()) ? timeLabel(retrieved, zone()) : "not supplied";
@@ -204,7 +224,7 @@
         return `${feed.id}: ${label} · source time basis ${sourceZone}`;
       });
       $("sessionsRetrievedAt").textContent = `Publisher retrievals: ${retrievals.join(" · ")}`;
-      $("sessionsLiveState").textContent = incomplete ? `${failedCount ? `${failedCount} of ${settled.length} publisher feeds could not be loaded.` : "At least one publisher snapshot is stale."} Verify every event at its issuer before relying on the schedule.` : "Official BLS, EIA, CFTC, Federal Reserve, ECB, Bank of England, Bank of Canada, RBA and BEA schedules are included. ECB, FOMC and RBA entries are date-only; BEA dates include publisher-supplied UTC times. Verify issuer revisions. Forecasts and actual values are not supplied.";
+      $("sessionsLiveState").textContent = incomplete ? `${failedCount ? `${failedCount} of ${settled.length} publisher feeds could not be loaded.` : partialFeeds ? "At least one publisher snapshot reports partial coverage." : "At least one publisher snapshot is stale."} Verify every event at its issuer before relying on the schedule.` : "Official BLS, EIA, CFTC, Federal Reserve, ECB, Bank of England, Bank of Canada, RBA and BEA schedules are included. ECB, FOMC and RBA entries are date-only; BEA dates include publisher-supplied UTC times. Verify issuer revisions. Forecasts and actual values are not supplied.";
       $("sessionsLiveState").dataset.tone = incomplete ? "warn" : "";
     } catch (error) {
       snapshot = null; events = [];
@@ -246,6 +266,7 @@
   $("sessionsTimezone").value = "browser";
   $("sessionsTimezone").addEventListener("change", () => { updateClock(); renderEvents(); renderWindows(); });
   $("sessionsRange").addEventListener("change", renderEvents);
+  $("sessionsPublisher").addEventListener("change", renderEvents);
   const family = $("sessionsFamily");
   const preset = new URLSearchParams(location.search).get("market");
   if ([...family.options].some(option => option.value === preset)) family.value = preset;

@@ -203,7 +203,7 @@ function validHttpUrl(value) {
 
 export function parseBlsIcs(input, { retrievedAt = new Date().toISOString(), maxEvents = BLS_CALENDAR_MAX_EVENTS } = {}) {
   const lines = unfoldLines(input);
-  const events = [];
+  const events = new Map();
   let current = null;
   for (const line of lines) {
     const item = property(line);
@@ -213,19 +213,26 @@ export function parseBlsIcs(input, { retrievedAt = new Date().toISOString(), max
       if (!current) continue;
       const summary = unescapeText(current.SUMMARY?.value).slice(0, 240);
       const start = timestamp(current.DTSTART);
+      const status = String(current.STATUS?.value || 'CONFIRMED').toUpperCase();
+      const sequence = /^\d{1,10}$/.test(current.SEQUENCE?.value || '') ? Number(current.SEQUENCE.value) : 0;
+      const stamp = current['LAST-MODIFIED']?.value || current.DTSTAMP?.value || null;
       if (summary && start) {
         const id = unescapeText(current.UID?.value).slice(0, 180) || `bls:${start.date}:${summary.toLowerCase().replace(/[^a-z0-9]+/g, "-").slice(0, 80)}`;
         const relevance = categoryFor(summary);
-        events.push({
-          event_id: `bls:${id}`, event_type: relevance.category.toUpperCase().replace(/-/g, "_"), title: summary,
+        const eventId = `bls:${id}`;
+        const previous = events.get(eventId);
+        const newer = !previous || sequence > previous.source_sequence ||
+          (sequence === previous.source_sequence && (stamp || '') >= (previous.source_revision || ''));
+        if (newer) events.set(eventId, {
+          event_id: eventId, event_type: relevance.category.toUpperCase().replace(/-/g, "_"), title: summary,
           country: "US", publisher: "U.S. Bureau of Labor Statistics", publisher_id: "BLS", source_url: validHttpUrl(current.URL?.value) || BLS_CALENDAR_SCHEDULE_URL,
           scheduled_at_utc: start.at, scheduled_date: start.date, scheduled_timezone: start.timezone || BLS_CALENDAR_TZ,
           timezone_basis: start.basis, schedule_time_resolution: start.resolution,
           published_at_utc: null, actual_release_at_utc: null, retrieved_at_utc: retrievedAt,
           previous_value: null, forecast_value: null, actual_value: null, unit: null, period_label: null,
           affected_instruments: relevance.affected, relevance_basis: "editorial-title-classification; verify issuer context",
-          importance: null, schedule_status: String(current.STATUS?.value || "CONFIRMED").toUpperCase() === "CANCELLED" ? "cancelled" : "scheduled",
-          data_class: "official-release-schedule", source_revision: current["LAST-MODIFIED"]?.value || current.DTSTAMP?.value || null,
+          importance: null, schedule_status: status === "CANCELLED" ? "cancelled" : status === "TENTATIVE" ? "tentative" : "scheduled",
+          data_class: "official-release-schedule", source_revision: stamp, source_sequence: sequence,
           date_only: start.basis === "date-only"
         });
       }
@@ -234,7 +241,7 @@ export function parseBlsIcs(input, { retrievedAt = new Date().toISOString(), max
     }
     if (current) current[item.name] = item;
   }
-  const deduped = [...new Map(events.map(event => [event.event_id, event])).values()];
+  const deduped = [...events.values()];
   deduped.sort((a, b) => (a.scheduled_at_utc || `${a.scheduled_date}T00:00:00.000Z`).localeCompare(b.scheduled_at_utc || `${b.scheduled_date}T00:00:00.000Z`));
   return deduped.slice(0, Math.max(0, Math.min(BLS_CALENDAR_MAX_EVENTS, Number(maxEvents) || BLS_CALENDAR_MAX_EVENTS)));
 }

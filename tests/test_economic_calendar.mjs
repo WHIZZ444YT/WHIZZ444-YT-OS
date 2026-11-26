@@ -279,3 +279,23 @@ test('BEA release calendar fetch uses only the official bounded JSON feed and re
   assert.ok(feed.coverage_notes.some(note => /not a complete/.test(note)));
   await assert.rejects(fetchBeaReleaseCalendar(async () => new Response('<html>unexpected</html>', { headers: { 'content-type': 'text/html' } })), /unexpected content type/);
 });
+
+test("BLS keeps the newest sequence even when the older row appears later", () => {
+  const feed = [
+    "BEGIN:VCALENDAR",
+    "BEGIN:VEVENT","UID:rescheduled","SEQUENCE:3","DTSTART;TZID=America/New_York:20260309T083000","SUMMARY:Rescheduled payrolls","STATUS:TENTATIVE","END:VEVENT",
+    "BEGIN:VEVENT","UID:rescheduled","SEQUENCE:2","DTSTART;TZID=America/New_York:20260306T083000","SUMMARY:Old payroll date","END:VEVENT",
+    "BEGIN:VEVENT","UID:removed","SEQUENCE:2","DTSTART;VALUE=DATE:20261102","SUMMARY:Cancelled date","STATUS:CANCELLED","END:VEVENT",
+    "BEGIN:VEVENT","UID:removed","SEQUENCE:1","DTSTART;VALUE=DATE:20261102","SUMMARY:Old meeting","END:VEVENT",
+    "END:VCALENDAR"
+  ].join("\r\n");
+  const rows = parseBlsIcs(feed);
+  assert.equal(rows.length, 2);
+  const revised = rows.find(row => row.event_id === "bls:rescheduled");
+  assert.equal(revised.scheduled_at_utc, "2026-03-09T12:30:00.000Z");
+  assert.equal(revised.schedule_status, "tentative");
+  assert.equal(revised.source_sequence, 3);
+  const cancelled = rows.find(row => row.event_id === "bls:removed");
+  assert.equal(cancelled.schedule_status, "cancelled");
+  assert.equal(cancelled.scheduled_at_utc, null);
+});

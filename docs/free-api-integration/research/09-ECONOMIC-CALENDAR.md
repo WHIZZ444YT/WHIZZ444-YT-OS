@@ -10,7 +10,7 @@ Out of scope for implementation of this workstream are unrelated product upgrade
 
 ## Repository audit evidence and gaps
 
-**Status** — Existing repository building blocks verified in source. Proposed changes and production verification remain pending.
+**Status** — Publisher filter, timezone display, and BLS revision handling implemented on the existing calendar.
 
 - [`cloudflare/src/economic-calendar.mjs`](https://github.com/WHIZZ444YT/WHIZZ444-YT-OS/blob/e791f37da39209f3ac6c50ebf2f960101f618efb/cloudflare/src/economic-calendar.mjs)
 - [`cloudflare/src/economic-calendar-extended.mjs`](https://github.com/WHIZZ444YT/WHIZZ444-YT-OS/blob/e791f37da39209f3ac6c50ebf2f960101f618efb/cloudflare/src/economic-calendar-extended.mjs)
@@ -81,6 +81,12 @@ Preserve direct source links and readable empty states. Show a precise status be
 
 Derive display with IANA identifiers, preserve source timezone and show date-only events as dates. Normalize stable publisher ID, release category, scheduled local date/time, timezone, precision, actual release timestamp if supplied, retrievedAt and revision/cancellation. Missing or incompatible parser falls back to linked issuer page. Personal events and ICT session/killzone calculations preserve their existing data model.
 
+## Implementation record
+
+- The existing calendar supports a publisher filter alongside range and market relevance. Timed events show the selected timezone plus distinct ET, IST and publisher clocks where available. Date-only entries preserve publisher dates and multi-day ranges. Event categories and publisher revision metadata remain visible.
+- BLS duplicate UIDs choose the highest sequence, then publisher revision timestamp. Tentative entries are labeled, and retained cancellations stay out of the visible schedule and ICS export. Independent publisher failures are surfaced without clearing healthy feeds.
+- The All publisher rows filter includes past publisher rows. Timed ranges continue to omit past rows. Existing EIA holiday rules, issuer links, session windows and private reminders are retained. Forecast, actual and actual release times remain independent and unavailable unless explicitly supplied by a source. No new feed or database layer is required.
+
 ## Future file changes and implementation sequence
 
 **Dependencies** — [02 · Data architecture and API gateway](../foundation/02-DATA-ARCHITECTURE-AND-API-GATEWAY.md) · [04 · Database and data contracts](../foundation/04-DATABASE-AND-DATA-CONTRACTS.md)
@@ -100,7 +106,7 @@ Derive display with IANA identifiers, preserve source timezone and show date-onl
 - Integration evidence includes a deterministic fixture, rebuild/validation where applicable, and a preview check of the affected UI including mobile, disabled credentials, blocked data and fallback links.
 - Disable the affected dataset, route flag or widget first if activation fails, restore last reviewed configuration/static build/Worker version, and invalidate any prohibited cached data. Retain permitted database history and prefer corrective additive migrations.
 
-- [ ] Scope and dependency evidence recorded.
+- [x] Scope and dependency evidence recorded.
 - [ ] Relevant data rights, owner actions and fallback verified per dataset.
 - [ ] Target routes and existing compatibility checked.
 - [ ] Unit, integration and applicable live preview results reported.
