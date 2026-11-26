@@ -936,20 +936,20 @@ def build():
     write(DIST/'data-health/index.html',shell('Sources & Data Health | Futures Intelligence OS','Independent gateway and provider snapshot health checks with provenance and freshness limitations.',body,'/data-health/', '<script defer src="/assets/provider-presentation.js"></script><script defer src="/assets/data-health.js"></script>'))
     integrations_path = '/data-health/integrations/'
     integrations = [
-        ('BLS', 'BLS_API_KEY', 'Optional. Public BLS v1 remains available without a key.',
+        ('bls', 'BLS', 'BLS_API_KEY', 'Optional. Public BLS v1 remains available without a key.',
          'https://data.bls.gov/registrationEngine/'),
-        ('BEA', 'BEA_API_KEY', 'Required for BEA observations. The BEA calendar remains public.',
+        ('bea', 'BEA', 'BEA_API_KEY', 'Required for BEA observations. The BEA calendar remains public.',
          'https://apps.bea.gov/API/signup/'),
-        ('EIA', 'EIA_API_KEY', 'Required for EIA observations. The EIA schedule remains public.',
+        ('eia', 'EIA', 'EIA_API_KEY', 'Required for EIA observations. The EIA schedule remains public.',
          'https://www.eia.gov/opendata/'),
-        ('FRED', 'FRED_API_KEY', 'Series-specific reuse approval is required before activation. Use official references while approval is pending.',
+        ('fred', 'FRED', 'FRED_API_KEY', 'After series-specific reuse approval, add the approved IDs to FRED_APPROVED_SERIES on the Worker and set the key. Use official references while approval is pending.',
          'https://fred.stlouisfed.org/docs/api/api_key.html'),
     ]
     integration_rows = ''.join(
-        f'<li data-credential="{escape(key)}"><b>{escape(name)}</b> · <code>{escape(key)}</code>'
+        f'<li data-setup-provider="{escape(provider_id)}"><b>{escape(name)}</b> · <code>{escape(key)}</code>'
         f'<p>{escape(note)} <a href="{escape(url)}">Official registration or documentation</a></p>'
         '<p data-credential-status>Gateway status unchecked.</p></li>'
-        for name, key, note, url in integrations
+        for provider_id, name, key, note, url in integrations
     )
     setup = page_intro('Data Health', 'API keys and integration setup',
                        'Review owner setup steps and safe configuration status.')
@@ -958,9 +958,16 @@ def build():
               f'<ul id="providerCredentials" aria-live="polite">{integration_rows}</ul></section>')
     setup += ('<section class="content-section"><h2>Set up a provider</h2><ol>'
               '<li>Confirm dataset use terms before requesting access.</li>'
-              '<li>Register with the provider and store the key as a secret on the intended Cloudflare Worker.</li>'
-              '<li>Verify on your preview environment. Check the provider status after a scheduled or authorized refresh.</li>'
-              '</ol><p>CFTC, Treasury Fiscal Data and ECB public sources use anonymous access. '
+              '<li>Register with the provider using the link above.</li>'
+              '<li>In Cloudflare, open Workers &amp; Pages → select the intended Worker → Settings → '
+              'Variables and Secrets → Add. Choose Secret, enter the variable name above and its value, then select Deploy. '
+              'The production Worker is <code>finance-intelligence-os-edge</code>. For testing, select your separate preview Worker.</li>'
+              '<li>Reload this page in the matching Vercel environment. After a scheduled or authorized refresh, '
+              'check the dataset and its latest retrieval result in Data Health.</li>'
+              '</ol></section>')
+    setup += ('<section class="content-section"><h2>Sources that use anonymous access</h2>'
+              '<p>BLS v1, official BLS/BEA/EIA/CFTC schedules, CFTC positioning, Treasury, New York Fed and ECB '
+              'public interfaces need no provider key. Confirm dataset coverage and retrieval status in Data Health.</p><p>'
               '<a href="/data-health/#provider-registry">Open Data Health and the provider registry</a>.</p></section>')
     setup += ('<section class="content-section"><h2>Platform credentials</h2>'
               '<p>Set only public frontend origins and the Supabase publishable key in the matching Vercel environment. '
