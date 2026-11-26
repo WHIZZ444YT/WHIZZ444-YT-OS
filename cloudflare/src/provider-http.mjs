@@ -20,11 +20,12 @@ export async function fetchJsonWithRetry(url, provider, options = {}) {
     try {
       response = await fetchImpl(url, {
         headers: { Accept: 'application/json', 'User-Agent': options.userAgent || 'FinanceIntelligenceOS/2.0 public research' },
-        signal: AbortSignal.timeout(timeoutMs)
+        signal: AbortSignal.timeout(timeoutMs),
+        redirect: 'error'
       });
-    } catch (error) {
-      lastError = error;
-      if (attempt >= retries) throw new Error(`${provider} network request failed: ${String(error?.message || error).slice(0, 240)}`);
+    } catch {
+      lastError = new Error(`${provider} network request failed`);
+      if (attempt >= retries) throw lastError;
       const delay = Math.min(maxDelayMs, 250 * (2 ** attempt) + Math.floor(random() * 250));
       await sleep(delay);
       continue;
@@ -32,17 +33,15 @@ export async function fetchJsonWithRetry(url, provider, options = {}) {
     const text = await response.text();
     let body;
     try { body = JSON.parse(text); }
-    catch { throw new Error(`${provider} returned non-JSON HTTP ${response.status}`); }
-    if (response.ok) return body;
-    const message = body?.error?.message || body?.error || body?.message || `HTTP ${response.status}`;
-    const transient = response.status === 408 || response.status === 429 || response.status >= 500;
-    lastError = new Error(`${provider} request failed: ${String(message).slice(0, 240)}`);
-    if (!transient || attempt >= retries) throw lastError;
-    const retryAfter = retryAfterMilliseconds(response.headers.get('Retry-After'), now());
-    if (retryAfter !== null && retryAfter > maxDelayMs) {
-      lastError.retryAfterMs = retryAfter;
-      throw lastError;
+    catch {
+      if (response.status !== 429) throw new Error(`${provider} returned non-JSON HTTP ${response.status}`);
     }
+    if (response.ok) return body;
+    const transient = response.status === 408 || response.status === 429 || response.status >= 500;
+    const retryAfter = retryAfterMilliseconds(response.headers.get('Retry-After'), now());
+    lastError = new Error(`${provider} request failed: HTTP ${response.status}`);
+    if (transient && retryAfter !== null) lastError.retryAfterMs = retryAfter;
+    if (!transient || attempt >= retries || (retryAfter !== null && retryAfter > maxDelayMs)) throw lastError;
     const backoff = 250 * (2 ** attempt) + Math.floor(random() * 250);
     await sleep(retryAfter ?? Math.min(maxDelayMs, backoff));
   }
