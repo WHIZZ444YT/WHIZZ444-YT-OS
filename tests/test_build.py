@@ -8,6 +8,26 @@ from build_academy import academy_video_coverage
 import build_site
 from build_site import TERMINAL_CUTOVER, futures_terminal_bundle
 class BuildTests(unittest.TestCase):
+    def test_agriculture_reference_requires_opt_in(self):
+        with TemporaryDirectory() as directory, patch.object(build_site, 'DIST', Path(directory)):
+            page = Path(directory) / 'macro/agriculture/index.html'
+            for flag in ('', '0', 'true'):
+                with patch.dict(os.environ, {'PUBLIC_AGRICULTURE_REFERENCE': flag}):
+                    self.assertEqual(build_site.build_agriculture_reference(), '')
+                self.assertFalse(page.exists())
+
+            with patch.dict(os.environ, {
+                'PUBLIC_AGRICULTURE_REFERENCE': '1',
+                'USDA_NASS_API_KEY': 'nass-secret-fixture',
+                'USDA_FAS_API_KEY': 'fas-secret-fixture',
+            }), patch.object(build_site, 'shell', side_effect=lambda title, description, body, route: body):
+                self.assertIn('href="/macro/agriculture/"', build_site.build_agriculture_reference())
+            html = page.read_text(encoding='utf-8')
+            for source in ('esmis.nal.usda.gov', 'www.nass.usda.gov/Quick_Stats/', 'fas.usda.gov/psdonline'):
+                self.assertIn(source, html)
+            self.assertNotIn('secret-fixture', html)
+            self.assertNotIn('/api/v1/', html)
+
     def test_ticker_requires_explicit_supported_markets(self):
         from build_public_futures import overview_ticker
 

@@ -415,6 +415,34 @@ def write_public_runtime_config():
           'window.FINANCE_OS_API_BASE = window.FINANCE_OS_CONFIG.apiBase;\n')
 
 
+def build_agriculture_reference():
+    if os.getenv('PUBLIC_AGRICULTURE_REFERENCE') != '1':
+        return ''
+
+    route = '/macro/agriculture/'
+    body = page_intro('Official USDA sources', 'Agriculture Intelligence',
+                      'Find crop production, stocks and supply-and-demand reports from USDA.')
+    body += (
+        '<section class="content-section"><h2>Official reports and data</h2>'
+        '<ul><li><a href="https://esmis.nal.usda.gov/publication/world-agricultural-supply-and-demand-estimates">'
+        'World Agricultural Supply and Demand Estimates (WASDE)</a> — USDA report archive.</li>'
+        '<li><a href="https://www.nass.usda.gov/Quick_Stats/">NASS Quick Stats</a> '
+        '— US crop production and stocks.</li>'
+        '<li><a href="https://fas.usda.gov/psdonline">FAS PSD Online</a> '
+        '— global production, supply and distribution by commodity and marketing year.</li></ul></section>'
+        '<section class="content-section"><h2>Data availability</h2>'
+        '<p><span class="data-pill">OFFICIAL LINK</span> '
+        'Commodity observations are available on the publisher sites. '
+        'When comparing releases, check the marketing year, geography, units and revision date. '
+        'A suppressed value is missing and must be kept distinct from a reported zero.</p>'
+        '<p><a href="/data-health/">Data Health &amp; Sources</a> · <a href="/macro/">US Macro</a></p></section>'
+    )
+    write(DIST / 'macro/agriculture/index.html',
+          shell('Agriculture Intelligence | Futures Intelligence OS',
+                'Official USDA crop and agricultural supply references.', body, route))
+    return f'<p><a href="{route}">Open Agriculture Intelligence</a> for official USDA research.</p>'
+
+
 def build():
     if DIST.exists(): shutil.rmtree(DIST)
     DIST.mkdir(parents=True)
@@ -691,6 +719,8 @@ def build():
     body+='<section class="content-section" id="treasury-rates"><h2>Treasury yields and spreads</h2><div id="treasuryCurves" aria-live="polite">Curve snapshot not loaded.</div><p><a href="https://home.treasury.gov/treasury-daily-interest-rate-xml-feed">Treasury daily yield source</a></p><h3>Fiscal Data monthly averages</h3><div id="treasuryMonthly" class="economic-provider-grid">Monthly observations not loaded.</div></section>'
     body+='<section class="content-section" id="federal-reserve"><h2>Federal Reserve and funding rates</h2><div id="nyFedFunding" aria-live="polite">Funding snapshot not loaded.</div><p><a href="https://markets.newyorkfed.org/static/docs/markets-api.html">New York Fed reference-rate source</a> · <a href="https://www.federalreserve.gov/releases/h41/">Fed H.4.1 balance sheet</a> · <a href="/sessions/#calendar">FOMC calendar</a></p></section>'
     body+='<p><a href="/macro/energy/">Open Energy Intelligence</a> for US energy indicators or <a href="/macro/global/">open Global Macro &amp; Liquidity</a> for country comparisons.</p>'
+    agriculture_navigation = build_agriculture_reference()
+    body += agriculture_navigation
     write(DIST/'macro/index.html',shell('US Macro Indicators | Futures Intelligence OS','Official BLS, BEA, EIA, FRED, Treasury and ECB historical observations with source labels, units and retrieval times.',body,'/macro/', '<script defer src="/assets/macro-page.js"></script><script defer src="/assets/economic-data.js"></script>'))
 
 
@@ -970,6 +1000,8 @@ def build():
     # Sitemap only when canonical base exists, else create relative noindex sitemap not intended for submission.
     if SITE_URL:
         urls=['/','/ict-lab/','/futures-intelligence/','/markets/','/sessions/','/academy/','/entry-models/','/news/','/volume-open-interest/','/research/positioning/','/contract-specs/','/strategy-lab/','/risk/','/account/','/data-health/','/data-health/integrations/','/macro/','/macro/energy/','/macro/global/','/status/','/docs/','/sources/','/ict-futures/']
+        if agriculture_navigation:
+            urls.append('/macro/agriculture/')
         urls += ['/charts/', '/academy/crosswalk/', *lab_routes]
         urls += [f'/ict-futures/markets/{p.name}' for p in (DIST/'ict-futures/markets').glob('*.html')]
         urls += [f'/ict-futures/academy/{p.name}' for p in (DIST/'ict-futures/academy').glob('*.html')]
