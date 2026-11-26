@@ -800,7 +800,7 @@ class BuildTests(unittest.TestCase):
         self.assertNotIn('service_role',js.lower())
     def test_p7_futures_specific_strategy_backtest_engine(self):
         engine=(ROOT/'assets/strategy-backtest-engine.mjs').read_text(encoding="utf-8")
-        self.assertIn('ENGINE_VERSION = "p7.0.0"',engine)
+        self.assertIn('ENGINE_VERSION = "p7.1.0"',engine)
         self.assertIn('signalKnownAt: "source-bar-close"',engine)
         self.assertIn('entry: "next-bar-open"',engine)
         self.assertIn('stop-first-same-bar',engine)

@@ -46,6 +46,14 @@ import {
       seriesType:"single-expiry",
       dataSource:$("dataSource").value.trim(),
       datasetId:$("datasetId").value.trim(),
+      sessionCalendar:$("strategyCalendar").value,
+      signalTiming:$("strategySignalTiming").value,
+      rights:{
+        research:$("strategyResearchRights").checked,
+        reference:$("strategyRightsReference").value,
+        persist:$("strategyPersistRights").checked,
+        export:$("strategyExportRights").checked
+      },
       downloadDate:$("downloadDate").value,
       volumeUnits:$("volumeUnits").value.trim(),
       costSource:$("costSource").value.trim(),
@@ -77,8 +85,9 @@ import {
       return;
     }
     file.text().then(text=>{
-      csvText=text;
+      if(csvFile!==file)return;
       const parsed=parseSignalCsv(text);
+      csvText=text;
       const q=parsed.quality;
       $("strategyFileMeta").textContent=file.name+" · "+file.size.toLocaleString()+" bytes · "+q.rows.toLocaleString()+" bars";
       $("strategyDataQuality").className="strategy-quality good";
@@ -89,6 +98,7 @@ import {
         (q.stopOverrideCount?" · "+q.stopOverrideCount+" row-level stop overrides":"");
       $("runStrategy").disabled=false;
     }).catch(error=>{
+      if(csvFile!==file)return;
       csvText="";
       $("strategyDataQuality").className="strategy-quality bad";
       $("strategyDataQuality").textContent=error.message;
@@ -203,7 +213,9 @@ import {
     $("strategyRunMeta").textContent=q.rows.toLocaleString()+" bars · "+q.firstTimestamp+" → "+q.lastTimestamp+
       " · "+q.signalCount+" signals · "+result.splitTrades.length+" split-scored trades";
     $("strategyOosNote").textContent=oosNote;
-    $("downloadManifest").disabled=false;$("downloadTrades").disabled=false;
+    const mayExport=result.config.rights?.export===true;
+    $("downloadManifest").disabled=!mayExport;
+    $("downloadTrades").disabled=!mayExport;
     lastSummary={
       runFingerprint:result.manifest.runFingerprint,
       datasetSha256:result.manifest.dataset.sha256,
@@ -213,8 +225,12 @@ import {
       oosNetPnlUsd:oos.netPnlUsd,
       oosExpectancyR:oos.averageR
     };
-    saveHistory(lastSummary);
-    syncRun(result).catch(error=>setStatus("Run remains available locally. Cloud sync failed: "+error.message,true));
+    if(result.config.rights?.persist===true){
+      try{saveHistory(lastSummary);}catch{setStatus("Browser history storage is unavailable.",true);}
+      syncRun(result).catch(error=>setStatus("Cloud sync failed: "+error.message,true));
+    }else{
+      setStatus("Run complete. Results stay in this tab.");
+    }
   }
   function download(name,content,type){
     const blob=new Blob([content],{type});
@@ -223,7 +239,7 @@ import {
     setTimeout(()=>URL.revokeObjectURL(url),1000);
   }
   function downloadManifest(){
-    if(!lastResult)return;
+    if(lastResult?.config.rights?.export!==true)return;
     const result=lastResult;
     const payload={
       manifest:result.manifest,
@@ -234,7 +250,7 @@ import {
     download("strategy-run-"+result.manifest.runFingerprint.slice(0,12)+".json",JSON.stringify(payload,null,2),"application/json");
   }
   function downloadTrades(){
-    if(!lastResult)return;
+    if(lastResult?.config.rights?.export!==true)return;
     const rows=lastResult.splitTrades.map(t=>({...t}));
     download("strategy-trades-"+lastResult.manifest.runFingerprint.slice(0,12)+".csv",tradesToCsv(rows),"text/csv;charset=utf-8");
   }

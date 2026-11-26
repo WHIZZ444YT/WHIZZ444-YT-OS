@@ -59,7 +59,7 @@ function sampleCsv({signals = {3:"LONG",21:"SHORT",27:"LONG"}, count = 30} = {})
 }
 
 test("engine has a stable explicit version", () => {
-  assert.equal(ENGINE_VERSION, "p7.0.0");
+  assert.equal(ENGINE_VERSION, "p7.1.0");
 });
 
 test("CSV parser validates OHLC, timezone, sort order and one contract", () => {
@@ -213,7 +213,7 @@ test("chronological experiment split has independent train, validation and OOS",
   assert.match(run.manifest.runFingerprint,/^[a-f0-9]{64}$/);
   const again=await runExperiment(csv,config(),"fixture.csv");
   assert.equal(run.manifest.runFingerprint,again.manifest.runFingerprint);
-  assert.equal(run.manifest.schemaVersion,2);
+  assert.equal(run.manifest.schemaVersion,3);
   assert.equal(run.manifest.dataset.exactExpiryDate,"2026-03-20");
   assert.equal(run.manifest.dataset.dataSource,"Synthetic unit fixture");
   assert.ok(run.warnings.some(w=>w.includes("fewer than 30 closed trades")));
@@ -247,4 +247,44 @@ test("experiment enforces exact contract, verified tick alignment and volume uni
   await assert.rejects(()=>runExperiment(sampleCsv(),config({marketSymbol:"ES"})),/must match the exact contract code/);
   await assert.rejects(()=>runExperiment(sampleCsv().replace("100.00,100.50","100.10,100.50"),config()),/do not align to the supplied tick size/);
   await assert.rejects(()=>runExperiment(sampleCsv(),config({volumeUnits:""})),/Enter their source units/);
+});
+
+test("point-in-time signals require evidence and reject release times after bar close", async () => {
+  const csv = sampleCsv();
+  const opts = { ...config(), signalTiming: "point-in-time" };
+  await assert.rejects(runExperiment(csv, opts), /signal_available_at on every non-flat/);
+  const timed = csv.trimEnd().split("\n").map((line, index) => {
+    if (!index) return line + ",signal_available_at";
+    const [timestamp,,,,,signal] = line.split(",");
+    return line + "," + (signal === "FLAT" ? "" : timestamp);
+  }).join("\n");
+  const result = await runExperiment(timed, opts);
+  assert.equal(result.quality.timedSignalCount, result.quality.signalCount);
+  assert.equal(result.manifest.dataset.signalTiming, "point-in-time");
+  const late = timed.replace(/,(\d{4}-\d{2}-\d{2}T[^,\n]+Z)$/m, ",2026-12-31T00:00:00Z");
+  assert.throws(() => parseSignalCsv(late), /after the source bar close/);
+});
+
+test("duplicate bars and missing dataset permissions fail closed", async () => {
+  const lines = sampleCsv().split("\n");
+  lines[2] = lines[1];
+  assert.throws(() => parseSignalCsv(lines.join("\n")), /duplicate or out-of-order/);
+  const csv = sampleCsv();
+  const provenance = { ...config(), sessionCalendar: "Synthetic UTC grid",
+    rights: { research: true, reference: "fixture-v1", persist: false, export: false } };
+  const run = await runExperiment(csv, provenance);
+  assert.equal(run.manifest.dataset.sessionCalendar, "Synthetic UTC grid");
+  assert.equal(run.manifest.dataset.rollMethod, null);
+  assert.equal(run.manifest.dataset.rights.export, false);
+  assert.equal((await runExperiment(csv, provenance)).manifest.runFingerprint, run.manifest.runFingerprint);
+  await assert.rejects(runExperiment(csv, { ...provenance, rights: {} }), /permission for local research/);
+});
+
+test("split boundaries prevent a late training signal from entering validation and track drawdown", async () => {
+  const boundary = await runExperiment(sampleCsv({signals:{17:"LONG"}}), config());
+  assert.equal(boundary.splits[0].trades.length, 0);
+  assert.equal(boundary.splits[1].trades.length, 0);
+  assert.ok(boundary.manifest.split.periods[0].endAt < boundary.manifest.split.periods[1].startAt);
+  const loss = runBacktest([makeBar(0,{signal:1}),makeBar(1,{low:97}),makeBar(2)],config());
+  assert.ok(loss.metrics.maxDrawdownUsd > 0);
 });
