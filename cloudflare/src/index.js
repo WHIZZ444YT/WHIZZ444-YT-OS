@@ -235,7 +235,7 @@ export default {
    });
    const q=new URLSearchParams({
     select:"provider_id,venue,instrument_root,contract_month,exchange_instrument_id,observation_type,interval_code,observed_at,data_as_of,retrieved_at,open,high,low,close,volume,open_interest,volume_unit,source_url,delay_class,quality_status",
-    quality_status:"neq.rejected",instrument_root:"eq."+validation.query.root,order:"observed_at.desc",limit:String(validation.query.limit)
+    quality_status:"neq.rejected",instrument_root:"eq."+validation.query.root,order:"observed_at.desc,data_as_of.desc,retrieved_at.desc,id.desc",limit:String(validation.query.limit)
    });
    if(validation.query.contractMonth)q.set("contract_month","eq."+validation.query.contractMonth);
    if(validation.query.type)q.set("observation_type","eq."+validation.query.type);
@@ -257,7 +257,7 @@ export default {
     const entitlementByKey=new Map(entitlements.filter(row=>!row.valid_until||Date.parse(row.valid_until)>visibleAt).map(row=>[JSON.stringify([row.provider_id,row.venue,row.instrument_root,row.delay_class]),row]));
     const observations=(Array.isArray(observationRows)?observationRows:[]).filter(row=>entitlementByKey.has(JSON.stringify([row.provider_id,row.venue,row.instrument_root,row.delay_class]))&&row.quality_status!=="rejected").map(row=>{
      const entitlement=entitlementByKey.get(JSON.stringify([row.provider_id,row.venue,row.instrument_root,row.delay_class]));
-     return{...row,public_display_approved_at:entitlement.reviewed_at};
+     return{...row,public_display_approved_at:entitlement.reviewed_at,public_display_valid_until:entitlement.valid_until||null};
     });
     return json({schema_version:1,data_type:"futures_market_observations",status:observations.length?"available":"no-approved-data",root:validation.query.root,query:validation.query,observations,access_note:"Only observations covered by an active provider, venue, market and delay-class entitlement are returned. Source timestamps and delay labels do not by themselves establish exchange real-time entitlement."},200,{...cors,"Cache-Control":"no-store"});
    }catch{return json({schema_version:1,data_type:"futures_market_observations",status:"unavailable",root:validation.query.root,observations:[],error:"Approved market-observation storage could not be queried."},502,{...cors,"Cache-Control":"no-store"});}
