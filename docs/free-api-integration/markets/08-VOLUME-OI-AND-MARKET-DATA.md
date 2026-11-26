@@ -55,6 +55,12 @@ Preserve direct source links and readable empty states. Show a precise status be
 
 
 
+## Implementation record
+
+- CFTC report open interest stays in the existing report section. The exchange table requests daily volume and open interest separately, filters by optional listed month, shows provider and listed-contract provenance, and handles independent failures. Declared revisions of the same provider/venue/instrument/metric/interval/timestamp/delay are displayed newest first. The table contains no price, settlement, or export action.
+- The Worker validates roots against the supported standard and mapped micro catalogue and rejects impossible calendar months. Ingestion stays bearer-protected and cannot authorize public display. The existing provider/venue/root/delay entitlement is checked at read time, and its expiry is projected to the client. Responses are no-store. An open page clears loaded rows at the earliest finite expiry and prompts for a recheck. Withdrawal is enforced on the next request.
+- CME Daily Bulletin and ICE report links remain available when no exchange data is approved. No new provider was activated. Do not copy CFTC values to exchange metrics. The ingestion contract still represents bars, daily volume, and published open interest. A distinct licensed settlement schema remains outside this volume/OI view.
+
 ## Future file changes and implementation sequence
 
 **Dependencies** — [04 · Database and data contracts](../foundation/04-DATABASE-AND-DATA-CONTRACTS.md) · [07 · Markets and contract intelligence](../markets/07-MARKETS-AND-CONTRACT-INTELLIGENCE.md) · [15 · CFTC COT and positioning](../research/15-CFTC-COT-AND-POSITIONING.md)
@@ -74,7 +80,7 @@ Preserve direct source links and readable empty states. Show a precise status be
 - Integration evidence includes a deterministic fixture, rebuild/validation where applicable, and a preview check of the affected UI including mobile, disabled credentials, blocked data and fallback links.
 - Disable the affected dataset, route flag or widget first if activation fails, restore last reviewed configuration/static build/Worker version, and invalidate any prohibited cached data. Retain permitted database history and prefer corrective additive migrations.
 
-- [ ] Scope and dependency evidence recorded.
+- [x] Scope and dependency evidence recorded.
 - [ ] Relevant data rights, owner actions and fallback verified per dataset.
 - [ ] Target routes and existing compatibility checked.
 - [ ] Unit, integration and applicable live preview results reported.

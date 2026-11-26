@@ -100,6 +100,8 @@ test("public observation query returns only rights-approved rows and uses bounde
     assert.equal(payload.status, "available");
     assert.equal(payload.observations.length, 1);
     assert.equal(payload.observations[0].public_display_approved_at,"2026-11-20T18:00:00.000Z");
+    assert.equal(payload.observations[0].public_display_valid_until,null);
+    assert.equal(requestUrls[1].searchParams.get("order"),"observed_at.desc,data_as_of.desc,retrieved_at.desc,id.desc");
     assert.equal(requestUrls[0].searchParams.get("public_display_status"),"eq.public-display-approved");
     assert.ok(requestUrls[0].searchParams.get("select").split(",").includes("public_display_status"));
     assert.equal(response.headers.get("Cache-Control"),"no-store");
@@ -194,5 +196,13 @@ test("a previously served observation is not served again after entitlement with
     assert.equal(observationReads, 1);
   } finally {
     globalThis.fetch = originalFetch;
+  }
+});
+
+test("unknown listed roots and impossible contract months are rejected before storage", async () => {
+  for (const query of ["root=UNKNOWN","root=NQ&contractMonth=202613","root=NQ&contractMonth=000012"]) {
+    const response = await worker.fetch(new Request("https://edge.example/api/v1/futures-observations?"+query), {}, ctx);
+    assert.equal(response.status,400);
+    assert.deepEqual((await response.json()).observations,[]);
   }
 });

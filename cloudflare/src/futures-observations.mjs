@@ -1,5 +1,5 @@
-const ROOT_PATTERN = /^[A-Z0-9]{1,10}$/;
-const CONTRACT_MONTH_PATTERN = /^\d{4}(0[1-9]|1[0-2])$/;
+const LISTED_ROOTS = new Set("NQ MNQ ES MES GC MGC CL MCL 6E M6E 6B M6B YM MYM RTY M2K DX ZN 6J MJY 6A M6A 6C MCD SI SIL BTC MBT".split(" "));
+const CONTRACT_MONTH_PATTERN = /^(?!0000)\d{4}(0[1-9]|1[0-2])$/;
 const TIME_PATTERN = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d{1,9})?(?:Z|[+-]\d{2}:\d{2})$/i;
 const PROVIDER_PATTERN = /^[a-z0-9][a-z0-9._-]{1,63}$/;
 const OBSERVATION_TYPES = new Set(["bar", "daily_volume", "open_interest"]);
@@ -68,7 +68,7 @@ export function normalizeFuturesObservationBatch(payload, now = new Date()) {
     const delayClass = String(input.delayClass || "unknown").trim();
 
     if (!/^[A-Z0-9][A-Z0-9._-]{1,31}$/.test(venue)) throw new Error(`${prefix}.venue is required and must be a short venue code.`);
-    if (!ROOT_PATTERN.test(root)) throw new Error(`${prefix}.instrumentRoot must be an uppercase listed-futures root such as NQ or 6E.`);
+    if (!LISTED_ROOTS.has(root)) throw new Error(`${prefix}.instrumentRoot must be an uppercase listed-futures root such as NQ or 6E.`);
     if (!exchangeInstrumentId || exchangeInstrumentId.length > 100 || !hasNoControlCharacters(exchangeInstrumentId)) throw new Error(`${prefix}.exchangeInstrumentId is required (maximum 100 characters).`);
     if (!CONTRACT_MONTH_PATTERN.test(contractMonth)) throw new Error(`${prefix}.contractMonth must use YYYYMM for the listed expiry.`);
     if (!OBSERVATION_TYPES.has(observationType)) throw new Error(`${prefix}.observationType must be bar, daily_volume, or open_interest.`);
@@ -125,7 +125,7 @@ export function normalizeFuturesObservationBatch(payload, now = new Date()) {
 
 export function validateFuturesObservationQuery(params) {
   const root = String(params.get("root") || "").trim().toUpperCase();
-  if (!ROOT_PATTERN.test(root)) return { ok: false, code: "invalid_root", message: "Supply one listed-futures root such as NQ or 6E." };
+  if (!LISTED_ROOTS.has(root)) return { ok: false, code: "invalid_root", message: "Supply one listed-futures root such as NQ or 6E." };
   const contractMonth = String(params.get("contractMonth") || "").trim();
   if (contractMonth && !CONTRACT_MONTH_PATTERN.test(contractMonth)) return { ok: false, code: "invalid_contract_month", message: "contractMonth must use YYYYMM." };
   const type = String(params.get("type") || "").trim();
