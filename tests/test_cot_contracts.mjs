@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { COT_DATASETS, cotResponseEnvelope, cotSourceColumns, normalizeCotRows, validateCotQuery } from '../cloudflare/src/cot-contracts.mjs';
+import { annotateCotChanges, COT_DATASETS, cotResponseEnvelope, cotSourceColumns, normalizeCotRows, validateCotQuery } from '../cloudflare/src/cot-contracts.mjs';
 
 test('all report families and futures-only versus combined views use distinct official dataset IDs', () => {
   for (const family of ['legacy', 'disaggregated', 'tff']) {
@@ -95,4 +95,24 @@ test('response envelope keeps position date, publication timestamp and retrieval
   assert.equal(response.retrieved_at, '2026-11-19T12:00:00Z');
   assert.equal(response.frequency, 'weekly');
   assert.ok(response.schedule_url);
+});
+
+test("midpoint ranks handle ties, gaps, duplicate revisions and variant isolation", () => {
+  const base = {reportFamily:"tff",reportVariant:"futures-only",contractMarketCode:"A123",traderCategory:"Dealer",short:0};
+  const row = (reportDate,net,extra={}) => ({...base,reportDate,net,long:net,...extra});
+  const observations = annotateCotChanges([
+    row("2026-10-27",10),row("2026-11-03",10),
+    row("2026-11-10",99,{retrievedAt:"2026-11-11"}),
+    row("2026-11-10",null,{retrievedAt:"2026-11-12"}),
+    row("2026-11-13",10),row("2026-11-13",50,{reportVariant:"combined"}),
+    row("2026-11-13",70,{reportFamily:"disaggregated"}),
+    row("2026-11-13",80,{contractMarketCode:null})
+  ]);
+  const scoped = observations.filter(r=>r.reportFamily==="tff"&&r.reportVariant==="futures-only"&&r.contractMarketCode==="A123");
+  assert.equal(scoped.length,4);
+  assert.equal(scoped[0].priorReportDate,"2026-11-10");
+  assert.equal(scoped[0].netChange,null);
+  assert.deepEqual(scoped[0].netPercentile,{value:50,count:3,from:"2026-10-27",to:"2026-11-13"});
+  assert.equal(observations.find(r=>r.reportVariant==="combined").netPercentile.count,1);
+  assert.equal(observations.find(r=>!r.contractMarketCode).netPercentile,null);
 });

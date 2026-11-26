@@ -4,7 +4,7 @@ import { providerRegistry } from "./provider-registry.mjs";
 import { approvedFredSeries, ECONOMIC_PROVIDER_CONFIG, fetchEconomicProvider } from "./economic-providers.js";
 import { filterNewsArticles, marketDataStatus, NEWS_SOURCE_REGISTRY, newsResponseEnvelope, validateNewsQuery, classifyNewsTopics, keywordRelevanceScore } from "./news-contracts.mjs";
 import { nextProviderCircuitState, providerCircuitIsOpen } from "./provider-http.mjs";
-import { COT_DATASETS, asFiniteNumber, cotResponseEnvelope, cotSourceColumns, normalizeCotRows, validateCotQuery } from "./cot-contracts.mjs";
+import { annotateCotChanges, COT_DATASETS, asFiniteNumber, cotResponseEnvelope, cotSourceColumns, normalizeCotRows, validateCotQuery } from "./cot-contracts.mjs";
 import { fetchBlsCalendar, fetchEiaWpsrSchedule } from "./economic-calendar.mjs";
 import { BEA_RELEASE_SCHEDULE_URL, BEA_RELEASE_DATES_URL, BOC_RATE_CALENDAR_URL, BOE_MPC_CALENDAR_URL, CFTC_COT_SCHEDULE_URL, ECB_COUNCIL_CALENDAR_URL, FOMC_CALENDAR_URL, RBA_BOARD_CALENDAR_URL, classifyPublisherScheduleFailure, fetchBeaReleaseCalendar, fetchBocRateCalendar, fetchBoeMpcCalendar, fetchCftcCotSchedule, fetchEcbCouncilCalendar, fetchFomcCalendar, fetchRbaBoardCalendar } from "./economic-calendar-extended.mjs";
 import { normalizeFuturesObservationBatch, validateFuturesObservationQuery } from "./futures-observations.mjs";
@@ -342,7 +342,9 @@ export default {
      }
     catch(error){if(!snapshot)return json({schema_version:1,data_type:"cftc_cot_positions",status:"unavailable",report_family:report,report_variant:variant,rows:[],normalizedRows:[],source_url:validation.dataset.sourceUrl,error:"CFTC PRE request failed"},502,cors);snapshot.status="stale";snapshot.lastError="CFTC PRE refresh failed; showing last successful cache";}
    }
-   const payload=cotResponseEnvelope(snapshot,snapshot.normalizedRows||normalizeCotRows(snapshot.rows||[],{report,variant,retrievedAt:snapshot.retrievedAt,sourceUrl:snapshot.sourceUrl}));
+   const records=(snapshot.normalizedRows||normalizeCotRows(snapshot.rows||[],{report,variant,retrievedAt:snapshot.retrievedAt,sourceUrl:snapshot.sourceUrl}))
+    .filter(row=>row.reportFamily===report&&row.reportVariant===variant&&(!contractMarketCode||row.contractMarketCode===contractMarketCode));
+   const payload=cotResponseEnvelope(snapshot,annotateCotChanges(records));
    return json({...snapshot,...payload,rows:snapshot.rows||[],normalizedRows:payload.rows,filtered:Boolean(q||contractMarketCode),query:q||null,contract_market_code:contractMarketCode||null,query_scope:q||contractMarketCode?"filtered-market-history":"latest-provider-observations",last_error:snapshot.lastError||null},200,{...cors,"Cache-Control":"public, max-age=900, s-maxage=1800"});
   }
   if(url.pathname==="/api/v1/macro"){
@@ -758,7 +760,7 @@ async function fetchCot(report,variant="futures-only",market="",contractMarketCo
   const term=market.toUpperCase().replace(/'/g,"''");
   u.searchParams.set("$where","upper(contract_market_name) like '%"+term+"%' OR upper(market_and_exchange_names) like '%"+term+"%'");
  }
- const response=await fetch(u,{headers:{"Accept":"application/json","User-Agent":"FinanceIntelligenceOS/1.2 public research"},signal:AbortSignal.timeout(18000)});
+ const response=await fetch(u,{headers:{"Accept":"application/json","User-Agent":"FinanceIntelligenceOS/1.2 public research",...(env.CFTC_APP_TOKEN?{"X-App-Token":env.CFTC_APP_TOKEN}:{})},redirect:"error",signal:AbortSignal.timeout(18000)});
  if(!response.ok)throw new Error("CFTC PRE "+response.status);
  const rows=await response.json();if(!Array.isArray(rows))throw new Error("CFTC PRE response was not an array");
  const dates=rows.map(r=>r.report_date_as_yyyy_mm_dd||r.report_date).filter(Boolean).map(value=>String(value).slice(0,10)).sort();

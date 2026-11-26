@@ -261,6 +261,31 @@ try {
   assert.ok(await globalMacro.evaluate(()=>document.documentElement.scrollWidth<=document.documentElement.clientWidth+1));
   await globalMacro.close();
 
+  const positioning = await browser.newPage({ viewport:{width:390,height:844} });
+  await positioning.route("**/assets/runtime-config.js", route => route.fulfill({
+    contentType:"application/javascript",body:"window.FINANCE_OS_CONFIG={apiBase:location.origin};"
+  }));
+  await positioning.route("**/api/v1/cot?*",route=>{
+    const query=new URL(route.request().url()).searchParams;
+    assert.equal(query.get("contract_market_code"),"A123");
+    return route.fulfill({json:{status:"fresh",report_family:query.get("report"),report_variant:query.get("variant"),normalizedRows:[{
+      reportFamily:query.get("report"),reportVariant:query.get("variant"),contractMarketCode:"A123",
+      marketName:"Fixture market",traderCategory:"Leveraged Funds",net:10,netChange:2,
+      reportDate:"2026-11-13",positionDate:"2026-11-13",priorReportDate:"2026-11-10",
+      netPercentile:{value:50,count:3,from:"2026-10-27",to:"2026-11-13"}
+    }]}});
+  });
+  await positioning.goto(site + "/research/positioning/");
+  await positioning.locator("#cotSearchMode").selectOption("code");
+  await positioning.locator("#cotSearch").fill("A123");
+  await positioning.getByRole("button",{name:"Search CFTC market"}).click();
+  await positioning.getByText("n=3 · 2026-10-27 → 2026-11-13").waitFor();
+  await positioning.locator("#cotMarket").selectOption("A123");
+  await positioning.locator("#cotCategory").selectOption("Leveraged Funds");
+  await positioning.locator("#cotChart svg").waitFor();
+  assert.ok(await positioning.evaluate(()=>document.documentElement.scrollWidth<=document.documentElement.clientWidth+1));
+  await positioning.close();
+
   await page.goto(site + '/ict-lab/learn/c17/');
   const worked = page.locator('[data-ifvg-worked]');
   const saveDecision = page.getByRole('button', { name: 'Save decision and reveal chart' });
