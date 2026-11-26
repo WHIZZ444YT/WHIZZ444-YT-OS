@@ -161,7 +161,7 @@ class BuildTests(unittest.TestCase):
         self.assertIn('url.searchParams.get("refresh")==="1"',js)
         self.assertIn('NEWS_REFRESH_LOCK_KEY',js)
         self.assertIn('ctx.waitUntil(refreshNews(env)',js)
-        self.assertIn('cooldownSeconds:300',js)
+        self.assertIn('cooldownSeconds:NEWS_REFRESH_INTERVAL/1000',js)
     def test_cot_category_fields_follow_cftc_schemas(self):
         js=(ROOT/'cloudflare/src/cot-contracts.mjs').read_text(encoding="utf-8")
         for field in ['dealer_positions_long_all','asset_mgr_positions_long','lev_money_positions_long','prod_merc_positions_long','swap__positions_short_all','m_money_positions_long_all','other_rept_positions_long']:
@@ -425,7 +425,7 @@ class BuildTests(unittest.TestCase):
         self.assertIn('economic_observations',js)
         self.assertIn('ingestion_runs',js)
         self.assertIn('on_conflict=provider,dataset_id,series_id,frequency,observation_date',js)
-        self.assertIn('scheduledEconomicIngestion(env)',js)
+        self.assertIn('scheduledEconomicJobs(env)',js)
         self.assertIn('recordIngestionRun(env,provider,"skipped"',js)
         self.assertIn('recordIngestionRun(env,provider,"failed"',js)
         self.assertIn('url.pathname==="/api/v1/economic/history"',js)

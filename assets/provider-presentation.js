@@ -52,6 +52,8 @@
       : options.decision === 'hosted-display-only' ? 'Provider-hosted display only'
       : status === 'excluded' ? 'Excluded'
       : options.decision === 'review-required' ? 'Review required for reuse' : 'Not reported';
+    const retry = Math.max(Date.parse(state?.retryAt ?? '') || 0, Date.parse(state?.circuitOpenUntil ?? '') || 0);
+    const retryAt = retry > (options.now ?? Date.now()) ? new Date(retry).toISOString() : null;
     const outcome = attemptAt
       ? state?.lastError ? 'Request failed' : ({
         fresh: 'Succeeded', partial: 'Partial coverage', empty: 'No observations',
@@ -59,7 +61,7 @@
         unavailable: 'Unavailable', blocked: 'Blocked', 'not-configured': 'Not configured'
       }[status] || 'Not reported')
       : 'Not reported';
-    return {status: ['fresh', 'partial', 'stale'].includes(status) ? freshness : status, configuration, authorization, freshness, attemptAt, outcome, successAt, asOf};
+    return {status: ['fresh', 'partial', 'stale'].includes(status) ? freshness : status, configuration, authorization, freshness, attemptAt, outcome, successAt, asOf, retryAt};
   }
   window.FinanceProviderPresentation = { timestamp, render, failed, healthState };
 })();

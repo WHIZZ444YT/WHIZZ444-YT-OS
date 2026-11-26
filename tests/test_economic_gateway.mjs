@@ -191,7 +191,7 @@ test("partial persistence replays a current snapshot without refetching or dupli
   assert.equal(updates.at(-1).status,"partial");
   fail=false;
   let completion;
-  worker.scheduled({},env,{waitUntil(promise){completion=promise;}});
+  await worker.scheduled({scheduledTime:Date.now()},env,{waitUntil(promise){completion=promise;}});
   await completion;
   assert.equal(providerCalls,3);
   assert.equal(observations.size,1001);

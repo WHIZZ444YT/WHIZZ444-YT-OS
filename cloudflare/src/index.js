@@ -3,7 +3,8 @@ import { officialNewsSnapshot, refreshOfficialNews } from "./official-news.mjs";
 import { providerRegistry } from "./provider-registry.mjs";
 import { approvedFredSeries, ECONOMIC_PROVIDER_CONFIG, fetchEconomicProvider } from "./economic-providers.js";
 import { filterNewsArticles, marketDataStatus, NEWS_SOURCE_REGISTRY, newsResponseEnvelope, validateNewsQuery, classifyNewsTopics, keywordRelevanceScore } from "./news-contracts.mjs";
-import { nextProviderCircuitState, providerCircuitIsOpen } from "./provider-http.mjs";
+import { nextProviderCircuitState, providerCircuitIsOpen, retryAfterMilliseconds } from "./provider-http.mjs";
+import { dispatchScheduled, eligibleEconomicJob, runProviderJobs } from "./provider-schedule.mjs";
 import { annotateCotChanges, COT_DATASETS, asFiniteNumber, cotResponseEnvelope, cotSourceColumns, normalizeCotRows, validateCotQuery } from "./cot-contracts.mjs";
 import { fetchBlsCalendar, fetchEiaWpsrSchedule } from "./economic-calendar.mjs";
 import { BEA_RELEASE_SCHEDULE_URL, BEA_RELEASE_DATES_URL, BOC_RATE_CALENDAR_URL, BOE_MPC_CALENDAR_URL, CFTC_COT_SCHEDULE_URL, ECB_COUNCIL_CALENDAR_URL, FOMC_CALENDAR_URL, RBA_BOARD_CALENDAR_URL, classifyPublisherScheduleFailure, fetchBeaReleaseCalendar, fetchBocRateCalendar, fetchBoeMpcCalendar, fetchCftcCotSchedule, fetchEcbCouncilCalendar, fetchFomcCalendar, fetchRbaBoardCalendar } from "./economic-calendar-extended.mjs";
@@ -11,6 +12,8 @@ import { normalizeFuturesObservationBatch, validateFuturesObservationQuery } fro
 
 const NEWS_KEY = "snapshot:gdelt:news:v1";
 const NEWS_REFRESH_LOCK_KEY = "lock:gdelt:manual-refresh:v1";
+const NEWS_REFRESH_INTERVAL = 30 * 60 * 1000;
+const NEWS_MAX_SNAPSHOT_AGE = 72 * 60 * 60 * 1000;
 const PROVIDER_STATE_KEY = "provider:gdelt:state:v1";
 const BLS_CALENDAR_KEY = "schedule:bls:ics:v1";
 const EIA_SCHEDULE_KEY = "schedule:eia:wpsr:v1";
@@ -295,10 +298,14 @@ export default {
    const query=validation.query;
    let snapshot=env.SNAPSHOTS?await env.SNAPSHOTS.get(NEWS_KEY,"json"):null;
    let refreshStatus="not-requested";
+   let retryAfter=null;
    if(query.refresh){
     if(!env.SNAPSHOTS)return json({...newsResponseEnvelope({status:"not-configured",lastCheckedAt:null,notes:["Cloudflare KV snapshot storage is not configured."]},[]),refresh:{status:"storage-unavailable"}},503,cors);
     const lastChecked=Date.parse(snapshot?.lastCheckedAt||"");
-    const coolingDown=Number.isFinite(lastChecked)&&Date.now()-lastChecked<5*60*1000;
+    const retryAt=Date.parse(snapshot?.retryAt||"");
+    const eligibleAt=Math.max(retryAt||0,(lastChecked||0)+NEWS_REFRESH_INTERVAL);
+    const coolingDown=eligibleAt>Date.now();
+    if(coolingDown)retryAfter=Math.ceil((eligibleAt-Date.now())/1000);
     const running=await env.SNAPSHOTS.get(NEWS_REFRESH_LOCK_KEY);
     if(coolingDown)refreshStatus="cooldown";
     else if(running)refreshStatus="in-progress";
@@ -309,8 +316,15 @@ export default {
     }
    }
    const base=snapshot||{status:"not-yet-fetched",provider:"GDELT DOC API",lastCheckedAt:null,articles:[],notes:["No edge snapshot exists yet. The configured Cron trigger populates this KV cache after its first successful run."]};
-   const filtered=filterNewsArticles(base.articles,query);
-   return json({...newsResponseEnvelope({...base,refresh:{status:refreshStatus,cooldownSeconds:300}},filtered),query:{instrument:query.instrument,topic:query.topic,publisher:query.publisher,since:query.since,until:query.until,limit:query.limit,sort:query.sort,time_basis:"provider_seen_at; publisher publication time is not supplied consistently"}},200,{...cors,"Cache-Control":query.refresh?"no-store":"public, max-age=30, s-maxage=60"});
+   const goodAge=Date.now()-Date.parse(base.generatedAt||"");
+   if(snapshot&&(!Number.isFinite(goodAge)||goodAge<0||goodAge>=NEWS_MAX_SNAPSHOT_AGE)){
+    snapshot={...base,status:"unavailable",articles:[]};
+   }else if(snapshot&&base.status==="fresh"&&goodAge>=2*NEWS_REFRESH_INTERVAL){
+    snapshot={...base,status:"stale"};
+   }
+   const publicSnapshot=snapshot||base;
+   const filtered=filterNewsArticles(publicSnapshot.articles,query);
+   return json({...newsResponseEnvelope({...publicSnapshot,refresh:{status:refreshStatus,cooldownSeconds:NEWS_REFRESH_INTERVAL/1000,retryAt:snapshot?.retryAt||null}},filtered),query:{instrument:query.instrument,topic:query.topic,publisher:query.publisher,since:query.since,until:query.until,limit:query.limit,sort:query.sort,time_basis:"provider_seen_at; publisher publication time is not supplied consistently"}},200,{...cors,...(retryAfter>0?{"Retry-After":String(retryAfter)}:{}),"Cache-Control":query.refresh?"no-store":"public, max-age=30, s-maxage=60"});
   }
 
   if(url.pathname==="/api/v1/volume-open-interest"){
@@ -486,7 +500,15 @@ export default {
   }
   return json({error:"Not found",routes:["/health","/api/v1/health","/api/v1/providers","/api/v1/news?instrument=NQ&topic=macro&limit=...","/api/v1/news/sources","/api/v1/market-data/status","/api/v1/futures-observations?root=NQ&contractMonth=202612&type=daily_volume","POST /api/v1/ingest/futures-market-data","/api/v1/volume-open-interest?report=tff|disaggregated","/api/v1/cot?report=tff|disaggregated","/api/v1/macro","/api/v1/macro/funding","/api/v1/economic/providers","/api/v1/economic/{bea|eia|fred|us_treasury|ecb}","POST /api/v1/ingest","/api/v1/economic/history?provider=...&series_id=...","/api/v1/prediction/polymarket","/api/v1/prediction/kalshi","/api/v1/cms/{model}"]},404,cors);
  },
- async scheduled(controller,env,ctx){ctx.waitUntil(Promise.allSettled([refreshNews(env),refreshOfficialNews(env.SNAPSHOTS),scheduledEconomicIngestion(env)]));}
+ async scheduled(controller,env,ctx){
+  ctx.waitUntil(dispatchScheduled(env.SNAPSHOTS,controller.scheduledTime,async({slot,slotStart})=>{
+   const jobs=[{id:"gdelt",run:()=>refreshNews(env,slotStart)}];
+   if(slot%2===0)jobs.push({id:"fed-official-news",run:()=>refreshOfficialNews(env.SNAPSHOTS)});
+   // Plan from snapshots independently so a failed KV read does not suppress other providers.
+   jobs.push(...await scheduledEconomicJobs(env));
+   await runProviderJobs(jobs);
+  }));
+ }
 };
 
 function economicCacheKey(provider){return "economic:"+provider+":v1";}
@@ -681,41 +703,68 @@ async function ingestEconomicProvider(provider,env){
   };
  }
 }
-async function scheduledEconomicIngestion(env){
- if(!env.SNAPSHOTS)return;
- const jobs=Object.entries(ECONOMIC_PROVIDER_CONFIG).filter(([provider])=>(provider!=="fred"||approvedFredSeries(env).length) && (provider!=="world-bank"||approvedWorldBankSeries(env).length));
- await Promise.allSettled(jobs.map(async([provider,cfg])=>{
+async function scheduledEconomicJobs(env){
+ const providers=Object.entries(ECONOMIC_PROVIDER_CONFIG).filter(([id,cfg])=>
+  (!cfg.credential||env[cfg.credential]) &&
+  (id!=="fred"||approvedFredSeries(env).length) &&
+  (id!=="world-bank"||approvedWorldBankSeries(env).length));
+ const due=[];
+ await runProviderJobs(providers.map(([provider,cfg])=>({id:provider,run:async()=>{
+  const statusKey="economic-provider:"+provider;
   const previous=await env.SNAPSHOTS.get(economicCacheKey(provider),"json");
+  const state=await env.SNAPSHOTS.get(statusKey,"json");
+  const now=Date.now();
   const at=Date.parse(previous?.retrievedAt||"");
-  if(!Number.isFinite(at)||Date.now()-at>cfg.ttlSeconds*1000)return await ingestEconomicProvider(provider,env);
-  if(provider!=="fred"&&provider!=="world-bank"&&previous.persistence?.status==="failed"&&env.SUPABASE_URL&&supabaseAdminKey(env)&&(!cfg.credential||env[cfg.credential])){
-   const persistence=await persistEconomicSnapshot(env,previous);
-   const remaining=Math.max(60,Math.ceil((at+cfg.ttlSeconds*2000-Date.now())/1000));
-   const current=await env.SNAPSHOTS.get(economicCacheKey(provider),"json");
-   if(current?.retrievedAt!==previous.retrievedAt)return persistence;
-   await env.SNAPSHOTS.put(economicCacheKey(provider),JSON.stringify({...previous,persistence}),{expirationTtl:remaining});
-   const statusKey="economic-provider:"+provider;
-   const state=await env.SNAPSHOTS.get(statusKey,"json");
-   if(state?.lastSuccessAt===previous.retrievedAt){
-    await env.SNAPSHOTS.put(statusKey,JSON.stringify({...state,persistenceStatus:persistence.status,rowsStored:persistence.rowsUpserted}),{expirationTtl:60*60*24*7});
-   }
-   return persistence;
+  const lastAttempt=Date.parse(state?.lastAttemptAt||"")||at||0;
+  if(eligibleEconomicJob(previous,state,cfg.ttlSeconds,now)){
+   due.push({id:provider,lastAttempt,run:()=>ingestEconomicProvider(provider,env)});
+   return;
   }
-  return{status:"fresh-cache"};
- }));
+  if(provider!=="fred"&&provider!=="world-bank"&&previous?.persistence?.status==="failed"&&
+     now>=at&&now-at<cfg.ttlSeconds*1000&&env.SUPABASE_URL&&supabaseAdminKey(env)){
+   due.push({id:provider,lastAttempt,run:async()=>{
+     const persistence=await persistEconomicSnapshot(env,previous);
+     const remaining=Math.max(60,Math.ceil((at+cfg.ttlSeconds*2000-Date.now())/1000));
+     const current=await env.SNAPSHOTS.get(economicCacheKey(provider),"json");
+     if(current?.retrievedAt!==previous.retrievedAt)return persistence;
+     await env.SNAPSHOTS.put(economicCacheKey(provider),JSON.stringify({...previous,persistence}),{expirationTtl:remaining});
+     const state=await env.SNAPSHOTS.get(statusKey,"json");
+     if(state?.lastSuccessAt===previous.retrievedAt){
+      await env.SNAPSHOTS.put(statusKey,JSON.stringify({...state,persistenceStatus:persistence.status,rowsStored:persistence.rowsUpserted}),{expirationTtl:60*60*24*7});
+     }
+     return persistence;
+   }});
+  }
+ }})));
+ return due.sort((a,b)=>a.lastAttempt-b.lastAttempt).slice(0,3);
 }
 
-async function refreshNews(env){
+let newsRefreshInFlight;
+function refreshNews(env,slotStart){
+ if(!newsRefreshInFlight){
+  newsRefreshInFlight=collectNews(env,slotStart).finally(()=>{newsRefreshInFlight=null;});
+ }
+ return newsRefreshInFlight;
+}
+
+async function collectNews(env,slotStart){
  if(!env.SNAPSHOTS)return;
  const checkedAt=new Date().toISOString();
  const previous=await env.SNAPSHOTS.get(NEWS_KEY,"json")||{articles:[]};
+ const now=Date.parse(checkedAt);
+ const lastChecked=Date.parse(previous.lastCheckedAt||"");
+ const retry=Date.parse(previous.retryAt||"");
+ if(retry>now||lastChecked>=Math.max(now-NEWS_REFRESH_INTERVAL,slotStart??0))return;
  let fresh=null,error=null;
  try{fresh=await fetchGdelt(GDELT_QUERY);}catch(cause){error=cause;}
  const articles=fresh?dedupe(fresh.articles).slice(0,100):[];
- const status=fresh?"fresh":(previous.articles?.length?"stale":"unavailable");
-  const next={schemaVersion:1,provider:"GDELT DOC API",status,generatedAt:fresh?checkedAt:previous.generatedAt||null,lastCheckedAt:checkedAt,queryCount:1,successfulQueries:fresh?1:0,articles:articles.length?articles:(previous.articles||[]),lastError:error?String(error.message||error).slice(0,180):null,notes:["One consolidated 72-hour query is used to respect GDELT's request-rate guidance.","GDELT is a broad news-discovery index, not a complete newswire.","GDELT output attribution: cite and link https://www.gdeltproject.org/about.html; rights to underlying publisher content remain separate.","seendate is GDELT indexing/seen time and may differ from publisher publication time.","Headlines are leads for verification, not trading signals."]};
+ const goodAge=now-Date.parse(previous.generatedAt||"");
+ const lastGood=goodAge>=0&&goodAge<NEWS_MAX_SNAPSHOT_AGE;
+ const status=fresh?"fresh":(lastGood?"stale":"unavailable");
+ const retryAt=error?.retryAfterMs>0?new Date(Date.parse(checkedAt)+error.retryAfterMs).toISOString():null;
+  const next={schemaVersion:1,provider:"GDELT DOC API",status,generatedAt:fresh?checkedAt:previous.generatedAt||null,lastCheckedAt:checkedAt,retryAt,queryCount:1,successfulQueries:fresh?1:0,articles:fresh?articles:(lastGood?previous.articles||[]:[]),lastError:error?String(error.message||error).slice(0,180):null,notes:["One consolidated 72-hour query is used to respect GDELT's request-rate guidance.","GDELT is a broad news-discovery index, not a complete newswire.","GDELT output attribution: cite and link https://www.gdeltproject.org/about.html; rights to underlying publisher content remain separate.","seendate is GDELT indexing/seen time and may differ from publisher publication time.","Headlines are leads for verification, not trading signals."]};
  await env.SNAPSHOTS.put(NEWS_KEY,JSON.stringify(next),{expirationTtl:60*60*24*3});
- await env.SNAPSHOTS.put(PROVIDER_STATE_KEY,JSON.stringify({status,lastCheckedAt:checkedAt,successfulQueries:fresh?1:0,queryCount:1,articleCount:next.articles.length,lastError:next.lastError}),{expirationTtl:60*60*24*7});
+ await env.SNAPSHOTS.put(PROVIDER_STATE_KEY,JSON.stringify({status,lastCheckedAt:checkedAt,retryAt,lastSuccessAt:next.generatedAt,successfulQueries:fresh?1:0,queryCount:1,articleCount:next.articles.length,lastError:next.lastError}),{expirationTtl:60*60*24*7});
  if(env.NEWS_DISCOVERY_PERSISTENCE_APPROVED==="true"&&env.SUPABASE_URL&&supabaseAdminKey(env)&&next.articles.length){
   const rows=next.articles.map(a=>({provider:"GDELT DOC API",title:a.title,url:a.url,domain:a.domain,topic:a.topic,retrieved_at:checkedAt,data_as_of:checkedAt,freshness_status:status,payload:a}));
   const endpoint=env.SUPABASE_URL.replace(/\/$/,"")+"/rest/v1/news_items?on_conflict=provider,url";
@@ -835,7 +884,11 @@ async function fetchGdelt(spec){
  const u=new URL("https://api.gdeltproject.org/api/v2/doc/doc");
  u.searchParams.set("query",spec.query);u.searchParams.set("mode","ArtList");u.searchParams.set("format","json");u.searchParams.set("maxrecords","100");u.searchParams.set("sort","DateDesc");u.searchParams.set("timespan","72h");
   const response=await fetch(u,{headers:{"Accept":"application/json","User-Agent":"FinanceIntelligenceOS/1.0 public research"},signal:AbortSignal.timeout(12000)});
- if(!response.ok)throw new Error("GDELT "+response.status);
+ if(!response.ok){
+  const error=new Error("GDELT "+response.status);
+  if(response.status===429)error.retryAfterMs=retryAfterMilliseconds(response.headers.get("Retry-After"))??NEWS_REFRESH_INTERVAL;
+  throw error;
+ }
   const data=await response.json(),retrievedAt=new Date().toISOString();return{articles:(data.articles||[]).map(a=>normalizeArticle(a,spec.label,retrievedAt)).filter(Boolean)};
 }
 function normalizeArticle(a,topic,retrievedAt=new Date().toISOString()){

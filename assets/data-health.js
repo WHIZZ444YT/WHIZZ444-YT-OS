@@ -34,7 +34,7 @@
   return Object.hasOwn(labels, value) ? labels[value] : labels.unknown;
  }
  function card(row) {
-  const {status, configuration, authorization, freshness, attemptAt, outcome, successAt, asOf} = row.health;
+  const {status, configuration, authorization, freshness, attemptAt, outcome, successAt, asOf, retryAt} = row.health;
   const tone = ["fresh", "partial"].includes(freshness) ? "good"
    : ["denied", "limited", "unavailable", "blocked"].includes(status) ? "bad" : "warn";
   const sourceUrl = safeUrl(row.source?.sourceUrl);
@@ -43,7 +43,8 @@
    ["Access", row.access], ["Configuration", configuration], ["Authorization", authorization],
    ["Freshness", label(freshness)], ["Data as of", presentation.timestamp(asOf)],
    ["Last successful fetch", presentation.timestamp(successAt)],
-   ["Last upstream attempt", presentation.timestamp(attemptAt)], ["Attempt outcome", outcome]
+   ["Last upstream attempt", presentation.timestamp(attemptAt)], ["Attempt outcome", outcome],
+   ["Next eligible retry", presentation.timestamp(retryAt)]
   ];
   return `<article class="health-card" id="provider-${escape(row.id)}">
    <div class="health-card-head"><h3>${escape(row.title)}</h3><span class="status-pill ${tone}">${label(status)}</span></div>

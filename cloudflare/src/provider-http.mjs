@@ -1,7 +1,7 @@
-function retryAfterMilliseconds(value, now = Date.now()) {
+export function retryAfterMilliseconds(value, now = Date.now()) {
   if (!value) return null;
   const seconds = Number(value);
-  if (Number.isFinite(seconds) && seconds >= 0) return seconds * 1000;
+  if (Number.isFinite(seconds) && seconds >= 0 && seconds * 1000 <= 8.64e15 - now) return seconds * 1000;
   const date = Date.parse(value);
   return Number.isFinite(date) ? Math.max(0, date - now) : null;
 }
