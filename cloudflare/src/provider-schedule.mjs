@@ -16,7 +16,7 @@ export async function dispatchScheduled(storage, scheduledTime, work, {
   try {
     await sleep(Math.floor(random() * 5000));
     if (await storage.get(key)) return;
-    await storage.put(key, "started", { expirationTtl: 7200 });
+    await storage.put(key, JSON.stringify({ started: true }), { expirationTtl: 7200 });
     await work({ slot, slotStart: slot * slotMs });
   } catch {
     console.warn("Scheduled provider dispatch failed");
