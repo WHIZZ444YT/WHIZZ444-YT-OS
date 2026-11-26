@@ -292,7 +292,7 @@ try {
     assert.equal(await entry.count(), 1);
     await entry.click();
     assert.equal(new URL(page.url()).pathname, path);
-    assert.ok(await page.locator('main .page-hero h1').isVisible());
+    await page.locator('main .page-hero h1').waitFor({state:'visible', timeout:10000});
     assert.equal(await page.getByRole('navigation', { name: 'ICT Academy sections' })
       .locator('[aria-current="page"]').getAttribute('href'), path);
     await page.goBack();
