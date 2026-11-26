@@ -9,7 +9,11 @@
   const day = value => new Intl.DateTimeFormat('sv-SE', {
     timeZone: 'America/New_York', year: 'numeric', month: '2-digit', day: '2-digit',
   }).format(value);
-  let schedules = [], news = null, report = null;
+  const preview = window.FinanceResearchPreview;
+  let schedules = [], news = null, cot = null, report = null;
+  let funding = "Funding snapshot has not been loaded.";
+  let checked = false;
+  let selectionVersion = 0;
 
   function item(text, url) {
     const row = document.createElement('li');
@@ -32,6 +36,10 @@
     const start = day(now);
     const end = new Date(Date.parse(start) + (Number(horizon.value) - 1) * 86400000).toISOString().slice(0, 10);
     const profile = context[id];
+    root.querySelector("[data-brief-chart]").href = "/charts/?market=" + encodeURIComponent(id);
+    root.querySelector("[data-brief-profile]").href = "/ict-futures/markets/" + encodeURIComponent(id) + ".html";
+    root.querySelector("[data-brief-funding]").textContent = funding;
+    root.querySelector("[data-brief-cot]").textContent = cot || "Positioning snapshot has not been loaded.";
     const headlines = (news?.articles || []).filter(row =>
       (row.instrument_tags || row.markets || []).some(tag => String(tag).toLowerCase() === id)
     ).slice(0, 8);
@@ -58,40 +66,81 @@
     const providers = available.map(({ id, data }) => ({
       publisher: id, status: data.status || 'unknown', retrievedAt: data.retrieved_at || null,
     }));
-    report = { generatedAt: now.toISOString(), market: id, horizonDays: +horizon.value, start, end,
-      newsStatus: news?.status || 'unavailable', newsRetrievedAt: news?.retrieved_at || news?.lastCheckedAt || null,
-      calendarPublishers: providers, headlines, events: listed, context: profile };
-    status.textContent = 'News ' + report.newsStatus + ' · retrieved ' + (report.newsRetrievedAt || 'time unavailable')
+    report = { schemaVersion: 2, generatedAt: now.toISOString(), market: id, horizonDays: +horizon.value, start, end };
+    if (!checked) {
+      status.textContent = "Load snapshots to check this market. Research links and plan export are available now.";
+      return;
+    }
+    const newsStatus = news?.status || "unavailable";
+    const newsRetrievedAt = news?.retrieved_at || news?.lastCheckedAt || news?.retrievedAt;
+    status.textContent = 'News ' + newsStatus + ' · retrieved ' + (newsRetrievedAt || 'time unavailable')
       + '. Calendar feeds: ' + (providers.map(p => p.publisher + ' ' + p.status + ' · ' + (p.retrievedAt || 'retrieval time unavailable')).join('; ') || 'unavailable')
       + (schedules.some(feed => feed.status === 'rejected') ? '. Some publisher feeds are unavailable.' : '.');
   }
 
-  const preset = new URLSearchParams(location.search).get('market');
-  if (preset && Object.hasOwn(context, preset)) market.value = preset;
+  function restoreSelection() {
+    const params = new URLSearchParams(location.search);
+    const preset = params.get("market");
+    market.value = preset && Object.hasOwn(context, preset) ? preset : market.options[0].value;
+    const days = params.get("horizon");
+    horizon.value = ["1", "7", "30"].includes(days) ? days : "7";
+  }
+
+  function updateSelection() {
+    const url = new URL(location.href);
+    url.searchParams.set("market", market.value);
+    url.searchParams.set("horizon", horizon.value);
+    history.replaceState(history.state, "", url);
+  }
+
+  async function request(path) {
+    if (!apiBase) throw new Error("Gateway unavailable");
+    const response = await fetch(apiBase + path, { signal: AbortSignal.timeout(16000) });
+    if (!response.ok) throw new Error("Snapshot unavailable");
+    return response.json();
+  }
+
+  async function loadNews() {
+    try { return await request("/api/v1/news?limit=100"); }
+    catch {
+      const response = await fetch("/data/news-snapshot.json", { signal: AbortSignal.timeout(8000) });
+      return response.ok ? response.json() : null;
+    }
+  }
+
+  restoreSelection();
   form.hidden = false;
-  form.addEventListener('change', render);
-  form.addEventListener('submit', async event => {
+  form.addEventListener("change", event => {
+    updateSelection();
+    if (event.target === market) {
+      selectionVersion++;
+      cot = null;
+    }
+    render();
+  });
+  form.addEventListener("submit", async event => {
     event.preventDefault();
-    const button = event.submitter || form.querySelector('[type=submit]');
+    updateSelection();
+    const button = event.submitter || form.querySelector("[type=submit]");
+    const version = selectionVersion;
+    const path = preview.cotPath(market.value);
     button.disabled = true;
-    status.textContent = 'Checking news and publisher schedules…';
+    status.textContent = "Checking available provider snapshots…";
     try {
-      const loadNews = async () => {
-        if (apiBase) {
-          try {
-            const response = await fetch(apiBase + '/api/v1/news?limit=100',
-              { signal: AbortSignal.timeout(16000) });
-            if (response.ok) return await response.json();
-          } catch { /* use the packaged snapshot */ }
-        }
-        const fallback = await fetch('/data/news-snapshot.json');
-        return fallback.ok ? fallback.json() : null;
-      };
-      const [newsResult, schedulesResult] = await Promise.allSettled([
+      const [newsResult, schedulesResult, fundingResult, cotResult] = await Promise.allSettled([
         loadNews(), apiBase ? window.loadPublisherSchedules(apiBase) : [],
+        request("/api/v1/macro/funding"), path ? request(path) : null,
       ]);
-      news = newsResult.status === 'fulfilled' ? newsResult.value : null;
-      schedules = schedulesResult.status === 'fulfilled' ? schedulesResult.value : [];
+      news = newsResult.status === "fulfilled" ? newsResult.value : null;
+      schedules = schedulesResult.status === "fulfilled" ? schedulesResult.value : [];
+      funding = fundingResult.status === "fulfilled" ? preview.fundingText(fundingResult.value)
+        : "Funding snapshot unavailable. See Macro for source details.";
+      if (version === selectionVersion) {
+        cot = !path ? "Open COT & Positioning to find the report for this market."
+          : cotResult.status === "fulfilled" ? preview.cotText(cotResult.value)
+          : "Positioning snapshot unavailable. See COT & Positioning.";
+      }
+      checked = true;
       render();
     } finally { button.disabled = false; }
   });

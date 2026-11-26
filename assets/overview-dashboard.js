@@ -178,7 +178,9 @@
     try {
       const term = String(market.label || market.id).split("·")[0]
         .replace(/E-mini|Micro/ig, "").trim();
-      const data = await api("/api/v1/cot?report=tff&q=" + encodeURIComponent(term));
+      const path = window.FinanceResearchPreview.cotPath(market.id) || "/api/v1/cot?report=tff&q=" + encodeURIComponent(term);
+      const data = await api(path);
+      if (selected()?.id !== market.id) return;
       const rows = Array.isArray(data.normalizedRows) ? data.normalizedRows :
         (Array.isArray(data.rows) ? data.rows : []);
       const reportDate = data.dataAsOf || data.reportDate || data.report_date || "Not supplied";
@@ -186,7 +188,7 @@
       const summary = $("overviewCotSummary");
       if (summary) summary.innerHTML = [
         ["Report date", reportDate],
-        ["Report type", data.report || "TFF · futures-only"],
+        ["Report type", [data.report_family || data.report, data.report_variant].filter(Boolean).join(" · ") || "Futures-only"],
         ["Rows returned", rows.length]
       ].map(([label,value]) => '<div><span>' + esc(label) + '</span><b>' + esc(value) + '</b></div>').join("");
       setChip("overviewCotBadge", state);
@@ -195,6 +197,7 @@
       setText("overviewCotAttribution", "Source: " + (data.provider || "CFTC Public Reporting Environment") +
         " · report date: " + reportDate + " · weekly cadence; not intraday positioning or exchange volume.");
     } catch (error) {
+      if (selected()?.id !== market.id) return;
       setChip("overviewCotBadge", "unavailable");
       setChip("overviewCotState", "unavailable");
       setText("overviewCotStateDetail", error.message);
@@ -202,6 +205,40 @@
       const summary = $("overviewCotSummary");
       if (summary) summary.innerHTML = '<div><span>Report date</span><b>—</b></div><div><span>Report type</span><b>TFF</b></div><div><span>Rows returned</span><b>—</b></div>';
     }
+  }
+
+  async function loadFunding() {
+    try { setText("overviewFunding", window.FinanceResearchPreview.fundingText(await api("/api/v1/macro/funding"))); }
+    catch { setText("overviewFunding", "Funding snapshot unavailable. See Macro for source details."); }
+  }
+
+  async function loadReleases() {
+    const list = $("overviewEvents");
+    if (!API || !list) {
+      setText("overviewCalendarState", "Gateway unavailable. Open the economic calendar for publisher links.");
+      return;
+    }
+    const results = await window.loadPublisherSchedules(API, ["BLS","EIA","FOMC","CFTC","BEA"]);
+    const usable = results.filter(result => result.status === "fulfilled" &&
+      ["fresh","stale","partial","cached","empty"].includes(result.value.data.status));
+    const today = new Intl.DateTimeFormat("sv-SE", {timeZone:"America/New_York",year:"numeric",month:"2-digit",day:"2-digit"}).format(new Date());
+    const events = new Map();
+    for (const {value:{id,data}} of usable) {
+      for (const event of data.events || []) {
+        if (event.scheduled_date >= today && event.event_id) events.set(event.event_id, {event,id,status:data.status});
+      }
+    }
+    const ordered = [...events.values()].sort((a,b) =>
+      ((a.event.scheduled_date || "") + (a.event.scheduled_at_utc || "")).localeCompare((b.event.scheduled_date || "") + (b.event.scheduled_at_utc || ""))).slice(0,5);
+    list.replaceChildren(...ordered.map(({event,id,status}) => {
+      const row = document.createElement("li");
+      row.textContent = [event.title || event.name || event.event_name, event.scheduled_at_utc || event.scheduled_date + " (date only)",
+        id, status].filter(Boolean).join(" · ");
+      return row;
+    }));
+    setText("overviewCalendarState", !usable.length ? "Publisher schedules unavailable."
+      : (ordered.length ? "" : "No upcoming events in available snapshots. ")
+        + usable.length + "/" + results.length + " publisher snapshots available.");
   }
 
   const timezoneKey = "fios.overview.timeZone.v1";
@@ -275,7 +312,7 @@
     window.setInterval(renderClock, 1000);
     bindEvents();
     await loadMarketRegistry();
-    await Promise.allSettled([loadNews(false),loadCot()]);
+    await Promise.allSettled([loadNews(false), loadCot(), loadFunding(), loadReleases()]);
     setText("overviewUpdated", "Last snapshot checks: " + new Intl.DateTimeFormat("en-IN", {
       dateStyle:"medium",timeStyle:"short"
     }).format(new Date()));

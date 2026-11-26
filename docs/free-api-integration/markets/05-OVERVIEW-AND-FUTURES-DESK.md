@@ -10,7 +10,7 @@ Out of scope for implementation of this workstream are unrelated product upgrade
 
 ## Repository audit evidence and gaps
 
-**Status** — Existing repository building blocks verified in source. Proposed changes and production verification remain pending.
+**Status** — Initial Overview and Desk previews use the existing gateway contracts. Provider upgrades remain owned by their dependency documents.
 
 - [`assets/overview-dashboard.js`](https://github.com/WHIZZ444YT/WHIZZ444-YT-OS/blob/e791f37da39209f3ac6c50ebf2f960101f618efb/assets/overview-dashboard.js)
 - [`assets/futures-brief.js`](https://github.com/WHIZZ444YT/WHIZZ444-YT-OS/blob/e791f37da39209f3ac6c50ebf2f960101f618efb/assets/futures-brief.js)
@@ -65,6 +65,13 @@ Preserve direct source links and readable empty states. Show a precise status be
 
 
 
+## Implementation record
+
+- Overview promotes NQ, ES, GC and CL with static links to existing Charts, profiles and scoped Desk selections. It previews capped issuer events and New York Fed funding alongside existing news and COT. Rates show effective dates and source status. No price ticker is activated pending Doc 06 widget coverage and terms review.
+- Desk stores validated market and horizon in the URL, including the existing brief fragment. News, calendar, funding and COT settle separately. Funding and calendar use publisher context. COT preview selects TFF or Disaggregated by priority market, and other markets retain a link to the full tool.
+- Export v2 contains only the user-selected market and date window plus generation metadata. Third-party headlines, event payloads, rates, positioning and hosted widget values are excluded unless a separate export grant is implemented and validated.
+- No new provider, credential, storage or gateway route is required. Production source coverage and the future provider rollout are separate from the preview checks.
+
 ## Future file changes and implementation sequence
 
 **Dependencies** — [02 · Data architecture and API gateway](../foundation/02-DATA-ARCHITECTURE-AND-API-GATEWAY.md) · [06 · TradingView charts and widgets](../markets/06-TRADINGVIEW-CHARTS-AND-WIDGETS.md) · [09 · Economic calendar](../research/09-ECONOMIC-CALENDAR.md) · [10 · Futures news and RSS](../research/10-FUTURES-NEWS-AND-RSS.md) · [12 · Treasury and Fed intelligence](../research/12-TREASURY-AND-FED-INTELLIGENCE.md) · [15 · CFTC COT and positioning](../research/15-CFTC-COT-AND-POSITIONING.md)
@@ -84,7 +91,7 @@ Preserve direct source links and readable empty states. Show a precise status be
 - Integration evidence includes a deterministic fixture, rebuild/validation where applicable, and a preview check of the affected UI including mobile, disabled credentials, blocked data and fallback links.
 - Disable the affected dataset, route flag or widget first if activation fails, restore last reviewed configuration/static build/Worker version, and invalidate any prohibited cached data. Retain permitted database history and prefer corrective additive migrations.
 
-- [ ] Scope and dependency evidence recorded.
+- [x] Scope and dependency evidence recorded.
 - [ ] Relevant data rights, owner actions and fallback verified per dataset.
 - [ ] Target routes and existing compatibility checked.
 - [ ] Unit, integration and applicable live preview results reported.

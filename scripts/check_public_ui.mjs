@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import { mkdir, writeFile } from 'node:fs/promises';
+import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import { createRequire } from 'node:module';
 import { join } from 'node:path';
 
@@ -39,6 +39,44 @@ try {
       }
     }
   }
+
+  const desk = await browser.newPage({ viewport: { width: 390, height: 844 }, acceptDownloads: true });
+  await desk.route("**/assets/runtime-config.js", route => route.fulfill({
+    contentType: "application/javascript",
+    body: 'window.FINANCE_OS_CONFIG = {apiBase: location.origin};'
+  }));
+  await desk.route("**/api/v1/**", route => {
+    const path = new URL(route.request().url()).pathname;
+    if (path.endsWith("/macro/funding")) return route.fulfill({json:{
+      status:"fresh",rates:[{type:"SOFR",percentRate:4.5,effectiveDate:"2026-11-25"}]
+    }});
+    if (path.endsWith("/cot")) return route.fulfill({status:503,json:{error:"COT unavailable"}});
+    if (path.endsWith("/news")) return route.fulfill({json:{
+      status:"stale",articles:[{title:"Fixture headline",markets:["gc"],url:"https://publisher.example/article"}]
+    }});
+    return route.fulfill({json:{status:"fresh",events:[]}});
+  });
+  await desk.goto(site + "/futures-intelligence/?market=gc&horizon=30#daily-brief");
+  const brief = desk.locator("#daily-brief");
+  await brief.getByRole("button",{name:"Load snapshots"}).click();
+  await brief.getByText(/SOFR 4.5%/).waitFor();
+  await brief.getByText(/Positioning snapshot unavailable/).waitFor();
+  await brief.getByRole("link",{name:/Fixture headline/}).waitFor();
+  await brief.locator('select[name="horizon"]').selectOption("1");
+  await desk.reload();
+  assert.equal(await brief.locator('select[name="market"]').inputValue(),"gc");
+  assert.equal(await brief.locator('select[name="horizon"]').inputValue(),"1");
+  assert.equal(await brief.getByRole("link",{name:"Charts",exact:true}).getAttribute("href"),"/charts/?market=gc");
+  // Export after loading provider data so an accidental inclusion fails even with a populated brief.
+  await brief.getByRole("button",{name:"Load snapshots"}).click();
+  await brief.getByRole("link",{name:/Fixture headline/}).waitFor();
+  const download = desk.waitForEvent("download");
+  await brief.getByRole("button",{name:"Export local research plan"}).click();
+  const payload = JSON.parse(await readFile(await (await download).path(),"utf8"));
+  assert.deepEqual(Object.keys(payload).sort(),["end","generatedAt","horizonDays","market","schemaVersion","start"]);
+  assert.equal(payload.market,"gc");
+  assert.equal(payload.horizonDays,1);
+  await desk.close();
 
   await page.setViewportSize({ width: 768, height: 900 });
   await page.goto(site + '/');
