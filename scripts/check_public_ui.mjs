@@ -117,6 +117,55 @@ try {
   assert.equal(await comparison.inputValue(), 'es');
   assert.equal(await comparisonChart.isVisible(), true);
 
+  const widgetPage = await browser.newPage({ viewport: { width: 320, height: 844 } });
+  const requests = [];
+  const vendor = 'https://s3.tradingview.com/external-embedding/embed-widget-advanced-chart.js';
+  await widgetPage.route(vendor, route => {
+    requests.push(route.request().url());
+    return route.fulfill({ contentType: 'application/javascript', body:
+      '(() => { const widget = document.currentScript.parentElement.querySelector(".tradingview-widget-container__widget");' +
+      'const frame = document.createElement("iframe"); frame.src = "about:blank"; widget.append(frame); })();'
+    });
+  });
+  await widgetPage.goto(site + '/charts/?market=nq&comparison=es&interval=60');
+  const previewButton = widgetPage.getByRole('button', {name:'Load previews'});
+  await previewButton.waitFor();
+  assert.equal(requests.length,0);
+  await previewButton.click();
+  const frames = widgetPage.locator('[data-chart-mount] iframe');
+  await frames.nth(1).waitFor();
+  assert.equal(await frames.count(),2);
+  assert.match(await frames.first().getAttribute('title'),/TradingView/);
+  assert.equal(await widgetPage.locator('.tradingview-widget-copyright a').count(),2);
+  const config = () => widgetPage.locator('[data-chart-mount] script').first().evaluate(node => JSON.parse(node.textContent));
+  assert.equal((await config()).interval,'60');
+  const themeButton = widgetPage.locator('#osThemeToggle');
+  const themeBefore = (await config()).theme;
+  await themeButton.click();
+  await widgetPage.waitForFunction(prior => {
+    const script = document.querySelector('[data-chart-mount] script');
+    return script && JSON.parse(script.textContent).theme !== prior;
+  },themeBefore);
+  assert.ok(await widgetPage.evaluate(() => document.documentElement.scrollWidth <= document.documentElement.clientWidth + 1));
+  await widgetPage.locator('#public-chart-controls [name=market]').selectOption('dx');
+  assert.equal(await widgetPage.locator('[data-chart-mount] script').count(),0);
+  await widgetPage.locator('#public-chart-controls [name=comparison]').selectOption('');
+  await previewButton.click();
+  await widgetPage.getByText(/Hosted coverage has not been verified/).waitFor();
+  assert.equal(await widgetPage.locator('[data-chart-mount] script').count(),0);
+  assert.match(await widgetPage.getByRole('link',{name:'Open chart on TradingView'}).getAttribute('href'),/ICEUS%3ADX1/);
+  await widgetPage.close();
+
+  await page.goto(site + '/charts/?market=gc');
+  await page.getByRole('button',{name:'Load previews'}).click();
+  await page.getByText('Preview unavailable. Open the direct TradingView link.').waitFor();
+  assert.equal(await page.getByRole('link',{name:'Open chart on TradingView'}).isVisible(),true);
+
+  const noScripts = await browser.newPage({ javaScriptEnabled:false });
+  await noScripts.goto(site + '/charts/');
+  assert.match(await noScripts.getByRole('link',{name:'Open chart on TradingView'}).getAttribute('href'),/CME_MINI%3ANQ1/);
+  await noScripts.close();
+
   await page.goto(site + '/ict-lab/learn/c17/');
   const worked = page.locator('[data-ifvg-worked]');
   const saveDecision = page.getByRole('button', { name: 'Save decision and reveal chart' });

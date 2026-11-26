@@ -10,7 +10,7 @@ Out of scope for implementation of this workstream are unrelated product upgrade
 
 ## Repository audit evidence and gaps
 
-**Status** — Existing repository building blocks verified in source. Proposed changes and production verification remain pending.
+**Status** — Advanced Chart pilot and opt-in ticker implemented. Live venue coverage and delay remain unverified.
 
 - [`scripts/build_public_futures.py`](https://github.com/WHIZZ444YT/WHIZZ444-YT-OS/blob/e791f37da39209f3ac6c50ebf2f960101f618efb/scripts/build_public_futures.py)
 - [`assets/public-charts.js`](https://github.com/WHIZZ444YT/WHIZZ444-YT-OS/blob/e791f37da39209f3ac6c50ebf2f960101f618efb/assets/public-charts.js)
@@ -68,6 +68,14 @@ Use the dataset decisions in [01 · Provider registry and licensing](../foundati
 
 Use official widget catalog and generated embed modes (iframe or vendor script/web component as documented per widget). Inspect frame-src/script-src/connect-src domains in preview and narrow CSP after report-only tests. Use a stable aspect ratio for small cards and a responsive chart with keyboard-accessible controls, descriptive titles and reserved minimum height. Respect theme setting, show unsupported/delay-unconfirmed states, and keep provider links available before mount and after timeout. Exact widget symbols are candidates from Doc 07 until checked. [Widget catalog](https://www.tradingview.com/widget-docs/) · [Data coverage](https://www.tradingview.com/data-coverage/) · [Widget data FAQ](https://www.tradingview.com/widget-docs/faq/data/).
 
+## Implementation record
+
+- Charts uses the documented TradingView Advanced Chart loader, with one instance per selected slot. NQ, ES, GC and CL are the initial pilot, with availability and delay unconfirmed. Other symbols, including ICE DX, keep their direct TradingView links. No vendor connection starts before Load previews.
+- Changing the selection or browser history clears mounted previews. Theme changes rebuild requested previews. Each widget keeps provider attribution and a direct URL. A blocked script or frame creation timeout surfaces a fallback. Cross-origin frame content is intentionally opaque, so frame creation is never treated as evidence of a quote or a supported symbol.
+- The homepage legacy iframe ticker is disabled by default. After verifying the exact symbols in a preview, set `PUBLIC_TRADINGVIEW_TICKER_MARKETS` to a comma-separated subset of `nq,es,gc,cl` in the intended Vercel environment. Rebuild and click Load ticker tape. Clear the setting and rebuild to remove the ticker. No provider key is used.
+- Keep the existing CSP report-only policy for this release. The documented loader uses `s3.tradingview.com`; verify the exact frame destinations and report impact before tightening the policy. Markets and Desk continue to deep-link into Charts. Additional widgets remain reference or optional placements until separately verified.
+- Widget data stays with TradingView. The site does not cache, export, or ingest chart or ticker values. Review the [Advanced Chart](https://www.tradingview.com/widget-docs/widgets/charts/advanced-chart/) and [legacy ticker](https://www.tradingview.com/widget-docs/widgets/tickers/legacy-ticker-tape) documentation.
+
 ## Future file changes and implementation sequence
 
 **Dependencies** — [01 · Provider registry and licensing](../foundation/01-PROVIDER-REGISTRY-AND-LICENSING.md) · [02 · Data architecture and API gateway](../foundation/02-DATA-ARCHITECTURE-AND-API-GATEWAY.md)
@@ -87,7 +95,7 @@ Use official widget catalog and generated embed modes (iframe or vendor script/w
 - Integration evidence includes a deterministic fixture, rebuild/validation where applicable, and a preview check of the affected UI including mobile, disabled credentials, blocked data and fallback links.
 - Disable the affected dataset, route flag or widget first if activation fails, restore last reviewed configuration/static build/Worker version, and invalidate any prohibited cached data. Retain permitted database history and prefer corrective additive migrations.
 
-- [ ] Scope and dependency evidence recorded.
+- [x] Scope and dependency evidence recorded.
 - [ ] Relevant data rights, owner actions and fallback verified per dataset.
 - [ ] Target routes and existing compatibility checked.
 - [ ] Unit, integration and applicable live preview results reported.

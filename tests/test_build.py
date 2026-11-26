@@ -8,6 +8,18 @@ from build_academy import academy_video_coverage
 import build_site
 from build_site import TERMINAL_CUTOVER, futures_terminal_bundle
 class BuildTests(unittest.TestCase):
+    def test_ticker_requires_explicit_supported_markets(self):
+        from build_public_futures import overview_ticker
+
+        markets = json.loads((ROOT/'ict-futures/data/market-universe.json').read_text(encoding='utf-8'))['markets']
+        self.assertEqual(overview_ticker(markets, '', json.dumps), '')
+        markup = overview_ticker(markets, 'nq, es', json.dumps)
+        self.assertIn('CME_MINI:NQ1!', markup)
+        self.assertIn('CME_MINI:ES1!', markup)
+        self.assertNotIn('COMEX:GC1!', markup)
+        with self.assertRaisesRegex(ValueError, 'accepts nq'):
+            overview_ticker(markets, 'dx', json.dumps)
+
     def test_preview_runtime_config_isolated_and_elevated_override_rejected(self):
         with TemporaryDirectory() as directory, patch.object(build_site, 'DIST', Path(directory)):
             path = Path(directory)/'assets/runtime-config.js'

@@ -25,9 +25,12 @@ TERMINAL_ROUTES = {
 }
 
 
+TRADINGVIEW_CHART_PILOT = frozenset({'nq', 'es', 'gc', 'cl'})
+
+
 def market_options(markets, default=None):
     return "".join(
-        f'<option value="{escape(m["id"])}" data-symbol="{escape(m.get("chart", ""))}" data-exchange="{escape(m["exchange"])}"{" selected" if m["id"] == default else ""}>'
+        f'<option value="{escape(m["id"])}" data-symbol="{escape(m.get("chart", ""))}" data-exchange="{escape(m["exchange"])}" data-preview="{"pilot" if m["id"] in TRADINGVIEW_CHART_PILOT else "link-only"}"{" selected" if m["id"] == default else ""}>'
         f'{escape(m["label"])}</option>' for m in markets
     )
 
@@ -39,7 +42,7 @@ def chart_page(markets):
     primary_options = market_options(markets, "nq")
     direct = "https://www.tradingview.com/chart/?" + urlencode({"symbol": nq["chart"], "interval": "15"})
     return f"""<section class="ict-public"><header class="ict-hero"><h1>Futures charts</h1>
-<p>Compare contract families at the same interval. Load a TradingView preview or open the full chart for drawing tools.</p></header>
+<p>Compare contract families at the same interval. Load a pilot preview for NQ, ES, GC or CL, or open the full TradingView chart. Hosted availability and delay can vary by symbol.</p></header>
 <form id="public-chart-controls" class="ict-chart-controls" action="/charts/" inert>
 <label>Market <select name="market">{primary_options}</select></label>
 <label>Comparison <select name="comparison"><option value="">None</option>{options}</select></label>
@@ -56,6 +59,24 @@ def chart_page(markets):
 <noscript><p>Enable JavaScript to change the chart selection. The direct chart link above is available.</p></noscript>
 <p>Continuous symbols may contain roll adjustments or gaps. Match listed expiries and bar times when comparing swings. Use the linked lesson to assess SMT manually.</p>
 <p><a href="/markets/">Market profiles</a> · <a href="/volume-open-interest/">Volume and open interest</a> · <a href="/ict-lab/learn/c43/">Learn NQ/ES SMT</a></p></section>"""
+
+
+def overview_ticker(markets, configured_ids, json_script):
+    selected = {item.strip() for item in configured_ids.split(',')} - {''}
+    if not selected:
+        return ''
+    if not selected <= TRADINGVIEW_CHART_PILOT:
+        raise ValueError('PUBLIC_TRADINGVIEW_TICKER_MARKETS accepts nq, es, gc and cl only.')
+    symbols = [{'proName': market['chart'], 'description': market['id'].upper()}
+               for market in markets if market['id'] in selected]
+    if len(symbols) != len(selected) or any(not item['proName'] for item in symbols):
+        raise ValueError('Ticker market is missing a trading symbol.')
+    return (f'<section class="os-widget" aria-labelledby="overview-ticker" data-tradingview-tape="{escape(json_script(symbols), quote=True)}">'
+            '<h2 id="overview-ticker">Futures ticker tape</h2>'
+            '<p>Continuous futures references. TradingView controls availability and delay.</p>'
+            '<button class="secondary-button" type="button">Load ticker tape</button><div data-tape-mount></div>'
+            '<a href="/charts/">Open Futures Charts</a></section>'
+            '<script defer src="/assets/tradingview-widgets.js"></script>')
 
 
 def bookmarks_page(markets, json_script):

@@ -198,7 +198,7 @@ test('chart controls restore Back and Forward selections without automatically l
   assert.match(chart, /Open chart on TradingView/);
   const state = { index: 0, urls: [origin + '/charts/?market=es&comparison=nq'] };
   const field = (name, entries) => {
-    const options = entries.map(([value, symbol]) => ({ value, dataset: { symbol }, textContent: value }));
+    const options = entries.map(([value, symbol]) => ({ value, dataset: { symbol, preview: "pilot" }, textContent: value }));
     return { name, options, get selectedOptions() { return options.filter(option => option.value === this.value); } };
   };
   const form = {
@@ -225,6 +225,14 @@ test('chart controls restore Back and Forward selections without automatically l
   };
   runInNewContext(candidateScript('public-charts.js'), {
     URL, URLSearchParams, location: target,
+    window: { FinanceTradingViewWidgets: {
+      theme: () => "dark",
+      onThemeChange() {},
+      mount(node, kind, config) {
+        node.append({kind,config});
+        return () => node.replaceChildren();
+      }
+    } },
     history: { pushState(_, _title, next) { state.urls.splice(++state.index, Infinity, next.href); } },
     FormData: function (form) { return Object.values(form.elements).map(option => [option.name, option.value]); },
     addEventListener: (event, callback) => { emit[event] = callback; },
@@ -242,7 +250,7 @@ test('chart controls restore Back and Forward selections without automatically l
   form.listeners.change();
   form.listeners.submit({ preventDefault() {} });
   assert.equal(frames().length, 2);
-  assert.equal(new URL(frames()[0].src).searchParams.get('interval'), '60');
+  assert.equal(frames()[0].config.interval, '60');
   state.index--;
   emit.popstate();
   assert.equal(form.elements.interval.value, '15');

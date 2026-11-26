@@ -11,7 +11,7 @@ from build_ict_lab import build_ict_lab
 from build_route_manifest import route_manifest
 from ict_crosswalk import IctCrosswalk, PUBLIC_MODELS
 from public_market_context import build_market_context, market_context_text
-from build_public_futures import bookmarks_page, chart_page, daily_brief, personal_reminders, search_page, session_heatmap, social_discovery
+from build_public_futures import bookmarks_page, chart_page, daily_brief, overview_ticker, personal_reminders, search_page, session_heatmap, social_discovery
 
 ROOT = Path(__file__).resolve().parents[1]
 DIST = ROOT / 'dist'
@@ -472,6 +472,8 @@ def build():
         if old_seo_file.exists(): old_seo_file.unlink()
     # Futures Command Center source is the maintained root index.html.
     home = (DIST/'index.html').read_text(encoding='utf-8')
+    ticker = overview_ticker(mdata, os.getenv('PUBLIC_TRADINGVIEW_TICKER_MARKETS', ''), json_script)
+    home = home.replace('<!-- TRADINGVIEW_TICKER -->', ticker, 1)
     home = re.sub(r'<aside class="os-sidebar" id="appSidebar".*?</aside>',
                   lambda _: nav_markup('/'), home, count=1, flags=re.S)
     if SITE_URL:
@@ -506,7 +508,7 @@ def build():
           '<link rel="stylesheet" href="/assets/ict-public.css"><script defer src="/assets/public-search.js"></script>'))
     write(DIST/'charts/index.html', shell('Futures Charts | Futures Intelligence OS',
           'Compare futures charts in TradingView.', chart_page(mdata), '/charts/',
-          '<link rel="stylesheet" href="/assets/ict-public.css"><script defer src="/assets/public-charts.js"></script>'))
+          '<link rel="stylesheet" href="/assets/ict-public.css"><script defer src="/assets/tradingview-widgets.js"></script><script defer src="/assets/public-charts.js"></script>'))
     bookmark_routes = ['/ict-futures/bookmarks/']
     if TERMINAL_CUTOVER:
         bookmark_routes.append('/ict-futures/')
