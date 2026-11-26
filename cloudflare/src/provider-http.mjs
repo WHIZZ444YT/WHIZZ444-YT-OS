@@ -34,12 +34,13 @@ export async function fetchJsonWithRetry(url, provider, options = {}) {
     let body;
     try { body = JSON.parse(text); }
     catch {
-      if (response.status !== 429) throw new Error(`${provider} returned non-JSON HTTP ${response.status}`);
+      if (![401, 403, 429].includes(response.status)) throw new Error(`${provider} returned non-JSON HTTP ${response.status}`);
     }
     if (response.ok) return body;
     const transient = response.status === 408 || response.status === 429 || response.status >= 500;
     const retryAfter = retryAfterMilliseconds(response.headers.get('Retry-After'), now());
     lastError = new Error(`${provider} request failed: HTTP ${response.status}`);
+    lastError.upstreamStatus = response.status;
     if (transient && retryAfter !== null) lastError.retryAfterMs = retryAfter;
     if (!transient || attempt >= retries || (retryAfter !== null && retryAfter > maxDelayMs)) throw lastError;
     const backoff = 250 * (2 ** attempt) + Math.floor(random() * 250);

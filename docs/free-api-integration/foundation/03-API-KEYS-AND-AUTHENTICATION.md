@@ -10,7 +10,7 @@ Out of scope for implementation of this workstream are unrelated product upgrade
 
 ## Repository audit evidence and gaps
 
-**Status** — Existing named variables verified in repository. Configured values and account activation are unverified.
+**Status** — Setup route, environment-scoped public build configuration and safe credential statuses implemented. Real account credentials and activation remain owner-managed.
 
 - [`.env.example`](https://github.com/WHIZZ444YT/WHIZZ444-YT-OS/blob/e791f37da39209f3ac6c50ebf2f960101f618efb/.env.example)
 - [`docs/ENVIRONMENT.md`](https://github.com/WHIZZ444YT/WHIZZ444-YT-OS/blob/e791f37da39209f3ac6c50ebf2f960101f618efb/docs/ENVIRONMENT.md)
@@ -70,6 +70,13 @@ Use the dataset decisions in [01 · Provider registry and licensing](../foundati
 
 Initial local testing: fill test-only Worker secrets via Wrangler's local secret config, keep it untracked and use fixtures when no test accounts exist. Vercel public build values belong in preview/production scopes. Owner setup uses Cloudflare Dashboard → Workers & Pages → finance-intelligence-os-edge → Settings → Variables and Secrets, or interactive `wrangler secret put NAME --config cloudflare/wrangler.toml` after confirming the target. Provisioning is manual unless separately authorized through protected tooling. No key should appear in output, command history, browser or error payloads. Some upstream APIs require query auth, so redact Worker invocation query strings and never preserve upstream signed URLs. Validate replacement before revoking old credentials, repeat the sanitized status probe, and use incident procedures if compromised. [Wrangler secrets](https://developers.cloudflare.com/workers/configuration/secrets/).
 
+## Implementation record
+
+- Data Health links to the generated `/data-health/integrations/` page. It has public registration links, setup and rotation guidance, and read-only Worker configuration status. It provides no secret input or public mutation endpoint.
+- Economic provider status gives current environment configuration precedence over old KV state. A registered provider returning HTTP 401 or 403 is reported as rejected, without forwarding upstream messages or secret values. Successful refresh replaces failure state. BLS key configuration is optional and separate from economic provider state.
+- Vercel preview leaves unset Worker and Supabase endpoints disabled. Explicit build inputs are restricted to the three documented public variables. The frontend key override requires a Supabase publishable key. Local and production builds without overrides retain existing defaults. Untracked Worker dev secret files remain environment-scoped.
+- Provision secrets and approve any FRED datasets separately. Existing public calendar routes remain independently available.
+
 ## Future file changes and implementation sequence
 
 **Dependencies** — [01 · Provider registry and licensing](../foundation/01-PROVIDER-REGISTRY-AND-LICENSING.md) · [02 · Data architecture and API gateway](../foundation/02-DATA-ARCHITECTURE-AND-API-GATEWAY.md)
@@ -89,7 +96,7 @@ Initial local testing: fill test-only Worker secrets via Wrangler's local secret
 - Integration evidence includes a deterministic fixture, rebuild/validation where applicable, and a preview check of the affected UI including mobile, disabled credentials, blocked data and fallback links.
 - Disable the affected dataset, route flag or widget first if activation fails, restore last reviewed configuration/static build/Worker version, and invalidate any prohibited cached data. Retain permitted database history and prefer corrective additive migrations.
 
-- [ ] Scope and dependency evidence recorded.
+- [x] Scope and dependency evidence recorded.
 - [ ] Relevant data rights, owner actions and fallback verified per dataset.
 - [ ] Target routes and existing compatibility checked.
 - [ ] Unit, integration and applicable live preview results reported.

@@ -268,7 +268,7 @@ ok('No service role in browser assets','SUPABASE_SERVICE_ROLE_KEY' not in ''.joi
 # Run generated route build and test final output if it exists.
 dist=ROOT/'dist'
 if dist.exists():
-    expected=['index.html','markets/index.html','futures-intelligence/index.html','academy/index.html','sessions/index.html','contract-specs/index.html','risk/index.html','tools/index.html','sources/index.html','research/index.html','research/positioning/index.html','macro/index.html','news/index.html','account/index.html','status/index.html','docs/index.html','legacy/index.html','ict-futures/index.html','volume-open-interest/index.html','prediction-markets/index.html','entry-models/index.html','strategy-lab/index.html','data-health/index.html']
+    expected=['index.html','markets/index.html','futures-intelligence/index.html','academy/index.html','sessions/index.html','contract-specs/index.html','risk/index.html','tools/index.html','sources/index.html','data-health/integrations/index.html','research/index.html','research/positioning/index.html','macro/index.html','news/index.html','account/index.html','status/index.html','docs/index.html','legacy/index.html','ict-futures/index.html','volume-open-interest/index.html','prediction-markets/index.html','entry-models/index.html','strategy-lab/index.html','data-health/index.html']
     ok('All primary route entry points generated',all((dist/p).exists() for p in expected),', '.join(p for p in expected if not (dist/p).exists()))
     html=list(dist.rglob('*.html'))
     ok('Futures-only homepage and generated product boundaries are present','Futures Command Center' in (dist/'index.html').read_text(encoding="utf-8") and len(list((dist/'markets').glob('*.html')))==1 and len(list((dist/'ict-futures/markets').glob('*.html')))==15)

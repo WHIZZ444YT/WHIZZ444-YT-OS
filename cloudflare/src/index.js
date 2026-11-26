@@ -413,7 +413,7 @@ export default {
   }
   if(url.pathname==="/api/v1/economic/providers"){
    const providers=await Promise.all(Object.entries(ECONOMIC_PROVIDER_CONFIG).map(async([id,cfg])=>({id,label:cfg.label,credential:cfg.credential||null,credentialConfigured:!cfg.credential||Boolean(env[cfg.credential]),cadence:cfg.cadence,ttlSeconds:cfg.ttlSeconds,state:await getEconomicProviderState(env,id)})));
-   return json({schemaVersion:1,providers,retrievedAt:new Date().toISOString(),persistenceConfigured:Boolean(env.SUPABASE_URL&&supabaseAdminKey(env))},200,cors);
+   return json({schemaVersion:1,providers,retrievedAt:new Date().toISOString(),persistenceConfigured:Boolean(env.SUPABASE_URL&&supabaseAdminKey(env)),optionalCredentials:{BLS_API_KEY:Boolean(env.BLS_API_KEY)}},200,{...cors,"Cache-Control":"no-store"});
   }
   if(url.pathname.startsWith("/api/v1/economic/")){
    const provider=url.pathname.slice("/api/v1/economic/".length);
@@ -458,15 +458,20 @@ export default {
 
 function economicCacheKey(provider){return "economic:"+provider+":v1";}
 async function getEconomicProviderState(env,provider){
+ const cfg=ECONOMIC_PROVIDER_CONFIG[provider];
+ const credentialRequired=cfg?.credential||null;
+ const persistenceStatus=env.SUPABASE_URL&&supabaseAdminKey(env)?"ready":"not-configured";
+ if(credentialRequired&&!env[credentialRequired]){
+  return{status:"not-configured",credentialRequired,lastAttemptAt:null,lastSuccessAt:null,persistenceStatus};
+ }
  if(env.SNAPSHOTS){
   const state=await env.SNAPSHOTS.get("economic-provider:"+provider,"json");
-  if(state){
+  if(state&&state.status!=="not-configured"){
    const {lastError,...publicState}=state;
    return lastError?{...publicState,lastError:"Economic data provider request failed."}:publicState;
   }
  }
- const cfg=ECONOMIC_PROVIDER_CONFIG[provider];
- return{status:cfg?.credential&&!env[cfg.credential]?"not-configured":"not-yet-fetched",credentialRequired:cfg?.credential||null,lastAttemptAt:null,lastSuccessAt:null,persistenceStatus:env.SUPABASE_URL&&supabaseAdminKey(env)?"ready":"not-configured"};
+ return{status:"not-yet-fetched",credentialRequired,lastAttemptAt:null,lastSuccessAt:null,persistenceStatus};
 }
 async function getEconomicData(provider,env){
  const cfg=ECONOMIC_PROVIDER_CONFIG[provider];
@@ -604,7 +609,7 @@ async function ingestEconomicProvider(provider,env){
   const retryAt=Number.isFinite(error?.retryAfterMs)&&error.retryAfterMs>0?new Date(Date.now()+Math.min(error.retryAfterMs,86400000)).toISOString():null;
   const circuitState=nextProviderCircuitState(priorState??{},"failure");
   const state={status:previous?"stale":"unavailable",lastAttemptAt:new Date().toISOString(),lastSuccessAt:previous?.retrievedAt||null,
-   persistenceStatus:env.SUPABASE_URL&&supabaseAdminKey(env)?"ready":"not-configured",lastError,retryAt,...circuitState};
+   persistenceStatus:env.SUPABASE_URL&&supabaseAdminKey(env)?"ready":"not-configured",lastError,retryAt,...(cfg.credential&&[401,403].includes(error?.upstreamStatus)?{credentialStatus:"rejected"}:{}),...circuitState};
   if(env.SNAPSHOTS)await env.SNAPSHOTS.put("economic-provider:"+provider,JSON.stringify(state),{expirationTtl:60*60*24*7});
   try{await upsertProviderStatus(env,provider,previous?"stale":"error",{datasetId:previous?.datasetId||null},lastError,Date.now()-started);}catch{}
   await recordIngestionRun(env,provider,"failed",previous?.datasetId||null,1,"provider_request_failed",lastError,{elapsedMs:Date.now()-started});
@@ -722,7 +727,7 @@ async function fetchBls(env){
  let data=null,lastError=null;
  for(let attempt=0;attempt<2;attempt++){
   try{
-   const response=await fetch(endpoint,{method:"POST",headers:{"Content-Type":"application/json","Accept":"application/json"},body:JSON.stringify(body),signal:AbortSignal.timeout(18000)});
+   const response=await fetch(endpoint,{method:"POST",headers:{"Content-Type":"application/json","Accept":"application/json"},body:JSON.stringify(body),redirect:"error",signal:AbortSignal.timeout(18000)});
    if(!response.ok){
     const error=new Error("BLS HTTP "+response.status);
     if(response.status===429)error.rateLimited=true;
@@ -731,7 +736,7 @@ async function fetchBls(env){
    data=await response.json();
    if(data.status!=="REQUEST_SUCCEEDED"){
     const message=String(data.message?.[0]||data.status).slice(0,180);
-    const error=new Error("BLS request failed: "+message);
+    const error=new Error("BLS request failed.");
     if(/daily threshold|too many requests|query limit|requests allocated/i.test(message))error.rateLimited=true;
     throw error;
    }

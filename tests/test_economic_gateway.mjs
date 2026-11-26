@@ -111,3 +111,43 @@ test("history hides upstream diagnostics while preserving bounded successful pag
   assert.deepEqual([body.limit,body.offset,body.count],[10,5,1]);
   assert.equal(network.mock.callCount(),2);
 });
+
+test("registered provider setup distinguishes missing, rejected and working keys", async t => {
+  const storage = snapshotStore({
+    "economic-provider:eia": { status:"fresh",lastSuccessAt:"2026-11-01T00:00:00Z" }
+  });
+  const env = { SNAPSHOTS:storage, INGEST_TOKEN:secret };
+  const eiaKey = "synthetic-eia-key";
+  let acceptsKey = false;
+  const fetchMock = t.mock.method(globalThis, "fetch", async input => {
+    const upstream = new URL(input);
+    assert.equal(upstream.hostname,"api.eia.gov");
+    assert.equal(upstream.searchParams.get("api_key"),eiaKey);
+    return acceptsKey
+      ? Response.json({response:{data:[{period:"2026-11-01",value:"42",unit:"thousand barrels"}]}})
+      : new Response(eiaKey,{status:401});
+  });
+  const status = async () => (await send("/api/v1/economic/providers",env)).json();
+  const eia = data => data.providers.find(provider => provider.id==="eia");
+  const ingest = () => send("/api/v1/ingest",env,{
+    method:"POST",headers:{Authorization:"Bearer "+secret},body:JSON.stringify({provider:"eia"})
+  });
+  let catalog = await status();
+  assert.equal(eia(catalog).state.status,"not-configured");
+  assert.equal(eia(catalog).credentialConfigured,false);
+  assert.equal(catalog.optionalCredentials.BLS_API_KEY,false);
+  assert.equal(catalog.providers.find(provider=>provider.id==="ecb").credentialConfigured,true);
+  assert.equal(fetchMock.mock.callCount(),0);
+  env.EIA_API_KEY = eiaKey;
+  assert.doesNotMatch(await (await ingest()).text(),/synthetic-eia-key/);
+  catalog = await status();
+  assert.equal(eia(catalog).state.credentialStatus,"rejected");
+  assert.doesNotMatch(JSON.stringify(catalog),/synthetic-eia-key/);
+  acceptsKey = true;
+  assert.equal((await (await ingest()).json()).results[0].status,"fresh");
+  catalog = await status();
+  assert.equal(eia(catalog).state.status,"fresh");
+  assert.equal(eia(catalog).state.credentialStatus,undefined);
+  assert.doesNotMatch(await (await send("/api/v1/economic/eia",env)).text(),/synthetic-eia-key/);
+  assert.equal(fetchMock.mock.callCount(),2);
+});
