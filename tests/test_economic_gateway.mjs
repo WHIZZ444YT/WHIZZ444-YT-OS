@@ -149,13 +149,13 @@ test("registered provider setup distinguishes missing, rejected and working keys
   assert.equal(eia(catalog).state.status,"fresh");
   assert.equal(eia(catalog).state.credentialStatus,undefined);
   assert.doesNotMatch(await (await send("/api/v1/economic/eia",env)).text(),/synthetic-eia-key/);
-  assert.equal(fetchMock.mock.callCount(),2);
+  assert.equal(fetchMock.mock.callCount(),6);
 });
 
 test("partial persistence replays a current snapshot without refetching or duplicating observations", async t => {
   const at = new Date().toISOString();
   const snapshots = snapshotStore(Object.fromEntries(
-    ["bea","eia","fred","us_treasury","ecb"].map(id=>["economic:"+id+":v1",{retrievedAt:at,status:"fresh"}])
+    ["bea","eia","fred","us_treasury","ecb","treasury-yield"].map(id=>["economic:"+id+":v1",{retrievedAt:at,status:"fresh"}])
   ));
   const observations = new Map();
   const updates = [];
@@ -166,6 +166,7 @@ test("partial persistence replays a current snapshot without refetching or dupli
     const url = new URL(input);
     if(url.hostname==="api.eia.gov"){
       providerCalls++;
+      if(!url.pathname.endsWith("PET.WCESTUS1.W"))return new Response(null,{status:404});
       return Response.json({response:{data:dates.map(period=>({period,value:"42",unit:"barrels"}))}});
     }
     if(url.hostname!=="storage.example")return new Response(null,{status:503});
@@ -192,13 +193,13 @@ test("partial persistence replays a current snapshot without refetching or dupli
   let completion;
   worker.scheduled({},env,{waitUntil(promise){completion=promise;}});
   await completion;
-  assert.equal(providerCalls,1);
+  assert.equal(providerCalls,3);
   assert.equal(observations.size,1001);
   assert.equal(new Set([...observations.values()].map(row=>row.retrieved_at)).size,1);
-  assert.equal(updates.at(-1).status,"success");
+  assert.equal(updates.at(-1).status,"partial");
   const response=await send("/api/v1/economic/eia",env);
   const reader=await response.json();
-  assert.equal(reader.persistence.status,"stored");
+  assert.equal(reader.persistence.status,"partial");
   assert.equal(reader.persistence.runId,undefined);
   assert.equal(reader.records[0].raw_payload,undefined);
 });
@@ -233,4 +234,23 @@ test("FRED default and narrow revision approvals hide legacy cached rows", async
   assert.deepEqual((await (await send("/api/v1/economic/fred",env)).json()).records,[]);
   env.FRED_APPROVED_SERIES="DFF,UNKNOWN";
   assert.deepEqual((await (await send("/api/v1/economic/fred",env)).json()).records.map(row=>row.series_id),["DFF"]);
+});
+
+test("EIA energy series keep native units and withheld data is null", async t => {
+  const ids=[];
+  t.mock.method(globalThis,"fetch",async input=>{
+    const url=new URL(input);
+    assert.equal(url.hostname,"api.eia.gov");
+    const id=url.pathname.split("/").at(-1);
+    ids.push(id);
+    return Response.json({response:{data:[{period:"2026-11-20",value:id.startsWith("NG.")?"W":"42"}]}});
+  });
+  const env={SNAPSHOTS:snapshotStore(),INGEST_TOKEN:secret,EIA_API_KEY:"fixture-key"};
+  await send("/api/v1/ingest",env,{method:"POST",headers:{Authorization:"Bearer "+secret},body:'{"provider":"eia"}'});
+  const {records}=await (await send("/api/v1/economic/eia",env)).json();
+  assert.deepEqual(ids.sort(),["NG.NW2_EPG0_SWO_R48_BCF.W","PET.WCESTUS1.W","PET.WCRFPUS2.W"]);
+  assert.deepEqual(records.map(row=>[row.unit,row.value]),[
+    ["Thousand barrels",42],["Thousand barrels per day",42],["Billion cubic feet",null]
+  ]);
+  assert.ok(records.every(row=>row.published_at===null&&!row.source_url.includes("fixture-key")));
 });

@@ -90,29 +90,37 @@ async function fetchBea(env) {
   ]),status:results.every(result=>result.status==="fulfilled")?"fresh":"partial"};
 }
 
+const EIA_ENERGY_SERIES = [
+  {id:"PET.WCESTUS1.W", label:"US crude oil stocks excluding SPR", unit:"Thousand barrels", limit:5000},
+  {id:"PET.WCRFPUS2.W", label:"US crude oil field production", unit:"Thousand barrels per day", limit:104},
+  {id:"NG.NW2_EPG0_SWO_R48_BCF.W", label:"Lower 48 working gas storage", unit:"Billion cubic feet", limit:104},
+];
+
 async function fetchEia(env) {
-  const sourceUrl = "https://api.eia.gov/v2/seriesid/PET.WCESTUS1.W";
-  if (!env.EIA_API_KEY) return notConfigured("EIA", "EIA_API_KEY", sourceUrl, ["EIA API v2 requires a registered API key."]);
-  const url = new URL(sourceUrl);
-  url.searchParams.set("api_key", env.EIA_API_KEY);
-  url.searchParams.set("length", "5000");
-  url.searchParams.set("sort[0][column]", "period");
-  url.searchParams.set("sort[0][direction]", "desc");
-  const body = await getJson(url, "EIA");
-  const response = body.response || {};
-  const rows = Array.isArray(response.data) ? response.data : Array.isArray(body.data) ? body.data : [];
-  if (!rows.length) throw new Error("EIA series route returned no data rows");
-  const records = rows.map(row => record(
-    "eia", "PET.WCESTUS1.W", "PET.WCESTUS1.W",
-    "US ending stocks of crude oil including the Strategic Petroleum Reserve",
-    "weekly", row.period, row.value, row.units || row.unit || "provider-reported units",
-    canonicalSource(url.toString()), row
-  )).filter(Boolean);
-  return snapshot("EIA", "PET.WCESTUS1.W", records, canonicalSource(url.toString()), 1, [
-    "Series PET.WCESTUS1.W is the selected US weekly crude-oil stocks series.",
-    "The value and units are taken from the EIA response; no conversion is applied.",
-    "Weekly inventory releases are not intraday futures volume or order-book data."
-  ]);
+  const base = "https://api.eia.gov/v2/seriesid/";
+  if (!env.EIA_API_KEY) return notConfigured("EIA","EIA_API_KEY",base+EIA_ENERGY_SERIES[0].id,["EIA API v2 requires a registered API key."]);
+  const results=await Promise.allSettled(EIA_ENERGY_SERIES.map(async series=>{
+    const url=new URL(base+series.id);
+    url.searchParams.set("api_key",env.EIA_API_KEY);
+    url.searchParams.set("length",String(series.limit));
+    url.searchParams.set("sort[0][column]","period");
+    url.searchParams.set("sort[0][direction]","desc");
+    const body=await getJson(url,"EIA");
+    const rows=body.response?.data ?? body.data;
+    if(!Array.isArray(rows)||!rows.length)throw new Error("EIA series unavailable");
+    const records=rows.slice(0,series.limit).map(row=>record("eia",series.id,series.id,series.label,
+      "weekly",row.period,row.value,series.unit,base+series.id,row)).filter(Boolean);
+    if(!records.length)throw new Error("EIA series has no valid observation periods");
+    return records;
+  }));
+  const records=results.flatMap(result=>result.status==="fulfilled"?result.value:[]);
+  if(!records.length)throw results.find(result=>result.status==="rejected")?.reason||new Error("EIA energy data unavailable");
+  const source=base+EIA_ENERGY_SERIES[0].id;
+  return {...snapshot("EIA","PET.WCESTUS1.W",records,source,EIA_ENERGY_SERIES.length,[
+    "Stock levels exclude the Strategic Petroleum Reserve. Production is a daily rate reported weekly.",
+    "Lower 48 working gas storage is an independent weekly series in billion cubic feet.",
+    "Observation periods do not establish a report publication timestamp."
+  ]),status:results.every(result=>result.status==="fulfilled")?"fresh":"partial"};
 }
 
 const FRED_SERIES = [

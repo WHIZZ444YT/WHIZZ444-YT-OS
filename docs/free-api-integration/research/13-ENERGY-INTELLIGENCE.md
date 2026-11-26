@@ -36,7 +36,7 @@ Preserve direct source links and readable empty states. Show a precise status be
 
 | ID / provider | Dataset | Source and endpoint | Access | Decision | Parameters, cadence and response shape |
 |---|---|---|---|---|---|
-| `eia` · EIA | PET.WCESTUS1.W crude stocks excluding SPR; production PET.WCRFPUS2.W and Lower 48 storage via documented metadata to confirm | [Official documentation](https://www.eia.gov/opendata/documentation.php) · [Endpoint or reference](https://api.eia.gov/v2/seriesid/PET.WCESTUS1.W) | Registered GET v2 with existing EIA_API_KEY | Conditional pending owner registration and dataset review; provider terms govern reuse | length/offset/sort bounded; response.data[].period/value/unit; totals can be strings. Weekly with schedule exceptions; bulk alternatives separate from API-key setup. |
+| `eia` · EIA | PET.WCESTUS1.W crude stocks excluding SPR; production PET.WCRFPUS2.W and Lower 48 storage NG.NW2_EPG0_SWO_R48_BCF.W | [Official documentation](https://www.eia.gov/opendata/documentation.php) · [Endpoint or reference](https://api.eia.gov/v2/seriesid/PET.WCESTUS1.W) | Registered GET v2 with existing EIA_API_KEY | Conditional pending owner registration and dataset review; provider terms govern reuse | length/offset/sort bounded; response.data[].period/value/unit; totals can be strings. Weekly with schedule exceptions; bulk alternatives separate from API-key setup. |
 | `opec` · OPEC | Monthly Oil Market Report and official releases | [Official documentation](https://www.opec.org/) · [Endpoint or reference](https://www.opec.org/) | Reference link | Reference only until precise report permalink and reuse permissions verified | Curate latest official publication landing page; avoid mirrored PDFs and unauthorized parsing. |
 
 **Site API** — GET /economic/eia, /economic/history and /events/eia. Listed suffixes refer to the existing `/api/v1` base unless a hosted or static mechanism is stated.
@@ -54,6 +54,13 @@ Preserve direct source links and readable empty states. Show a precise status be
 - **Licensing/security** — Follow Docs 01 and 23 per dataset. Use allowlisted destinations and bounded parameters, redact secrets and classify display, cache, persist and export separately. Keep costs within the eligible free-plan scope.
 
 
+
+## Implementation record
+
+- `/macro/energy/` links CL research and contract context, official weekly reports, the WPSR calendar, and OPEC's Monthly Oil Market Report. The publisher links are in the static HTML.
+- The existing EIA adapter keeps the crude ex-SPR series ID and adds independent crude production and Lower 48 storage requests. EIA's published native units are thousand barrels, thousand barrels per day, and billion cubic feet. OPEC remains link-only. No additional market family or credential was created.
+- Observation week ending, publication timestamp, snapshot retrieval, and the upcoming WPSR slot are separate. Weekly differences require valid observations exactly seven days apart. Withheld data stays null. The public EIA schedule remains available without an EIA key.
+- The existing Worker refresh and persistence path is reused. Live data requires the deployed adapter and configured EIA key. [EIA reuse policy](https://www.eia.gov/about/copyrights_reuse.php).
 
 ## Future file changes and implementation sequence
 
@@ -74,7 +81,7 @@ Preserve direct source links and readable empty states. Show a precise status be
 - Integration evidence includes a deterministic fixture, rebuild/validation where applicable, and a preview check of the affected UI including mobile, disabled credentials, blocked data and fallback links.
 - Disable the affected dataset, route flag or widget first if activation fails, restore last reviewed configuration/static build/Worker version, and invalidate any prohibited cached data. Retain permitted database history and prefer corrective additive migrations.
 
-- [ ] Scope and dependency evidence recorded.
+- [x] Scope and dependency evidence recorded.
 - [ ] Relevant data rights, owner actions and fallback verified per dataset.
 - [ ] Target routes and existing compatibility checked.
 - [ ] Unit, integration and applicable live preview results reported.

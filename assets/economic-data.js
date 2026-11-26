@@ -4,7 +4,7 @@
  const $=id=>document.getElementById(id);
  const providers=[
   {id:"bea",name:"BEA · National Accounts",desc:"Quarterly NIPA Table T10101 · Real GDP growth components",source:"https://apps.bea.gov/api/data/"},
-  {id:"eia",name:"EIA · Crude Oil Stocks",desc:"Weekly US ending stocks of crude oil including the Strategic Petroleum Reserve",source:"https://www.eia.gov/petroleum/supply/weekly/"},
+  {id:"eia",name:"EIA · Crude Oil Stocks",desc:"Weekly crude stocks excluding SPR, crude production and Lower 48 storage",source:"https://www.eia.gov/petroleum/supply/weekly/"},
   {id:"fred",name:"FRED · Macro History",desc:"Federal funds rate, 10-year Treasury yield, CPI, unemployment and PCE price index",source:"https://fred.stlouisfed.org/"},
   {id:"us_treasury",name:"US Treasury · Average Interest Rates",desc:"Monthly average rates on outstanding marketable Treasury securities",source:"https://fiscaldata.treasury.gov/"},
   {id:"ecb",name:"ECB · USD / EUR Reference Rate",desc:"Daily ECB reference-rate series D.USD.EUR.SP00.A",source:"https://data.ecb.europa.eu/"}
