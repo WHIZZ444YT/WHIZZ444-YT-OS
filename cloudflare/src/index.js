@@ -396,7 +396,7 @@ export default {
    if(!/^\d{1,4}$/.test(rawLimit)||limit<1||limit>5000||!/^\d{1,7}$/.test(rawOffset)||offset>1000000){
     return json({error:"limit must be 1–5000 and offset must be 0–1000000."},400,cors);
    }
-   const query=new URLSearchParams({select:"provider,dataset_id,series_id,series_name,country_code,frequency,observation_date,value,unit,data_as_of,published_at,retrieved_at,source_url,freshness_status"});
+   const query=new URLSearchParams({select:"provider,dataset_id,series_id,series_name,country_code,frequency,observation_date,value,unit,data_as_of,published_at,vintage_start,vintage_end,retrieved_at,source_url,freshness_status"});
    query.set("provider","eq."+provider);
    if(seriesId)query.set("series_id","eq."+seriesId);
    if(startDate&&endDate)query.set("and","(observation_date.gte."+startDate+",observation_date.lte."+endDate+")");
@@ -489,6 +489,10 @@ async function getEconomicData(provider,env){
     delete safeSnapshot.lastError;
     delete safeSnapshot.details;
     delete safeSnapshot.error;
+    safeSnapshot.records=(Array.isArray(snapshot.records)?snapshot.records:[]).map(({raw_payload,...record})=>record);
+    if(snapshot.persistence){
+     safeSnapshot.persistence={status:snapshot.persistence.status,rowsUpserted:snapshot.persistence.rowsUpserted};
+    }
     return age>=cfg.ttlSeconds*1000?{...safeSnapshot,status:"stale"}:safeSnapshot;
    }
   }catch{
@@ -532,7 +536,12 @@ async function recordIngestionRun(env,provider,status,datasetId,requestCount,err
 }
 async function persistEconomicSnapshot(env,snapshot){
  if(!env.SUPABASE_URL||!supabaseAdminKey(env))return{status:"not-configured",rowsUpserted:0};
- const started=Date.now(),provider=snapshot.providerId||"unknown",records=Array.isArray(snapshot.records)?snapshot.records:[];
+ const started=Date.now(),provider=snapshot.providerId||"unknown";
+ const rows=Array.isArray(snapshot.records)?snapshot.records:[];
+ const records=[...new Map(rows.map(row=>[
+  JSON.stringify([row.provider,row.dataset_id,row.series_id,row.frequency,row.observation_date]),
+  {...row,retrieved_at:snapshot.retrievedAt}
+ ])).values()];
  let runId=null,rowsUpserted=0;
  try{
   const runRows=await supabaseRequest(env,"ingestion_runs","POST","",{
@@ -557,16 +566,17 @@ async function persistEconomicSnapshot(env,snapshot){
    datasetId:snapshot.datasetId,dataAsOf:snapshot.dataAsOf,rows:rowsUpserted,sourceUrl:snapshot.sourceUrl,persistence:"stored"
   });
   return{status:snapshot.status==="partial"?"partial":"stored",rowsUpserted,runId};
- }catch(error){
+ }catch{
+  const failure="Economic persistence did not complete.";
   if(runId)try{await supabaseRequest(env,"ingestion_runs","PATCH","id=eq."+encodeURIComponent(runId),{
    status:rowsUpserted?"partial":"failed",completed_at:new Date().toISOString(),rows_received:records.length,
-   rows_upserted:rowsUpserted,error_message:String(error.message||error).slice(0,500),
+   rows_upserted:rowsUpserted,error_code:"economic_persistence_failed",error_message:failure,
    details:{dataAsOf:snapshot.dataAsOf||null,elapsedMs:Date.now()-started}
   },"return=minimal");}catch{}
   try{await upsertProviderStatus(env,provider,rowsUpserted?"partial":"error",{
    datasetId:snapshot.datasetId,rowsUpserted,persistence:"failed"
-  },String(error.message||error).slice(0,500),Date.now()-started);}catch{}
-  return{status:"failed",rowsUpserted,runId,error:String(error.message||error).slice(0,300)};
+  },failure,Date.now()-started);}catch{}
+  return{status:"failed",rowsUpserted,runId,error:failure};
  }
 }
 async function ingestEconomicProvider(provider,env){
@@ -626,6 +636,19 @@ async function scheduledEconomicIngestion(env){
   const previous=await env.SNAPSHOTS.get(economicCacheKey(provider),"json");
   const at=Date.parse(previous?.retrievedAt||"");
   if(!Number.isFinite(at)||Date.now()-at>cfg.ttlSeconds*1000)return await ingestEconomicProvider(provider,env);
+  if(previous.persistence?.status==="failed"&&env.SUPABASE_URL&&supabaseAdminKey(env)&&(!cfg.credential||env[cfg.credential])){
+   const persistence=await persistEconomicSnapshot(env,previous);
+   const remaining=Math.max(60,Math.ceil((at+cfg.ttlSeconds*2000-Date.now())/1000));
+   const current=await env.SNAPSHOTS.get(economicCacheKey(provider),"json");
+   if(current?.retrievedAt!==previous.retrievedAt)return persistence;
+   await env.SNAPSHOTS.put(economicCacheKey(provider),JSON.stringify({...previous,persistence}),{expirationTtl:remaining});
+   const statusKey="economic-provider:"+provider;
+   const state=await env.SNAPSHOTS.get(statusKey,"json");
+   if(state?.lastSuccessAt===previous.retrievedAt){
+    await env.SNAPSHOTS.put(statusKey,JSON.stringify({...state,persistenceStatus:persistence.status,rowsStored:persistence.rowsUpserted}),{expirationTtl:60*60*24*7});
+   }
+   return persistence;
+  }
   return{status:"fresh-cache"};
  }));
 }

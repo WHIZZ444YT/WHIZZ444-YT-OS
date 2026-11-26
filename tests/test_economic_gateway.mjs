@@ -151,3 +151,54 @@ test("registered provider setup distinguishes missing, rejected and working keys
   assert.doesNotMatch(await (await send("/api/v1/economic/eia",env)).text(),/synthetic-eia-key/);
   assert.equal(fetchMock.mock.callCount(),2);
 });
+
+test("partial persistence replays a current snapshot without refetching or duplicating observations", async t => {
+  const at = new Date().toISOString();
+  const snapshots = snapshotStore(Object.fromEntries(
+    ["bea","eia","fred","us_treasury","ecb"].map(id=>["economic:"+id+":v1",{retrievedAt:at,status:"fresh"}])
+  ));
+  const observations = new Map();
+  const updates = [];
+  let fail = true;
+  let providerCalls = 0;
+  const dates = Array.from({length:1001},(_,index)=>new Date(Date.UTC(2000,0,1+index*7)).toISOString().slice(0,10));
+  t.mock.method(globalThis,"fetch",async (input,options) => {
+    const url = new URL(input);
+    if(url.hostname==="api.eia.gov"){
+      providerCalls++;
+      return Response.json({response:{data:dates.map(period=>({period,value:"42",unit:"barrels"}))}});
+    }
+    if(url.hostname!=="storage.example")return new Response(null,{status:503});
+    if(url.pathname.endsWith("/ingestion_runs")){
+      if(options.method==="POST")return Response.json([{id:"fixture-run"}]);
+      updates.push(JSON.parse(options.body));
+      return new Response(null,{status:204});
+    }
+    if(url.pathname.endsWith("/economic_observations")){
+      const batch=JSON.parse(options.body);
+      assert.equal(url.searchParams.get("on_conflict"),"provider,dataset_id,series_id,frequency,observation_date");
+      if(fail&&batch.length===1)return new Response("database diagnostic",{status:503});
+      for(const row of batch)observations.set(row.observation_date,row);
+    }
+    return new Response(null,{status:204});
+  });
+  const env={SNAPSHOTS:snapshots,INGEST_TOKEN:secret,EIA_API_KEY:"fixture-key",SUPABASE_URL:"https://storage.example",SUPABASE_SECRET_KEY:secret};
+  const first=await send("/api/v1/ingest",env,{method:"POST",headers:{Authorization:"Bearer "+secret},body:'{"provider":"eia"}'});
+  const firstRun=(await first.json()).results[0].persistence;
+  assert.equal(firstRun.status,"failed");
+  assert.equal(firstRun.rowsUpserted,1000);
+  assert.equal(updates.at(-1).status,"partial");
+  fail=false;
+  let completion;
+  worker.scheduled({},env,{waitUntil(promise){completion=promise;}});
+  await completion;
+  assert.equal(providerCalls,1);
+  assert.equal(observations.size,1001);
+  assert.equal(new Set([...observations.values()].map(row=>row.retrieved_at)).size,1);
+  assert.equal(updates.at(-1).status,"success");
+  const response=await send("/api/v1/economic/eia",env);
+  const reader=await response.json();
+  assert.equal(reader.persistence.status,"stored");
+  assert.equal(reader.persistence.runId,undefined);
+  assert.equal(reader.records[0].raw_payload,undefined);
+});

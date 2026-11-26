@@ -10,7 +10,7 @@ Out of scope for implementation of this workstream are unrelated product upgrade
 
 ## Repository audit evidence and gaps
 
-**Status** — Existing repository building blocks verified in source. Proposed changes and production verification remain pending.
+**Status** — Existing tables and identities retained. Economic revision and retry controls are included in this implementation. Production migration is a separate rollout step.
 
 - [`supabase/migrations/`](https://github.com/WHIZZ444YT/WHIZZ444-YT-OS/tree/e791f37da39209f3ac6c50ebf2f960101f618efb/supabase/migrations)
 - [`supabase/seed-source-registry.sql`](https://github.com/WHIZZ444YT/WHIZZ444-YT-OS/blob/e791f37da39209f3ac6c50ebf2f960101f618efb/supabase/seed-source-registry.sql)
@@ -63,6 +63,13 @@ Use the dataset decisions in [01 · Provider registry and licensing](../foundati
 
 Contract example (illustrative field values, not a live reading): provider=bea, dataset_id=NIPA:T10101, series_id from BEA metadata, observation_date=2026-07-01, frequency=quarterly, value=null, unit=percent, published_at=null, vintage_start=null. Missing numeric data remains null. Add separate safe lineage fields only where consumers need them. Compare SQL unique indexes before choosing UPSERT keys, scope auth checks ahead of storage and export, keep legacy views compatible, redact raw payloads and enforce retention by dataset.
 
+## Implementation record
+
+- Economic latest rows continue to merge by provider, dataset, series, frequency and observation date. The additive migration archives the previous normalized values on a substantive change and ignores an older retrieval attempting to replace a newer row. Identical replays do not create revisions. Earlier overwritten revisions cannot be reconstructed.
+- The revision archive is service-only and uses the existing observation ID as lineage. Deleting an observation deletes its revisions. Public direct SQL readers must select named normalized columns. Raw payloads and persistence diagnostics stay out of public economic snapshots. Historical gateway pagination keeps the established response shape.
+- A partial Supabase batch records counts and a sanitized failure reason. The scheduled job can replay a still-current KV snapshot with the same conflict keys, without fetching the external dataset again. Existing COT and licensed futures identities stay intact. Licensed futures visibility continues to require a current entitlement, and workspace RLS still scopes rows to their owners.
+- Apply the additive migration to the intended database before relying on revision capture. Run the disposable PostgreSQL and Worker checks first. This branch neither applies the production migration nor changes approval for any provider. Roll back application code independently. Preserve the archive if a subsequent corrective migration is needed.
+
 ## Future file changes and implementation sequence
 
 **Dependencies** — [01 · Provider registry and licensing](../foundation/01-PROVIDER-REGISTRY-AND-LICENSING.md) · [02 · Data architecture and API gateway](../foundation/02-DATA-ARCHITECTURE-AND-API-GATEWAY.md) · [03 · API keys and authentication](../foundation/03-API-KEYS-AND-AUTHENTICATION.md)
@@ -82,7 +89,7 @@ Contract example (illustrative field values, not a live reading): provider=bea, 
 - Integration evidence includes a deterministic fixture, rebuild/validation where applicable, and a preview check of the affected UI including mobile, disabled credentials, blocked data and fallback links.
 - Disable the affected dataset, route flag or widget first if activation fails, restore last reviewed configuration/static build/Worker version, and invalidate any prohibited cached data. Retain permitted database history and prefer corrective additive migrations.
 
-- [ ] Scope and dependency evidence recorded.
+- [x] Scope and dependency evidence recorded.
 - [ ] Relevant data rights, owner actions and fallback verified per dataset.
 - [ ] Target routes and existing compatibility checked.
 - [ ] Unit, integration and applicable live preview results reported.
