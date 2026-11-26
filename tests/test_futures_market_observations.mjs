@@ -101,6 +101,8 @@ test("public observation query returns only rights-approved rows and uses bounde
     assert.equal(payload.observations.length, 1);
     assert.equal(payload.observations[0].public_display_approved_at,"2026-11-20T18:00:00.000Z");
     assert.equal(requestUrls[0].searchParams.get("public_display_status"),"eq.public-display-approved");
+    assert.ok(requestUrls[0].searchParams.get("select").split(",").includes("public_display_status"));
+    assert.equal(response.headers.get("Cache-Control"),"no-store");
     assert.equal(requestUrls[0].searchParams.get("instrument_root"),"eq.NQ");
     assert.equal(requestUrls[1].searchParams.get("quality_status"),"neq.rejected");
     assert.equal(requestUrls[1].searchParams.get("instrument_root"),"eq.NQ");
@@ -140,6 +142,56 @@ test("expired provider entitlement prevents the observation query and produces a
     assert.equal(payload.status, "no-approved-data");
     assert.equal(payload.observations.length, 0);
     assert.equal(calls, 1);
+  } finally {
+    globalThis.fetch = originalFetch;
+  }
+});
+
+test("public provider registry separates publisher schedules from datasets and configuration", async () => {
+  const response = await worker.fetch(new Request("https://edge.example/api/v1/providers"), {}, ctx);
+  const { providers, registry } = await response.json();
+  assert.equal(response.status, 200);
+  assert.equal(registry.schemaVersion, 1);
+  assert.equal(new Set(registry.sources.map(source => source.id)).size, registry.sources.length);
+  assert.ok(registry.sources.every(source => source.owner && source.attribution && source.fallback));
+  assert.deepEqual(registry.interfaces.find(entry => entry.id === "cftc-pre"), {
+    id: "cftc-pre", providerId: "cftc", type: "provider"
+  });
+  assert.deepEqual(registry.interfaces.find(entry => entry.id === "eia-wpsr-schedule"), {
+    id: "eia-wpsr-schedule", providerId: "eia", type: "publisher-schedule"
+  });
+  assert.ok(providers.some(provider => provider.id === "eia-wpsr-schedule"));
+  const tradingview = registry.sources.find(source => source.id === "tradingview");
+  assert.equal(tradingview.grants.display, "provider-hosted-only");
+  assert.equal(tradingview.grants.persist, null);
+  assert.equal(tradingview.grants.export, null);
+  assert.equal(registry.sources.find(source => source.id === "databento").decision, "excluded");
+});
+
+test("a previously served observation is not served again after entitlement withdrawal", async () => {
+  const originalFetch = globalThis.fetch;
+  const entitlement = {
+    provider_id:"vendor-x", venue:"CME", instrument_root:"ES", delay_class:"end-of-day",
+    public_display_status:"public-display-approved", rights_reference:"review-ref",
+    reviewed_at:"2026-10-01T00:00:00Z", reviewed_by:"owner", valid_until:null, is_active:true
+  };
+  let observationReads = 0;
+  globalThis.fetch = async input => {
+    const url = new URL(String(input));
+    const entitlementRead = url.pathname.endsWith("/futures_market_data_entitlements");
+    if (!entitlementRead) observationReads++;
+    return Response.json(entitlementRead ? [entitlement] : [{ ...entitlement, quality_status:"provider-reported" }]);
+  };
+  try {
+    const url = "https://edge.example/api/v1/futures-observations?root=ES";
+    const approved = await worker.fetch(new Request(url), configuredEnv(), ctx);
+    assert.equal((await approved.json()).observations.length, 1);
+    assert.equal(approved.headers.get("Cache-Control"),"no-store");
+    entitlement.is_active = false;
+    const withdrawn = await worker.fetch(new Request(url), configuredEnv(), ctx);
+    assert.equal((await withdrawn.json()).observations.length, 0);
+    assert.equal(withdrawn.headers.get("Cache-Control"),"no-store");
+    assert.equal(observationReads, 1);
   } finally {
     globalThis.fetch = originalFetch;
   }
