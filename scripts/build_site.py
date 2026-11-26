@@ -690,7 +690,7 @@ def build():
     body+='<section class="content-section"><h2>Economic release calendar</h2><p><span class="status-pill warn">PARTIAL OFFICIAL SCHEDULES</span></p><p>Separate BLS, EIA WPSR, CFTC COT and Federal Reserve FOMC schedule snapshots are available on <a href="/sessions/">Sessions &amp; Calendar</a> in the implementation branch. They do not form a complete U.S. or global event calendar; FOMC records are date-only. Consensus forecasts, actual values and actual publication timestamps are not supplied. Verify each issuer schedule before an event.</p><div class="source-notes"><a href="https://www.bls.gov/schedule/news_release/" target="_blank" rel="noopener noreferrer">BLS release schedule ↗</a><a href="https://www.bea.gov/news/schedule" target="_blank" rel="noopener noreferrer">BEA release schedule ↗</a><a href="https://www.eia.gov/petroleum/supply/weekly/schedule.php" target="_blank" rel="noopener noreferrer">EIA WPSR schedule ↗</a><a href="https://www.cftc.gov/MarketReports/CommitmentsofTraders/ReleaseSchedule/index.htm" target="_blank" rel="noopener noreferrer">CFTC COT schedule ↗</a><a href="https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm" target="_blank" rel="noopener noreferrer">Federal Reserve FOMC calendar ↗</a></div></section>'
     body+='<section class="content-section" id="treasury-rates"><h2>Treasury yields and spreads</h2><div id="treasuryCurves" aria-live="polite">Curve snapshot not loaded.</div><p><a href="https://home.treasury.gov/treasury-daily-interest-rate-xml-feed">Treasury daily yield source</a></p><h3>Fiscal Data monthly averages</h3><div id="treasuryMonthly" class="economic-provider-grid">Monthly observations not loaded.</div></section>'
     body+='<section class="content-section" id="federal-reserve"><h2>Federal Reserve and funding rates</h2><div id="nyFedFunding" aria-live="polite">Funding snapshot not loaded.</div><p><a href="https://markets.newyorkfed.org/static/docs/markets-api.html">New York Fed reference-rate source</a> · <a href="https://www.federalreserve.gov/releases/h41/">Fed H.4.1 balance sheet</a> · <a href="/sessions/#calendar">FOMC calendar</a></p></section>'
-    body+='<p><a href="/macro/energy/">Open Energy Intelligence</a> for crude stocks, production, and Lower 48 gas storage.</p>'
+    body+='<p><a href="/macro/energy/">Open Energy Intelligence</a> for US energy indicators or <a href="/macro/global/">open Global Macro &amp; Liquidity</a> for country comparisons.</p>'
     write(DIST/'macro/index.html',shell('US Macro Indicators | Futures Intelligence OS','Official BLS, BEA, EIA, FRED, Treasury and ECB historical observations with source labels, units and retrieval times.',body,'/macro/', '<script defer src="/assets/macro-page.js"></script><script defer src="/assets/economic-data.js"></script>'))
 
 
@@ -703,6 +703,16 @@ def build():
     write(DIST/'macro/energy/index.html',shell('Energy Intelligence | Futures Intelligence OS',
         'Weekly crude stocks, production, natural gas storage and EIA release schedules.',
         energy_body,'/macro/energy/', '<script defer src="/assets/energy-page.js"></script>'))
+
+
+    global_body = page_intro('Global research', 'Global Macro & Liquidity',
+        'Compare countries using matching annual periods. Review ECB reference rates and official global liquidity sources.')
+    global_body += '<section class="content-section"><h2>World Bank country comparison</h2><div class="ict-chart-controls"><label for="globalCountry">Country</label><select id="globalCountry"><option value="all">Compare all</option><option value="USA">United States</option><option value="IND">India</option><option value="DEU">Germany</option><option value="JPN">Japan</option></select><label for="globalYear">Observation year</label><select id="globalYear" disabled><option>Unavailable</option></select></div><p id="globalWdiState" role="status">World Bank observations have not loaded.</p><div id="globalWdi" class="economic-provider-grid"></div><p><a href="https://data.worldbank.org/">World Bank World Development Indicators and original sources</a></p></section>'
+    global_body += '<section class="content-section"><h2>ECB euro reference rate</h2><p id="globalEcb" role="status">ECB snapshot has not loaded.</p><p>USD per EUR is the dollar value of one euro on the observation date. Use the <a href="https://data.ecb.europa.eu/data/datasets/EXR/EXR.D.USD.EUR.SP00.A">ECB series reference</a> for the published rate or <a href="/charts/?market=6e">6E Futures Charts</a> for the listed futures instrument.</p></section>'
+    global_body += '<section class="content-section"><h2>Global liquidity and research</h2><p><a href="https://www.bis.org/statistics/gli.htm">BIS Global Liquidity Indicators</a> · <a href="https://data.imf.org/">IMF Data</a> · <a href="/macro/#treasury-rates">US Treasury yields</a> · <a href="/data-health/">Data Health</a></p></section>'
+    write(DIST/'macro/global/index.html',shell('Global Macro & Liquidity | Futures Intelligence OS',
+        'World Bank annual country comparisons, ECB reference rates and official liquidity sources.',
+        global_body,'/macro/global/', '<script defer src="/assets/global-macro.js"></script>'))
 
     # COT / institutional positioning.
     body=page_intro('Institutional positioning','CFTC Commitments of Traders','Compare Legacy, TFF and Disaggregated reports while keeping futures-only and futures-and-options combined datasets separate. COT reports Tuesday positions; publication schedule and retrieval time are shown separately when available.')
@@ -959,7 +969,7 @@ def build():
 
     # Sitemap only when canonical base exists, else create relative noindex sitemap not intended for submission.
     if SITE_URL:
-        urls=['/','/ict-lab/','/futures-intelligence/','/markets/','/sessions/','/academy/','/entry-models/','/news/','/volume-open-interest/','/research/positioning/','/contract-specs/','/strategy-lab/','/risk/','/account/','/data-health/','/data-health/integrations/','/macro/','/macro/energy/','/status/','/docs/','/sources/','/ict-futures/']
+        urls=['/','/ict-lab/','/futures-intelligence/','/markets/','/sessions/','/academy/','/entry-models/','/news/','/volume-open-interest/','/research/positioning/','/contract-specs/','/strategy-lab/','/risk/','/account/','/data-health/','/data-health/integrations/','/macro/','/macro/energy/','/macro/global/','/status/','/docs/','/sources/','/ict-futures/']
         urls += ['/charts/', '/academy/crosswalk/', *lab_routes]
         urls += [f'/ict-futures/markets/{p.name}' for p in (DIST/'ict-futures/markets').glob('*.html')]
         urls += [f'/ict-futures/academy/{p.name}' for p in (DIST/'ict-futures/academy').glob('*.html')]
