@@ -58,27 +58,35 @@ function notConfigured(provider, credential, sourceUrl, notes) {
 async function fetchBea(env) {
   const sourceUrl = "https://apps.bea.gov/api/data/";
   if (!env.BEA_API_KEY) return notConfigured("BEA", "BEA_API_KEY", sourceUrl, ["BEA requires a registered 36-character UserID."]);
+  const tables = [
+    {id:'T10101', frequency:'Q', line:'1', code:'A191RL', label:/gross domestic product/i, unit:/percent/i},
+    {id:'T20804', frequency:'M', line:'1', code:'DPCERG', label:/personal consumption expenditures/i, unit:/index/i},
+  ];
+  const results = await Promise.allSettled(tables.map(async table => {
   const url = new URL(sourceUrl);
   for (const [key, value] of Object.entries({
     UserID: env.BEA_API_KEY, method: "GetData", datasetname: "NIPA",
-    TableName: "T10101", Frequency: "Q", Year: Array.from({ length: new Date().getUTCFullYear() - 2009 }, (_, i) => String(2010 + i)).join(","), ResultFormat: "JSON"
+    TableName: table.id, Frequency: table.frequency, Year: Array.from({length:5},(_,i)=>String(new Date().getUTCFullYear()-i)).join(","), ResultFormat: "JSON"
   })) url.searchParams.set(key, value);
   const body = await getJson(url, "BEA");
   const api = body.BEAAPI;
   if (api?.Error || api?.Results?.Error) throw new Error("BEA returned an API error");
   const rows = api?.Results?.Data;
   if (!Array.isArray(rows)) throw new Error("BEA response did not contain NIPA Data rows");
-  const records = rows.map(row => record(
-    "bea", "NIPA:T10101", "T10101:" + (row.SeriesCode || row.LineNumber || row.LineDescription),
-    row.LineDescription || "NIPA T10101 series", "quarterly", row.TimePeriod,
-    row.DataValue, row.CL_UNIT || null, canonicalSource(url.toString()),
-    { ...row, unitMultiplier: row.UNIT_MULT || null }
-  )).filter(Boolean);
-  return snapshot("BEA", "NIPA:T10101", records, canonicalSource(url.toString()), 1, [
-    "NIPA Table T10101 is requested at quarterly frequency.",
-    "Values are stored as published by BEA; UNIT_MULT and CL_UNIT are retained in raw_payload and values are not rescaled.",
-    "GDP national-accounts figures are subject to revisions and are not live market prices."
-  ]);
+  const matching = rows.filter(row => String(row.LineNumber)===table.line && row.SeriesCode===table.code &&
+    table.label.test(row.LineDescription||"") && table.unit.test(row.CL_UNIT||""));
+  if (!matching.length) throw new Error("BEA response did not match the expected series metadata");
+  return matching.map(row=>record("bea","NIPA:"+table.id,table.id+":"+table.code,row.LineDescription,
+    table.frequency==="Q"?"quarterly":"monthly",row.TimePeriod,row.DataValue,
+    table.frequency==="Q"?"Percent, annualized QoQ (BEA published)":"Index level (seasonally adjusted)",sourceUrl,row)).filter(Boolean);
+  }));
+  const records = results.flatMap(result=>result.status==="fulfilled"?result.value:[]);
+  if (!records.length) throw results.find(result=>result.status==="rejected")?.reason || new Error("BEA observations unavailable");
+  return {...snapshot("BEA","NIPA:T10101+T20804",records,sourceUrl,tables.length,[
+    "Real GDP growth is the published annualized quarterly percent change (T10101).",
+    "Headline PCE prices are the seasonally adjusted monthly index level (T20804).",
+    "Observation periods can be revised and do not imply an actual publication timestamp."
+  ]),status:results.every(result=>result.status==="fulfilled")?"fresh":"partial"};
 }
 
 async function fetchEia(env) {
@@ -114,10 +122,18 @@ const FRED_SERIES = [
   { id: "PCEPI", name: "Personal Consumption Expenditures: Chain-type Price Index", frequency: "monthly", unit: "index 2017=100, seasonally adjusted" }
 ];
 
+export function approvedFredSeries(env) {
+  const approved = new Set(String(env.FRED_APPROVED_SERIES || "").split(",").map(id=>id.trim()));
+  return FRED_SERIES.filter(series=>approved.has(series.id)).map(series=>series.id);
+}
+
 async function fetchFred(env) {
   const sourceUrl = "https://api.stlouisfed.org/fred/series/observations";
   if (!env.FRED_API_KEY) return notConfigured("FRED", "FRED_API_KEY", sourceUrl, ["FRED Web Services requires a registered API key."]);
-  const results = await Promise.allSettled(FRED_SERIES.map(async meta => {
+  const approved = approvedFredSeries(env);
+  const configured = FRED_SERIES.filter(meta=>approved.includes(meta.id));
+  if (!configured.length) return {...notConfigured("FRED", "FRED_API_KEY", sourceUrl, []),status:"reference-only",notes:["Series-specific reuse approval is required."]};
+  const results = await Promise.allSettled(configured.map(async meta => {
     const url = new URL(sourceUrl);
     url.searchParams.set("api_key", env.FRED_API_KEY);
     url.searchParams.set("file_type", "json");
@@ -139,12 +155,12 @@ async function fetchFred(env) {
   if (!records.length) throw new Error("FRED returned no usable observations for the configured series set");
   return {
     ...snapshot("FRED", "fred:series_observations", records, sourceUrl, requestCount, [
-      "Five explicitly listed FRED series are requested independently.",
+      "Owner-approved FRED series are requested independently.",
       "Unsuccessful individual series are reported in provider notes; missing values are not converted to zero.",
       "FRED observation histories can be revised. Vintage-aware backtesting requires explicit realtime/vintage parameters."
     ]),
-    status: successful.length === FRED_SERIES.length ? "fresh" : "partial",
-    seriesResults: results.map((x, i) => ({ seriesId: FRED_SERIES[i].id, status: x.status === "fulfilled" ? "success" : "failed", error: x.status === "rejected" ? String(x.reason?.message || "Request failed").slice(0, 180) : null })),
+    status: successful.length === configured.length ? "fresh" : "partial",
+    seriesResults: results.map((x, i) => ({ seriesId: configured[i].id, status: x.status === "fulfilled" ? "success" : "failed", error: x.status === "rejected" ? String(x.reason?.message || "Request failed").slice(0, 180) : null })),
     requestCount
   };
 }

@@ -65,6 +65,11 @@ select public.fixture_assert(not has_table_privilege(current_user,'public.ingest
 select public.fixture_assert(not has_table_privilege(current_user,'public.economic_observation_revisions','SELECT'),'revision archive exposed');
 select public.fixture_assert(not has_column_privilege(current_user,'public.economic_observations','raw_payload','SELECT'),'raw payload exposed');
 reset role;
+\ir ../supabase/migrations/20261126130000_gate_direct_fred_reads.sql
+insert into public.economic_observations
+  (provider,dataset_id,series_id,series_name,frequency,observation_date,value,source_url)
+values ('fred','fred:series_observations','DFF','Fixture','daily','2026-11-01',1,'https://fred.stlouisfed.org/');
 set local role anon;
+select public.fixture_assert((select count(provider)=0 from public.economic_observations where provider='fred'),'direct FRED reads bypass approval');
 select public.fixture_assert((select value=12 from public.economic_observations where provider='fixture'),'public normalized reads lost');
 rollback;
