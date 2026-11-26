@@ -8,9 +8,43 @@ Pin HEAD and identify generator ownership, canonical routes, data rights gates a
 
 Out of scope for implementation of this workstream are unrelated product upgrades, additional paid services, unapproved exports, AI inference and trade execution. This file is a future implementation handoff.
 
+## Doc 00 execution record
+
+Audited on 26 November 2026 (IST). Default branch `main` was pinned to [`70405ba8569807e098b3af45924dac912fbc4bb5`](https://github.com/WHIZZ444YT/WHIZZ444-YT-OS/commit/70405ba8569807e098b3af45924dac912fbc4bb5), the merge of the 30-document blueprint. The [recursive tree](https://api.github.com/repos/WHIZZ444YT/WHIZZ444-YT-OS/git/trees/70405ba8569807e098b3af45924dac912fbc4bb5?recursive=1) returned 684 entries with no truncation. The prior pinned evidence below records the blueprint's source baseline and is retained for comparison.
+
+| Check | Result and evidence |
+|---|---|
+| Standard and cutover builds | Both passed in the [quality run for the pinned SHA](https://github.com/WHIZZ444YT/WHIZZ444-YT-OS/actions/runs/45767032231). |
+| Python, Node and structural tests | Both matrix jobs passed Python, Node, release version and structural checks. Standard logs reported 76 Python tests and 123 Node tests. |
+| Links and reproducibility | Both modes passed link/anchor audits, clean artifact reproducibility and exact ICT watch-URL checks. Standard reported 14,985 checked links across 461 HTML files with zero issues. |
+| Responsive browser | Standard mode failed [Chromium's horizontal overflow assertion](https://github.com/WHIZZ444YT/WHIZZ444-YT-OS/blob/70405ba8569807e098b3af45924dac912fbc4bb5/scripts/check_public_ui.mjs#L98) for `/status/` at 851 px. This is a separate release follow-up from the open Academy issues. |
+| Standard/cutover parity | CI skipped the explicit parity comparison after the browser failure. Both builds passed independently. Git and archive download could not resolve GitHub locally, so a disposable local checkout and parity rerun remain outstanding. |
+| Vercel | Deployment metadata for the exact SHA reports **READY**, environment **production**. [Deployment URL](https://finance-intelligence-fbt2yxele-whizz444yt-7353.vercel.app/). The [live route manifest](https://finance-intelligence-os-whizz444yt-7353.vercel.app/route-manifest.json) returned 200, reported the same SHA and standard mode, and listed 461 routes. Status, Data Health, Search and both C17 paths returned 200. Browser behavior and upstream data availability require separate checks. |
+| Worker and Supabase | Worker and migration contracts are present in source. Production Worker provider freshness, actual credentials, applied migrations and RLS behavior remain unverified. |
+
+### Current source inventory and boundaries
+
+- **Runtime ownership** — [Python shell and page generator](https://github.com/WHIZZ444YT/WHIZZ444-YT-OS/blob/70405ba8569807e098b3af45924dac912fbc4bb5/scripts/build_site.py), [public futures pages](https://github.com/WHIZZ444YT/WHIZZ444-YT-OS/blob/70405ba8569807e098b3af45924dac912fbc4bb5/scripts/build_public_futures.py), [route manifest](https://github.com/WHIZZ444YT/WHIZZ444-YT-OS/blob/70405ba8569807e098b3af45924dac912fbc4bb5/scripts/build_route_manifest.py), [edge dispatcher](https://github.com/WHIZZ444YT/WHIZZ444-YT-OS/blob/70405ba8569807e098b3af45924dac912fbc4bb5/cloudflare/src/index.js), [migration source](https://github.com/WHIZZ444YT/WHIZZ444-YT-OS/tree/70405ba8569807e098b3af45924dac912fbc4bb5/supabase/migrations). The audit adds no runtime endpoint, page, key, migration or provider.
+- **Compiled artifact drift** — The tracked `dist/` blobs differ from their source copies for `assets/academy-learning.css`, `assets/account.js`, `assets/data-health.js`, `assets/futures-intelligence.js`, `assets/news-page.js`, `assets/overview-dashboard.js`, `assets/risk-calculator.js`, `assets/sessions-page.js`, `assets/site-shell.css`, `assets/site-shell.js`. Clean generated artifacts are the baseline for route and UI checks.
+- **Active families (15)** — `NQ` (CME, `CME_MINI:NQ1!`), `ES` (CME, `CME_MINI:ES1!`), `GC` (COMEX, `COMEX:GC1!`), `6E` (CME, `CME:6E1!`), `6B` (CME, `CME:6B1!`), `YM` (CBOT, `CBOT_MINI:YM1!`), `RTY` (CME, `CME_MINI:RTY1!`), `DX` (ICE US, `ICEUS:DX1!`), `ZN` (CBOT, `CBOT:ZN1!`), `CL` (NYMEX, `NYMEX:CL1!`), `6J` (CME, `CME:6J1!`), `6A` (CME, `CME:6A1!`), `6C` (CME, `CME:6C1!`), `SI` (COMEX, `COMEX:SI1!`), `BTC` (CME, `CME:BTC1!`). Chart IDs are continuous-series mappings from the [active registry](https://github.com/WHIZZ444YT/WHIZZ444-YT-OS/blob/70405ba8569807e098b3af45924dac912fbc4bb5/ict-futures/data/market-universe.json). Listed contract dates, exchange permissions and widget coverage require separate evidence.
+- **Worker route inventory** — `/api/v1/builder/models`, `/api/v1/cms/`, `/api/v1/cot`, `/api/v1/economic/`, `/api/v1/economic/history`, `/api/v1/economic/providers`, `/api/v1/events`, `/api/v1/events/bea`, `/api/v1/events/boc`, `/api/v1/events/boe`, `/api/v1/events/cftc`, `/api/v1/events/ecb`, `/api/v1/events/eia`, `/api/v1/events/fomc`, `/api/v1/events/rba`, `/api/v1/futures-observations`, `/api/v1/health`, `/api/v1/ingest`, `/api/v1/ingest/futures-market-data`, `/api/v1/macro`, `/api/v1/macro/funding`, `/api/v1/market-data/status`, `/api/v1/news`, `/api/v1/news/sources`, `/api/v1/prediction/`, `/api/v1/prediction/kalshi`, `/api/v1/prediction/polymarket`, `/api/v1/providers`, `/api/v1/volume-open-interest`. Trailing-slash entries represent dispatch prefixes. The worker also has the legacy `/health` alias and handles preflight. The two ingestion routes are protected POSTs. Existing routes are evidence of code capability only.
+- **Migrations** — 15 checked-in migrations cover the initial registry and workspace, profile setup and access restrictions, economic observations and ingest history, lesson progress, strategy runs/trades, workspace notes/alerts and indexes, richer COT records, and entitlement-scoped futures observations. See the [pinned migration history](https://github.com/WHIZZ444YT/WHIZZ444-YT-OS/tree/70405ba8569807e098b3af45924dac912fbc4bb5/supabase/migrations).
+- **Data rights gates** — Keep the approved lifecycle snapshot separate from futures observations. The observation read path requires an active entitlement scoped to provider, venue, family and delay. Confirm display, caching, persistence and export independently in Doc 01.
+
+### Open issue triage at the audited SHA
+
+| Issue | Scope and disposition |
+|---|---|
+| [#55](https://github.com/WHIZZ444YT/WHIZZ444-YT-OS/issues/55) | The production search HTML embeds the legacy C17 target. Preserve the compatibility target while coordinating canonical routes with existing Academy work. |
+| [#56](https://github.com/WHIZZ444YT/WHIZZ444-YT-OS/issues/56) | The production search HTML lacked the reported sample video ID. The issue tracks video, podcast and mentor records. Existing Academy/search workstream owns the follow-up. |
+| [#57](https://github.com/WHIZZ444YT/WHIZZ444-YT-OS/issues/57) | Both production C17 pages returned 200 and declared their respective URLs canonical. Track as SEO/route ownership, independent of provider availability. |
+| [#58](https://github.com/WHIZZ444YT/WHIZZ444-YT-OS/issues/58) | Tutorial lesson-link overflow at 320 px. This is distinct from the confirmed `/status/` failure at 851 px. |
+
+Doc 01 can use the pinned source and issue inventory to review provider terms. Production activation remains gated on the failed responsive check, explicit parity evidence, live provider checks and the applicable owner authorization.
+
 ## Repository audit evidence and gaps
 
-**Status** — Audited at source level. Production verification pending.
+**Status** — Execution evidence recorded above. The responsive gate, explicit parity and upstream production checks are outstanding.
 
 - [`scripts/build_site.py`](https://github.com/WHIZZ444YT/WHIZZ444-YT-OS/blob/e791f37da39209f3ac6c50ebf2f960101f618efb/scripts/build_site.py)
 - [`scripts/build_route_manifest.py`](https://github.com/WHIZZ444YT/WHIZZ444-YT-OS/blob/e791f37da39209f3ac6c50ebf2f960101f618efb/scripts/build_route_manifest.py)
@@ -109,9 +143,10 @@ NAV_GROUPS = [
 - Integration evidence includes a deterministic fixture, rebuild/validation where applicable, and a preview check of the affected UI including mobile, disabled credentials, blocked data and fallback links.
 - Disable the affected dataset, route flag or widget first if activation fails, restore last reviewed configuration/static build/Worker version, and invalidate any prohibited cached data. Retain permitted database history and prefer corrective additive migrations.
 
-- [ ] Scope and dependency evidence recorded.
+- [x] Scope and dependency evidence recorded.
 - [ ] Relevant data rights, owner actions and fallback verified per dataset.
-- [ ] Target routes and existing compatibility checked.
+- [x] Production standard route manifest and representative compatibility URLs checked.
+- [ ] Explicit standard/cutover parity passed.
 - [ ] Unit, integration and applicable live preview results reported.
 - [ ] Rollback or disable procedure verified.
 
