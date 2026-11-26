@@ -217,6 +217,28 @@ try {
   await newsPage.getByText(/Fixture discovery unavailable/).waitFor();
   await newsPage.close();
 
+  const energy = await browser.newPage({ viewport:{width:390,height:844} });
+  await energy.route("**/assets/runtime-config.js", route => route.fulfill({
+    contentType:"application/javascript",body:"window.FINANCE_OS_CONFIG={apiBase:location.origin};"
+  }));
+  await energy.route("**/api/v1/economic/eia", route => route.fulfill({json:{status:"not-configured",records:[]}}));
+  await energy.route("**/api/v1/events/eia", route => route.fulfill({json:{status:"fresh",events:[{
+    scheduled_at_utc:"2099-12-24T16:00:00Z",timezone_basis:"publisher-holiday-exception",schedule_status:"scheduled"
+  }]}}));
+  await energy.goto(site + "/macro/energy/");
+  await energy.getByText(/EIA API key is not configured/).waitFor();
+  await energy.getByText(/Publisher holiday exception/).waitFor();
+  assert.equal(await energy.locator("#energySeries article").count(),3);
+  assert.match(await energy.locator("#energySeries").innerText(),/Billion cubic feet/);
+  assert.ok(await energy.evaluate(()=>document.documentElement.scrollWidth<=document.documentElement.clientWidth+1));
+  await energy.close();
+
+  const staticEnergy = await browser.newPage({javaScriptEnabled:false});
+  await staticEnergy.goto(site + "/macro/energy/");
+  assert.equal(await staticEnergy.getByRole("link",{name:"OPEC Monthly Oil Market Report"}).isVisible(),true);
+  assert.equal(await staticEnergy.getByRole("link",{name:"EIA Weekly Petroleum Status Report"}).isVisible(),true);
+  await staticEnergy.close();
+
   await page.goto(site + '/ict-lab/learn/c17/');
   const worked = page.locator('[data-ifvg-worked]');
   const saveDecision = page.getByRole('button', { name: 'Save decision and reveal chart' });
