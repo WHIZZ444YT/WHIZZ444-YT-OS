@@ -54,6 +54,13 @@ Preserve direct source links and readable empty states. Show a precise status be
 
 
 
+## Implementation record
+
+- Positioning separates market-name searches from exact CFTC market-code searches. Analytics are grouped by report family, variant, market code and trader category. Existing COT routing, CFTC OI and CSV field contracts remain compatible.
+- Duplicate position dates keep the newer retrieval. Changes compare with the prior matching report, including gaps or irregular cadence. Missing current or prior positions produce no change value. Code-less rows remain descriptive and do not feed the chart or percentile.
+- A percentile is `100 × (below + ties / 2) / n`, calculated from up to 52 complete observations available for that series ending on the row’s position date. The table includes its sample size and date window. Future reports are excluded.
+- Publication remains distinct from position and retrieval dates. The release schedule is linked for publisher changes. `CFTC_APP_TOKEN` is optional and server-side only. No database migration or new datasets were introduced.
+
 ## Future file changes and implementation sequence
 
 **Dependencies** — [04 · Database and data contracts](../foundation/04-DATABASE-AND-DATA-CONTRACTS.md) · [09 · Economic calendar](../research/09-ECONOMIC-CALENDAR.md)
@@ -73,7 +80,7 @@ Preserve direct source links and readable empty states. Show a precise status be
 - Integration evidence includes a deterministic fixture, rebuild/validation where applicable, and a preview check of the affected UI including mobile, disabled credentials, blocked data and fallback links.
 - Disable the affected dataset, route flag or widget first if activation fails, restore last reviewed configuration/static build/Worker version, and invalidate any prohibited cached data. Retain permitted database history and prefer corrective additive migrations.
 
-- [ ] Scope and dependency evidence recorded.
+- [x] Scope and dependency evidence recorded.
 - [ ] Relevant data rights, owner actions and fallback verified per dataset.
 - [ ] Target routes and existing compatibility checked.
 - [ ] Unit, integration and applicable live preview results reported.

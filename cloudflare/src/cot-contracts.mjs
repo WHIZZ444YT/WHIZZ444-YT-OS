@@ -140,23 +140,45 @@ export function normalizeCotRows(rows, { report, variant = "futures-only", retri
 
 export function annotateCotChanges(rows) {
   const bySeries = new Map();
-  for (const row of rows || []) {
-    const key = [row.reportFamily, row.reportVariant, row.contractMarketCode || row.marketName || "", row.traderCategory].join("|");
-    const series = bySeries.get(key) || [];
-    series.push(row);
-    bySeries.set(key, series);
+  const unscoped = [];
+  for (const input of rows || []) {
+    const row = {...input, longChange:null, shortChange:null, netChange:null, priorReportDate:null, netPercentile:null};
+    const date = String(row.reportDate || "");
+    const parsed = Date.parse(date+"T00:00:00Z");
+    if (!row.contractMarketCode || !Number.isFinite(parsed) || new Date(parsed).toISOString().slice(0,10)!==date) {
+      unscoped.push(row);
+      continue;
+    }
+    const key = JSON.stringify([row.reportFamily,row.reportVariant,row.contractMarketCode,row.traderCategory]);
+    if (!bySeries.has(key)) bySeries.set(key,new Map());
+    const dated = bySeries.get(key);
+    const existing = dated.get(date);
+    if (!existing || String(row.retrievedAt||"")>String(existing.retrievedAt||"")) dated.set(date,row);
   }
-  for (const series of bySeries.values()) {
-    series.sort((a, b) => String(a.reportDate || "").localeCompare(String(b.reportDate || "")));
-    let previous = null;
+  const output = [...unscoped];
+  const delta = (value, previous) => Number.isFinite(value)&&Number.isFinite(previous)?value-previous:null;
+  for (const dated of bySeries.values()) {
+    const series=[...dated.values()].sort((a,b)=>a.reportDate.localeCompare(b.reportDate));
+    const complete=[];
+    let previous=null;
     for (const row of series) {
-      row.longChange = previous && row.long !== null && previous.long !== null ? row.long - previous.long : null;
-      row.shortChange = previous && row.short !== null && previous.short !== null ? row.short - previous.short : null;
-      row.netChange = previous && row.net !== null && previous.net !== null ? row.net - previous.net : null;
-      previous = row;
+      row.priorReportDate=previous?.reportDate||null;
+      row.longChange=delta(row.long,previous?.long);
+      row.shortChange=delta(row.short,previous?.short);
+      row.netChange=delta(row.net,previous?.net);
+      if (Number.isFinite(row.net)) {
+        complete.push(row);
+        if (complete.length>52) complete.shift();
+        const below=complete.filter(item=>item.net<row.net).length;
+        const tied=complete.filter(item=>item.net===row.net).length;
+        row.netPercentile={value:100*(below+tied/2)/complete.length,count:complete.length,
+          from:complete[0].reportDate,to:row.reportDate};
+      }
+      previous=row;
+      output.push(row);
     }
   }
-  return [...(rows || [])].sort((a, b) => String(b.reportDate || "").localeCompare(String(a.reportDate || "")));
+  return output.sort((a,b)=>String(b.reportDate||"").localeCompare(String(a.reportDate||"")));
 }
 
 export function cotResponseEnvelope(snapshot, rows = snapshot?.normalizedRows || []) {
