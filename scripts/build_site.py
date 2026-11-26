@@ -98,7 +98,7 @@ def nav_markup(current='/'):
             symbol = {
                 'Search':'SE','Markets':'MK','Charts':'CH','Macro':'MA','Journal practice':'JP',
                 'Overview':'OV','Futures Markets':'FD','ICT Academy':'AC','Entry Models':'EM',
-                'Sessions & Calendar':'SC','Futures News':'NW','Volume & Open Interest':'OI',
+                'Sessions & Calendar':'SC','Futures News':'NW','Reports & Publications':'RP','Volume & Open Interest':'OI',
                 'COT & Positioning':'CT','Contract Specs & Expiry':'SP','Strategy Lab':'SL',
                 'Risk & Prop Firms':'RK','Journal & Watchlists':'JW','Data Health & Sources':'DH'
             }[label]
