@@ -1,109 +1,150 @@
 (() => {
- const presentation=window.FinanceProviderPresentation;
- const cfg=window.FINANCE_OS_CONFIG||{};
- const API=String(cfg.apiBase||window.FINANCE_OS_API_BASE||"").replace(/\/$/,"");
- const $=id=>document.getElementById(id);
- const esc=v=>String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
- const endpoints=[
-  {id:"news",name:"GDELT News Discovery",path:"/api/v1/news",detail:"Global discovery index; scheduled collection every 30 minutes."},
-  {id:"bls",name:"US Bureau of Labor Statistics",path:"/api/v1/macro",detail:"Historical inflation and labour observations; not a real-time market feed."},
-  {id:"bls-calendar",name:"Official BLS Release Calendar",path:"/api/v1/events",detail:"Publisher-maintained ICS schedule for most BLS national-office releases; not a complete macro calendar."},
-  {id:"bea-calendar",name:"Official BEA Release Calendar",path:"/api/v1/events/bea",detail:"Machine-readable publisher schedule with upcoming BEA releases; dates and times only, not a complete macro calendar."},
-  {id:"eia-calendar",name:"Official EIA WPSR Schedule",path:"/api/v1/events/eia",detail:"Weekly petroleum report schedule and publisher-listed holiday exceptions; not a forecast or inventory feed."},
-  {id:"cftc-calendar",name:"Official CFTC COT Schedule",path:"/api/v1/events/cftc",detail:"Publisher-listed COT publication dates; cadence may change and is not exchange intraday volume/open interest."},
-  {id:"fomc-calendar",name:"Official Federal Reserve FOMC Calendar",path:"/api/v1/events/fomc",detail:"Publisher meeting dates only; this feed does not supply statement release times."},
-  {id:"cftc",name:"CFTC COT · TFF",path:"/api/v1/cot?report=tff&q=NASDAQ",detail:"Weekly financial-futures positioning and reported open interest."},
-  {id:"nyfed",name:"Federal Reserve Bank of New York",path:"/api/v1/macro/funding",detail:"Published overnight reference rates; daily/business-day cadence."},
-  {id:"bea",name:"BEA National Accounts",path:"/api/v1/economic/bea",detail:"Quarterly national-accounts data; requires BEA_API_KEY."},
-  {id:"eia",name:"EIA Weekly Petroleum",path:"/api/v1/economic/eia",detail:"Weekly crude-oil inventory history; requires EIA_API_KEY."},
-  {id:"fred",name:"FRED Economic Series",path:"/api/v1/economic/fred",detail:"Historical rate and macro series; requires FRED_API_KEY."},
-  {id:"treasury",name:"US Treasury Fiscal Data",path:"/api/v1/economic/us_treasury",detail:"Monthly average interest rates on marketable securities."},
-  {id:"ecb",name:"ECB USD/EUR Reference Series",path:"/api/v1/economic/ecb",detail:"Daily ECB reference rate; not a live FX quote."},
-  {id:"market-data",name:"Licensed Futures Market Data",path:"/api/v1/market-data/status",detail:"CME/ICE exchange prices, quotes and bars; remains unavailable until a licensed provider and public display entitlement are configured."}
- ];
- const stateLabel=s=>({denied:"Access denied",limited:"Rate limited",fresh:"Fresh",partial:"Partial",stale:"Stale snapshot",unavailable:"Unavailable","not-yet-fetched":"Not fetched","not-configured":"Not configured","available-on-demand":"Available on request","official-source-link":"Official source link","needs-worker-secret":"Worker secret needed","needs-public-space-key":"Public key needed"}[String(s||"").toLowerCase()]||String(s||"Unknown").replaceAll("-"," "));
- const tone=s=>["fresh","partial"].includes(String(s||"").toLowerCase())?"good":["stale","not-yet-fetched","available-on-demand","not-configured","official-source-link","needs-worker-secret","needs-public-space-key"].includes(String(s||"").toLowerCase())?"warn":"bad";
- async function request(path){
-  const response=await fetch(API+path,{headers:{Accept:"application/json"},signal:AbortSignal.timeout(18000),cache:"no-store"});
-  const payload=await response.json().catch(()=>({}));
-  if(!response.ok)throw Object.assign(new Error("HTTP "+response.status), {status: response.status});
-  return payload;
+ const presentation = window.FinanceProviderPresentation;
+ const config = window.FINANCE_OS_CONFIG || {};
+ const api = String(config.apiBase || window.FINANCE_OS_API_BASE || "").replace(/\/$/, "");
+ const element = id => document.getElementById(id);
+ const escape = value => String(value ?? "").replace(/[&<>"']/g, character => ({
+  "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;"
+ }[character]));
+ const hiddenProviders = new Set(["builder-admin", "builder-content", "supabase", "kalshi", "polymarket"]);
+ const labels = {
+  fresh: "Fresh snapshot", partial: "Partial snapshot", stale: "Stale snapshot",
+  empty: "No observations", unavailable: "Unavailable", denied: "Access denied",
+  limited: "Rate limited", "not-configured": "Not configured", "not-yet-fetched": "Not fetched",
+  "available-on-demand": "Available on request", "official-source-link": "Official link",
+  "reference-only": "Official link", "hosted-display-only": "Hosted display", excluded: "Excluded",
+  configured: "Configured", blocked: "Blocked", unknown: "Unknown"
+ };
+ const safeUrl = value => {
+  try {
+   const url = new URL(value);
+   return url.protocol === "https:" && !url.username && !url.password ? url.href : null;
+  } catch {
+   return null;
+  }
+ };
+ async function request(path) {
+  const response = await fetch(api + path, {
+   headers: {Accept: "application/json"}, signal: AbortSignal.timeout(18000), cache: "no-store"
+  });
+  if (!response.ok) throw Object.assign(new Error("Gateway request failed"), {status: response.status});
+  return response.json();
  }
- function rowCard(p){
-  return '<article class="health-card"><div class="health-card-head"><div><span class="health-kicker">'+esc(p.group||"PUBLIC DATA PROVIDER")+'</span><h3>'+esc(p.name)+'</h3></div><span class="status-pill '+tone(p.status)+'">'+esc(stateLabel(p.status))+'</span></div><p>'+esc(p.detail||"Provider status.")+'</p><div class="health-meta"><span>Endpoint: <code>'+esc(p.path||"configuration")+'</code></span><span>Last checked: '+esc(p.checked||"—")+'</span></div>'+(p.asOf?'<div class="health-asof">Data as of: '+esc(presentation.timestamp(p.asOf))+'</div>':'')+(p.note?'<div class="health-note">'+esc(p.note)+'</div>':'')+'</article>';
+ function label(value) {
+  return Object.hasOwn(labels, value) ? labels[value] : labels.unknown;
  }
- function renderRegistry(registry){
-  const list=$("providerRegistry");
-  if(!list)return;
-  const sources=Array.isArray(registry?.sources)?registry.sources:[];
-  if(!sources.length){
-   list.textContent="Registry unavailable. Use the official links in the source directory.";
+ function card(row) {
+  const {status, configuration, authorization, freshness, attemptAt, outcome, successAt, asOf} = row.health;
+  const tone = ["fresh", "partial"].includes(freshness) ? "good"
+   : ["denied", "limited", "unavailable", "blocked"].includes(status) ? "bad" : "warn";
+  const sourceUrl = safeUrl(row.source?.sourceUrl);
+  const termsUrl = safeUrl(row.source?.termsUrl);
+  const fields = [
+   ["Access", row.access], ["Configuration", configuration], ["Authorization", authorization],
+   ["Freshness", label(freshness)], ["Data as of", presentation.timestamp(asOf)],
+   ["Last successful fetch", presentation.timestamp(successAt)],
+   ["Last upstream attempt", presentation.timestamp(attemptAt)], ["Attempt outcome", outcome]
+  ];
+  return `<article class="health-card" id="provider-${escape(row.id)}">
+   <div class="health-card-head"><h3>${escape(row.title)}</h3><span class="status-pill ${tone}">${label(status)}</span></div>
+   ${row.dataset ? `<p>${escape(row.dataset)}</p>` : ""}
+   <dl>${fields.map(([name, value]) => `<div class="health-meta"><dt>${name}</dt><dd>${escape(value)}</dd></div>`).join("")}</dl>
+   <p>${sourceUrl ? `<a href="${escape(sourceUrl)}">Source · ${escape(row.source.attribution || row.source.label)}</a>` : ""}
+   ${termsUrl ? ` · <a href="${escape(termsUrl)}">Terms</a>` : ""}</p></article>`;
+ }
+ function rows(registration, economic, market) {
+  const registry = registration?.registry;
+  const sources = new Map((registry?.sources || []).map(source => [source.id, source]));
+  const interfaces = new Map((registry?.interfaces || []).map(item => [item.id, item]));
+  const economics = new Map((economic?.providers || []).map(item => [item.id, item]));
+  const output = new Map();
+  for (const provider of registration?.providers || []) {
+   if (hiddenProviders.has(provider.id) || provider.id === "licensed-futures-market-data") continue;
+   if (provider.id === "cme-rss" && sources.has("cme")) continue;
+   const mapping = interfaces.get(provider.id);
+   const source = sources.get(mapping?.providerId);
+   const schedule = mapping?.type === "publisher-schedule";
+   const id = schedule ? provider.id : source?.id || provider.id;
+   const economicStatus = schedule ? null : economics.get(id === "treasury" ? "us_treasury" : id);
+   const state = economicStatus?.state || provider.state;
+   const economicDataset = typeof state?.datasetId === "string" ? state.datasetId : null;
+   output.set(id, {
+    id, title: schedule ? provider.label : source?.label || provider.label,
+    dataset: schedule ? "Official publisher schedule" : economicDataset || source?.dataset,
+    access: provider.access?.replaceAll("-", " ") || "Unknown", source,
+    health: presentation.healthState(state, {
+     decision: source?.decision, credentialConfigured: economicStatus?.credential ? economicStatus.credentialConfigured : undefined,
+     ttlSeconds: economicStatus?.ttlSeconds
+    })
+   });
+  }
+  for (const source of sources.values()) {
+   if (output.has(source.id)) continue;
+   output.set(source.id, {
+    id: source.id, title: source.label, dataset: source.dataset, source,
+    access: source.access?.replaceAll("-", " ") || "Unknown",
+    health: presentation.healthState(null, {decision: source.decision})
+   });
+  }
+  for (const item of economics.values()) {
+   const id = item.id === "us_treasury" ? "treasury" : item.id;
+   if (output.has(id)) continue;
+   output.set(id, {
+    id, title: item.label, dataset: item.state?.datasetId,
+    access: item.credential ? "Registered API" : "Public API",
+    health: presentation.healthState(item.state, {
+     credentialConfigured: item.credential ? item.credentialConfigured : undefined, ttlSeconds: item.ttlSeconds
+    })
+   });
+  }
+  const exchangeSource = sources.get("cme") || {sourceUrl: "https://www.cmegroup.com/market-data.html", label: "CME Group"};
+  output.set("licensed-futures-market-data", {
+   id: "licensed-futures-market-data", title: "Licensed CME / ICE market data",
+   dataset: "Exchange prices, quotes and bars", access: "Licensed entitlement required", source: exchangeSource,
+   health: presentation.healthState(market, {decision: market?.status === "not-configured" ? "entitlement-missing" : null})
+  });
+  return [...output.values()];
+ }
+ async function refresh() {
+  const headline = element("healthHeadline");
+  const meta = element("healthLatency");
+  const grid = element("healthGrid");
+  const button = element("healthRefresh");
+  if (!api) {
+   headline.textContent = "Gateway not configured";
+   meta.textContent = "Official links remain available.";
+   element("healthUpdated").textContent = "Dataset health is unavailable in this deployment.";
+   grid.textContent = "Set the public Worker URL to enable dataset status.";
+   button.disabled = true;
    return;
   }
-  const items=document.createElement("ul");
-  for(const source of sources){
-   const item=document.createElement("li");
-   const link=document.createElement("a");
-   if(typeof source.sourceUrl!=="string"||!URL.canParse(source.sourceUrl)||new URL(source.sourceUrl).protocol!=="https:")continue;
-   link.href=source.sourceUrl;
-   link.textContent=source.label;
-   item.append(link);
-   item.append(" · "+source.decision.replaceAll("-"," ")+" · "+source.dataset);
-   if(typeof source.termsUrl==="string"&&URL.canParse(source.termsUrl)&&new URL(source.termsUrl).protocol==="https:"){
-     const terms=document.createElement("a");
-     terms.href=source.termsUrl;
-     terms.textContent="Terms";
-     item.append(" · ",terms);
-   }
-   items.append(item);
+  button.disabled = true;
+  headline.textContent = "Checking gateway…";
+  try {
+   const results = await Promise.allSettled([
+    request("/health"), request("/api/v1/providers"),
+    request("/api/v1/economic/providers"), request("/api/v1/market-data/status")
+   ]);
+   const [edge, registration, economic, market] = results.map(result =>
+    result.status === "fulfilled" ? result.value : null);
+   headline.textContent = edge?.ok ? "Gateway responding" : "Gateway health unavailable";
+   meta.textContent = edge?.ok ? "The gateway responded to its health check." : "Browse the source directory for publisher links.";
+   const registryStatus = element("providerRegistryStatus");
+   registryStatus.textContent = registration
+    ? `Registry loaded.${economic ? "" : " Economic configuration status unavailable."}${market ? "" : " Exchange status unavailable."}`
+    : "Provider registry unavailable. Use the official source directory.";
+   const datasets = rows(registration, economic, market);
+   grid.innerHTML = datasets.map(card).join("");
+   const snapshots = datasets.filter(row => ["fresh", "partial"].includes(row.health.freshness)).length;
+   element("healthUpdated").textContent = `${snapshots} of ${datasets.length} datasets report a fresh or partial snapshot. Gateway availability and upstream attempts are checked independently.`;
+  } catch {
+   headline.textContent = "Health check unavailable";
+   meta.textContent = "Browse the source directory for publisher links.";
+   grid.textContent = "Provider status could not be displayed.";
+  } finally {
+   button.disabled = false;
   }
-  list.replaceChildren(items);
  }
- async function refresh(){
-  if(!API){$("healthGrid").innerHTML='<div class="empty-state">API gateway is not configured. Set the public Worker URL in the deployment environment.</div>';$("healthHeadline").textContent="Gateway not configured";return;}
-  $("healthRefresh").disabled=true;$("healthRefresh").textContent="Checking…";
-  $("healthGrid").innerHTML='<div class="loading-state">Checking provider snapshots independently…</div>';
-  const started=performance.now();
-  try{
-   const [edge,providerRegistry]=await Promise.allSettled([request("/health"),request("/api/v1/providers")]);
-   renderRegistry(providerRegistry.status==="fulfilled"?providerRegistry.value.registry:null);
-   const providers=providerRegistry.status==="fulfilled"?providerRegistry.value.providers||[]:[];
-   const cards=[];
-   cards.push(edge.status==="fulfilled"
-    ?{name:"Cloudflare API Gateway",group:"EDGE RUNTIME",status:edge.value.ok?"fresh":"unavailable",detail:"Worker health route and KV configuration flags.",path:"/health",checked:edge.value.time||new Date().toISOString(),note:"KV: "+(edge.value.storageConfigured?"configured":"not configured")+" · Supabase ingestion: "+(edge.value.databaseConfigured?"configured":"not configured")}
-    :{name:"Cloudflare API Gateway",group:"EDGE RUNTIME",status:"unavailable",detail:"Gateway health check failed.",path:"/health",checked:"—",note:String(edge.reason||"Request failed")});
-   const results=await Promise.allSettled(endpoints.map(async e=>({endpoint:e,data:await request(e.path)})));
-   for(let i=0;i<results.length;i++){
-    const result=results[i],e=endpoints[i];
-    if(result.status!=="fulfilled"){
-     cards.push({name:e.name,group:"UPSTREAM SNAPSHOT",status:presentation.failed(result.reason?.status),detail:e.detail,path:e.path,checked:new Date().toISOString(),note:String(result.reason?.message||"Request failed")});
-     continue;
-    }
-    const d=result.value.data;
-    const status=String(d.status||"unknown").toLowerCase();
-    const checked=d.lastCheckedAt||d.retrievedAt||d.retrieved_at||d.generatedAt||"timestamp not supplied";
-    const asOf=d.dataAsOf||d.data_as_of||null;
-    let note=d.lastError||d.error||"";
-    if(e.id==="news"&&d.successfulQueries!==undefined)note=(d.successfulQueries+"/"+d.queryCount+" discovery queries succeeded. "+(d.refresh?.status&&d.refresh.status!=="not-requested"?"Manual refresh: "+d.refresh.status+". ":""))+note;
-    if(e.id==="cftc")note=(d.rows?.length||0)+" matching CFTC report rows returned. Weekly reporting; not intraday.";
-    cards.push({name:e.name,group:"UPSTREAM SNAPSHOT",status,detail:e.detail,path:e.path,checked,asOf,note});
-   }
-   for(const p of providers){
-    if(["builder-content","builder-admin","supabase","cme-rss"].includes(p.id)){
-     const status=p.state?.status||"unknown";
-     cards.push({name:p.label,group:"CONFIGURATION / SOURCE REGISTRY",status,detail:p.notes||"Configuration status as reported by the edge provider registry.",path:"/api/v1/providers",checked:new Date().toISOString(),note:p.state?.lastError||p.state?.lastCheckedAt||""});
-    }
-   }
-   $("healthGrid").innerHTML=cards.map(rowCard).join("");
-   const healthy=cards.filter(x=>["fresh","partial"].includes(x.status)).length;
-   const stale=cards.filter(x=>["stale","not-yet-fetched","available-on-demand","not-configured"].includes(x.status)).length;
-   const unavailable=cards.length-healthy-stale;
-   $("healthHeadline").textContent=healthy+" responding · "+stale+" waiting/configuration · "+unavailable+" unavailable";
-   $("healthLatency").textContent="Checks completed in "+Math.round(performance.now()-started)+" ms · "+new Date().toLocaleString("en-IN",{timeZone:"Asia/Kolkata"});
-   $("healthUpdated").textContent="Each card reports its own endpoint or cache state. A cached response is not the same as a fresh upstream collection.";
-  }catch(e){$("healthGrid").innerHTML='<div class="empty-state">'+esc(e.message)+'</div>';$("healthHeadline").textContent="Health check failed";}
-  finally{$("healthRefresh").disabled=false;$("healthRefresh").textContent="Recheck providers";}
- }
- $("healthRefresh").addEventListener("click",refresh);
+ element("healthRefresh").addEventListener("click", refresh);
  refresh();
 })();

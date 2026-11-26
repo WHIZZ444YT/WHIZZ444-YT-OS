@@ -393,8 +393,10 @@ class BuildTests(unittest.TestCase):
     def test_provider_health_checks_are_independent(self):
         js=(ROOT/'assets/data-health.js').read_text(encoding="utf-8")
         self.assertIn('Promise.allSettled',js)
-        for endpoint in ['/api/v1/news','/api/v1/macro','/api/v1/cot?report=tff','/api/v1/macro/funding']:
-            self.assertIn(endpoint,js)
+        for endpoint in ['/health','/api/v1/providers','/api/v1/economic/providers','/api/v1/market-data/status']:
+            self.assertIn(f'request("{endpoint}")',js)
+        for endpoint in ['/api/v1/news','/api/v1/macro','/api/v1/cot','/api/v1/events']:
+            self.assertNotIn(endpoint,js)
     def test_retired_event_market_ui_has_no_active_frontend_consumers(self):
         desk=(ROOT/'assets/futures-intelligence.js').read_text(encoding="utf-8")
         health=(ROOT/'assets/data-health.js').read_text(encoding="utf-8")
@@ -939,11 +941,9 @@ class BuildTests(unittest.TestCase):
         self.assertIn('boc-rate-calendar',worker)
         self.assertIn('rba-monetary-policy-calendar',worker)
         self.assertIn('bea-release-calendar',worker)
-        self.assertIn('/api/v1/events/bea',health)
-        self.assertIn('/api/v1/events',health)
-        self.assertIn('/api/v1/events/eia',health)
-        self.assertIn('/api/v1/events/cftc',health)
-        self.assertIn('/api/v1/events/fomc',health)
+        self.assertIn('request("/api/v1/providers")',health)
+        self.assertIn('"publisher-schedule"',health)
+        self.assertNotIn('/api/v1/events',health)
         self.assertIn("shell('Sessions & Calendar | Futures Intelligence OS'",builder)
         self.assertIn('sessions-page.css',builder)
         self.assertIn('sessions-page.js',builder)
