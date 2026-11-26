@@ -1,3 +1,4 @@
+import { fetchWorldBank, worldBankSource } from "./world-bank.mjs";
 import { fetchTreasuryYields, treasuryYieldSource } from "./treasury-yields.mjs";
 import { fetchJsonWithRetry } from "./provider-http.mjs";
 
@@ -215,8 +216,8 @@ function parseEcb(body, sourceUrl) {
       const value = Array.isArray(raw) ? raw[0] : raw;
       const row = record(
         "ecb", "EXR", "EXR:D.USD.EUR.SP00.A:" + seriesKey,
-        "ECB daily exchange-rate reference series (USD/EUR key D.USD.EUR.SP00.A)",
-        "daily", date, value, "ECB series units; see official SDMX attributes",
+        "ECB daily exchange-rate reference (US dollars per euro)",
+        "daily", date, value, "USD per EUR",
         sourceUrl, { seriesKey, observation: raw, period: date }, "EU"
       );
       if (row) records.push(row);
@@ -269,6 +270,12 @@ export async function fetchEconomicProvider(provider, env) {
         status:result.status};
     }
     case "ecb": return await fetchEcb();
+    case "world-bank": {
+      const result=await fetchWorldBank(env);
+      return {...snapshot("World Bank World Development Indicators","WDI",result.records,worldBankSource,result.requestCount,
+        ["Annual observations. Compare matching years and units; revisions may occur.","Attribution: World Bank WDI and indicator-specific original sources."]),
+        status:result.status};
+    }
     default: throw new Error("Unsupported economic data provider");
   }
 }
@@ -279,5 +286,6 @@ export const ECONOMIC_PROVIDER_CONFIG = {
   fred: { label: "Federal Reserve Economic Data", credential: "FRED_API_KEY", ttlSeconds: 21600, cadence: "series-specific" },
   "treasury-yield": { label: "US Treasury daily nominal and real par yields", credential: null, ttlSeconds: 43200, cadence: "business days" },
   us_treasury: { label: "US Treasury Fiscal Data", credential: null, ttlSeconds: 43200, cadence: "monthly for average interest rates" },
+  "world-bank": { label:"World Bank World Development Indicators", credential:null, ttlSeconds:86400, cadence:"annual; daily snapshot check" },
   ecb: { label: "European Central Bank Data Portal", credential: null, ttlSeconds: 21600, cadence: "daily business-day reference data" }
 };

@@ -239,6 +239,28 @@ try {
   assert.equal(await staticEnergy.getByRole("link",{name:"EIA Weekly Petroleum Status Report"}).isVisible(),true);
   await staticEnergy.close();
 
+  const globalMacro = await browser.newPage({ viewport:{width:390,height:844} });
+  await globalMacro.route("**/assets/runtime-config.js", route => route.fulfill({
+    contentType:"application/javascript",body:"window.FINANCE_OS_CONFIG={apiBase:location.origin};"
+  }));
+  await globalMacro.route("**/api/v1/economic/world-bank", route => route.fulfill({json:{status:"fresh",records:[
+    {series_id:"NY.GDP.MKTP.KD.ZG:IND",series_name:"Real GDP growth",observation_date:"2025-01-01",value:6,unit:"Annual percent"},
+    {series_id:"NY.GDP.MKTP.KD.ZG:USA",series_name:"Real GDP growth",observation_date:"2024-01-01",value:2,unit:"Annual percent"}
+  ]}}));
+  await globalMacro.route("**/api/v1/economic/ecb", route => route.fulfill({json:{status:"fresh",records:[
+    {series_id:"EXR:D.USD.EUR.SP00.A:0:0",observation_date:"2026-11-25",value:1.1234}
+  ]}}));
+  await globalMacro.goto(site + "/macro/global/");
+  await globalMacro.getByText("India · 6 Annual percent").waitFor();
+  assert.match(await globalMacro.locator("#globalWdi").innerText(),/United States · Unavailable/);
+  await globalMacro.locator("#globalYear").selectOption("2024");
+  await globalMacro.getByText("United States · 2 Annual percent").waitFor();
+  assert.match(await globalMacro.locator("#globalWdi").innerText(),/India · Unavailable/);
+  await globalMacro.getByText(/1\.1234 USD per EUR/).waitFor();
+  assert.equal(await globalMacro.getByRole("link",{name:"6E Futures Charts"}).getAttribute("href"),"/charts/?market=6e");
+  assert.ok(await globalMacro.evaluate(()=>document.documentElement.scrollWidth<=document.documentElement.clientWidth+1));
+  await globalMacro.close();
+
   await page.goto(site + '/ict-lab/learn/c17/');
   const worked = page.locator('[data-ifvg-worked]');
   const saveDecision = page.getByRole('button', { name: 'Save decision and reveal chart' });

@@ -55,6 +55,12 @@ Preserve direct source links and readable empty states. Show a precise status be
 
 
 
+## Implementation record
+
+- `/macro/global/` compares United States, India, Germany and Japan in a selected annual WDI period. Missing country/year values are shown as unavailable. Earlier observations do not substitute for a different year.
+- The Worker supports four fixed WDI indicators with bounded pagination. Set `WORLD_BANK_APPROVED_INDICATORS` to a comma-separated reviewed subset after confirming original attribution and indicator-specific terms. The default is reference-only. Approved observations use KV snapshots and are excluded from Supabase history pending a separate retention decision. Public reads filter cached rows against current approval.
+- ECB EXR daily context is labeled USD per EUR with the publisher's observation date. 6E futures have their own separate Charts link. BIS and IMF remain official links pending flow and rights review. No new accounts, credentials, or deployment are required for the reference links.
+
 ## Future file changes and implementation sequence
 
 **Dependencies** — [04 · Database and data contracts](../foundation/04-DATABASE-AND-DATA-CONTRACTS.md) · [12 · Treasury and Fed intelligence](../research/12-TREASURY-AND-FED-INTELLIGENCE.md)
@@ -74,7 +80,7 @@ Preserve direct source links and readable empty states. Show a precise status be
 - Integration evidence includes a deterministic fixture, rebuild/validation where applicable, and a preview check of the affected UI including mobile, disabled credentials, blocked data and fallback links.
 - Disable the affected dataset, route flag or widget first if activation fails, restore last reviewed configuration/static build/Worker version, and invalidate any prohibited cached data. Retain permitted database history and prefer corrective additive migrations.
 
-- [ ] Scope and dependency evidence recorded.
+- [x] Scope and dependency evidence recorded.
 - [ ] Relevant data rights, owner actions and fallback verified per dataset.
 - [ ] Target routes and existing compatibility checked.
 - [ ] Unit, integration and applicable live preview results reported.

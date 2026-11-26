@@ -254,3 +254,18 @@ test("EIA energy series keep native units and withheld data is null", async t =>
   ]);
   assert.ok(records.every(row=>row.published_at===null&&!row.source_url.includes("fixture-key")));
 });
+
+test("World Bank snapshots enforce per-indicator approval on public reads", async ()=>{
+  const env={SNAPSHOTS:snapshotStore({"economic:world-bank:v1":{
+    status:"fresh",retrievedAt:new Date().toISOString(),records:[
+      {series_id:"NY.GDP.MKTP.KD.ZG:IND",value:6,observation_date:"2025-01-01"},
+      {series_id:"FP.CPI.TOTL.ZG:IND",value:3,observation_date:"2025-01-01"}
+    ]
+  }})};
+  const path="/api/v1/economic/world-bank";
+  assert.equal((await (await send(path,env)).json()).status,"reference-only");
+  env.WORLD_BANK_APPROVED_INDICATORS="NY.GDP.MKTP.KD.ZG";
+  const response=await send(path,env);
+  assert.equal(response.headers.get("Cache-Control"),"no-store");
+  assert.deepEqual((await response.json()).records.map(row=>row.series_id),["NY.GDP.MKTP.KD.ZG:IND"]);
+});

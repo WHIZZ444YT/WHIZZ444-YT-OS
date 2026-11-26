@@ -1,3 +1,4 @@
+import { approvedWorldBankSeries, worldBankSource } from "./world-bank.mjs";
 import { officialNewsSnapshot, refreshOfficialNews } from "./official-news.mjs";
 import { providerRegistry } from "./provider-registry.mjs";
 import { approvedFredSeries, ECONOMIC_PROVIDER_CONFIG, fetchEconomicProvider } from "./economic-providers.js";
@@ -140,6 +141,7 @@ export default {
     {id:"fred",label:"Federal Reserve Economic Data",access:"registered-api-key",state:await getEconomicProviderState(env,"fred"),notes:"Daily and monthly macro histories; FRED_API_KEY required."},
     {id:"treasury-yield",label:"US Treasury daily par yields",access:"public-xml-no-key",state:await getEconomicProviderState(env,"treasury-yield"),notes:"Nominal and real curves are separate from monthly Fiscal Data averages."},
     {id:"us-treasury",label:"US Treasury Fiscal Data",access:"public-api-no-key",state:await getEconomicProviderState(env,"us_treasury"),notes:"Monthly average interest rates on marketable Treasury securities; not the daily par yield curve."},
+    {id:"world-bank",label:"World Bank World Development Indicators",access:"public-api-no-key",state:await getEconomicProviderState(env,"world-bank"),notes:"Reference-only until reuse approval is configured for specific indicators."},
     {id:"ecb",label:"European Central Bank Data Portal",access:"public-sdmx-api-no-key",state:await getEconomicProviderState(env,"ecb"),notes:"Daily USD/EUR reference exchange-rate series; not a live FX quote."},
     {id:"supabase",label:"Supabase Postgres",access:"server-side-only",state:{status:env.SUPABASE_URL&&supabaseAdminKey(env)?"configured":"not-configured"},notes:"Server-side ingestion writes only; browser roles cannot write economic observations or ingestion logs."}
    ];
@@ -392,6 +394,7 @@ export default {
    const provider=String(url.searchParams.get("provider")||"").toLowerCase();
    if(!Object.prototype.hasOwnProperty.call(ECONOMIC_PROVIDER_CONFIG,provider))return json({error:"A supported provider is required."},400,cors);
    const seriesId=String(url.searchParams.get("series_id")||"").trim();
+   if(provider==="world-bank")return json({status:"snapshot-only",observations:[]},200,{...cors,"Cache-Control":"no-store"});
    const fredScope=provider==="fred"?approvedFredSeries(env):null;
    if(fredScope&&(!fredScope.length||(seriesId&&!fredScope.includes(seriesId))))return json({status:"reference-only",observations:[]},200,{...cors,"Cache-Control":"no-store"});
    if(seriesId.length>160)return json({error:"series_id is too long."},400,cors);
@@ -431,7 +434,7 @@ export default {
    if(!Object.prototype.hasOwnProperty.call(ECONOMIC_PROVIDER_CONFIG,provider))return json({error:"Unsupported economic provider"},404,cors);
    const result=await getEconomicData(provider,env);
    const status=result.status==="unavailable"?503:200;
-   const cacheable=provider!=="fred"&&["fresh","partial"].includes(result.status);
+   const cacheable=provider!=="fred"&&provider!=="world-bank"&&["fresh","partial"].includes(result.status);
    return json(result,status,{...cors,"Cache-Control":cacheable?"public, max-age=300, s-maxage=300":"no-store"});
   }
   if(url.pathname.startsWith("/api/v1/prediction/")){
@@ -472,7 +475,7 @@ async function getEconomicProviderState(env,provider){
  const cfg=ECONOMIC_PROVIDER_CONFIG[provider];
  const credentialRequired=cfg?.credential||null;
  const persistenceStatus=env.SUPABASE_URL&&supabaseAdminKey(env)?"ready":"not-configured";
- if(provider==="fred"&&!approvedFredSeries(env).length)return{status:"reference-only",lastSuccessAt:null,persistenceStatus};
+ if((provider==="fred"&&!approvedFredSeries(env).length)||(provider==="world-bank"&&!approvedWorldBankSeries(env).length))return{status:"reference-only",lastSuccessAt:null,persistenceStatus:provider==="world-bank"?"snapshot-only":persistenceStatus};
  if(credentialRequired&&!env[credentialRequired]){
   return{status:"not-configured",credentialRequired,lastAttemptAt:null,lastSuccessAt:null,persistenceStatus};
  }
@@ -488,6 +491,8 @@ async function getEconomicProviderState(env,provider){
 async function getEconomicData(provider,env){
  const cfg=ECONOMIC_PROVIDER_CONFIG[provider];
  const empty={schemaVersion:1,provider,providerId:provider,dataAsOf:null,retrievedAt:null,records:[],series:[],sourceUrl:null};
+ const bankScope=provider==="world-bank"?approvedWorldBankSeries(env):null;
+ if(bankScope&&!bankScope.length)return {...empty,status:"reference-only",sourceUrl:worldBankSource};
  const fredScope=provider==="fred"?approvedFredSeries(env):null;
  if(fredScope&&!fredScope.length)return {...empty,status:"reference-only",sourceUrl:"https://fred.stlouisfed.org/"};
  if(cfg.credential&&!env[cfg.credential]){
@@ -508,6 +513,12 @@ async function getEconomicData(provider,env){
      safeSnapshot.records=safeSnapshot.records.filter(row=>fredScope.includes(row.series_id));
      safeSnapshot.series=(snapshot.series||[]).filter(row=>fredScope.includes(row.seriesId));
      safeSnapshot.seriesResults=(snapshot.seriesResults||[]).filter(row=>fredScope.includes(row.seriesId));
+     safeSnapshot.dataAsOf=safeSnapshot.records.map(row=>row.observation_date).sort().at(-1)||null;
+    }
+    if(bankScope){
+     const allowed=id=>bankScope.includes(String(id).split(":")[0]);
+     safeSnapshot.records=safeSnapshot.records.filter(row=>allowed(row.series_id));
+     safeSnapshot.series=(snapshot.series||[]).filter(row=>allowed(row.seriesId));
      safeSnapshot.dataAsOf=safeSnapshot.records.map(row=>row.observation_date).sort().at(-1)||null;
     }
     if(snapshot.persistence){
@@ -600,7 +611,7 @@ async function persistEconomicSnapshot(env,snapshot){
  }
 }
 async function ingestEconomicProvider(provider,env){
- if(provider==="fred"&&!approvedFredSeries(env).length)return {status:"reference-only",records:[],series:[]};
+ if((provider==="fred"&&!approvedFredSeries(env).length)||(provider==="world-bank"&&!approvedWorldBankSeries(env).length))return {status:"reference-only",records:[],series:[]};
  const cfg=ECONOMIC_PROVIDER_CONFIG[provider],started=Date.now();
   const priorState=env.SNAPSHOTS?await env.SNAPSHOTS.get("economic-provider:"+provider,"json"):null;
   const pausedUntil=Date.parse(priorState?.retryAt||"");
@@ -624,7 +635,8 @@ async function ingestEconomicProvider(provider,env){
    return snapshot;
   }
   let persistence={status:"not-configured",rowsUpserted:0};
-  if(env.SUPABASE_URL&&supabaseAdminKey(env))persistence=await persistEconomicSnapshot(env,snapshot);
+  if(provider==="world-bank")persistence={status:"snapshot-only",rowsUpserted:0};
+  else if(env.SUPABASE_URL&&supabaseAdminKey(env))persistence=await persistEconomicSnapshot(env,snapshot);
   snapshot.persistence=persistence;
   snapshot.elapsedMs=Date.now()-started;
    const state={status:snapshot.status,lastAttemptAt:snapshot.retrievedAt,lastSuccessAt:snapshot.retrievedAt,
@@ -652,12 +664,12 @@ async function ingestEconomicProvider(provider,env){
 }
 async function scheduledEconomicIngestion(env){
  if(!env.SNAPSHOTS)return;
- const jobs=Object.entries(ECONOMIC_PROVIDER_CONFIG).filter(([provider])=>provider!=="fred"||approvedFredSeries(env).length);
+ const jobs=Object.entries(ECONOMIC_PROVIDER_CONFIG).filter(([provider])=>(provider!=="fred"||approvedFredSeries(env).length) && (provider!=="world-bank"||approvedWorldBankSeries(env).length));
  await Promise.allSettled(jobs.map(async([provider,cfg])=>{
   const previous=await env.SNAPSHOTS.get(economicCacheKey(provider),"json");
   const at=Date.parse(previous?.retrievedAt||"");
   if(!Number.isFinite(at)||Date.now()-at>cfg.ttlSeconds*1000)return await ingestEconomicProvider(provider,env);
-  if(provider!=="fred"&&previous.persistence?.status==="failed"&&env.SUPABASE_URL&&supabaseAdminKey(env)&&(!cfg.credential||env[cfg.credential])){
+  if(provider!=="fred"&&provider!=="world-bank"&&previous.persistence?.status==="failed"&&env.SUPABASE_URL&&supabaseAdminKey(env)&&(!cfg.credential||env[cfg.credential])){
    const persistence=await persistEconomicSnapshot(env,previous);
    const remaining=Math.max(60,Math.ceil((at+cfg.ttlSeconds*2000-Date.now())/1000));
    const current=await env.SNAPSHOTS.get(economicCacheKey(provider),"json");
