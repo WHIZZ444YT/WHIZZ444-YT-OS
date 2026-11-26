@@ -10,7 +10,9 @@ Out of scope for implementation of this workstream are unrelated product upgrade
 
 ## Repository audit evidence and gaps
 
-**Status** — Strategy Lab and private persistence code present. Historical dataset availability and rights are unverified.
+**Status** — Strategy Lab accepts exact-expiry CSVs for browser research. Record provider and dataset ID, download date, bar-close timestamp timezone, session calendar, timeframe, volume units and a rights reference. Private persistence and derived export each require separate permission. Use the synthetic backtest tests in `tests/test_strategy_backtest.mjs` for reproducible QA. No vendor feed is enabled.
+
+For a release-dependent signal, select point-in-time mode. Supply `signal_available_at` as the latest availability timestamp across that signal’s inputs, with `Z` or UTC offset. A non-flat signal without evidence, or one whose evidence follows the bar close, is rejected. Choose the vintage that existed at the time. The engine checks the supplied timestamps, and provenance remains a user declaration. Continuous roll and release ingestion remain unsupported.
 
 - [`assets/strategy-lab.js`](https://github.com/WHIZZ444YT/WHIZZ444-YT-OS/blob/e791f37da39209f3ac6c50ebf2f960101f618efb/assets/strategy-lab.js)
 - [`tests/test_strategy_backtest.mjs`](https://github.com/WHIZZ444YT/WHIZZ444-YT-OS/blob/e791f37da39209f3ac6c50ebf2f960101f618efb/tests/test_strategy_backtest.mjs)

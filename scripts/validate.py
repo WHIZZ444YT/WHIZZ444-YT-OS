@@ -202,7 +202,7 @@ p7_engine=(ROOT/'assets/strategy-backtest-engine.mjs').read_text(encoding="utf-8
 p7_ui=(ROOT/'assets/strategy-lab.js').read_text(encoding="utf-8")
 p4_migration=ROOT/'supabase/migrations/20261108151112_add_strategy_backtest_runs_and_trades.sql'
 ok('P7 engine has deterministic next-bar signal execution and conservative exits',
-   'ENGINE_VERSION = "p7.0.0"' in p7_engine and 'source-bar-close' in p7_engine and 'next-bar-open' in p7_engine and 'stop-first-same-bar' in p7_engine and 'stop-gap' in p7_engine)
+   'ENGINE_VERSION = "p7.1.0"' in p7_engine and 'source-bar-close' in p7_engine and 'next-bar-open' in p7_engine and 'stop-first-same-bar' in p7_engine and 'stop-gap' in p7_engine)
 ok('P7 manifest records exact expiry, provenance, gaps and reproducible input fingerprints',
    'exactExpiryDate' in p7_engine and 'dataSource' in p7_engine and 'observedGapCount' in p7_engine and 'runFingerprint' in p7_engine)
 ok('P7 validates listed contract, tick grid and safe CSV columns',
@@ -335,7 +335,7 @@ if dist.exists():
         'Exact contract code (must match CSV)' in p7_page and 'external signal only' in p7_page and 'out-of-sample' in p7_page and 'downloadManifest' in p7_page and 'downloadTrades' in p7_page)
     p7_template=dist/'strategy-lab/backtest-input-template.csv'
     ok('P7 CSV template requires exact contract and expiry fields',
-        p7_template.exists() and p7_template.read_text(encoding="utf-8").strip()=='timestamp,open,high,low,close,signal,contract,expiry,stop_ticks,volume')
+        p7_template.exists() and p7_template.read_text(encoding="utf-8").strip()=='timestamp,open,high,low,close,signal,contract,expiry,stop_ticks,volume,signal_available_at')
     published_docs = {p.relative_to(dist).as_posix() for p in (dist/'docs').rglob('*') if p.is_file()}
     ok('Public documentation is limited to the help index and linked rule cards',
        published_docs == {'docs/index.html', 'docs/futures-only-roadmap/22-PART-7-MODEL-RULE-CARDS.md'})

@@ -1,8 +1,8 @@
-export const ENGINE_VERSION = "p7.0.0";
+export const ENGINE_VERSION = "p7.1.0";
 export const MAX_BARS = 250000;
 
 const REQUIRED = ["timestamp", "open", "high", "low", "close", "signal", "contract", "expiry"];
-const ALLOWED = new Set([...REQUIRED, "stop_ticks", "volume"]);
+const ALLOWED = new Set([...REQUIRED, "stop_ticks", "volume", "signal_available_at"]);
 const MODEL_TAGS = new Set(["custom", "liquidity-sweep-mss", "silver-bullet", "ict-2022-model", "judas-mss", "amd-po3", "unicorn", "fvg-continuation", "ifvg", "fvg-ote", "smt-assisted"]);
 const TZ_RE = /(?:Z|[+-](?:0\d|1\d|2[0-3]):[0-5]\d)$/i;
 
@@ -76,6 +76,7 @@ export function parseSignalCsv(text) {
   const bars = [];
   let previousTime = -Infinity;
   const contracts = new Set(), expiries = new Set();
+  let timedSignalCount = 0;
   let signalCount = 0, longCount = 0, shortCount = 0, volumeCount = 0, stopOverrideCount = 0;
   for (let i = 0; i < dataRows.length; i += 1) {
     const raw = dataRows[i];
@@ -98,6 +99,15 @@ export function parseSignalCsv(text) {
       throw new Error("OHLC range is inconsistent at CSV row " + rowNumber + ".");
     }
     const signal = parseSignal(cell("signal"), rowNumber);
+    const availableAt = String(cell("signal_available_at")).trim();
+    if (availableAt) {
+      const availableEpoch = Date.parse(availableAt);
+      if (!TZ_RE.test(availableAt) || !Number.isFinite(availableEpoch)) {
+        throw new Error("Signal availability at CSV row " + rowNumber + " needs a timestamp with an explicit UTC offset.");
+      }
+      if (availableEpoch > epoch) throw new Error("Signal availability is after the source bar close at CSV row " + rowNumber + ".");
+      if (signal !== 0) timedSignalCount += 1;
+    }
     if (signal !== 0) signalCount += 1;
     if (signal === 1) longCount += 1;
     if (signal === -1) shortCount += 1;
@@ -129,6 +139,7 @@ export function parseSignalCsv(text) {
     bars,
     quality: {
       rows: bars.length,
+      timedSignalCount,
       firstTimestamp: bars[0].timestamp,
       lastTimestamp: bars[bars.length - 1].timestamp,
       signalCount, longSignals: longCount, shortSignals: shortCount,
@@ -177,6 +188,14 @@ export function validateConfig(input) {
   c.signalSourceNotes = String(c.signalSourceNotes || "").trim().slice(0, 2000);
   if (c.seriesType === "back-adjusted-continuous") throw new Error("Roll-adjusted continuous series are not supported in this engine version. Use one exact listed expiry per run.");
   c.seriesType = "single-expiry";
+  c.sessionCalendar = String(c.sessionCalendar || "").trim().slice(0, 200) || null;
+  c.signalTiming = c.signalTiming === "point-in-time" ? "point-in-time" : "declared-causal";
+  if (c.rights !== undefined) {
+    if (c.rights?.research !== true) throw new Error("Confirm permission for local research before running.");
+    const reference = String(c.rights.reference || "").trim().slice(0, 200);
+    if (!reference || !c.sessionCalendar) throw new Error("Enter the rights reference and session calendar for this dataset.");
+    c.rights = { research: true, reference, persist: c.rights.persist === true, export: c.rights.export === true };
+  }
   c.dataSource = String(c.dataSource || "").trim().slice(0, 160);
   c.datasetId = String(c.datasetId || "").trim().slice(0, 160);
   c.downloadDate = String(c.downloadDate || "").trim();
@@ -509,6 +528,9 @@ export async function runExperiment(csvText, inputConfig, datasetName = "uploade
   const parsed = parseSignalCsv(csvText);
   const config = validateConfig(inputConfig);
   const bars = parsed.bars;
+  if (config.signalTiming === "point-in-time" && parsed.quality.timedSignalCount !== parsed.quality.signalCount) {
+    throw new Error("Point-in-time mode needs signal_available_at on every non-flat signal.");
+  }
   if (parsed.quality.volumeCoverage > 0 && !config.volumeUnits) throw new Error("Volume values are present. Enter their source units, or remove volume from the CSV.");
   const expectedIntervalMs = timeframeMilliseconds(config.timeframe);
   const observedGaps = [];
@@ -563,7 +585,7 @@ export async function runExperiment(csvText, inputConfig, datasetName = "uploade
   };
   const runFingerprint = await sha256(stableStringify(fingerprintInput));
   const manifest = {
-    schemaVersion: 2,
+    schemaVersion: 3,
     engineVersion: ENGINE_VERSION,
     runFingerprint,
     dataset: {
@@ -577,6 +599,13 @@ export async function runExperiment(csvText, inputConfig, datasetName = "uploade
       shortSignals: parsed.quality.shortSignals,
       contract: parsed.quality.contract,
       exactExpiryDate: parsed.quality.expiry,
+      seriesType: config.seriesType,
+      rollMethod: null,
+      timeframe: config.timeframe,
+      timezone: config.timezone,
+      sessionCalendar: config.sessionCalendar,
+      rights: config.rights || null,
+      signalTiming: config.signalTiming,
       dataSource: config.dataSource,
       datasetId: config.datasetId,
       downloadDate: config.downloadDate,
@@ -599,7 +628,7 @@ export async function runExperiment(csvText, inputConfig, datasetName = "uploade
       optimization: "none; parameters are user-specified and the OOS segment must remain untouched until final evaluation"
     },
     config,
-    split: fingerprintInput.split,
+    split: { ...fingerprintInput.split, periods: splits.map(({key,startAt,endAt}) => ({key,startAt,endAt})) },
     dataQuality: parsed.quality,
     limitations: [
       "This engine tests supplied LONG/SHORT signals; it does not automatically detect ICT concepts or generate model signals.",

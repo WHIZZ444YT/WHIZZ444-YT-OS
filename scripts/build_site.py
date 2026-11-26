@@ -838,7 +838,7 @@ def build():
     </nav>
   <div class="strategy-grid" id="strategy-input">
     <section class="strategy-panel">
-      <h3>01 · Dataset &amp; model tag</h3><p>Use one exact listed contract and expiry date per run. The uploaded file stays in this browser; only its hash, manifest and completed trade ledger can sync to your private account.</p>
+      <h3>01 · Dataset &amp; model tag</h3><p>Use one exact listed contract and expiry date per run. The CSV stays in this tab. Enable persistence only if your source permits storing derived results and syncing the manifest and trade ledger to your private account.</p>
       <div class="strategy-file-zone">
         <label>Historical signal CSV<br><input id="strategyCsv" type="file" accept=".csv,text/csv"></label>
         <div id="strategyFileMeta" class="strategy-file-meta">No file selected. Minimum 30 timestamped bars; maximum 250,000 bars / 50 MB.</div>
@@ -854,11 +854,22 @@ def build():
         <label>Bar timeframe<input id="timeframe" type="text" placeholder="e.g. 1m, 5m, 1h, 1d" maxlength="30" required></label>
         <label>Timestamp / session timezone<input id="timezone" type="text" value="America/Chicago" maxlength="80"></label>
         <label>Data provider / source<input id="dataSource" type="text" placeholder="Name the provider or original dataset" maxlength="160" required></label>
+        <label>Session calendar or convention<input id="strategyCalendar" type="text" placeholder="e.g. publisher calendar or synthetic UTC grid" maxlength="200"></label>
         <label>Provider dataset ID<input id="datasetId" type="text" placeholder="Provider ID or stable dataset reference" maxlength="160" required></label>
         <label>Download date<input id="downloadDate" type="date" required></label>
         <label>Volume units (required only when volume is supplied)<input id="volumeUnits" type="text" placeholder="e.g. contracts, lots, provider ticks" maxlength="80"></label>
+        <label>Signal timing<select id="strategySignalTiming"><option value="declared-causal">Price-only or synthetic signals</option><option value="point-in-time">Signals using releases or revised data</option></select></label>
         <label class="strategy-wide">Signal-generation rule / source note<textarea id="signalSourceNotes" rows="2" placeholder="Describe the causal rule and where signals were generated. Include Pine version, signal timestamp convention and any session filters."></textarea></label>
       </div>
+      <fieldset class="strategy-panel">
+        <legend>Dataset permissions</legend>
+        <label>Rights reference<input id="strategyRightsReference" type="text" maxlength="200" placeholder="Public terms reference or synthetic fixture ID"></label>
+        <p class="strategy-help">Use a reference ID without private contract details. Bar timestamps represent bar close. For release-based signals, include the latest input availability time in <code>signal_available_at</code> for every non-flat signal and use the vintage available then.</p>
+        <p><label><input id="strategyResearchRights" type="checkbox"> I have permission to use this file for local research.</label></p>
+        <p><label><input id="strategyPersistRights" type="checkbox"> My source permits saving and privately syncing these derived results.</label></p>
+        <p><label><input id="strategyExportRights" type="checkbox"> My source permits downloading the manifest and derived trade ledger.</label></p>
+        <p><a href="/data-health/#provider-registry">Data Health and source rights</a></p>
+      </fieldset>
       <p class="strategy-help">The research tag is only a label. None of the ten listed ICT candidates has a machine-testable detector here. See the <a href="/docs/futures-only-roadmap/22-PART-7-MODEL-RULE-CARDS.md">rule-card status and decisions required</a>.</p>
     </section>
     <section class="strategy-panel">
@@ -888,7 +899,7 @@ def build():
       <div class="strategy-disclosure" style="margin-top:12px"><b>Out-of-sample = remainder.</b> Keep this final segment untouched until rules and parameters are frozen. The tool does not optimize settings; inspecting OOS and then changing rules turns it into another in-sample period.</div>
       </details>
       <div class="strategy-actions" style="margin-top:13px"><button id="runStrategy" class="strategy-run-button" type="button" disabled>Run reproducible backtest</button><span id="strategyRunMeta" class="strategy-help">Choose a valid CSV to enable the engine.</span></div>
-      <p id="strategySyncStatus" class="strategy-sync-status" aria-live="polite">Runs stay local unless you sign in. Signed-in runs and trade ledgers sync to your user-owned Supabase tables.</p>
+      <p id="strategySyncStatus" class="strategy-sync-status" aria-live="polite">Runs stay in this tab unless dataset permissions allow persistence.</p>
     </section>
     <section class="strategy-panel">
       <h3>04 · Method contract</h3>
@@ -922,7 +933,7 @@ def build():
   <section class="strategy-panel"><h3>Evidence rules</h3><p>Win rate alone is not a decision metric. Review trade count, net expectancy, average R, net profit factor, drawdown size/duration, costs and out-of-sample stability together. Small samples, externally generated signals with look-ahead, unadjusted contract rolls, inaccurate tick values and omitted costs can invalidate results. A backtest is not a forecast or a guarantee of future performance.</p></section>
 </section>
 '''
-    write(DIST/'strategy-lab/backtest-input-template.csv','timestamp,open,high,low,close,signal,contract,expiry,stop_ticks,volume\n')
+    write(DIST/'strategy-lab/backtest-input-template.csv','timestamp,open,high,low,close,signal,contract,expiry,stop_ticks,volume,signal_available_at\n')
     write(DIST/'strategy-lab/index.html',shell('Strategy Lab | Futures Intelligence OS','Reproducible futures signal backtesting with cost-aware expectancy, drawdown and chronological out-of-sample testing.',body,'/strategy-lab/', '<link rel="stylesheet" href="/assets/strategy-lab.css"><script type="module" defer src="/assets/strategy-lab.js"></script>'))
 
     # Independent provider and snapshot health dashboard.
