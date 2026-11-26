@@ -416,7 +416,7 @@ export default {
    try{
     const rows=await supabaseRequest(env,"economic_observations","GET",query.toString());
     const observations=fredScope&&Array.isArray(rows)?rows.filter(row=>fredScope.includes(row.series_id)):rows;
-    return json({schemaVersion:1,status:"fresh",provider,seriesId:seriesId||null,count:Array.isArray(observations)?observations.length:0,limit,offset,observations:Array.isArray(observations)?observations:[],source:"Supabase economic_observations",retrievedAt:new Date().toISOString()},200,{...cors,"Cache-Control":"public, max-age=60, s-maxage=120"});
+    return json({schemaVersion:1,status:"fresh",provider,seriesId:seriesId||null,count:Array.isArray(observations)?observations.length:0,limit,offset,observations:Array.isArray(observations)?observations:[],source:"Supabase economic_observations",retrievedAt:new Date().toISOString()},200,{...cors,"Cache-Control":fredScope?"no-store":"public, max-age=60, s-maxage=120"});
    }catch{
     return json({status:"unavailable",provider,observations:[],error:"Historical data could not be retrieved."},502,{...cors,"Cache-Control":"no-store"});
    }
@@ -430,7 +430,7 @@ export default {
    if(!Object.prototype.hasOwnProperty.call(ECONOMIC_PROVIDER_CONFIG,provider))return json({error:"Unsupported economic provider"},404,cors);
    const result=await getEconomicData(provider,env);
    const status=result.status==="unavailable"?503:200;
-   const cacheable=["fresh","partial"].includes(result.status);
+   const cacheable=provider!=="fred"&&["fresh","partial"].includes(result.status);
    return json(result,status,{...cors,"Cache-Control":cacheable?"public, max-age=300, s-maxage=300":"no-store"});
   }
   if(url.pathname.startsWith("/api/v1/prediction/")){
