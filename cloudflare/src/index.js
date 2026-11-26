@@ -1,3 +1,4 @@
+import { officialNewsSnapshot, refreshOfficialNews } from "./official-news.mjs";
 import { providerRegistry } from "./provider-registry.mjs";
 import { ECONOMIC_PROVIDER_CONFIG, fetchEconomicProvider } from "./economic-providers.js";
 import { filterNewsArticles, marketDataStatus, NEWS_SOURCE_REGISTRY, newsResponseEnvelope, validateNewsQuery, classifyNewsTopics, keywordRelevanceScore } from "./news-contracts.mjs";
@@ -157,6 +158,11 @@ export default {
     const models=Array.isArray(data.data?.models)?data.data.models:[];
     return json({status:"connected",provider:"Builder.io Admin API",access:"read-only",modelCount:models.length,models,retrievedAt:new Date().toISOString()},200,{...cors,"Cache-Control":"private, max-age=60"});
    }catch{return json({status:"unavailable",provider:"Builder.io Admin API",error:"Builder Admin API request could not be completed"},502,cors);}
+  }
+
+  if(url.pathname==="/api/v1/news/official"){
+   try{return json(await officialNewsSnapshot(env.SNAPSHOTS),200,{...cors,"Cache-Control":"no-store"});}
+   catch{return json({status:"unavailable",releases:[]},503,{...cors,"Cache-Control":"no-store"});}
   }
 
   if(url.pathname==="/api/v1/news/sources"){
@@ -453,7 +459,7 @@ export default {
   }
   return json({error:"Not found",routes:["/health","/api/v1/health","/api/v1/providers","/api/v1/news?instrument=NQ&topic=macro&limit=...","/api/v1/news/sources","/api/v1/market-data/status","/api/v1/futures-observations?root=NQ&contractMonth=202612&type=daily_volume","POST /api/v1/ingest/futures-market-data","/api/v1/volume-open-interest?report=tff|disaggregated","/api/v1/cot?report=tff|disaggregated","/api/v1/macro","/api/v1/macro/funding","/api/v1/economic/providers","/api/v1/economic/{bea|eia|fred|us_treasury|ecb}","POST /api/v1/ingest","/api/v1/economic/history?provider=...&series_id=...","/api/v1/prediction/polymarket","/api/v1/prediction/kalshi","/api/v1/cms/{model}"]},404,cors);
  },
- async scheduled(controller,env,ctx){ctx.waitUntil(Promise.allSettled([refreshNews(env),scheduledEconomicIngestion(env)]));}
+ async scheduled(controller,env,ctx){ctx.waitUntil(Promise.allSettled([refreshNews(env),refreshOfficialNews(env.SNAPSHOTS),scheduledEconomicIngestion(env)]));}
 };
 
 function economicCacheKey(provider){return "economic:"+provider+":v1";}
@@ -664,7 +670,7 @@ async function refreshNews(env){
   const next={schemaVersion:1,provider:"GDELT DOC API",status,generatedAt:fresh?checkedAt:previous.generatedAt||null,lastCheckedAt:checkedAt,queryCount:1,successfulQueries:fresh?1:0,articles:articles.length?articles:(previous.articles||[]),lastError:error?String(error.message||error).slice(0,180):null,notes:["One consolidated 72-hour query is used to respect GDELT's request-rate guidance.","GDELT is a broad news-discovery index, not a complete newswire.","GDELT output attribution: cite and link https://www.gdeltproject.org/about.html; rights to underlying publisher content remain separate.","seendate is GDELT indexing/seen time and may differ from publisher publication time.","Headlines are leads for verification, not trading signals."]};
  await env.SNAPSHOTS.put(NEWS_KEY,JSON.stringify(next),{expirationTtl:60*60*24*3});
  await env.SNAPSHOTS.put(PROVIDER_STATE_KEY,JSON.stringify({status,lastCheckedAt:checkedAt,successfulQueries:fresh?1:0,queryCount:1,articleCount:next.articles.length,lastError:next.lastError}),{expirationTtl:60*60*24*7});
- if(env.SUPABASE_URL&&supabaseAdminKey(env)&&next.articles.length){
+ if(env.NEWS_DISCOVERY_PERSISTENCE_APPROVED==="true"&&env.SUPABASE_URL&&supabaseAdminKey(env)&&next.articles.length){
   const rows=next.articles.map(a=>({provider:"GDELT DOC API",title:a.title,url:a.url,domain:a.domain,topic:a.topic,retrieved_at:checkedAt,data_as_of:checkedAt,freshness_status:status,payload:a}));
   const endpoint=env.SUPABASE_URL.replace(/\/$/,"")+"/rest/v1/news_items?on_conflict=provider,url";
   const write=await fetch(endpoint,{method:"POST",headers:{...supabaseApiHeaders(env),"Content-Type":"application/json","Prefer":"resolution=merge-duplicates,return=minimal"},body:JSON.stringify(rows)});
@@ -787,7 +793,22 @@ async function fetchGdelt(spec){
 function normalizeArticle(a,topic,retrievedAt=new Date().toISOString()){
  try{const u=new URL(a.url);if(!["http:","https:"].includes(u.protocol))return null;const title=String(a.title||"").replace(/\s+/g," ").trim();if(!title)return null;const cleanTitle=title.slice(0,800),providerSeenAt=String(a.seendate||"").slice(0,40)||null,instruments=matchMarketIds(cleanTitle),topicTags=classifyNewsTopics(cleanTitle),relevance=keywordRelevanceScore(cleanTitle,instruments,topicTags),canonicalUrl=u.href;return{data_type:"news_discovery_item",title:cleanTitle,url:canonicalUrl,canonical_url:canonicalUrl,publisher:String(a.domain||u.hostname).slice(0,255),published_at:null,event_at:null,retrieved_at:retrievedAt,source_id:"gdelt-doc",provider_id:"gdelt-doc",provider_seen_at:providerSeenAt,language:String(a.language||"").slice(0,30)||null,source_country:String(a.sourceCountry||"").slice(0,80)||null,topic_tags:topicTags,instrument_tags:instruments,relevance_score:relevance.score,relevance_method:relevance.method,verification_status:"unverified",duplicate_cluster_id:"url:"+canonicalUrl.toLowerCase().replace(/\/$/,""),topic,markets:instruments,seendate:providerSeenAt,domain:String(a.domain||u.hostname).slice(0,255)};}catch{return null;}
 }
-function dedupe(rows){const seen=new Set();return rows.filter(a=>{const key=String(a.url||"").replace(/\/$/,"").toLowerCase();if(!key||seen.has(key))return false;seen.add(key);return true;}).sort((a,b)=>String(b.seendate).localeCompare(String(a.seendate)));}
+function dedupe(rows){
+ const seen=new Set();
+ return rows.sort((a,b)=>String(b.seendate).localeCompare(String(a.seendate))).flatMap(article=>{
+  let url;
+  try{url=new URL(article.url);}catch{return [];}
+  if(!["http:","https:"].includes(url.protocol)||url.username||url.password)return [];
+  url.hash="";
+  for(const name of [...url.searchParams.keys()]){
+   if(/^utm_/i.test(name)||/^(fbclid|gclid)$/i.test(name))url.searchParams.delete(name);
+  }
+  const key=url.href;
+  if(seen.has(key))return [];
+  seen.add(key);
+  return [{...article,url:key}];
+ });
+}
 
 const MARKET_KEYWORDS=[
   ["nq",["nasdaq","nq futures","nasdaq-100","technology stocks"]],

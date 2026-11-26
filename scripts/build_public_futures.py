@@ -104,7 +104,7 @@ def daily_brief(markets, json_script):
 <p role="status">Snapshot status appears when the brief loads.</p>
 <p><a data-brief-chart href="/charts/">Charts</a> · <a data-brief-profile href="/markets/">Contract profile</a> · <a href="/data-health/">Data Health</a></p>
 <div class="card-grid"><article><h3>Contract context</h3><p data-brief-context>Read the <a href="/markets/">contract profiles</a>.</p></article>
-<article><h3>Matched headlines</h3><ul data-brief-news><li><a href="/news/">Browse futures news</a></li></ul><p><a href="/news/">Open full news</a></p></article>
+<article><h3>Matched headlines</h3><ul data-brief-news><li><a href="/news/">Browse futures news</a></li></ul><p><a href="/news/">Open full news</a> · <a href="/news/#official-releases">Official releases</a></p></article>
 <article><h3>Publisher events</h3><ul data-brief-events><li><a href="/sessions/#calendar">Check official schedules</a></li></ul><p><a href="/sessions/#calendar">Open full calendar</a></p></article>
 <article><h3>Funding rates</h3><p data-brief-funding>Funding snapshot has not been loaded.</p><a href="/macro/">Open Macro</a></article>
 <article><h3>COT positioning</h3><p data-brief-cot>Positioning snapshot has not been loaded.</p><a href="/research/positioning/">Open COT &amp; Positioning</a></article></div>
