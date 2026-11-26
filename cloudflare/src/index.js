@@ -104,6 +104,23 @@ export default {
   }
   if(url.pathname==="/health"||url.pathname==="/api/v1/health")return json({ok:true,service:"finance-intelligence-os-edge",version:"2.2.0",time:new Date().toISOString(),storageConfigured:Boolean(env.SNAPSHOTS),cmsConfigured:Boolean(env.BUILDER_PUBLIC_API_KEY),databaseConfigured:Boolean(env.SUPABASE_URL&&supabaseAdminKey(env)),economicProviders:Object.keys(ECONOMIC_PROVIDER_CONFIG).length,ingestionTokenConfigured:Boolean(env.INGEST_TOKEN)},200,cors);
   if(url.pathname==="/api/v1/providers"){
+   if(url.searchParams.get("view")==="setup"){
+    const headers={...cors,"Cache-Control":"no-store"};
+    try{
+     const providers=[{id:"bls",status:env.BLS_API_KEY?"configured":"anonymous"}];
+     for(const id of ["bea","eia","fred"]){
+      const credential=ECONOMIC_PROVIDER_CONFIG[id].credential;
+      let status="configured";
+      if(id==="fred"&&!approvedFredSeries(env).length)status="reference-only";
+      else if(!env[credential])status="missing";
+      else if((await getEconomicProviderState(env,id)).credentialStatus==="rejected")status="rejected";
+      providers.push({id,status});
+     }
+     return json({schemaVersion:1,providers},200,headers);
+    }catch{
+     return json({status:"unavailable"},503,headers);
+    }
+   }
    const state=env.SNAPSHOTS?await env.SNAPSHOTS.get(PROVIDER_STATE_KEY,"json"):null;
    const macroState=env.SNAPSHOTS?await env.SNAPSHOTS.get("macro:bls:v1","json"):null;
    const blsCalendarState=env.SNAPSHOTS?await env.SNAPSHOTS.get(BLS_CALENDAR_KEY,"json"):null;

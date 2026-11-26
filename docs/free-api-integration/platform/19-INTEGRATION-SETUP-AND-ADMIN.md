@@ -10,7 +10,7 @@ Out of scope for implementation of this workstream are unrelated product upgrade
 
 ## Repository audit evidence and gaps
 
-**Status** — Proposed route. Related source registry/adapters already exist where shown below.
+**Status** — The generated Integration Setup page lists public registration links, placeholder variable names and the Cloudflare dashboard path. Its status request uses `GET /api/v1/providers?view=setup` and reads only fixed provider IDs and setup states. Deploy the updated Worker to the intended environment to enable these statuses. Older Workers show the status-unavailable fallback while the setup instructions remain available.
 
 - [`scripts/build_site.py`](https://github.com/WHIZZ444YT/WHIZZ444-YT-OS/blob/e791f37da39209f3ac6c50ebf2f960101f618efb/scripts/build_site.py)
 - [`docs/ENVIRONMENT.md`](https://github.com/WHIZZ444YT/WHIZZ444-YT-OS/blob/e791f37da39209f3ac6c50ebf2f960101f618efb/docs/ENVIRONMENT.md)
@@ -20,7 +20,7 @@ The gap to close is defined by this acceptance condition: Ensure generated sourc
 
 ## Website behavior and placement
 
-**Routes** — /data-health/integrations/ (new)
+**Routes** — /data-health/integrations/
 
 ```text
 1. Connection type
@@ -34,7 +34,7 @@ Preserve direct source links and readable empty states. Show a precise status be
 
 Use the [canonical provider and rights register](../foundation/01-PROVIDER-REGISTRY-AND-LICENSING.md). This workstream applies the relevant provider decisions at the platform layer.
 
-**Site API** — GET /providers, no browser mutation endpoint. Listed suffixes refer to the existing `/api/v1` base unless a hosted or static mechanism is stated.
+**Site API** — GET /providers?view=setup returns a read-only setup projection. Listed suffixes refer to the existing `/api/v1` base unless a hosted or static mechanism is stated.
 
 **Automatic procedure** — Use existing Worker dispatch and canonical registry for approved data only. Anonymous sources require no owner credential. Run a bounded, redacted sample in preview and cache only if permitted.
 
