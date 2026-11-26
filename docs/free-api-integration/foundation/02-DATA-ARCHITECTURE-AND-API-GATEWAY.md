@@ -10,7 +10,7 @@ Out of scope for implementation of this workstream are unrelated product upgrade
 
 ## Repository audit evidence and gaps
 
-**Status** — Existing repository building blocks verified in source. Proposed changes and production verification remain pending.
+**Status** — Gateway changes implemented against the merged Doc 01 baseline. Live activation remains separate.
 
 - [`cloudflare/src/index.js`](https://github.com/WHIZZ444YT/WHIZZ444-YT-OS/blob/e791f37da39209f3ac6c50ebf2f960101f618efb/cloudflare/src/index.js)
 - [`cloudflare/src/provider-http.mjs`](https://github.com/WHIZZ444YT/WHIZZ444-YT-OS/blob/e791f37da39209f3ac6c50ebf2f960101f618efb/cloudflare/src/provider-http.mjs)
@@ -66,6 +66,16 @@ All paths below use the existing `/api/v1` prefix. Preserve response schemas and
 
 Future route policy: keep additive changes under economic/provider dispatch, event sources, news and provider health. Recommend public status 400 invalid filters, 405 unsupported method, 429 budget reached (Retry-After) and 503 unconfigured/unavailable if no permitted last-good data, subject to compatibility. Distinguish successful zero observations from authorization denial. Keep public CORS exact and separate from bearer/RLS decisions. Use schema limits on result size and elapsed time, avoid logging queries.
 
+## Implementation record
+
+Base revision `3a2bbbdc8469443edf61a3c093a037590e8e156f`. The existing `/api/v1` and browser runtime configuration are retained.
+
+- The five existing economic provider GETs now read KV snapshots only. A fresh snapshot keeps its existing envelope. An eligible over-TTL snapshot is marked stale. Snapshots at twice the provider TTL, invalid timestamps or missing KV produce an unavailable response with HTTP 503. Missing provider credentials return the existing not-configured state without serving a prior snapshot. Stale and unavailable responses use no-store. The Macro page keeps its official source links.
+- Scheduled refresh and bearer-protected `POST /api/v1/ingest` remain the collection paths. The JSON body is bounded to 4 KiB. The server chooses an existing provider from the allowlist. Provider requests reject redirects, use bounded retries, and persist upstream Retry-After backoff in KV when available. Public diagnostics use stable messages. An empty KV deployment must first run the existing scheduled collection or an authorized ingest.
+- History retains the existing filters and success envelope. Invalid dates, providers and out-of-range or non-integer pagination return HTTP 400. Defaults remain limit 1000 and offset 0. The server-side query does not accept a destination override.
+- CORS returns the configured exact origin and Vary: Origin. Confirm the frontend origins in Cloudflare configuration before activation. A wildcard is ignored. CORS remains independent of bearer authentication and does not restrict direct public reads.
+- No change to economic datasets, provider licensing decisions, legacy news/calendars/COT response contracts, runtime secrets or database schema. Doc 04 remains responsible for any new persistence policy or schema.
+
 ## Future file changes and implementation sequence
 
 **Dependencies** — [01 · Provider registry and licensing](../foundation/01-PROVIDER-REGISTRY-AND-LICENSING.md)
@@ -81,11 +91,11 @@ Future route policy: keep additive changes under economic/provider dispatch, eve
 
 ## Tests, acceptance and rollback
 
-- Unit and contract tests cover Test invalid enum, date, limit and origin; timeout and 429 fallback; assert no supplied host reaches fetch.
+- Unit and contract tests cover invalid provider/date/pagination, exact-origin CORS, snapshot age, timeout handling, Retry-After fallback, bounded authenticated request bodies and fixed upstream selection.
 - Integration evidence includes a deterministic fixture, rebuild/validation where applicable, and a preview check of the affected UI including mobile, disabled credentials, blocked data and fallback links.
 - Disable the affected dataset, route flag or widget first if activation fails, restore last reviewed configuration/static build/Worker version, and invalidate any prohibited cached data. Retain permitted database history and prefer corrective additive migrations.
 
-- [ ] Scope and dependency evidence recorded.
+- [x] Scope and dependency evidence recorded.
 - [ ] Relevant data rights, owner actions and fallback verified per dataset.
 - [ ] Target routes and existing compatibility checked.
 - [ ] Unit, integration and applicable live preview results reported.

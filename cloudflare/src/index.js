@@ -50,18 +50,20 @@ function supabaseApiHeaders(env){
 export default {
  async fetch(request,env,ctx){
   const url=new URL(request.url);const origin=request.headers.get("Origin")||"";
-  const configuredOrigins=(env.ALLOWED_ORIGINS||"https://finance-intelligence-os-whizz444yt-7353.vercel.app,https://finance-intelligence-os-alpha.vercel.app").split(",").map(x=>x.trim()).filter(Boolean);
-  const allowed=configuredOrigins.includes("*")?["https://finance-intelligence-os-whizz444yt-7353.vercel.app","https://finance-intelligence-os-alpha.vercel.app"]:configuredOrigins;
-  const cors=origin&&(allowed.includes("*")||allowed.includes(origin))?{...CORS_HEADERS,"Access-Control-Allow-Origin":allowed.includes("*")?"*":origin}:CORS_HEADERS;
+  const configuredOrigins=(env.ALLOWED_ORIGINS||"https://finance-intelligence-os-whizz444yt-7353.vercel.app,https://finance-intelligence-os-alpha.vercel.app").split(",").map(x=>x.trim()).filter(value=>value&&value!=="*");
+  const cors=origin&&origin!=="null"&&configuredOrigins.includes(origin)?{...CORS_HEADERS,"Access-Control-Allow-Origin":origin}:CORS_HEADERS;
   if(request.method==="OPTIONS")return new Response(null,{status:204,headers:cors});
   if(request.method!=="GET"&&!(request.method==="POST"&&["/api/v1/ingest","/api/v1/ingest/futures-market-data"].includes(url.pathname)))return json({error:"Method not allowed"},405,cors);
   if(request.method==="POST"&&url.pathname==="/api/v1/ingest"){
    if(!env.INGEST_TOKEN)return json({status:"not-configured",error:"INGEST_TOKEN is not configured on the Worker"},503,cors);
    if(request.headers.get("Authorization")!=="Bearer "+env.INGEST_TOKEN)return json({error:"Unauthorized"},401,cors);
-   let payload={};try{payload=await request.json();}catch{return json({error:"Invalid JSON body"},400,cors);}
+   let payload;
+   try{payload=JSON.parse(await readBoundedRequestText(request,4096));}
+   catch(error){return json({error:error instanceof RangeError?"Request body exceeds the size limit.":"Invalid JSON body"},error instanceof RangeError?413:400,cors);}
+   if(!payload||typeof payload!=="object"||Array.isArray(payload))return json({error:"Request body must be an object."},400,cors);
    const requested=payload.provider==="all"?Object.keys(ECONOMIC_PROVIDER_CONFIG):[String(payload.provider||"")];
    if(!requested.length||requested.some(p=>!Object.prototype.hasOwnProperty.call(ECONOMIC_PROVIDER_CONFIG,p)))return json({error:"provider must be one of "+Object.keys(ECONOMIC_PROVIDER_CONFIG).join(", ")+" or all"},400,cors);
-   const results=await Promise.all(requested.map(async provider=>({provider,...await ingestEconomicProvider(provider,env,true)})));
+   const results=await Promise.all(requested.map(async provider=>({provider,...await ingestEconomicProvider(provider,env)})));
    return json({status:results.every(x=>x.status==="fresh")?"fresh":results.some(x=>["fresh","partial"].includes(x.status))?"partial":"unavailable",results},200,cors);
   }
   if(request.method==="POST"&&url.pathname==="/api/v1/ingest/futures-market-data"){
@@ -389,8 +391,11 @@ export default {
    const datePattern=/^\d{4}-\d{2}-\d{2}$/;
    const validDate=value=>{if(!datePattern.test(value))return false;const parsed=new Date(value+"T00:00:00Z");return Number.isFinite(parsed.getTime())&&parsed.toISOString().slice(0,10)===value;};
    if((startDate&&!validDate(startDate))||(endDate&&!validDate(endDate))||(startDate&&endDate&&startDate>endDate))return json({error:"Dates must be valid YYYY-MM-DD values and start_date must not follow end_date."},400,cors);
-   const parsedLimit=Number(url.searchParams.get("limit")||1000),limit=Number.isInteger(parsedLimit)?Math.min(5000,Math.max(1,parsedLimit)):1000;
-   const parsedOffset=Number(url.searchParams.get("offset")||0),offset=Number.isInteger(parsedOffset)?Math.min(1000000,Math.max(0,parsedOffset)):0;
+   const rawLimit=url.searchParams.get("limit")??"1000",rawOffset=url.searchParams.get("offset")??"0";
+   const limit=Number(rawLimit),offset=Number(rawOffset);
+   if(!/^\d{1,4}$/.test(rawLimit)||limit<1||limit>5000||!/^\d{1,7}$/.test(rawOffset)||offset>1000000){
+    return json({error:"limit must be 1–5000 and offset must be 0–1000000."},400,cors);
+   }
    const query=new URLSearchParams({select:"provider,dataset_id,series_id,series_name,country_code,frequency,observation_date,value,unit,data_as_of,published_at,retrieved_at,source_url,freshness_status"});
    query.set("provider","eq."+provider);
    if(seriesId)query.set("series_id","eq."+seriesId);
@@ -402,8 +407,8 @@ export default {
    try{
     const observations=await supabaseRequest(env,"economic_observations","GET",query.toString());
     return json({schemaVersion:1,status:"fresh",provider,seriesId:seriesId||null,count:Array.isArray(observations)?observations.length:0,limit,offset,observations:Array.isArray(observations)?observations:[],source:"Supabase economic_observations",retrievedAt:new Date().toISOString()},200,{...cors,"Cache-Control":"public, max-age=60, s-maxage=120"});
-   }catch(error){
-    return json({status:"unavailable",provider,observations:[],error:"Historical Supabase query failed: "+String(error.message||error).slice(0,180)},502,cors);
+   }catch{
+    return json({status:"unavailable",provider,observations:[],error:"Historical data could not be retrieved."},502,{...cors,"Cache-Control":"no-store"});
    }
   }
   if(url.pathname==="/api/v1/economic/providers"){
@@ -411,11 +416,12 @@ export default {
    return json({schemaVersion:1,providers,retrievedAt:new Date().toISOString(),persistenceConfigured:Boolean(env.SUPABASE_URL&&supabaseAdminKey(env))},200,cors);
   }
   if(url.pathname.startsWith("/api/v1/economic/")){
-   const provider=url.pathname.split("/").pop();
+   const provider=url.pathname.slice("/api/v1/economic/".length);
    if(!Object.prototype.hasOwnProperty.call(ECONOMIC_PROVIDER_CONFIG,provider))return json({error:"Unsupported economic provider"},404,cors);
-   const result=await getEconomicData(provider,env,false);
-   const status=result.status==="unavailable"?502:200;
-   return json(result,status,{...cors,"Cache-Control":"public, max-age=900, s-maxage=1800"});
+   const result=await getEconomicData(provider,env);
+   const status=result.status==="unavailable"?503:200;
+   const cacheable=["fresh","partial"].includes(result.status);
+   return json(result,status,{...cors,"Cache-Control":cacheable?"public, max-age=300, s-maxage=300":"no-store"});
   }
   if(url.pathname.startsWith("/api/v1/prediction/")){
    const provider=url.pathname.split("/").pop();
@@ -452,24 +458,46 @@ export default {
 
 function economicCacheKey(provider){return "economic:"+provider+":v1";}
 async function getEconomicProviderState(env,provider){
- if(env.SNAPSHOTS){const state=await env.SNAPSHOTS.get("economic-provider:"+provider,"json");if(state)return state;}
+ if(env.SNAPSHOTS){
+  const state=await env.SNAPSHOTS.get("economic-provider:"+provider,"json");
+  if(state){
+   const {lastError,...publicState}=state;
+   return lastError?{...publicState,lastError:"Economic data provider request failed."}:publicState;
+  }
+ }
  const cfg=ECONOMIC_PROVIDER_CONFIG[provider];
  return{status:cfg?.credential&&!env[cfg.credential]?"not-configured":"not-yet-fetched",credentialRequired:cfg?.credential||null,lastAttemptAt:null,lastSuccessAt:null,persistenceStatus:env.SUPABASE_URL&&supabaseAdminKey(env)?"ready":"not-configured"};
 }
-async function getEconomicData(provider,env,force){
- const cfg=ECONOMIC_PROVIDER_CONFIG[provider],key=economicCacheKey(provider);
- let snapshot=env.SNAPSHOTS?await env.SNAPSHOTS.get(key,"json"):null;
- const retrieved=Date.parse(snapshot?.retrievedAt||"");
- const stale=!Number.isFinite(retrieved)||Date.now()-retrieved>cfg.ttlSeconds*1000;
- if(force||!snapshot||stale)return await ingestEconomicProvider(provider,env,force);
- return snapshot;
+async function getEconomicData(provider,env){
+ const cfg=ECONOMIC_PROVIDER_CONFIG[provider];
+ const empty={schemaVersion:1,provider,providerId:provider,dataAsOf:null,retrievedAt:null,records:[],series:[],sourceUrl:null};
+ if(cfg.credential&&!env[cfg.credential]){
+  return {...empty,status:"not-configured",credentialRequired:cfg.credential};
+ }
+ if(env.SNAPSHOTS){
+  try{
+   const snapshot=await env.SNAPSHOTS.get(economicCacheKey(provider),"json");
+   const age=Date.now()-Date.parse(snapshot?.retrievedAt||"");
+   if(Number.isFinite(age)&&age>=0&&age<cfg.ttlSeconds*2000&&["fresh","partial","stale"].includes(snapshot.status)){
+    const safeSnapshot={...snapshot};
+    // Dropping historical diagnostic text also covers snapshots created by older Worker versions.
+    delete safeSnapshot.lastError;
+    delete safeSnapshot.details;
+    delete safeSnapshot.error;
+    return age>=cfg.ttlSeconds*1000?{...safeSnapshot,status:"stale"}:safeSnapshot;
+   }
+  }catch{
+   return {...empty,status:"unavailable",error:"Economic snapshot storage is unavailable."};
+  }
+ }
+ return {...empty,status:"unavailable",error:"Awaiting a scheduled or authorized provider refresh."};
 }
 async function supabaseRequest(env,table,method,query,body,prefer){
  if(!env.SUPABASE_URL||!supabaseAdminKey(env))throw new Error("Supabase server credentials are not configured");
  const base=String(env.SUPABASE_URL).replace(/\/+$/,"");
  const response=await fetch(base+"/rest/v1/"+table+(query?"?"+query:""),{
   method,headers:{...supabaseApiHeaders(env),"Content-Type":"application/json","Accept":"application/json",...(prefer?{"Prefer":prefer}:{})},
-  body:body===undefined?undefined:JSON.stringify(body),signal:AbortSignal.timeout(20000)
+  body:body===undefined?undefined:JSON.stringify(body),redirect:"error",signal:AbortSignal.timeout(20000)
  });
  const text=await response.text();
  if(!response.ok)throw new Error("Supabase "+table+" HTTP "+response.status+": "+text.slice(0,300));
@@ -536,12 +564,13 @@ async function persistEconomicSnapshot(env,snapshot){
   return{status:"failed",rowsUpserted,runId,error:String(error.message||error).slice(0,300)};
  }
 }
-async function ingestEconomicProvider(provider,env,force=false){
+async function ingestEconomicProvider(provider,env){
  const cfg=ECONOMIC_PROVIDER_CONFIG[provider],started=Date.now();
   const priorState=env.SNAPSHOTS?await env.SNAPSHOTS.get("economic-provider:"+provider,"json"):null;
-  if(!(cfg?.credential&&!env[cfg.credential])&&providerCircuitIsOpen(priorState,Date.now())){
+  const pausedUntil=Date.parse(priorState?.retryAt||"");
+  if(!(cfg?.credential&&!env[cfg.credential])&&(pausedUntil>started||providerCircuitIsOpen(priorState,started))){
    const cached=env.SNAPSHOTS?await env.SNAPSHOTS.get(economicCacheKey(provider),"json"):null;
-   const lastError="Provider circuit breaker is open after repeated transient failures; retry will resume after "+priorState.circuitOpenUntil+".";
+   const lastError="Provider refresh is temporarily paused.";
    return cached?{...cached,status:"stale",lastError,circuitOpenUntil:priorState.circuitOpenUntil}:{schemaVersion:1,provider,status:"unavailable",retrievedAt:new Date().toISOString(),dataAsOf:null,records:[],series:[],sourceUrl:null,error:lastError,circuitOpenUntil:priorState.circuitOpenUntil};
   }
  try{
@@ -563,7 +592,7 @@ async function ingestEconomicProvider(provider,env,force=false){
   snapshot.persistence=persistence;
   snapshot.elapsedMs=Date.now()-started;
    const state={status:snapshot.status,lastAttemptAt:snapshot.retrievedAt,lastSuccessAt:snapshot.retrievedAt,
-    dataAsOf:snapshot.dataAsOf,persistenceStatus:persistence.status,rowsStored:persistence.rowsUpserted||0,datasetId:snapshot.datasetId,...nextProviderCircuitState(priorState,"success")};
+    dataAsOf:snapshot.dataAsOf,persistenceStatus:persistence.status,rowsStored:persistence.rowsUpserted||0,datasetId:snapshot.datasetId,...nextProviderCircuitState(priorState??{},"success")};
   if(env.SNAPSHOTS){
    await env.SNAPSHOTS.put(economicCacheKey(provider),JSON.stringify(snapshot),{expirationTtl:Math.max(cfg.ttlSeconds*2,3600)});
    await env.SNAPSHOTS.put("economic-provider:"+provider,JSON.stringify(state),{expirationTtl:60*60*24*7});
@@ -571,10 +600,11 @@ async function ingestEconomicProvider(provider,env,force=false){
   return snapshot;
  }catch(error){
   const previous=env.SNAPSHOTS?await env.SNAPSHOTS.get(economicCacheKey(provider),"json"):null;
-  const lastError=String(error.message||error).slice(0,300);
-  const circuitState=nextProviderCircuitState(priorState,"failure");
+  const lastError="Economic data provider request failed.";
+  const retryAt=Number.isFinite(error?.retryAfterMs)&&error.retryAfterMs>0?new Date(Date.now()+Math.min(error.retryAfterMs,86400000)).toISOString():null;
+  const circuitState=nextProviderCircuitState(priorState??{},"failure");
   const state={status:previous?"stale":"unavailable",lastAttemptAt:new Date().toISOString(),lastSuccessAt:previous?.retrievedAt||null,
-   persistenceStatus:env.SUPABASE_URL&&supabaseAdminKey(env)?"ready":"not-configured",lastError,...circuitState};
+   persistenceStatus:env.SUPABASE_URL&&supabaseAdminKey(env)?"ready":"not-configured",lastError,retryAt,...circuitState};
   if(env.SNAPSHOTS)await env.SNAPSHOTS.put("economic-provider:"+provider,JSON.stringify(state),{expirationTtl:60*60*24*7});
   try{await upsertProviderStatus(env,provider,previous?"stale":"error",{datasetId:previous?.datasetId||null},lastError,Date.now()-started);}catch{}
   await recordIngestionRun(env,provider,"failed",previous?.datasetId||null,1,"provider_request_failed",lastError,{elapsedMs:Date.now()-started});
@@ -590,7 +620,7 @@ async function scheduledEconomicIngestion(env){
  await Promise.allSettled(jobs.map(async([provider,cfg])=>{
   const previous=await env.SNAPSHOTS.get(economicCacheKey(provider),"json");
   const at=Date.parse(previous?.retrievedAt||"");
-  if(!Number.isFinite(at)||Date.now()-at>cfg.ttlSeconds*1000)return await ingestEconomicProvider(provider,env,false);
+  if(!Number.isFinite(at)||Date.now()-at>cfg.ttlSeconds*1000)return await ingestEconomicProvider(provider,env);
   return{status:"fresh-cache"};
  }));
 }

@@ -32,7 +32,7 @@ ok('Worker contains health/news/provider/calendar endpoints','/api/v1/health' in
 ok('Worker contains BLS and CFTC endpoints','/api/v1/macro' in worker and '/api/v1/cot' in worker and 'api.bls.gov/publicAPI/v1' in worker and 'publicreporting.cftc.gov/resource/' in worker)
 ok('Worker contains NY Fed public reference rates','/api/v1/macro/funding' in worker and 'markets.newyorkfed.org/api/rates/all/latest.json' in worker)
 ok('Worker prediction endpoints are retained as dormant compatibility code','/api/v1/prediction/polymarket' in worker and '/api/v1/prediction/kalshi' in worker and 'gamma-api.polymarket.com/events' in worker and 'external-api.kalshi.com/trade-api/v2/markets' in worker)
-ok('Worker has production-origin allow-list without wildcard','finance-intelligence-os-whizz444yt-7353.vercel.app' in worker and 'includes("*")' in worker and 'return json' in worker)
+ok('Worker has production-origin allow-list without wildcard','finance-intelligence-os-whizz444yt-7353.vercel.app' in worker and 'value!=="*"' in worker and 'configuredOrigins.includes(origin)' in worker and 'origin!=="null"' in worker)
 
 worker=(ROOT/'cloudflare/src/index.js').read_text(encoding="utf-8")
 dashboard=(ROOT/'assets/futures-intelligence.js').read_text(encoding="utf-8")
@@ -190,7 +190,7 @@ ok('P3 progress client exposes no service-role credential',
    'service_role' not in (ROOT/'assets/academy-learning.js').read_text(encoding="utf-8").lower() and 'SUPABASE_SERVICE_ROLE_KEY' not in (ROOT/'assets/academy-learning.js').read_text(encoding="utf-8"))
 
 
-ok('P2 exposes bounded read-only Supabase history API','url.pathname==="/api/v1/economic/history"' in worker and 'query.set("and"' in worker and 'Math.min(5000' in worker)
+ok('P2 exposes bounded read-only Supabase history API','url.pathname==="/api/v1/economic/history"' in worker and 'query.set("and"' in worker and 'limit>5000' in worker and 'offset>1000000' in worker)
 ok('P2 records provider skips and fetch failures when persistence is configured','recordIngestionRun(env,provider,"skipped"' in worker and 'recordIngestionRun(env,provider,"failed"' in worker)
 ok('Ingestion ledger has explicit browser-deny migration','using (false)' in (ROOT/'supabase/migrations/20261108140821_deny_browser_access_to_ingestion_runs.sql').read_text(encoding="utf-8") and 'with check (false)' in (ROOT/'supabase/migrations/20261108140821_deny_browser_access_to_ingestion_runs.sql').read_text(encoding="utf-8"))
 
