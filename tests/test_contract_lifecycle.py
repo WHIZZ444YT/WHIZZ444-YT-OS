@@ -111,7 +111,7 @@ class ContractLifecycleRightsGateTests(unittest.TestCase):
             "asOfDate": "2026-11-20",
             "cmeSourceBusinessDate": "2026-11-20",
             "products": [
-                {"marketId": family, "specificationUrl": "https://www.cmegroup.com/test-only-synthetic-fixture", "contractMonths": [dict(row)]}
+                self.fixture_product(family, row)
                 for family in sorted(self.family_ids)
             ],
         }
@@ -121,23 +121,29 @@ class ContractLifecycleRightsGateTests(unittest.TestCase):
     def test_import_shape_rejects_stale_dates_and_duplicate_rows(self):
         row = {"contractSymbol": "TEST", "contractMonth": "209912", "lastTradeDate": "2099-12-31", "sourceUrl": "https://www.cmegroup.com/test-only-synthetic-fixture"}
         products = [
-            {"marketId": family, "specificationUrl": "https://www.cmegroup.com/test-only-synthetic-fixture", "contractMonths": [dict(row)]}
+            self.fixture_product(family, row)
             for family in sorted(self.family_ids)
         ]
         snapshot = {"schemaVersion": 1, "asOfDate": "2026-11-20", "cmeSourceBusinessDate": "2026-11-20", "products": products}
         stale = dict(snapshot, cmeSourceBusinessDate="2026-11-12")
         with self.assertRaisesRegex(ValueError, "more than seven days old"):
             validate_snapshot(stale, self.family_ids, date(2026, 11, 20))
-        products[0]["contractMonths"].append(dict(row))
+        products[0]["contractMonths"].append(dict(products[0]["contractMonths"][0]))
         with self.assertRaisesRegex(ValueError, "duplicate contract row"):
             validate_snapshot(snapshot, self.family_ids, date(2026, 11, 20))
+
+    def fixture_product(self, family, row):
+        market = next(m for m in json.loads((ROOT / "ict-futures/data/market-universe.json").read_text(encoding="utf-8"))["markets"] if m["id"] == family)
+        return {"marketId": family, "specificationUrl": market["specsUrl"],
+                "contractMonths": [{**row, "contractSymbol": family.upper() + "Z99",
+                                    "sourceUrl": market["specsUrl"]}]}
 
     def authorized_fixture(self, day):
         url = "https://www.cmegroup.com/test-only-synthetic-fixture"
         data = {"schemaVersion": 1, "asOfDate": day.isoformat(), "cmeSourceBusinessDate": day.isoformat(),
-                "products": [{"marketId": family, "specificationUrl": url, "contractMonths": [
-                    {"contractSymbol": "SYNTHZ99", "contractMonth": "209912", "lastTradeDate": "2099-11-30", "sourceUrl": url}
-                ]} for family in sorted(self.family_ids)]}
+                "products": [self.fixture_product(family, {
+                    "contractMonth": "209912", "lastTradeDate": "2099-11-30"
+                }) for family in sorted(self.family_ids)]}
         return {**validate_snapshot(data, self.family_ids, day), "rightsStatus": "approved-public-display",
                 "rightsReviewDate": day.isoformat(), "rightsValidThrough": day.isoformat()}
 
@@ -156,12 +162,26 @@ class ContractLifecycleRightsGateTests(unittest.TestCase):
         valid["products"][0]["marketId"] = "unknown"
         self.assertEqual(public_contract_lifecycle_data(valid,self.family_ids,as_of=day)["products"], [])
 
+    def test_wrong_product_exchange_and_reversed_dates_fail_closed(self):
+        day = date(2026, 11, 20)
+        for field, value, error in (
+            ("contractSymbol", "OTHERZ99", "configured product"),
+            ("sourceUrl", "https://www.ice.com/products/194", "exchange publisher"),
+            ("firstTradeDate", "2099-12-30", "reversed firstTradeDate"),
+        ):
+            source = self.authorized_fixture(day)
+            product = next(p for p in source["products"] if p["marketId"] == "nq")
+            product["contractMonths"][0][field] = value
+            with self.assertRaisesRegex(ValueError, error):
+                validate_snapshot(source, self.family_ids, day)
+            self.assertEqual(public_contract_lifecycle_data(source, self.family_ids, as_of=day)["products"], [])
+
     def test_conflicting_months_fail_import_and_publication(self):
         day = date(2026, 11, 20)
         source = self.authorized_fixture(day)
         rows = source["products"][0]["contractMonths"]
         rows.append({**rows[0], "contractMonth": "209911"})
-        with self.assertRaisesRegex(ValueError, "conflicting contract months"):
+        with self.assertRaisesRegex(ValueError, "does not match"):
             validate_snapshot(source, self.family_ids, day)
         self.assertEqual(public_contract_lifecycle_data(source, self.family_ids, as_of=day)["products"], [])
 
@@ -185,13 +205,25 @@ class ContractLifecycleRightsGateTests(unittest.TestCase):
             data = json.loads((repo/"dist/data/contract-lifecycle.json").read_text(encoding="utf-8"))
             self.assertEqual(data["coverage"]["contractMonthRows"],15)
             page = (repo/"dist/contract-specs/index.html").read_text(encoding="utf-8")
-            self.assertEqual(page.count("SYNTHZ99"),15)
+            self.assertIn("NQZ99",page)
+            self.assertIn("DXZ99",page)
+            result = subprocess.run([sys.executable, "scripts/build_site.py"], cwd=repo, env={**env, "CONTRACT_LIFECYCLE_STATIC_HOST":"1"}, capture_output=True, text=True, encoding="utf-8")
+            self.assertEqual(result.returncode,0,result.stdout+result.stderr)
+            hosted_json = json.loads((repo/"dist/data/contract-lifecycle.json").read_text(encoding="utf-8"))
+            self.assertEqual(hosted_json["products"],[])
+            self.assertNotIn("NQZ99",(repo/"dist/contract-specs/index.html").read_text(encoding="utf-8"))
             self.assertNotIn("synthetic fixture only",json.dumps(data))
 
     def test_contract_page_and_public_json_show_the_configured_rights_state(self):
         page = (ROOT / "dist/contract-specs/index.html").read_text(encoding="utf-8")
         public_json = json.loads((ROOT / "dist/data/contract-lifecycle.json").read_text(encoding="utf-8"))
         self.assertIn("Contract date display is rights-gated", page)
+        for label in ("Tick size", "Tick value", "Point value"):
+            self.assertIn(f"<span>{label}</span>", page)
+        markets_page = (ROOT / "dist/markets/index.html").read_text(encoding="utf-8")
+        for family in self.family_ids:
+            self.assertIn(f'href="/charts/?market={family}"', markets_page)
+            self.assertIn(f'href="/futures-intelligence/?market={family}#daily-brief"', markets_page)
         self.assertEqual(public_json,public_contract_lifecycle_data(self.snapshot,self.family_ids))
         if public_json["rightsStatus"]=="not-approved":
             self.assertIn("No schedule rows are configured for public display", page)

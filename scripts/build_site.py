@@ -270,9 +270,15 @@ def contract_lifecycle_table(product, snapshot_date):
     )
 
 
-def public_contract_lifecycle_data(source, family_ids=None, *, as_of=None):
+def public_contract_lifecycle_data(source, family_ids=None, *, as_of=None, hosted=None):
     """Apply a fail-closed rights gate and allowlist the fields sent to the public site."""
     source = source if isinstance(source, dict) else {}
+    if hosted is None:
+        hosted = (os.getenv('CONTRACT_LIFECYCLE_STATIC_HOST') == '1'
+                  or os.getenv('VERCEL') == '1' or bool(os.getenv('VERCEL_ENV')))
+    # Static CDN responses cannot enforce authorization expiry per request.
+    if hosted:
+        source = {}
     if family_ids is None:
         family_ids = {row['id'] for row in load(ROOT/'ict-futures/data/market-universe.json', {})['markets']}
     today = as_of or datetime.now(timezone.utc).date()
@@ -463,6 +469,16 @@ def build():
         if html.parent == DIST/'ict-futures/markets':
             s=s.replace(f'../index.html?market={html.stem}#market-profile',
                         f'/futures-intelligence/?market={html.stem}#fiSelectedMarket')
+            market_id = html.stem
+            if any(m['id'] == market_id for m in mdata):
+                profile_links = (
+                    f'<section><h2>Related contract research</h2><div class="links">'
+                    f'<a href="/charts/?market={market_id}">Charts for this family</a>'
+                    f'<a href="/contract-specs/#{market_id}">Dated exchange facts</a>'
+                    f'<a href="/futures-intelligence/?market={market_id}#daily-brief">Research brief</a>'
+                    '</div></section>'
+                )
+                s=s.replace('</main>', profile_links + '</main>', 1)
         html.write_text(s,encoding='utf-8')
     # The legacy child sitemap used the previous GitHub Pages domain; the root sitemap below owns all canonical URLs.
     for stale in [DIST/'ict-futures/sitemap.xml', DIST/'ict-futures/robots.txt']:
@@ -642,6 +658,10 @@ def build():
     cards=''.join(
         f'<div data-market-profile="{escape(m["id"])}" data-tier="{escape(m["tier"])}">'
         + card(m["label"],market_context["families"][m["id"]]["summary"],f'/ict-futures/markets/{m["id"]}.html',m["exchange"],m["tier"])
+        + f'<p class="os-context-links"><a href="/charts/?market={escape(m["id"])}">Charts</a> · '
+          f'<a href="/futures-intelligence/?market={escape(m["id"])}#daily-brief">Research brief</a> · '
+          f'<a href="/contract-specs/#{escape(m["id"])}">Tick and contract facts</a> · '
+          f'<a href="{escape(m["specsUrl"], quote=True)}" rel="noopener noreferrer">Official specification</a></p>'
         + '</div>' for m in mdata)
     market_filter='<form hidden class="ict-chart-controls"><label>Find a contract <input type="search" name="q"></label><label>Tier <select name="tier"><option value="">All</option><option>T1</option><option>T2</option><option>T3</option></select></label></form><p role="status"></p>'
     body=page_intro('Listed futures universe','Futures markets','Explore the 15 retained futures contract families. CME currency and Bitcoin futures remain in scope. Verify current exchange specifications before trading.')
