@@ -198,6 +198,25 @@ try {
   assert.equal(await calendarPage.locator("#windows").count(),1);
   await calendarPage.close();
 
+  const newsPage = await browser.newPage({ viewport:{width:390,height:844} });
+  await newsPage.route("**/assets/runtime-config.js", route => route.fulfill({
+    contentType:"application/javascript",body:"window.FINANCE_OS_CONFIG={apiBase:location.origin};"
+  }));
+  await newsPage.route("**/api/v1/news**", route => {
+    const path = new URL(route.request().url()).pathname;
+    if (path.endsWith("/official")) return route.fulfill({json:{status:"stale",releases:[{
+      title:"<markup> Fixture policy release",url:"https://www.federalreserve.gov/newsevents/pressreleases/monetary20990101a.htm",published_at:null
+    }]}});
+    return route.fulfill({status:503,json:{error:{message:"Fixture discovery unavailable"}}});
+  });
+  await newsPage.goto(site + "/news/");
+  const official = newsPage.locator("#official-releases");
+  await official.getByRole("link",{name:"<markup> Fixture policy release"}).waitFor();
+  assert.equal(await official.locator("markup").count(),0);
+  assert.match(await official.innerText(),/Publication time unavailable/);
+  await newsPage.getByText(/Fixture discovery unavailable/).waitFor();
+  await newsPage.close();
+
   await page.goto(site + '/ict-lab/learn/c17/');
   const worked = page.locator('[data-ifvg-worked]');
   const saveDecision = page.getByRole('button', { name: 'Save decision and reveal chart' });
@@ -273,7 +292,7 @@ try {
     assert.equal(await entry.count(), 1);
     await entry.click();
     assert.equal(new URL(page.url()).pathname, path);
-    assert.ok(await page.locator('main .page-hero h1').isVisible());
+    await page.locator('main .page-hero h1').waitFor({state:'visible', timeout:10000});
     assert.equal(await page.getByRole('navigation', { name: 'ICT Academy sections' })
       .locator('[aria-current="page"]').getAttribute('href'), path);
     await page.goBack();

@@ -100,5 +100,28 @@
   }catch(error){state.textContent=error.message;btn.disabled=false;btn.textContent='Retry refresh';}
  });
  if(btn)btn.textContent='Refresh snapshot';
- loadAndRender();loadSources();
+ async function loadOfficial(){
+  const label=byId("officialNewsState"),list=byId("officialNewsList");
+  if(!label||!list)return;
+  try{
+   if(!base)throw new Error("Gateway not configured");
+   const response=await fetch(base+"/api/v1/news/official",{cache:"no-store",signal:AbortSignal.timeout(10000)});
+   if(!response.ok)throw new Error("Official releases unavailable");
+   const data=await response.json();
+   const rows=[];
+   for(const release of (Array.isArray(data.releases)?data.releases:[]).slice(0,20)){
+    let url;
+    try{url=new URL(release.url);}catch{continue;}
+    if(url.origin!=="https://www.federalreserve.gov"||url.username||url.password)continue;
+    const item=document.createElement("li"),link=document.createElement("a");
+    link.href=url.href;link.textContent=release.title;
+    item.append(link,document.createTextNode(" · Federal Reserve Board · "+(release.published_at?timeLabel(release.published_at):"Publication time unavailable")));
+    rows.push(item);
+   }
+   list.replaceChildren(...rows);
+   label.textContent=rows.length?"Federal Reserve monetary-policy releases · "+data.status+" · retrieved "+timeLabel(data.retrieved_at)
+     :"No official feed snapshot available. Open the publisher links below.";
+  }catch{label.textContent="Official feed unavailable. Open the publisher links below.";}
+ }
+ loadAndRender();loadSources();loadOfficial();
 })();

@@ -68,6 +68,12 @@ Preserve direct source links and readable empty states. Show a precise status be
 
 Raw content, paywalled articles, publisher thumbnails and republication are outside this scope. Dedup normalized original URL and known tracking parameters while preserving genuinely distinct publisher articles. Use text-only rendering and sanitize external URLs. Never show source ingestion time as article publication.
 
+## Implementation record
+
+- News separates official releases from GDELT discovery. The Desk links to both. The official endpoint exposes a bounded Federal Reserve monetary-policy RSS snapshot, title, canonical publisher link and nullable publication time. Scheduled refresh is independent of GDELT. The adapter uses the official fixed feed URL, rejects redirects and unsupported declarations, and does not fetch article bodies.
+- Board-origin release metadata is attributed under the [Federal Reserve disclaimer](https://www.federalreserve.gov/disclaimer.htm). ECB, BLS, BEA, CFTC, EIA and OPEC are linked while their feed-specific scope is reviewed. Cache refresh targets four hours and last-good display expires at 24 hours.
+- Existing discovery filters stay in place. GDELT deduplication ignores known tracking parameters and preserves publisher hostname and case-sensitive article paths. Discovery timestamps remain distinct from publication times. Supabase discovery writes require explicit `NEWS_DISCOVERY_PERSISTENCE_APPROVED=true` after rights review. No export is introduced.
+
 ## Future file changes and implementation sequence
 
 **Dependencies** — [01 · Provider registry and licensing](../foundation/01-PROVIDER-REGISTRY-AND-LICENSING.md) · [02 · Data architecture and API gateway](../foundation/02-DATA-ARCHITECTURE-AND-API-GATEWAY.md) · [09 · Economic calendar](../research/09-ECONOMIC-CALENDAR.md)
@@ -87,7 +93,7 @@ Raw content, paywalled articles, publisher thumbnails and republication are outs
 - Integration evidence includes a deterministic fixture, rebuild/validation where applicable, and a preview check of the affected UI including mobile, disabled credentials, blocked data and fallback links.
 - Disable the affected dataset, route flag or widget first if activation fails, restore last reviewed configuration/static build/Worker version, and invalidate any prohibited cached data. Retain permitted database history and prefer corrective additive migrations.
 
-- [ ] Scope and dependency evidence recorded.
+- [x] Scope and dependency evidence recorded.
 - [ ] Relevant data rights, owner actions and fallback verified per dataset.
 - [ ] Target routes and existing compatibility checked.
 - [ ] Unit, integration and applicable live preview results reported.
