@@ -22,7 +22,7 @@ function context() { return { waitUntil() {} }; }
 
 test('news route applies validated filters and exposes the versioned discovery contract', async () => {
   const snapshot = {
-    status: 'fresh', lastCheckedAt: '2026-11-19T12:00:00.000Z', generatedAt: '2026-11-19T12:00:00.000Z',
+    status: 'fresh', lastCheckedAt: new Date().toISOString(), generatedAt: new Date().toISOString(),
     queryCount: 1, successfulQueries: 1, notes: ['GDELT is a discovery index.'],
     articles: [
       { title: 'US CPI release', publisher: 'bls.gov', instrument_tags: ['nq'], topic_tags: ['macro'], provider_seen_at: '20261119T115000Z', published_at: null, retrieved_at: '2026-11-19T12:00:00.000Z', verification_status: 'unverified' },
@@ -499,5 +499,30 @@ test('COT persistence uses server-side Supabase credentials and a variant-aware 
     assert.equal(upsertRows[0].source_fields.cftc_contract_market_code, '123456');
   } finally {
     globalThis.fetch = originalFetch;
+  }
+});
+
+test('manual discovery refresh observes persisted Retry-After', async () => {
+  const retryAt = new Date(Date.now() + 3600000).toISOString();
+  const key = 'snapshot:gdelt:news:v1';
+  const env = makeEnv({ [key]: { status: 'stale', retryAt, articles: [] } });
+  const response = await worker.fetch(new Request('https://edge.example/api/v1/news?refresh=1'), env, {
+    waitUntil() { assert.fail('A paused provider must not queue work'); }
+  });
+  const payload = await response.json();
+  assert.equal(payload.refresh.status, 'cooldown');
+  assert.equal(payload.refresh.retryAt, retryAt);
+  assert.ok(Number(response.headers.get('Retry-After')) > 0);
+});
+
+test('discovery cache ages from last success rather than the last failed check', async () => {
+  const key = 'snapshot:gdelt:news:v1';
+  for (const [hours, expected] of [[2, 'stale'], [73, 'unavailable']]) {
+    const env = makeEnv({ [key]: {
+      status: 'fresh', lastCheckedAt: new Date().toISOString(),
+      generatedAt: new Date(Date.now() - hours * 3600000).toISOString(), articles: []
+    } });
+    const response = await worker.fetch(new Request('https://edge.example/api/v1/news'), env, {});
+    assert.equal((await response.json()).status, expected);
   }
 });
