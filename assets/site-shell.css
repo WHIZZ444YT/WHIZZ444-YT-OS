@@ -338,6 +338,9 @@ body.os-dark{min-height:100vh;margin:0;background:var(--os-bg);color:var(--os-te
   .os-app-shell:not(.sidebar-collapsed) {grid-template-columns: 220px minmax(0, 1fr)}
   .os-topbar {padding-inline: 14px; gap: 10px}
 }
+@media (851px <= width <= 900px) {
+  .os-topbar .os-mode-chip {display:none}
+}
 @media (max-width: 1120px) {
   .os-overview-grid {grid-template-columns: minmax(0, 1fr) 260px}
 }

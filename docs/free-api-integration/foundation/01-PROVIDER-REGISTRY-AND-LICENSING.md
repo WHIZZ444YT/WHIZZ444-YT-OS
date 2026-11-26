@@ -10,7 +10,7 @@ Out of scope for implementation of this workstream are unrelated product upgrade
 
 ## Repository audit evidence and gaps
 
-**Status** — Existing repository building blocks verified in source. Proposed changes and production verification remain pending.
+**Status** — Public capability registry and licensed-observation read checks implemented in this workstream. Production deployment and source-by-source reuse approvals remain pending.
 
 - [`ict-futures/data/source-directory.json`](https://github.com/WHIZZ444YT/WHIZZ444-YT-OS/blob/e791f37da39209f3ac6c50ebf2f960101f618efb/ict-futures/data/source-directory.json)
 - [`supabase/seed-source-registry.sql`](https://github.com/WHIZZ444YT/WHIZZ444-YT-OS/blob/e791f37da39209f3ac6c50ebf2f960101f618efb/supabase/seed-source-registry.sql)
@@ -90,6 +90,16 @@ Preserve direct source links and readable empty states. Show a precise status be
 
 The register above indexes 26 sources or source interfaces, counting Treasury's two interfaces separately. A documented endpoint is evidence of its intended contract. Successful responses, coverage and public display rights must be recorded independently at activation. Use redacted test fixtures with the listed fields. Confirm quotas in the current official documentation or account console. Where no quota is established here, enforce the project budget in Doc 20 and mark the upstream quota unverified.
 
+## Implementation record
+
+Built against `main` at `bfea6245998e25fa4a7e3e3f7c48bcfdb46fc268` after Doc 00 merged. The Worker catalogue is the canonical source of capability IDs and decisions. The original curated link directory and its Supabase seed retain their existing link IDs and URLs. Seed descriptions and the existence of a database row convey no data rights. No new table or migration is required for this capability projection.
+
+- `GET /api/v1/providers` retains its `providers` health array and adds `registry.sources` and `registry.interfaces` with schema version 1. `gdelt-doc`, `cftc-pre`, `bls-v1`, `nyfed-markets` and Treasury IDs resolve to stable catalogue identities. Schedule interface IDs map to the same publisher while remaining `publisher-schedule` records. CMS, platform and retired compatibility statuses remain in the existing health array.
+- Data Health shows capability decisions independently of snapshot freshness, and Sources links directly to the registry. Both provide publisher fallback links. No configuration or rights claims are inferred from a credential or a cached status.
+- The operation fields `fetch`, `display`, `cache`, `persist` and `export` are independent. Null means the catalogue records no affirmative grant. TradingView is marked provider-hosted display only and grants no application fetch, cache or export. Databento remains excluded, exchange pages remain reference links, and FRED remains reference-first pending series-specific review. No additional upstream requests or provider credentials were introduced.
+- The existing protected entitlement table remains the source for licensed futures display decisions. The query explicitly selects its display status and checks the provider/venue/root/delay match. Expiry is checked before querying observations and again before rendering the response. Responses are no-store so a previously released payload cannot be reused by a compliant cache after expiry or withdrawal. Existing private evidence fields are not exposed by the capability catalogue.
+- Owners record the exact scope, relevant operation grants, evidence/reference, approver, review date, effective dates and expiry in reviewed records before enabling a new dataset. Use the existing entitlement table for licensed-observation display; broader approved dataset storage changes belong to Doc 04. For withdrawal, deactivate the entitlement, then verify that the public route produces an empty result even with database observations still present.
+
 ## Future file changes and implementation sequence
 
 **Dependencies** — [00 · Repository audit](../foundation/00-REPOSITORY-AUDIT.md)
@@ -105,11 +115,11 @@ The register above indexes 26 sources or source interfaces, counting Treasury's 
 
 ## Tests, acceptance and rollback
 
-- Unit and contract tests cover Test withdrawn and expired grants with a populated cache. Every source has an owner and fallback.
+- Unit and contract tests cover active, expired and withdrawn display entitlements with observations still present, registry ID uniqueness, schedule identity and hosted-widget operation limits.
 - Integration evidence includes a deterministic fixture, rebuild/validation where applicable, and a preview check of the affected UI including mobile, disabled credentials, blocked data and fallback links.
 - Disable the affected dataset, route flag or widget first if activation fails, restore last reviewed configuration/static build/Worker version, and invalidate any prohibited cached data. Retain permitted database history and prefer corrective additive migrations.
 
-- [ ] Scope and dependency evidence recorded.
+- [x] Scope and dependency evidence recorded.
 - [ ] Relevant data rights, owner actions and fallback verified per dataset.
 - [ ] Target routes and existing compatibility checked.
 - [ ] Unit, integration and applicable live preview results reported.

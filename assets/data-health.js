@@ -32,6 +32,33 @@
  function rowCard(p){
   return '<article class="health-card"><div class="health-card-head"><div><span class="health-kicker">'+esc(p.group||"PUBLIC DATA PROVIDER")+'</span><h3>'+esc(p.name)+'</h3></div><span class="status-pill '+tone(p.status)+'">'+esc(stateLabel(p.status))+'</span></div><p>'+esc(p.detail||"Provider status.")+'</p><div class="health-meta"><span>Endpoint: <code>'+esc(p.path||"configuration")+'</code></span><span>Last checked: '+esc(p.checked||"—")+'</span></div>'+(p.asOf?'<div class="health-asof">Data as of: '+esc(presentation.timestamp(p.asOf))+'</div>':'')+(p.note?'<div class="health-note">'+esc(p.note)+'</div>':'')+'</article>';
  }
+ function renderRegistry(registry){
+  const list=$("providerRegistry");
+  if(!list)return;
+  const sources=Array.isArray(registry?.sources)?registry.sources:[];
+  if(!sources.length){
+   list.textContent="Registry unavailable. Use the official links in the source directory.";
+   return;
+  }
+  const items=document.createElement("ul");
+  for(const source of sources){
+   const item=document.createElement("li");
+   const link=document.createElement("a");
+   if(typeof source.sourceUrl!=="string"||!URL.canParse(source.sourceUrl)||new URL(source.sourceUrl).protocol!=="https:")continue;
+   link.href=source.sourceUrl;
+   link.textContent=source.label;
+   item.append(link);
+   item.append(" · "+source.decision.replaceAll("-"," ")+" · "+source.dataset);
+   if(typeof source.termsUrl==="string"&&URL.canParse(source.termsUrl)&&new URL(source.termsUrl).protocol==="https:"){
+     const terms=document.createElement("a");
+     terms.href=source.termsUrl;
+     terms.textContent="Terms";
+     item.append(" · ",terms);
+   }
+   items.append(item);
+  }
+  list.replaceChildren(items);
+ }
  async function refresh(){
   if(!API){$("healthGrid").innerHTML='<div class="empty-state">API gateway is not configured. Set the public Worker URL in the deployment environment.</div>';$("healthHeadline").textContent="Gateway not configured";return;}
   $("healthRefresh").disabled=true;$("healthRefresh").textContent="Checking…";
@@ -39,6 +66,7 @@
   const started=performance.now();
   try{
    const [edge,providerRegistry]=await Promise.allSettled([request("/health"),request("/api/v1/providers")]);
+   renderRegistry(providerRegistry.status==="fulfilled"?providerRegistry.value.registry:null);
    const providers=providerRegistry.status==="fulfilled"?providerRegistry.value.providers||[]:[];
    const cards=[];
    cards.push(edge.status==="fulfilled"

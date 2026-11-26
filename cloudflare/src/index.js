@@ -1,3 +1,4 @@
+import { providerRegistry } from "./provider-registry.mjs";
 import { ECONOMIC_PROVIDER_CONFIG, fetchEconomicProvider } from "./economic-providers.js";
 import { filterNewsArticles, marketDataStatus, NEWS_SOURCE_REGISTRY, newsResponseEnvelope, validateNewsQuery, classifyNewsTopics, keywordRelevanceScore } from "./news-contracts.mjs";
 import { nextProviderCircuitState, providerCircuitIsOpen } from "./provider-http.mjs";
@@ -112,7 +113,7 @@ export default {
    const beaCalendarState=env.SNAPSHOTS?await env.SNAPSHOTS.get(BEA_SCHEDULE_KEY,"json"):null;
    const cotKeys=env.SNAPSHOTS?await env.SNAPSHOTS.list({prefix:"cot:tff:futures-only:v6:",limit:1}):{keys:[]};
    const cotState=env.SNAPSHOTS&&cotKeys.keys?.length?await env.SNAPSHOTS.get(cotKeys.keys[0].name,"json"):null;
-   return json({providers:[
+   const providers=[
     {id:"gdelt-doc",label:"GDELT DOC API",access:"public-api",state:state||{status:"not-yet-fetched",lastCheckedAt:null},notes:"Discovery coverage is not comprehensive and not a licensed newswire."},
     {id:"bls-v1",label:env.BLS_API_KEY?"US BLS Public Data API v2":"US BLS Public Data API v1",access:env.BLS_API_KEY?"registered-api-key":"public-api-no-registration",state:macroState?{status:macroState.status,dataAsOf:macroState.dataAsOf,retrievedAt:macroState.retrievedAt,lastError:macroState.lastError||macroState.error||null,retryAt:macroState.retryAt||null}:{status:"available-on-demand"},notes:env.BLS_API_KEY?"Registered API v2 (up to 500 daily queries).":"Unregistered API v1 is limited to 25 daily queries; add BLS_API_KEY as a Cloudflare Worker secret to use registered API v2."},
     {id:"bls-calendar",label:"BLS Online Calendar (official ICS)",access:"official-scheduled-feed-no-key",state:blsCalendarState?{status:blsCalendarState.status,eventCount:blsCalendarState.event_count,retrievedAt:blsCalendarState.retrieved_at,lastError:blsCalendarState.last_error||null}:{status:env.SNAPSHOTS?"available-on-demand":"not-configured"},notes:"Most scheduled releases from the BLS national office; updated by BLS as needed. This is not a complete macro calendar."},
@@ -137,7 +138,8 @@ export default {
     {id:"us-treasury",label:"US Treasury Fiscal Data",access:"public-api-no-key",state:await getEconomicProviderState(env,"us_treasury"),notes:"Monthly average interest rates on marketable Treasury securities; not the daily par yield curve."},
     {id:"ecb",label:"European Central Bank Data Portal",access:"public-sdmx-api-no-key",state:await getEconomicProviderState(env,"ecb"),notes:"Daily USD/EUR reference exchange-rate series; not a live FX quote."},
     {id:"supabase",label:"Supabase Postgres",access:"server-side-only",state:{status:env.SUPABASE_URL&&supabaseAdminKey(env)?"configured":"not-configured"},notes:"Server-side ingestion writes only; browser roles cannot write economic observations or ingestion logs."}
-   ]},200,cors);
+   ];
+   return json({providers, registry:providerRegistry(providers)},200,cors);
   }
 
   if(url.pathname==="/api/v1/builder/models"){
@@ -224,7 +226,7 @@ export default {
    if(!validation.ok)return json({schema_version:1,data_type:"futures_market_observations",status:"invalid-query",error:{code:validation.code,message:validation.message},observations:[]},400,cors);
    if(!env.SUPABASE_URL||!supabaseAdminKey(env))return json({schema_version:1,data_type:"futures_market_observations",status:"not-configured",observations:[],access_note:"Server-side database access is not configured."},503,{...cors,"Cache-Control":"no-store"});
    const entitlementQuery=new URLSearchParams({
-    select:"provider_id,venue,instrument_root,delay_class,rights_reference,reviewed_at,reviewed_by,valid_until,is_active",
+    select:"provider_id,venue,instrument_root,delay_class,rights_reference,reviewed_at,reviewed_by,valid_until,is_active,public_display_status",
     instrument_root:"eq."+validation.query.root,public_display_status:"eq.public-display-approved",is_active:"eq.true",
     rights_reference:"not.is.null",reviewed_at:"not.is.null",reviewed_by:"not.is.null",delay_class:"neq.unknown",
     order:"reviewed_at.desc",limit:"100"
@@ -244,17 +246,18 @@ export default {
     const entitlementRows=await supabaseRequest(env,"futures_market_data_entitlements","GET",entitlementQuery.toString());
     const now=Date.now();
     const entitlements=(Array.isArray(entitlementRows)?entitlementRows:[]).filter(row=>row.is_active===true&&row.public_display_status==="public-display-approved"&&row.delay_class!=="unknown"&&row.rights_reference&&row.reviewed_at&&row.reviewed_by&&(!row.valid_until||Date.parse(row.valid_until)>now));
-    if(!entitlements.length)return json({schema_version:1,data_type:"futures_market_observations",status:"no-approved-data",root:validation.query.root,observations:[],access_note:"No active public-display entitlement is recorded for this futures root."},200,{...cors,"Cache-Control":"public, max-age=30, s-maxage=60"});
+    if(!entitlements.length)return json({schema_version:1,data_type:"futures_market_observations",status:"no-approved-data",root:validation.query.root,observations:[],access_note:"No active public-display entitlement is recorded for this futures root."},200,{...cors,"Cache-Control":"no-store"});
     const providerIds=[...new Set(entitlements.map(row=>String(row.provider_id||"")))].filter(id=>/^[a-z0-9][a-z0-9._-]{1,63}$/.test(id));
-    if(!providerIds.length)return json({schema_version:1,data_type:"futures_market_observations",status:"no-approved-data",root:validation.query.root,observations:[],access_note:"No usable active public-display entitlement is recorded for this futures root."},200,{...cors,"Cache-Control":"public, max-age=30, s-maxage=60"});
+    if(!providerIds.length)return json({schema_version:1,data_type:"futures_market_observations",status:"no-approved-data",root:validation.query.root,observations:[],access_note:"No usable active public-display entitlement is recorded for this futures root."},200,{...cors,"Cache-Control":"no-store"});
     q.set("provider_id","in.("+providerIds.join(",")+")");
     const observationRows=await supabaseRequest(env,"futures_market_observations","GET",q.toString());
-    const entitlementByKey=new Map(entitlements.map(row=>[JSON.stringify([row.provider_id,row.venue,row.instrument_root,row.delay_class]),row]));
+    const visibleAt=Date.now();
+    const entitlementByKey=new Map(entitlements.filter(row=>!row.valid_until||Date.parse(row.valid_until)>visibleAt).map(row=>[JSON.stringify([row.provider_id,row.venue,row.instrument_root,row.delay_class]),row]));
     const observations=(Array.isArray(observationRows)?observationRows:[]).filter(row=>entitlementByKey.has(JSON.stringify([row.provider_id,row.venue,row.instrument_root,row.delay_class]))&&row.quality_status!=="rejected").map(row=>{
      const entitlement=entitlementByKey.get(JSON.stringify([row.provider_id,row.venue,row.instrument_root,row.delay_class]));
      return{...row,public_display_approved_at:entitlement.reviewed_at};
     });
-    return json({schema_version:1,data_type:"futures_market_observations",status:observations.length?"available":"no-approved-data",root:validation.query.root,query:validation.query,observations,access_note:"Only observations covered by an active provider, venue, market and delay-class entitlement are returned. Source timestamps and delay labels do not by themselves establish exchange real-time entitlement."},200,{...cors,"Cache-Control":"public, max-age=30, s-maxage=60"});
+    return json({schema_version:1,data_type:"futures_market_observations",status:observations.length?"available":"no-approved-data",root:validation.query.root,query:validation.query,observations,access_note:"Only observations covered by an active provider, venue, market and delay-class entitlement are returned. Source timestamps and delay labels do not by themselves establish exchange real-time entitlement."},200,{...cors,"Cache-Control":"no-store"});
    }catch{return json({schema_version:1,data_type:"futures_market_observations",status:"unavailable",root:validation.query.root,observations:[],error:"Approved market-observation storage could not be queried."},502,{...cors,"Cache-Control":"no-store"});}
   }
 
