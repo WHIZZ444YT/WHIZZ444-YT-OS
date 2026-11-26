@@ -59,6 +59,13 @@ Preserve direct source links and readable empty states. Show a precise status be
 
 
 
+## Implementation record
+
+- `/api/v1/economic/treasury-yield` uses the existing economic-provider snapshot and persistence lifecycle. It fetches bounded official nominal and real XML feeds separately. The Fiscal Data monthly averages remain under `/api/v1/economic/us_treasury`.
+- `/macro/#treasury-rates` shows nominal and real curve rows with their own effective dates and units. Spreads are calculated in basis points only where both tenors come from the same curve and date. Real 10Y–2Y is omitted because the real curve does not supply 2Y. Missing tenors are shown as unavailable.
+- `/macro/#federal-reserve` shows published New York Fed reference rates with effective dates, plus official H.4.1 and FOMC links. The funding adapter preserves missing values instead of converting them into zero. Dealer and operations datasets remain outside the reference rate feed pending separate approval.
+- No new credentials, database schema, vendor activation or deployment. Production curves populate after the existing Worker schedule or authorized refresh retrieves them.
+
 ## Future file changes and implementation sequence
 
 **Dependencies** — [04 · Database and data contracts](../foundation/04-DATABASE-AND-DATA-CONTRACTS.md) · [09 · Economic calendar](../research/09-ECONOMIC-CALENDAR.md)
@@ -78,7 +85,7 @@ Preserve direct source links and readable empty states. Show a precise status be
 - Integration evidence includes a deterministic fixture, rebuild/validation where applicable, and a preview check of the affected UI including mobile, disabled credentials, blocked data and fallback links.
 - Disable the affected dataset, route flag or widget first if activation fails, restore last reviewed configuration/static build/Worker version, and invalidate any prohibited cached data. Retain permitted database history and prefer corrective additive migrations.
 
-- [ ] Scope and dependency evidence recorded.
+- [x] Scope and dependency evidence recorded.
 - [ ] Relevant data rights, owner actions and fallback verified per dataset.
 - [ ] Target routes and existing compatibility checked.
 - [ ] Unit, integration and applicable live preview results reported.
