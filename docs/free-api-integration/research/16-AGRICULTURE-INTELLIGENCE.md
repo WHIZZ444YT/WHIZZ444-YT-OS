@@ -17,6 +17,14 @@ Out of scope for implementation of this workstream are unrelated product upgrade
 
 The gap to close is defined by this acceptance condition: Keep route/nav hidden while disabled. Test suppressed values, same-year revisions and no keys in browser.
 
+## Enable the reference page
+
+Set `PUBLIC_AGRICULTURE_REFERENCE=1` in the intended static build environment and rebuild. For review, set it in the Vercel Preview environment of the feature branch and redeploy. The Macro page links to Agriculture Intelligence, and the generated route manifest and canonical sitemap include it when enabled. Select a publisher and use its own commodity, geography and marketing-year controls.
+
+The reference page uses direct HTTPS links to the [WASDE archive](https://esmis.nal.usda.gov/publication/world-agricultural-supply-and-demand-estimates), [NASS Quick Stats](https://www.nass.usda.gov/Quick_Stats/) and [FAS PSD Online](https://fas.usda.gov/psdonline). It needs no API keys. To disable the route, remove the variable or set it to `0` and redeploy. The clean static build removes the page, Macro navigation link and sitemap entry together.
+
+Dataset approval is required to add ingestion, numeric results, filters or charts. At that stage, verify real suppression codes against publisher documentation and test separate revisions for the same commodity, geography and marketing year.
+
 ## Website behavior and placement
 
 **Routes** — /macro/agriculture/ (optional new)
