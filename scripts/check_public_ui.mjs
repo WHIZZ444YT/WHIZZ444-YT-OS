@@ -365,6 +365,20 @@ try {
   assert.equal(new URL(page.url()).searchParams.has('q'), false);
   await page.goBack();
   assert.equal(await page.getByRole('searchbox', { name: 'Search the site' }).inputValue(), 'COT');
+  for (const [query, path] of [
+    ['C17', '/academy/learn/c17/'],
+    ['P01', '/academy/playbooks/p01/'],
+    ['C01', '/academy/learn/c01/'],
+    ['13', '/academy/practice/13/'],
+  ]) {
+    await page.goto(site + '/search/?q=' + query);
+    assert.equal(await page.locator('[data-results] a[href="' + path + '"]').count(), 1, query);
+    assert.equal(await page.locator('[data-results] a[href^="/ict-lab/"]').count(), 0, query);
+  }
+  await page.goto(site + '/search/?q=BSL');
+  assert.equal(await page.locator('[data-results] a[href="/academy/learn/c01/"]').count(), 1);
+  assert.equal(await page.locator('[data-results] a[href="/ict-futures/academy/bsl.html"]').count(), 0);
+
   await page.goto(site + '/search/');
   const directory = page.getByRole('navigation', { name: 'Browse public pages' });
   const directoryLinks = await directory.getByRole('link').evaluateAll(links => links.map(link => link.href));
