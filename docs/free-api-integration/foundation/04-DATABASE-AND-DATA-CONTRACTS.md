@@ -6,7 +6,7 @@
 
 Reuse normalized records and enforce provenance and RLS. Map dataset IDs to existing economic_observations, cot_report_observations and futures_market_observations; use ingestion_runs for internal accountability. Upsert deterministic identities, preserve revisions and enforce downstream rights per row. Add migrations only for gaps after schema review.
 
-Out of scope for implementation of this workstream are unrelated product upgrades, additional paid services, unapproved exports, AI inference and trade execution. This file is a future implementation handoff.
+Out of scope for implementation of this workstream are unrelated product upgrades, additional paid services, unapproved exports, AI inference and trade execution. Use the linked sequence and acceptance records for merged implementation evidence and current rollout gates.
 
 ## Repository audit evidence and gaps
 

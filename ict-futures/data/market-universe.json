@@ -294,7 +294,7 @@
       "compare": [
         "GC–SI comparison; DX and ZN are macro context, not mechanical signals."
       ],
-      "specsUrl": "https://www.cmegroup.com/markets/metals/precious/gold-futures.contractSpecs.html",
+      "specsUrl": "https://www.cmegroup.com/markets/metals/precious/gold/specs",
       "heat": {
         "Asia": "medium",
         "London": "high",
@@ -344,7 +344,7 @@
         "sourceStatus": "SOURCED",
         "checkedAt": "2026-11-20",
         "publisher": "CME Group",
-        "sourceUrl": "https://www.cmegroup.com/markets/metals/precious/gold-futures.contractSpecs.html",
+        "sourceUrl": "https://www.cmegroup.com/markets/metals/precious/gold/specs",
         "checkedScope": [
           "standard contract unit / multiplier (point value where directly applicable)",
           "outright minimum tick size",

@@ -6,7 +6,7 @@
 
 Maintain the 15-family universe and verified contract lifecycle. Link each card to chart, family-specific research and official specification. Reuse lifecycle snapshot workflow. Validate real calendar YYYYMM, specific product, source evidence and effective period. Fail closed at validThrough for static publication and protect cached delivery against expiry.
 
-Out of scope for implementation of this workstream are unrelated product upgrades, additional paid services, unapproved exports, AI inference and trade execution. This file is a future implementation handoff.
+Out of scope for implementation of this workstream are unrelated product upgrades, additional paid services, unapproved exports, AI inference and trade execution. Use the linked sequence and acceptance records for merged implementation evidence and current rollout gates.
 
 ## Repository audit evidence and gaps
 
@@ -62,7 +62,7 @@ Continuous chart symbols are current registry configuration. Widget support and 
 |---|---|---|---|
 | nq | CME | `CME_MINI:NQ1!` | [Contract specs](https://www.cmegroup.com/markets/equities/nasdaq/e-mini-nasdaq-100.contractSpecs.html) |
 | es | CME | `CME_MINI:ES1!` | [Contract specs](https://www.cmegroup.com/markets/equities/sp/e-mini-sandp500.contractSpecs.html) |
-| gc | COMEX | `COMEX:GC1!` | [Contract specs](https://www.cmegroup.com/markets/metals/precious/gold-futures.contractSpecs.html) |
+| gc | COMEX | `COMEX:GC1!` | [Contract specs](https://www.cmegroup.com/markets/metals/precious/gold/specs) |
 | 6e | CME | `CME:6E1!` | [Contract specs](https://www.cmegroup.com/markets/fx/g10/euro-fx/specs) |
 | 6b | CME | `CME:6B1!` | [Contract specs](https://www.cmegroup.com/markets/fx/g10/british-pound/specs) |
 | ym | CBOT | `CBOT_MINI:YM1!` | [Contract specs](https://www.cmegroup.com/markets/equities/dow-jones/e-mini-dow.contractSpecs.html) |

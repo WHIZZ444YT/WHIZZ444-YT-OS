@@ -51,7 +51,7 @@ class BuildTests(unittest.TestCase):
             }), patch.object(build_site, 'shell', side_effect=lambda title, description, body, route: body):
                 self.assertIn('href="/macro/agriculture/"', build_site.build_agriculture_reference())
             html = page.read_text(encoding='utf-8')
-            for source in ('esmis.nal.usda.gov', 'www.nass.usda.gov/Quick_Stats/', 'fas.usda.gov/psdonline'):
+            for source in ('esmis.nal.usda.gov', 'quickstats.nass.usda.gov/', 'fas.usda.gov/psdonline'):
                 self.assertIn(source, html)
             self.assertNotIn('secret-fixture', html)
             self.assertNotIn('/api/v1/', html)

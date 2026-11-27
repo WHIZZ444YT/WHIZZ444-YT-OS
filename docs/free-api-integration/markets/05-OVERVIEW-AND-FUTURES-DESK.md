@@ -6,7 +6,7 @@
 
 Give NQ, ES, GC and CL one fast research entry point. Put optional ticker after home heading and four market cards before catalysts; use calendar/news/rates/COT previews from existing contracts. Desk selects market and horizon once, routes each card to its owning page, and excludes non-exportable fields from brief JSON.
 
-Out of scope for implementation of this workstream are unrelated product upgrades, additional paid services, unapproved exports, AI inference and trade execution. This file is a future implementation handoff.
+Out of scope for implementation of this workstream are unrelated product upgrades, additional paid services, unapproved exports, AI inference and trade execution. Use the linked sequence and acceptance records for merged implementation evidence and current rollout gates.
 
 ## Repository audit evidence and gaps
 

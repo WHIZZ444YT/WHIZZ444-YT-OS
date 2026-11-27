@@ -6,7 +6,7 @@
 
 Give one authoritative status per provider/dataset. Separate access, configuration, authorization, freshness and last attempt/outcome. Show existing statuses and safe compatibility aliases. Place freshness badges on consuming pages linking back to this canonical view. No public operational internals or keys.
 
-Out of scope for implementation of this workstream are unrelated product upgrades, additional paid services, unapproved exports, AI inference and trade execution. This file is a future implementation handoff.
+Out of scope for implementation of this workstream are unrelated product upgrades, additional paid services, unapproved exports, AI inference and trade execution. Use the linked sequence and acceptance records for merged implementation evidence and current rollout gates.
 
 ## Repository audit evidence and gaps
 

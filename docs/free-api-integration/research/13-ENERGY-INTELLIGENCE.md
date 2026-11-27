@@ -6,11 +6,11 @@
 
 Build an EIA-backed energy research page for CL. Add crude ex-SPR, approved production and gas storage panels. Keep weekly inventory observation, report date and calendar slot distinct. Compare levels and changes in native units; label gas as research context with no new futures family. Link EIA and OPEC publishers.
 
-Out of scope for implementation of this workstream are unrelated product upgrades, additional paid services, unapproved exports, AI inference and trade execution. This file is a future implementation handoff.
+Out of scope for implementation of this workstream are unrelated product upgrades, additional paid services, unapproved exports, AI inference and trade execution. Use the linked sequence and acceptance records for merged implementation evidence and current rollout gates.
 
 ## Repository audit evidence and gaps
 
-**Status** — Proposed route. Related source registry/adapters already exist where shown below.
+**Status** — Energy Intelligence is implemented at `/macro/energy/`. Weekly EIA observations require owner credentials. The official schedule and source links remain independent.
 
 - [`cloudflare/src/economic-providers.js`](https://github.com/WHIZZ444YT/WHIZZ444-YT-OS/blob/e791f37da39209f3ac6c50ebf2f960101f618efb/cloudflare/src/economic-providers.js)
 - [`assets/economic-data.js`](https://github.com/WHIZZ444YT/WHIZZ444-YT-OS/blob/e791f37da39209f3ac6c50ebf2f960101f618efb/assets/economic-data.js)

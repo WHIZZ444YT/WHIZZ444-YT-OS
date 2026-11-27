@@ -45,6 +45,12 @@ Sampled control-plane KV status on 27 November 2026. The checked timestamps are 
 
 Record actual observation date, last successful retrieval, retrieval age, authorization and result for each enabled dataset when running [Doc 25 smoke](25-DEPLOYMENT-AND-LIVE-VERIFICATION.md). Use [Data Health](https://finance-intelligence-os-whizz444yt-7353.vercel.app/data-health/) for runtime status and publisher links.
 
+## Full-pack recheck on 27 November 2026 (IST)
+
+Audited all 30 Markdown files against [main at `1cd812375cdc`](https://github.com/WHIZZ444YT/WHIZZ444-YT-OS/commit/1cd812375cdcd1d7977b57083b4a78c6b1fb08a6). Internal links and historical GitHub paths were checked at their pinned revisions. Updated confirmed broken or superseded publisher links. API examples that require specific query parameters, credentials or publisher access remain documentation references. Link access is independent of dataset reuse rights.
+
+Supabase still reports the migration gaps below. Cloudflare's active Worker version did not change since the previous audit. Complete the approved rollout and retest live source and CORS status before production acceptance.
+
 ## Remaining production gates
 
 - [ ] Review and apply applicable migrations in dependency order, then confirm production history and RLS. The missing versions observed were `20261120110000` (futures observations), `20261126120000` (economic revisions), `20261126130000` (direct FRED read gate) and `20261127120000` (required futures display expiry).

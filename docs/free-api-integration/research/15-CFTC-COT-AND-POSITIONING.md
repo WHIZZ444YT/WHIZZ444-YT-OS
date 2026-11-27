@@ -6,11 +6,11 @@
 
 Normalize report-specific positioning and comparisons. Use identifiers per venue and report family, match market code before rendering. TFF dealers, asset managers, leveraged funds versus Disaggregated managed money, producer/merchant and swap dealers. Compute long minus short and changes against prior matching report; percentile = midpoint ranks among eligible values with sample/window disclosure. No interpolation of missing reports.
 
-Out of scope for implementation of this workstream are unrelated product upgrades, additional paid services, unapproved exports, AI inference and trade execution. This file is a future implementation handoff.
+Out of scope for implementation of this workstream are unrelated product upgrades, additional paid services, unapproved exports, AI inference and trade execution. Use the linked sequence and acceptance records for merged implementation evidence and current rollout gates.
 
 ## Repository audit evidence and gaps
 
-**Status** — Existing repository building blocks verified in source. Proposed changes and production verification remain pending.
+**Status** — CFTC positioning comparisons and percentiles are implemented. Verify live report family, variant and observation dates before release.
 
 - [`cloudflare/src/cot-contracts.mjs`](https://github.com/WHIZZ444YT/WHIZZ444-YT-OS/blob/e791f37da39209f3ac6c50ebf2f960101f618efb/cloudflare/src/cot-contracts.mjs)
 - [`assets/cot-page.js`](https://github.com/WHIZZ444YT/WHIZZ444-YT-OS/blob/e791f37da39209f3ac6c50ebf2f960101f618efb/assets/cot-page.js)
