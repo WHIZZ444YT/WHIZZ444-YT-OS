@@ -60,6 +60,24 @@ function parseSignal(value, rowNumber) {
   throw new Error("Unsupported signal '" + signal + "' at CSV row " + rowNumber + ". Use LONG, SHORT or FLAT.");
 }
 
+function isCivilDate(value) {
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(value)) return false;
+  const date = new Date(value + "T00:00:00Z");
+  return Number.isFinite(date.getTime()) && date.toISOString().slice(0, 10) === value;
+}
+
+function parseCsvTimestamp(value, field, rowNumber) {
+  if (!TZ_RE.test(value)) {
+    throw new Error(field + " at CSV row " + rowNumber + " must include Z or an explicit UTC offset.");
+  }
+  // Validate the date as written before any timezone conversion or day rollover.
+  const epoch = Date.parse(value);
+  if (!isCivilDate(value.slice(0, 10)) || !Number.isFinite(epoch)) {
+    throw new Error("Invalid " + field + " at CSV row " + rowNumber + ".");
+  }
+  return epoch;
+}
+
 export function parseSignalCsv(text) {
   const rows = parseCsvRows(text);
   const headers = rows[0].map(v => String(v).trim().replace(/^\uFEFF/, "").toLowerCase());
@@ -86,9 +104,7 @@ export function parseSignalCsv(text) {
     }
     const cell = key => raw[ix[key]] ?? "";
     const ts = String(cell("timestamp")).trim();
-    if (!TZ_RE.test(ts)) throw new Error("Timestamp at CSV row " + rowNumber + " must include Z or an explicit UTC offset.");
-    const epoch = Date.parse(ts);
-    if (!Number.isFinite(epoch)) throw new Error("Invalid timestamp at CSV row " + rowNumber + ".");
+    const epoch = parseCsvTimestamp(ts, "timestamp", rowNumber);
     if (epoch <= previousTime) throw new Error("Timestamps must be strictly increasing; duplicate or out-of-order row at CSV row " + rowNumber + ".");
     previousTime = epoch;
     const open = finiteCell(cell("open"), "open", rowNumber);
@@ -101,10 +117,7 @@ export function parseSignalCsv(text) {
     const signal = parseSignal(cell("signal"), rowNumber);
     const availableAt = String(cell("signal_available_at")).trim();
     if (availableAt) {
-      const availableEpoch = Date.parse(availableAt);
-      if (!TZ_RE.test(availableAt) || !Number.isFinite(availableEpoch)) {
-        throw new Error("Signal availability at CSV row " + rowNumber + " needs a timestamp with an explicit UTC offset.");
-      }
+      const availableEpoch = parseCsvTimestamp(availableAt, "signal_available_at", rowNumber);
       if (availableEpoch > epoch) throw new Error("Signal availability is after the source bar close at CSV row " + rowNumber + ".");
       if (signal !== 0) timedSignalCount += 1;
     }
@@ -122,7 +135,7 @@ export function parseSignalCsv(text) {
     if (!contract) throw new Error("Missing exact contract code at CSV row " + rowNumber + ".");
     contracts.add(contract);
     const expiry = String(cell("expiry")).trim();
-    if (!/^\d{4}-\d{2}-\d{2}$/.test(expiry) || !Number.isFinite(Date.parse(expiry + "T00:00:00Z")) || new Date(expiry + "T00:00:00Z").toISOString().slice(0, 10) !== expiry) {
+    if (!isCivilDate(expiry)) {
       throw new Error("Expiry at CSV row " + rowNumber + " must be an exact YYYY-MM-DD date from the dataset source.");
     }
     expiries.add(expiry);
