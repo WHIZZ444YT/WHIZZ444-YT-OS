@@ -50,6 +50,7 @@
 .reference-item>div{min-width:0;flex:1}
 .reference-item a{white-space:nowrap}
 .related-lessons .chip{overflow-wrap:anywhere}
+.reference-actions .academy-link{flex:0 1 auto;min-width:0;max-width:100%;box-sizing:border-box;white-space:normal;overflow-wrap:anywhere}
 .academy-track-card,.academy-tutorial-card{box-shadow:0 5px 16px rgba(16,45,66,.035);display:flex;flex-direction:column;gap:5px}
 .academy-track-card h3,.academy-tutorial-card h3{line-height:1.5}
 .academy-track-card>p,.academy-tutorial-card>p{line-height:1.65}

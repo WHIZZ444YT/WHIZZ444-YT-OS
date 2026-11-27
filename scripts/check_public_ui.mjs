@@ -44,6 +44,39 @@ try {
     }
   }
 
+  const tutorial = await fixturePage({ colorScheme: 'dark', viewport: { width: 320, height: 880 } });
+  const tutorialPath = '/ict-futures/academy/tutorials/supplemental-source-audit.html';
+  for (const width of [320, 360, 390]) {
+    await tutorial.setViewportSize({ width, height: 880 });
+    assert.equal((await tutorial.goto(site + tutorialPath)).status(), 200);
+    const lesson = tutorial.getByRole('link', { name: 'New York Lunch Algorithmic Reversal →', exact: true });
+    await lesson.scrollIntoViewIfNeeded();
+    assert.ok(await lesson.isVisible());
+    const bounds = await lesson.evaluate(link => {
+      const parent = link.parentElement.getBoundingClientRect();
+      const box = link.getBoundingClientRect();
+      const range = document.createRange();
+      range.selectNodeContents(link);
+      const text = range.getBoundingClientRect();
+      const root = document.documentElement;
+      return {
+        viewport: root.clientWidth,
+        content: root.scrollWidth,
+        linkFitsParent: box.left >= parent.left && box.right <= parent.right,
+        textFitsLink: text.left >= box.left && text.right <= box.right,
+      };
+    });
+    assert.equal(bounds.viewport, width);
+    assert.equal(bounds.content, width, 'Tutorial must fit at ' + width + 'px');
+    assert.ok(bounds.linkFitsParent && bounds.textFitsLink, JSON.stringify({ width, ...bounds }));
+  }
+  const lesson = tutorial.getByRole('link', { name: 'New York Lunch Algorithmic Reversal →', exact: true });
+  const destination = await lesson.getAttribute('href');
+  assert.match(destination, /^\/ict-futures\/academy\/[^/]+\.html$/);
+  await lesson.click();
+  await tutorial.waitForURL(site + destination);
+  await tutorial.close();
+
   const desk = await fixturePage({ viewport: { width: 390, height: 844 }, acceptDownloads: true });
   await desk.route("**/assets/runtime-config.js", route => route.fulfill({
     contentType: "application/javascript",
