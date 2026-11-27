@@ -13,11 +13,15 @@ const cases = [
 
 await mkdir(output, { recursive: true });
 const browser = await chromium.launch();
+const blockExternal = route => route.request().url().startsWith(site + '/')
+  ? route.continue() : route.abort();
+async function fixturePage(options = {}) {
+  const page = await browser.newPage({ ...options, serviceWorkers: 'block' });
+  await page.route('**/*', blockExternal);
+  return page;
+}
 try {
-  const page = await browser.newPage({ reducedMotion: 'reduce' });
-  // Use the checked-in public data and avoid requesting third-party widgets.
-  await page.route('**/*', route => route.request().url().startsWith(site + '/')
-    ? route.continue() : route.abort());
+  const page = await fixturePage({ reducedMotion: 'reduce' });
   for (const theme of ['dark', 'light']) {
     for (const width of [320, 360, 390, 768, 1280, 1440]) {
       await page.setViewportSize({ width, height: width < 768 ? 844 : 1000 });
@@ -40,7 +44,7 @@ try {
     }
   }
 
-  const desk = await browser.newPage({ viewport: { width: 390, height: 844 }, acceptDownloads: true });
+  const desk = await fixturePage({ viewport: { width: 390, height: 844 }, acceptDownloads: true });
   await desk.route("**/assets/runtime-config.js", route => route.fulfill({
     contentType: "application/javascript",
     body: 'window.FINANCE_OS_CONFIG = {apiBase: location.origin};'
@@ -124,7 +128,7 @@ try {
   assert.equal(await comparison.inputValue(), 'es');
   assert.equal(await comparisonChart.isVisible(), true);
 
-  const widgetPage = await browser.newPage({ viewport: { width: 320, height: 844 } });
+  const widgetPage = await fixturePage({ viewport: { width: 320, height: 844 } });
   const requests = [];
   const vendor = 'https://s3.tradingview.com/external-embedding/embed-widget-advanced-chart.js';
   await widgetPage.route(vendor, route => {
@@ -168,12 +172,12 @@ try {
   await page.getByText('Preview unavailable. Open the direct TradingView link.').waitFor();
   assert.equal(await page.getByRole('link',{name:'Open chart on TradingView'}).isVisible(),true);
 
-  const noScripts = await browser.newPage({ javaScriptEnabled:false });
+  const noScripts = await fixturePage({ javaScriptEnabled:false });
   await noScripts.goto(site + '/charts/');
   assert.match(await noScripts.getByRole('link',{name:'Open chart on TradingView'}).getAttribute('href'),/CME_MINI%3ANQ1/);
   await noScripts.close();
 
-  const calendarPage = await browser.newPage({ viewport: {width:390,height:844}, timezoneId:"UTC" });
+  const calendarPage = await fixturePage({ viewport: {width:390,height:844}, timezoneId:"UTC" });
   await calendarPage.route("**/assets/runtime-config.js", route => route.fulfill({
     contentType:"application/javascript",body:"window.FINANCE_OS_CONFIG={apiBase:location.origin};"
   }));
@@ -205,7 +209,7 @@ try {
   assert.equal(await calendarPage.locator("#windows").count(),1);
   await calendarPage.close();
 
-  const newsPage = await browser.newPage({ viewport:{width:390,height:844} });
+  const newsPage = await fixturePage({ viewport:{width:390,height:844} });
   await newsPage.route("**/assets/runtime-config.js", route => route.fulfill({
     contentType:"application/javascript",body:"window.FINANCE_OS_CONFIG={apiBase:location.origin};"
   }));
@@ -224,7 +228,7 @@ try {
   await newsPage.getByText(/Fixture discovery unavailable/).waitFor();
   await newsPage.close();
 
-  const energy = await browser.newPage({ viewport:{width:390,height:844} });
+  const energy = await fixturePage({ viewport:{width:390,height:844} });
   await energy.route("**/assets/runtime-config.js", route => route.fulfill({
     contentType:"application/javascript",body:"window.FINANCE_OS_CONFIG={apiBase:location.origin};"
   }));
@@ -240,7 +244,7 @@ try {
   assert.ok(await energy.evaluate(()=>document.documentElement.scrollWidth<=document.documentElement.clientWidth+1));
   await energy.close();
 
-  const staticNavigation = await browser.newPage({javaScriptEnabled:false, viewport:{width:320,height:844}});
+  const staticNavigation = await fixturePage({javaScriptEnabled:false, viewport:{width:320,height:844}});
   await staticNavigation.goto(site + '/macro/');
   assert.equal(await staticNavigation.locator('#sidebarToggle').isVisible(), false);
   await staticNavigation.getByRole('link', {name:'Browse public pages', exact:true}).click();
@@ -250,13 +254,13 @@ try {
   await staticNavigation.getByRole('link', {name:'Global Macro & Liquidity', exact:true}).waitFor();
   await staticNavigation.close();
 
-  const staticEnergy = await browser.newPage({javaScriptEnabled:false});
+  const staticEnergy = await fixturePage({javaScriptEnabled:false});
   await staticEnergy.goto(site + "/macro/energy/");
   assert.equal(await staticEnergy.getByRole("link",{name:"OPEC Monthly Oil Market Report"}).isVisible(),true);
   assert.equal(await staticEnergy.getByRole("link",{name:"EIA Weekly Petroleum Status Report"}).isVisible(),true);
   await staticEnergy.close();
 
-  const globalMacro = await browser.newPage({ viewport:{width:390,height:844} });
+  const globalMacro = await fixturePage({ viewport:{width:390,height:844} });
   await globalMacro.route("**/assets/runtime-config.js", route => route.fulfill({
     contentType:"application/javascript",body:"window.FINANCE_OS_CONFIG={apiBase:location.origin};"
   }));
@@ -278,7 +282,7 @@ try {
   assert.ok(await globalMacro.evaluate(()=>document.documentElement.scrollWidth<=document.documentElement.clientWidth+1));
   await globalMacro.close();
 
-  const positioning = await browser.newPage({ viewport:{width:390,height:844} });
+  const positioning = await fixturePage({ viewport:{width:390,height:844} });
   await positioning.route("**/assets/runtime-config.js", route => route.fulfill({
     contentType:"application/javascript",body:"window.FINANCE_OS_CONFIG={apiBase:location.origin};"
   }));
@@ -431,7 +435,7 @@ try {
   await page.goForward();
   assert.equal(await labQuery.inputValue(), 'CBDR');
 
-  const staticPage = await browser.newPage({ javaScriptEnabled: false });
+  const staticPage = await fixturePage({ javaScriptEnabled: false });
   for (const path of ['/ict-lab/learn/c34/', '/ict-lab/playbooks/p10/', '/ict-lab/practice/16/']) {
     const response = await staticPage.goto(site + path);
     assert.equal(response.status(), 200, path);
@@ -460,9 +464,7 @@ try {
   assert.ok(await page.getByRole('heading', { name: 'Best for this topic' }).isVisible());
   await page.goto(site + '/ict-lab/playbooks/#charter-lectures');
   assert.equal(await page.locator('#charter-lectures article').count(), 13);
-  const perf = await browser.newPage({ viewport: { width: 390, height: 844 }, isMobile: true, deviceScaleFactor: 2 });
-  await perf.route('**/*', route => route.request().url().startsWith(site + '/')
-    ? route.continue() : route.abort());
+  const perf = await fixturePage({ viewport: { width: 390, height: 844 }, isMobile: true, deviceScaleFactor: 2 });
   const cdp = await perf.context().newCDPSession(perf);
   await cdp.send('Emulation.setCPUThrottlingRate', { rate: 4 });
   await cdp.send('Network.enable');
@@ -530,8 +532,12 @@ try {
     assert.ok(await page.getByRole('navigation', { name: 'Breadcrumb' }).isVisible());
     assert.equal(await page.getByRole('link', { name: 'Practice next', exact: true }).count(), 1);
   }
-  const research = await browser.newPage();
+  const research = await fixturePage();
   let newsResponseStatus = 200;
+  await research.route('**/assets/runtime-config.js', route => route.fulfill({
+    contentType: 'application/javascript',
+    body: 'window.FINANCE_OS_CONFIG = {apiBase: location.origin};',
+  }));
   await research.route('**/api/v1/news?*', route => route.fulfill({
     status: newsResponseStatus,
     headers: { 'access-control-allow-origin': '*' },
@@ -557,8 +563,45 @@ try {
     await research.goto(site + route);
     await research.getByText(context.families.nq.summary, { exact: true }).first().waitFor();
   }
+  await research.route('**/api/v1/providers?view=setup', route => route.fulfill({json:{providers:[
+    {id:'bls',status:'anonymous'}, {id:'bea',status:'missing'},
+    {id:'eia',status:'rejected'}, {id:'fred',status:'reference-only'}
+  ]}}));
+  await research.goto(site + '/data-health/integrations/');
+  await research.locator('[data-setup-provider="bea"]').getByText('Key missing from this Worker.').waitFor();
+  await research.locator('[data-setup-provider="eia"]').getByText(/rejected the credential/).waitFor();
+  await research.locator('[data-setup-provider="fred"]').getByText(/Reference only/).waitFor();
   await research.close();
+
+  const disabled = await fixturePage({viewport:{width:320,height:844}});
+  await disabled.route('**/assets/runtime-config.js', route => route.fulfill({
+    contentType: 'application/javascript',
+    body: 'window.FINANCE_OS_CONFIG = {};',
+  }));
+  await disabled.goto(site + '/data-health/integrations/');
+  await disabled.locator('[data-setup-provider="bls"]').getByText(/gateway is not configured/).waitFor();
+  await disabled.getByRole('link', {name:/Cloudflare secret setup/}).waitFor();
+  await disabled.close();
+  const offlineContext = await browser.newContext();
+  await offlineContext.route('**/*', blockExternal);
+  const offline = await offlineContext.newPage();
+  await offline.goto(site + '/');
+  await offline.evaluate(() => navigator.serviceWorker.register('/sw.js'));
+  await offline.waitForFunction(() => Boolean(navigator.serviceWorker.controller));
+  const cachedPaths = await offline.evaluate(async () => {
+    const keys = await caches.keys();
+    const cache = await caches.open(keys.find(key => key.startsWith('fios-shell-')));
+    return (await cache.keys()).map(request => new URL(request.url).pathname).sort();
+  });
+  assert.deepEqual(cachedPaths, ['/icon.svg', '/index.html', '/manifest.webmanifest', '/resources.json']);
+  await offlineContext.setOffline(true);
+  const offlineHome = await offline.reload();
+  assert.equal(offlineHome.status(), 200);
+  assert.equal(offlineHome.fromServiceWorker(), true);
+  await offlineContext.close();
+
   const contextForAccount = await browser.newContext({ serviceWorkers: 'block' });
+  await contextForAccount.route('**/*', blockExternal);
   const workspace = await contextForAccount.newPage();
   await workspace.route('**/assets/runtime-config.js', route => route.fulfill({
     contentType: 'application/javascript',
