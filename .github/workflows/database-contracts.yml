@@ -28,6 +28,20 @@ jobs:
         with:
           persist-credentials: false
       - name: Run disposable PostgreSQL contract checks
+        id: database
         env:
           PGPASSWORD: fixture-only
         run: psql -h localhost -U postgres -d postgres -f tests/database_contracts.sql
+
+      - name: Record machine-readable database QA evidence
+        if: always()
+        env:
+          QA_STEP_RESULTS: ${{ toJSON(steps) }}
+        run: python3 scripts/write_qa_evidence.py database "$RUNNER_TEMP/qa-database.json"
+      - name: Upload database QA evidence
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: qa-database
+          path: ${{ runner.temp }}/qa-database.json
+          if-no-files-found: error

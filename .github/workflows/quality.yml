@@ -20,16 +20,21 @@ jobs:
         with:
           persist-credentials: false
       - name: Verify runtime
+        id: runtime
         run: |
           python3 --version
           node --version
       - name: Build static routes
+        id: build
         run: python3 scripts/build_site.py
       - name: Unit tests
+        id: python_tests
         run: python3 -m unittest discover -s tests -v
       - name: Node tests
+        id: node_tests
         run: node --test tests/*.mjs
       - name: Verify release version consistency
+        id: version
         run: |
           python3 - <<'PY'
           import json, re, pathlib, sys
@@ -47,15 +52,28 @@ jobs:
               sys.exit(1)
           PY
       - name: Structural and security validation
+        id: structure
         run: python3 scripts/validate.py
       - name: Internal link and anchor audit
+        id: links
         run: python3 scripts/audit_internal_links.py
 
       - name: Verify clean artifact reproducibility
+        id: clean
         run: python3 scripts/check_clean_artifact.py
       - name: Check exact ICT watch URLs
+        id: watch_urls
         run: python3 scripts/check_ict_watch_urls.py
+      - name: Bundle Worker without deploying
+        id: worker_bundle
+        env:
+          WRANGLER_SEND_METRICS: 'false'
+        if: matrix.cutover == '0'
+        run: |
+          npm ci --no-audit --no-fund
+          npm run worker:dry-run
       - name: Check responsive public pages in Chromium
+        id: browser
         if: matrix.cutover == '0'
         run: |
           npm install --prefix "$RUNNER_TEMP/public-ui" --no-audit --no-fund playwright@1.56.1
@@ -74,8 +92,22 @@ jobs:
           path: ${{ runner.temp }}/public-ui-screenshots/
 
       - name: Compare clean standard and cutover route manifests
+        id: parity
         if: matrix.cutover == '0'
         run: |
           cp dist/route-manifest.json "$RUNNER_TEMP/standard-routes.json"
           ICT_TERMINAL_CUTOVER=1 python3 scripts/build_site.py
           python3 scripts/check_release_parity.py "$RUNNER_TEMP/standard-routes.json" dist/route-manifest.json
+
+      - name: Record machine-readable QA evidence
+        if: always()
+        env:
+          QA_STEP_RESULTS: ${{ toJSON(steps) }}
+        run: python3 scripts/write_qa_evidence.py quality "$RUNNER_TEMP/qa-evidence.json"
+      - name: Upload QA evidence
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: qa-evidence-cutover-${{ matrix.cutover }}
+          path: ${{ runner.temp }}/qa-evidence.json
+          if-no-files-found: error
