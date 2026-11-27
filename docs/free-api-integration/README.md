@@ -1,6 +1,6 @@
 # Finance Intelligence OS free-data integration blueprint
 
-This is the build handoff for [WHIZZ444YT/WHIZZ444-YT-OS](https://github.com/WHIZZ444YT/WHIZZ444-YT-OS), sourced from [main at e791f37da392](https://github.com/WHIZZ444YT/WHIZZ444-YT-OS/commit/e791f37da39209f3ac6c50ebf2f960101f618efb). Start with [the master roadmap](MASTER-IMPLEMENTATION-ROADMAP.md), then use each document's coding-agent prompt after its prerequisites pass. Docs 00–04 are the first implementation handoff. Scope is documentation and future implementation requirements.
+This is the build handoff for [WHIZZ444YT/WHIZZ444-YT-OS](https://github.com/WHIZZ444YT/WHIZZ444-YT-OS), sourced from [main at e791f37da392](https://github.com/WHIZZ444YT/WHIZZ444-YT-OS/commit/e791f37da39209f3ac6c50ebf2f960101f618efb). Start with [the master roadmap](MASTER-IMPLEMENTATION-ROADMAP.md), then use each document's coding-agent prompt after its prerequisites pass. See [the implementation sequence](delivery/26-IMPLEMENTATION-SEQUENCE.md) for merged evidence, optional dependencies and remaining acceptance steps.
 
 | Document | Priority | Dependencies |
 |---|---|---|
@@ -26,7 +26,7 @@ This is the build handoff for [WHIZZ444YT/WHIZZ444-YT-OS](https://github.com/WHI
 | [19 · Integration setup and admin](platform/19-INTEGRATION-SETUP-AND-ADMIN.md) | Sequenced | 03,18 |
 | [20 · Scheduling, caching and free limits](platform/20-SCHEDULING-CACHING-AND-FREE-LIMITS.md) | Sequenced | 02,04,18 |
 | [21 · Historical data and Strategy Lab](platform/21-HISTORICAL-DATA-AND-STRATEGY-LAB.md) | Sequenced | 04,08 |
-| [22 · UI, UX and navigation](platform/22-UI-UX-AND-NAVIGATION.md) | Sequenced | 05,06,07,08,09,10,11,12,13,14,15,16,17,18,19,21 |
+| [22 · UI, UX and navigation](platform/22-UI-UX-AND-NAVIGATION.md) | Sequenced | 05,06,07,08,09,10,11,12,13,14,15,17,18,19,21 |
 | [23 · Security and data compliance](delivery/23-SECURITY-AND-DATA-COMPLIANCE.md) | Sequenced | 01,02,03,04,20 |
 | [24 · Testing and quality assurance](delivery/24-TESTING-AND-QUALITY-ASSURANCE.md) | Sequenced | 22,23 |
 | [25 · Deployment and live verification](delivery/25-DEPLOYMENT-AND-LIVE-VERIFICATION.md) | Sequenced | 24 |
