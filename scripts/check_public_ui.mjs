@@ -298,8 +298,7 @@ try {
     { name: 'Fixture Exchange', category: 'Exchange', url: 'https://example.com/exchange' },
     { name: 'Fixture Regulator', category: 'Regulator', url: 'https://example.com/regulator' },
   ] } }));
-  await sources.goto(site + '/research/');
-  await sources.waitForURL(site + '/sources/');
+  await sources.goto(site + '/sources/');
   await sources.getByText('2 of 2 resources', { exact: true }).waitFor();
   const sourceSearch = sources.getByRole('searchbox', { name: 'Search sources', exact: true });
   const sourceCategory = sources.getByRole('combobox', { name: 'Category', exact: true });
