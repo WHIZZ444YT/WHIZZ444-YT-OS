@@ -161,8 +161,8 @@ try {
   await widgetPage.locator('#public-chart-controls [name=market]').selectOption('dx');
   assert.equal(await widgetPage.locator('[data-chart-mount] script').count(),0);
   await widgetPage.locator('#public-chart-controls [name=comparison]').selectOption('');
-  await previewButton.click();
-  await widgetPage.getByText(/Hosted coverage has not been verified/).waitFor();
+  assert.equal(await previewButton.isEnabled(), false);
+  await widgetPage.getByRole('status').getByText(/No hosted preview for these selections/).waitFor();
   assert.equal(await widgetPage.locator('[data-chart-mount] script').count(),0);
   assert.match(await widgetPage.getByRole('link',{name:'Open chart on TradingView'}).getAttribute('href'),/ICEUS%3ADX1/);
   await widgetPage.close();
