@@ -85,6 +85,46 @@ test("CSV parser validates OHLC, timezone, sort order and one contract", () => {
   assert.throws(()=>parseSignalCsv(sampleCsv().replace("ESH6,2026-03-20","ESH6,2026-13-40")),/exact YYYY-MM-DD/);
 });
 
+function datedCsv(timestamp, signalAvailableAt = timestamp) {
+  const [header, ...data] = sampleCsv({ signals: { 0: "LONG" } }).split("\n");
+  const rows = data.map((line, index) => {
+    const minute = String(index).padStart(2, "0");
+    return timestamp.replace("MM", minute) + line.slice(line.indexOf(",")) +
+      "," + signalAvailableAt.replace("MM", minute);
+  });
+  return [header + ",signal_available_at", ...rows].join("\n");
+}
+
+test("CSV parser rejects impossible civil dates in each timestamp column", () => {
+  assert.throws(
+    () => parseSignalCsv(datedCsv("2026-02-30T00:MM:00Z")),
+    /Invalid timestamp at CSV row 2\./
+  );
+  assert.throws(
+    () => parseSignalCsv(datedCsv("2026-03-02T00:MM:00Z", "2026-02-30T00:MM:00Z")),
+    /Invalid signal_available_at at CSV row 2\./
+  );
+  assert.throws(
+    () => parseSignalCsv(datedCsv("2026-02-29T00:MM:00+05:30")),
+    /Invalid timestamp at CSV row 2\./
+  );
+  assert.throws(
+    () => parseSignalCsv(datedCsv("2026-05-01T00:MM:00Z", "2026-04-31T00:MM:00-04:00")),
+    /Invalid signal_available_at at CSV row 2\./
+  );
+});
+
+test("CSV parser preserves valid dates and applies explicit offsets after calendar validation", () => {
+  const february = parseSignalCsv(datedCsv("2026-02-28T00:MM:00Z"));
+  assert.equal(february.quality.rows, 30);
+  assert.equal(february.quality.firstTimestamp, "2026-02-28T00:00:00.000Z");
+  const leapDay = parseSignalCsv(datedCsv(
+    "2028-02-29T00:MM:00+05:30", "2028-02-28 18:MM:00+00:00"
+  ));
+  assert.equal(leapDay.quality.firstTimestamp, "2028-02-28T18:30:00.000Z");
+  assert.equal(leapDay.quality.timedSignalCount, 1);
+});
+
 test("CSV parser rejects missing/duplicate columns and bad signals", () => {
   assert.throws(()=>parseSignalCsv("timestamp,open,high,low,close\n2026-01-01T00:00:00Z,1,1,1,1"),/missing required columns/);
   assert.throws(()=>parseSignalCsv(sampleCsv().replace("timestamp,open","timestamp,timestamp")),/duplicate column/);
