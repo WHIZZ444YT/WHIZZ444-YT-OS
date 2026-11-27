@@ -293,6 +293,32 @@ try {
   }
   await newsPage.close();
 
+  const sources = await fixturePage({ viewport: { width: 320, height: 844 } });
+  await sources.route('**/resources.json', route => route.fulfill({ json: { resources: [
+    { name: 'Fixture Exchange', category: 'Exchange', url: 'https://example.com/exchange' },
+    { name: 'Fixture Regulator', category: 'Regulator', url: 'https://example.com/regulator' },
+  ] } }));
+  await sources.goto(site + '/sources/');
+  await sources.getByText('2 of 2 resources', { exact: true }).waitFor();
+  const sourceSearch = sources.getByRole('searchbox', { name: 'Search sources', exact: true });
+  const sourceCategory = sources.getByRole('combobox', { name: 'Category', exact: true });
+  assert.ok(await sourceSearch.isVisible());
+  assert.equal(await sourceCategory.inputValue(), '');
+  await sourceSearch.focus();
+  await sources.keyboard.type('Fixture');
+  await sources.keyboard.press('Tab');
+  assert.ok(await sourceCategory.evaluate(element => element === document.activeElement));
+  await sources.keyboard.press('End');
+  await sources.getByText('1 of 2 resources', { exact: true }).waitFor();
+  assert.equal(await sourceCategory.inputValue(), 'Regulator');
+  assert.ok(await sources.getByRole('heading', { name: 'Fixture Regulator' }).isVisible());
+  await sources.keyboard.press('Shift+Tab');
+  assert.ok(await sourceSearch.evaluate(element => element === document.activeElement));
+  await sources.keyboard.type(' missing');
+  await sources.getByText('No matching resources.', { exact: true }).waitFor();
+  assert.equal(await sourceCategory.inputValue(), 'Regulator');
+  await sources.close();
+
   const energy = await fixturePage({ viewport:{width:390,height:844} });
   await energy.route("**/assets/runtime-config.js", route => route.fulfill({
     contentType:"application/javascript",body:"window.FINANCE_OS_CONFIG={apiBase:location.origin};"
