@@ -62,7 +62,7 @@ test('the five Lab views and all 93 detail pages contain public HTML without scr
   assert.match(published(lab + 'podcasts/w42kzZb9oYY/index.html'), /1:25:36/);
   assert.match(published(lab + 'practice/16/index.html'), /data-journal-playbooks/);
   const search = published('search/index.html');
-  assert.ok(search.includes('"path": "/ict-lab/learn/c34/"'));
+  assert.ok(search.includes('"path": "/academy/learn/c34/"'));
   assert.ok(search.includes('"path": "/ict-futures/markets/nq.html"'));
   assert.ok(!search.includes('"path": "/ict-futures/"'));
   assert.equal(readdirSync(new URL('../dist/ict-lab/', import.meta.url)).some(file => file.endsWith('.js')), false);
@@ -130,7 +130,10 @@ test('the crosswalk distinguishes shared concepts, separate variants and exact A
   assert.match(modelIndex, /Judas \+ MSS · Overlapping setup/);
   assert.match(modelIndex, /href="\/ict-futures\/academy\/ifvg-reversal-model.html"/);
   assert.match(published('ict-futures/academy/ifvg-reversal-model.html'), /Continue in ICT Lab[\s\S]+\/ict-lab\/playbooks\/p07\//);
-  assert.match(published('search/index.html'), /"path": "\/ict-futures\/academy\/bsl.html"[^}]*"practicePath": "\/ict-lab\/learn\/c01\/"/);
+  const search = published('search/index.html');
+  assert.match(search, /"path": "\/academy\/learn\/c01\/"[^}]*"keywords": "C01 BSL bsl /);
+  assert.ok(!search.includes('"path": "/ict-futures/academy/bsl.html"'));
+  assert.ok(!search.includes('"path": "/ict-lab/learn/c01/"'));
 });
 
 test('terminal bookmarks preserve real public fragments and allowlisted market context', () => {
