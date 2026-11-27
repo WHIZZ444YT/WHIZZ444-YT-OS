@@ -239,11 +239,12 @@ def futures_terminal_bundle():
     }
 
 
-def shell(title, description, body, canonical_path='/', extra_head='', right_panel=''):
-    canonical = '<meta name="robots" content="noindex,nofollow">' if canonical_path == '/account/' else (f'<link rel="canonical" href="{escape(SITE_URL + canonical_path)}">' if SITE_URL else '<meta name="robots" content="noindex,follow">')
+def shell(title, description, body, page_path='/', extra_head='', right_panel='', *, canonical_path=None):
+    canonical_path = page_path if canonical_path is None else canonical_path
+    canonical = '<meta name="robots" content="noindex,nofollow">' if page_path == '/account/' else (f'<link rel="canonical" href="{escape(SITE_URL + canonical_path)}">' if SITE_URL else '<meta name="robots" content="noindex,follow">')
     og_url = escape(SITE_URL + canonical_path) if SITE_URL else ''
     speed_insights = '<script>window.si = window.si || function () { (window.siq = window.siq || []).push(arguments); };</script><script defer src="/_vercel/speed-insights/script.js"></script>'
-    area = escape(current_area(canonical_path))
+    area = escape(current_area(page_path))
     right_class = ' has-context-panel' if right_panel else ''
     content = f'<div class="os-content-grid{right_class}"><div class="os-page-body">{body}</div>{right_panel}</div>'
     return f'''<!doctype html>
@@ -253,7 +254,7 @@ def shell(title, description, body, canonical_path='/', extra_head='', right_pan
 <link rel="icon" href="/icon.svg" type="image/svg+xml"><link rel="manifest" href="/manifest.webmanifest"><link rel="stylesheet" href="/assets/site-shell.css"><script defer src="/assets/runtime-config.js"></script>{speed_insights}{extra_head}</head>
 <body class="os-dark"><a class="skip" href="#content">Skip to content</a>
 <div class="os-app-shell" data-os-shell>
-{nav_markup(canonical_path)}<div class="os-sidebar-scrim" id="sidebarScrim" hidden></div>
+{nav_markup(page_path)}<div class="os-sidebar-scrim" id="sidebarScrim" hidden></div>
 <div class="os-main-column"><header class="os-topbar">
 <div class="os-topbar-start"><button class="os-sidebar-toggle" id="sidebarToggle" type="button" aria-expanded="true" aria-controls="appSidebar" aria-label="Collapse navigation"><span aria-hidden="true">☰</span></button><div class="os-topbar-heading"><span>FUTURES INTELLIGENCE OS</span><b>{area}</b></div></div>
 <div class="os-topbar-actions"><a class="os-global-search" href="/search/">Search</a><span class="os-mode-chip"><i></i> RESEARCH ONLY</span><button class="os-theme-toggle" id="osThemeToggle" type="button" aria-pressed="false" aria-label="Switch to light theme" title="Switch theme">☼</button><a class="os-workspace-link" href="/account/">Private workspace <span aria-hidden="true">↗</span></a></div>
@@ -586,7 +587,7 @@ def build():
     playbook_data=load(ROOT/'ict-futures/data/ict-playbook.json',{})
     crosswalk = IctCrosswalk(academy_data, catalog, playbook_data)
     build_academy(DIST, academy_data, SITE_URL, crosswalk)
-    lab_routes, media_search_rows = build_ict_lab(ROOT, DIST, shell, write, academy, json_script, catalog, crosswalk, mdata, page_intro)
+    academy_canonical_routes, media_search_rows = build_ict_lab(ROOT, DIST, shell, write, academy, json_script, catalog, crosswalk, mdata, page_intro)
     write(DIST/'academy/crosswalk/index.html', shell(
         'Academy and Lab Crosswalk | Futures Intelligence OS',
         'Find shared definitions, distinct models and Academy media gaps.',
@@ -1084,10 +1085,10 @@ def build():
 
     # Sitemap only when canonical base exists, else create relative noindex sitemap not intended for submission.
     if SITE_URL:
-        urls=['/','/ict-lab/','/futures-intelligence/','/markets/','/sessions/','/academy/','/entry-models/','/news/','/volume-open-interest/','/research/positioning/','/contract-specs/','/strategy-lab/','/risk/','/account/','/data-health/','/data-health/integrations/','/macro/','/macro/energy/','/macro/global/','/status/','/docs/','/sources/','/ict-futures/']
+        urls=['/','/futures-intelligence/','/markets/','/sessions/','/entry-models/','/news/','/volume-open-interest/','/research/positioning/','/contract-specs/','/strategy-lab/','/risk/','/account/','/data-health/','/data-health/integrations/','/macro/','/macro/energy/','/macro/global/','/status/','/docs/','/sources/','/ict-futures/']
         if agriculture_navigation:
             urls.append('/macro/agriculture/')
-        urls += [reports_route, '/charts/', '/academy/crosswalk/', *lab_routes]
+        urls += [reports_route, '/charts/', '/academy/crosswalk/', *academy_canonical_routes]
         urls += [f'/ict-futures/markets/{p.name}' for p in (DIST/'ict-futures/markets').glob('*.html')]
         urls += [f'/ict-futures/academy/{p.name}' for p in (DIST/'ict-futures/academy').glob('*.html')]
         urls.append('/ict-futures/academy/tutorials/')
