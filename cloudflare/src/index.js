@@ -38,7 +38,7 @@ async function readBoundedRequestText(request,maxBytes){
  try{
   while(true){
    const {done,value}=await reader.read();if(done)break;
-   bytes+=value.byteLength;if(bytes>maxBytes){await reader.cancel();throw new RangeError("Request body exceeds the size limit.");}
+   bytes+=value.byteLength;if(bytes>maxBytes){await reader.cancel().catch(()=>{});throw new RangeError("Request body exceeds the size limit.");}
    text+=decoder.decode(value,{stream:true});
   }
   return text+decoder.decode();
@@ -56,12 +56,19 @@ export default {
  async fetch(request,env,ctx){
   const url=new URL(request.url);const origin=request.headers.get("Origin")||"";
   const configuredOrigins=(env.ALLOWED_ORIGINS||"https://finance-intelligence-os-whizz444yt-7353.vercel.app,https://finance-intelligence-os-alpha.vercel.app").split(",").map(x=>x.trim()).filter(value=>value&&value!=="*");
-  const cors=origin&&origin!=="null"&&configuredOrigins.includes(origin)?{...CORS_HEADERS,"Access-Control-Allow-Origin":origin}:CORS_HEADERS;
+  const allowedOrigin=origin&&origin!=="null"&&configuredOrigins.includes(origin);
+  const ingestRoute=["/api/v1/ingest","/api/v1/ingest/futures-market-data"].includes(url.pathname);
+  const cors={...CORS_HEADERS,...(allowedOrigin?{"Access-Control-Allow-Origin":origin}:{}),
+   ...(ingestRoute?{"Cache-Control":"no-store"}:{})};
+  if(ingestRoute&&origin&&!allowedOrigin)return json({error:"Origin not allowed"},403,cors);
   if(request.method==="OPTIONS")return new Response(null,{status:204,headers:cors});
   if(request.method!=="GET"&&!(request.method==="POST"&&["/api/v1/ingest","/api/v1/ingest/futures-market-data"].includes(url.pathname)))return json({error:"Method not allowed"},405,cors);
   if(request.method==="POST"&&url.pathname==="/api/v1/ingest"){
    if(!env.INGEST_TOKEN)return json({status:"not-configured",error:"INGEST_TOKEN is not configured on the Worker"},503,cors);
    if(request.headers.get("Authorization")!=="Bearer "+env.INGEST_TOKEN)return json({error:"Unauthorized"},401,cors);
+   if(request.headers.get("Content-Type")?.split(";")[0].trim().toLowerCase()!=="application/json"){
+    return json({error:"Content-Type must be application/json"},415,cors);
+   }
    let payload;
    try{payload=JSON.parse(await readBoundedRequestText(request,4096));}
    catch(error){return json({error:error instanceof RangeError?"Request body exceeds the size limit.":"Invalid JSON body"},error instanceof RangeError?413:400,cors);}
@@ -74,7 +81,10 @@ export default {
   if(request.method==="POST"&&url.pathname==="/api/v1/ingest/futures-market-data"){
    if(!env.INGEST_TOKEN)return json({status:"not-configured",error:"INGEST_TOKEN is not configured on the Worker"},503,cors);
    if(request.headers.get("Authorization")!=="Bearer "+env.INGEST_TOKEN)return json({error:"Unauthorized"},401,cors);
-   let raw;try{raw=await readBoundedRequestText(request,1024*1024);}catch(error){if(error instanceof RangeError)return json({error:"Request body exceeds the 1 MiB limit."},413,cors);throw error;}
+   if(request.headers.get("Content-Type")?.split(";")[0].trim().toLowerCase()!=="application/json"){
+    return json({error:"Content-Type must be application/json"},415,cors);
+   }
+   let raw;try{raw=await readBoundedRequestText(request,1024*1024);}catch(error){return error instanceof RangeError?json({error:"Request body exceeds the 1 MiB limit."},413,cors):json({error:"Invalid JSON body"},400,cors);}
    let payload;try{payload=JSON.parse(raw);}catch{return json({error:"Invalid JSON body"},400,cors);}
    let batch;try{batch=normalizeFuturesObservationBatch(payload);}catch(error){return json({status:"invalid-payload",error:String(error.message||error)},400,cors);}
    if(!env.SUPABASE_URL||!supabaseAdminKey(env))return json({status:"not-configured",error:"Supabase server-side persistence is not configured."},503,cors);
@@ -165,7 +175,11 @@ export default {
     {id:"ecb",label:"European Central Bank Data Portal",access:"public-sdmx-api-no-key",state:await getEconomicProviderState(env,"ecb"),notes:"Daily USD/EUR reference exchange-rate series; not a live FX quote."},
     {id:"supabase",label:"Supabase Postgres",access:"server-side-only",state:{status:env.SUPABASE_URL&&supabaseAdminKey(env)?"configured":"not-configured"},notes:"Server-side ingestion writes only; browser roles cannot write economic observations or ingestion logs."}
    ];
-   return json({providers, registry:providerRegistry(providers)},200,cors);
+   const safeProviders=providers.map(provider=>{
+    const {lastError,error,...state}=provider.state;
+    return {...provider,state:{...state,...(lastError||error?{lastError:"Provider request failed."}:{})}};
+   });
+   return json({providers:safeProviders,registry:providerRegistry(providers)},200,{...cors,"Cache-Control":"no-store"});
   }
 
   if(url.pathname==="/api/v1/builder/models"){
@@ -175,7 +189,7 @@ export default {
    const adminUrl=new URL("https://cdn.builder.io/api/v2/admin");
    adminUrl.searchParams.set("apiKey",spaceKey);
    try{
-    const response=await fetch(adminUrl,{method:"POST",headers:{"Authorization":"Bearer "+env.BUILDER_PAT,"Content-Type":"application/json","Accept":"application/json"},body:JSON.stringify({query:"query { models { id name kind fields } }"}),signal:AbortSignal.timeout(12000)});
+    const response=await fetch(adminUrl,{redirect:"error",method:"POST",headers:{"Authorization":"Bearer "+env.BUILDER_PAT,"Content-Type":"application/json","Accept":"application/json"},body:JSON.stringify({query:"query { models { id name kind fields } }"}),signal:AbortSignal.timeout(12000)});
     const data=await response.json();
     if(!response.ok||data.errors)return json({status:"provider-error",provider:"Builder.io Admin API",httpStatus:response.status,error:data.errors||"Builder Admin API request failed"},502,cors);
     const models=Array.isArray(data.data?.models)?data.data.models:[];
@@ -276,14 +290,14 @@ export default {
    try{
     const entitlementRows=await supabaseRequest(env,"futures_market_data_entitlements","GET",entitlementQuery.toString());
     const now=Date.now();
-    const entitlements=(Array.isArray(entitlementRows)?entitlementRows:[]).filter(row=>row.is_active===true&&row.public_display_status==="public-display-approved"&&row.delay_class!=="unknown"&&row.rights_reference&&row.reviewed_at&&row.reviewed_by&&(!row.valid_until||Date.parse(row.valid_until)>now));
+    const entitlements=(Array.isArray(entitlementRows)?entitlementRows:[]).filter(row=>row.is_active===true&&row.public_display_status==="public-display-approved"&&row.delay_class!=="unknown"&&row.rights_reference&&row.reviewed_at&&row.reviewed_by&&Date.parse(row.valid_until)>now);
     if(!entitlements.length)return json({schema_version:1,data_type:"futures_market_observations",status:"no-approved-data",root:validation.query.root,observations:[],access_note:"No active public-display entitlement is recorded for this futures root."},200,{...cors,"Cache-Control":"no-store"});
     const providerIds=[...new Set(entitlements.map(row=>String(row.provider_id||"")))].filter(id=>/^[a-z0-9][a-z0-9._-]{1,63}$/.test(id));
     if(!providerIds.length)return json({schema_version:1,data_type:"futures_market_observations",status:"no-approved-data",root:validation.query.root,observations:[],access_note:"No usable active public-display entitlement is recorded for this futures root."},200,{...cors,"Cache-Control":"no-store"});
     q.set("provider_id","in.("+providerIds.join(",")+")");
     const observationRows=await supabaseRequest(env,"futures_market_observations","GET",q.toString());
     const visibleAt=Date.now();
-    const entitlementByKey=new Map(entitlements.filter(row=>!row.valid_until||Date.parse(row.valid_until)>visibleAt).map(row=>[JSON.stringify([row.provider_id,row.venue,row.instrument_root,row.delay_class]),row]));
+    const entitlementByKey=new Map(entitlements.filter(row=>Date.parse(row.valid_until)>visibleAt).map(row=>[JSON.stringify([row.provider_id,row.venue,row.instrument_root,row.delay_class]),row]));
     const observations=(Array.isArray(observationRows)?observationRows:[]).filter(row=>entitlementByKey.has(JSON.stringify([row.provider_id,row.venue,row.instrument_root,row.delay_class]))&&row.quality_status!=="rejected").map(row=>{
      const entitlement=entitlementByKey.get(JSON.stringify([row.provider_id,row.venue,row.instrument_root,row.delay_class]));
      return{...row,public_display_approved_at:entitlement.reviewed_at,public_display_valid_until:entitlement.valid_until||null};
@@ -493,7 +507,7 @@ export default {
    apiUrl.searchParams.set("limit",String(Math.min(50,Math.max(1,Number(url.searchParams.get("limit")||20)))));
    if(url.searchParams.get("urlPath"))apiUrl.searchParams.set("userAttributes.urlPath",url.searchParams.get("urlPath"));
    try{
-    const result=await fetch(apiUrl,{headers:{"Accept":"application/json"},cf:{cacheTtl:120,cacheEverything:true}});
+    const result=await fetch(apiUrl,{redirect:"error",headers:{"Accept":"application/json"},cf:{cacheTtl:120,cacheEverything:true}});
     const data=await result.json();
     return json({status:result.ok?"connected":"provider-error",model,results:Array.isArray(data.results)?data.results:[],error:result.ok?undefined:"Builder API returned "+result.status},result.ok?200:502,{...cors,"Cache-Control":"public, max-age=60, s-maxage=120"});
    }catch{return json({status:"unavailable",model,results:[]},502,cors);}
@@ -768,7 +782,7 @@ async function collectNews(env,slotStart){
  if(env.NEWS_DISCOVERY_PERSISTENCE_APPROVED==="true"&&env.SUPABASE_URL&&supabaseAdminKey(env)&&next.articles.length){
   const rows=next.articles.map(a=>({provider:"GDELT DOC API",title:a.title,url:a.url,domain:a.domain,topic:a.topic,retrieved_at:checkedAt,data_as_of:checkedAt,freshness_status:status,payload:a}));
   const endpoint=env.SUPABASE_URL.replace(/\/$/,"")+"/rest/v1/news_items?on_conflict=provider,url";
-  const write=await fetch(endpoint,{method:"POST",headers:{...supabaseApiHeaders(env),"Content-Type":"application/json","Prefer":"resolution=merge-duplicates,return=minimal"},body:JSON.stringify(rows)});
+  const write=await fetch(endpoint,{redirect:"error",method:"POST",headers:{...supabaseApiHeaders(env),"Content-Type":"application/json","Prefer":"resolution=merge-duplicates,return=minimal"},body:JSON.stringify(rows)});
   if(!write.ok)console.error("Supabase news upsert failed",write.status);
  }
 }
@@ -805,7 +819,7 @@ async function persistCotRows(snapshot,env){
  let persistedRows=0;
  try{
   for(let i=0;i<records.length;i+=400){
-   const response=await fetch(endpoint,{method:"POST",headers:{...supabaseApiHeaders(env),"Content-Type":"application/json","Prefer":"resolution=merge-duplicates,return=minimal"},body:JSON.stringify(records.slice(i,i+400)),signal:AbortSignal.timeout(18000)});
+   const response=await fetch(endpoint,{redirect:"error",method:"POST",headers:{...supabaseApiHeaders(env),"Content-Type":"application/json","Prefer":"resolution=merge-duplicates,return=minimal"},body:JSON.stringify(records.slice(i,i+400)),signal:AbortSignal.timeout(18000)});
    if(!response.ok)return{status:persistedRows?"partial":"unavailable",persistedRows,failureStatus:response.status,error:"COT upsert failed; raw provider data was not logged."};
    persistedRows+=Math.min(400,records.length-i);
   }
@@ -883,7 +897,7 @@ async function fetchBls(env){
 async function fetchGdelt(spec){
  const u=new URL("https://api.gdeltproject.org/api/v2/doc/doc");
  u.searchParams.set("query",spec.query);u.searchParams.set("mode","ArtList");u.searchParams.set("format","json");u.searchParams.set("maxrecords","100");u.searchParams.set("sort","DateDesc");u.searchParams.set("timespan","72h");
-  const response=await fetch(u,{headers:{"Accept":"application/json","User-Agent":"FinanceIntelligenceOS/1.0 public research"},signal:AbortSignal.timeout(12000)});
+  const response=await fetch(u,{redirect:"error",headers:{"Accept":"application/json","User-Agent":"FinanceIntelligenceOS/1.0 public research"},signal:AbortSignal.timeout(12000)});
  if(!response.ok){
   const error=new Error("GDELT "+response.status);
   if(response.status===429)error.retryAfterMs=retryAfterMilliseconds(response.headers.get("Retry-After"))??NEWS_REFRESH_INTERVAL;
@@ -942,7 +956,7 @@ async function fetchNyFedFunding(){
 
 async function fetchPolymarket(){
  const u=new URL("https://gamma-api.polymarket.com/events");u.searchParams.set("active","true");u.searchParams.set("closed","false");u.searchParams.set("limit","100");u.searchParams.set("order","volume_24hr");u.searchParams.set("ascending","false");
- const response=await fetch(u,{headers:{"Accept":"application/json","User-Agent":"FinanceIntelligenceOS/1.1 public research"},signal:AbortSignal.timeout(14000)});
+ const response=await fetch(u,{redirect:"error",headers:{"Accept":"application/json","User-Agent":"FinanceIntelligenceOS/1.1 public research"},signal:AbortSignal.timeout(14000)});
  if(!response.ok)throw new Error("Polymarket Gamma "+response.status);
  const data=await response.json();if(!Array.isArray(data))throw new Error("Polymarket Gamma response was not an array");
  const items=data.map(event=>({title:String(event.title||event.question||"Untitled event"),slug:String(event.slug||""),url:event.slug?"https://polymarket.com/event/"+event.slug:"https://polymarket.com",volume:asFiniteNumber(event.volume),volume24hr:asFiniteNumber(event.volume24hr),liquidity:asFiniteNumber(event.liquidity),endDate:event.endDate||event.endDateIso||null,markets:parseArray(event.markets).slice(0,8).map(m=>({question:String(m.question||m.groupItemTitle||""),slug:String(m.slug||""),outcomes:parseArray(m.outcomes),outcomePrices:parseArray(m.outcomePrices).map(Number),volume:Number(m.volume||0),liquidity:Number(m.liquidity||0),active:m.active!==false,closed:Boolean(m.closed),clobTokenIds:parseArray(m.clobTokenIds)}))})).filter(item=>item.title);
@@ -950,7 +964,7 @@ async function fetchPolymarket(){
 }
 async function fetchKalshi(){
  const u=new URL("https://external-api.kalshi.com/trade-api/v2/markets");u.searchParams.set("status","open");u.searchParams.set("limit","100");u.searchParams.set("mve_filter","exclude");
- const response=await fetch(u,{headers:{"Accept":"application/json","User-Agent":"FinanceIntelligenceOS/1.1 public research"},signal:AbortSignal.timeout(14000)});
+ const response=await fetch(u,{redirect:"error",headers:{"Accept":"application/json","User-Agent":"FinanceIntelligenceOS/1.1 public research"},signal:AbortSignal.timeout(14000)});
  if(!response.ok)throw new Error("Kalshi public markets "+response.status);
  const data=await response.json();if(!Array.isArray(data.markets))throw new Error("Kalshi response did not include markets");
  const items=data.markets.map(m=>({title:String(m.title||m.subtitle||m.ticker||"Untitled market"),ticker:String(m.ticker||""),eventTicker:String(m.event_ticker||""),yesBid:Number(m.yes_bid_dollars??m.yes_bid??NaN),yesAsk:Number(m.yes_ask_dollars??m.yes_ask??NaN),lastPrice:Number(m.last_price_dollars??m.last_price??NaN),volume24h:asFiniteNumber(m.volume_24h_fp??m.volume_24h),volume:asFiniteNumber(m.volume_fp??m.volume),liquidity:asFiniteNumber(m.liquidity_dollars),closeTime:m.close_time||m.expected_expiration_time||null,updatedAt:m.updated_time||null,url:"https://kalshi.com/markets"})).filter(item=>item.ticker&&item.title);

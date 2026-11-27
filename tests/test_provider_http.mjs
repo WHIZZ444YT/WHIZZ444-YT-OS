@@ -67,3 +67,13 @@ test('provider circuit opens after repeated failures and resets after success', 
   assert.equal(providerCircuitIsOpen(third, 603000), false);
   assert.deepEqual(nextProviderCircuitState(third, 'success', 700000), { consecutiveFailures: 0, circuitOpenUntil: null });
 });
+
+test('provider JSON reader caps streamed bodies', async () => {
+  await assert.rejects(fetchJsonWithRetry('https://provider.example/data', 'Example', {
+    maxResponseBytes: 4,
+    fetchImpl: async (_url, options) => {
+      assert.equal(options.redirect, 'error');
+      return new Response('{"value":"oversized"}');
+    }
+  }), /exceeds the size limit/);
+});

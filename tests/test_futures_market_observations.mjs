@@ -85,7 +85,7 @@ test("public observation query returns only rights-approved rows and uses bounde
     const requestUrl = new URL(String(input));requestUrls.push(requestUrl);
     if(requestUrl.pathname.endsWith("/futures_market_data_entitlements"))return new Response(JSON.stringify([{
       provider_id:"vendor-x",venue:"CME",instrument_root:"NQ",delay_class:"end-of-day",public_display_status:"public-display-approved",
-      rights_reference:"license-review-2026-11",reviewed_at:"2026-11-20T18:00:00.000Z",reviewed_by:"project-owner",valid_until:null,is_active:true
+      rights_reference:"license-review-2026-11",reviewed_at:"2026-11-20T18:00:00.000Z",reviewed_by:"project-owner",valid_until:new Date(Date.now()+3600000).toISOString(),is_active:true
     }]),{status:200,headers:{"content-type":"application/json"}});
     return new Response(JSON.stringify([
       {provider_id:"vendor-x",venue:"CME",instrument_root:"NQ",delay_class:"end-of-day",quality_status:"provider-reported",observation_type:"daily_volume"},
@@ -100,7 +100,7 @@ test("public observation query returns only rights-approved rows and uses bounde
     assert.equal(payload.status, "available");
     assert.equal(payload.observations.length, 1);
     assert.equal(payload.observations[0].public_display_approved_at,"2026-11-20T18:00:00.000Z");
-    assert.equal(payload.observations[0].public_display_valid_until,null);
+    assert.ok(Date.parse(payload.observations[0].public_display_valid_until)>Date.now());
     assert.equal(requestUrls[1].searchParams.get("order"),"observed_at.desc,data_as_of.desc,retrieved_at.desc,id.desc");
     assert.equal(requestUrls[0].searchParams.get("public_display_status"),"eq.public-display-approved");
     assert.ok(requestUrls[0].searchParams.get("select").split(",").includes("public_display_status"));
@@ -175,7 +175,7 @@ test("a previously served observation is not served again after entitlement with
   const entitlement = {
     provider_id:"vendor-x", venue:"CME", instrument_root:"ES", delay_class:"end-of-day",
     public_display_status:"public-display-approved", rights_reference:"review-ref",
-    reviewed_at:"2026-10-01T00:00:00Z", reviewed_by:"owner", valid_until:null, is_active:true
+    reviewed_at:"2026-10-01T00:00:00Z", reviewed_by:"owner", valid_until:new Date(Date.now()+3600000).toISOString(), is_active:true
   };
   let observationReads = 0;
   globalThis.fetch = async input => {
@@ -189,6 +189,11 @@ test("a previously served observation is not served again after entitlement with
     const approved = await worker.fetch(new Request(url), configuredEnv(), ctx);
     assert.equal((await approved.json()).observations.length, 1);
     assert.equal(approved.headers.get("Cache-Control"),"no-store");
+    const originalExpiry = entitlement.valid_until;
+    entitlement.valid_until = null;
+    const noCutoff = await worker.fetch(new Request(url), configuredEnv(), ctx);
+    assert.equal((await noCutoff.json()).observations.length, 0);
+    entitlement.valid_until = originalExpiry;
     entitlement.is_active = false;
     const withdrawn = await worker.fetch(new Request(url), configuredEnv(), ctx);
     assert.equal((await withdrawn.json()).observations.length, 0);

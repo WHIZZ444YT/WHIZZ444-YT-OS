@@ -10,7 +10,7 @@ Out of scope for implementation of this workstream are unrelated product upgrade
 
 ## Repository audit evidence and gaps
 
-**Status** — Existing repository building blocks verified in source. Proposed changes and production verification remain pending.
+**Status** — Protected ingestion requires an authorized bearer and `Content-Type: application/json`. Exact-origin browser requests are enforced on the write routes, which return `no-store`. Worker provider JSON reads have a body cap and reject redirects. The charts route enforces an exact TradingView frame allowlist. Licensed observations require a future `valid_until` at both the gateway and RLS checks. Deploy the Worker and apply the additive Supabase migration to complete production rollout. Review existing entitlement rows without an expiry before deployment; they become ineligible for public display.
 
 - [`cloudflare/src/index.js`](https://github.com/WHIZZ444YT/WHIZZ444-YT-OS/blob/e791f37da39209f3ac6c50ebf2f960101f618efb/cloudflare/src/index.js)
 - [`cloudflare/src/provider-http.mjs`](https://github.com/WHIZZ444YT/WHIZZ444-YT-OS/blob/e791f37da39209f3ac6c50ebf2f960101f618efb/cloudflare/src/provider-http.mjs)
