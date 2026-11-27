@@ -22,12 +22,6 @@
       link.href = row.path;
       link.textContent = row.title;
       item.append(link, ' · ' + row.category);
-      if (row.practicePath) {
-        const practice = document.createElement('a');
-        practice.href = row.practicePath;
-        practice.textContent = 'Open Lab exercise';
-        item.append(' · ', practice);
-      }
       const group = row.category === 'Contract profile' ? 'Markets'
         : row.category === 'Practice' ? 'Tools' : groups.has(row.category) ? row.category : 'Lessons';
       groups.get(group).push(item);

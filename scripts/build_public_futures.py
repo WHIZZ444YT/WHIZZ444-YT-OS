@@ -2,6 +2,8 @@
 from html import escape
 from urllib.parse import urlencode
 
+from ict_crosswalk import SHARED_CONCEPTS
+
 
 TERMINAL_ROUTES = {
     "top": "/",
@@ -151,7 +153,7 @@ def social_discovery(markets, social, json_script):
 <script type="application/json">{json_script(social)}</script></section>"""
 
 
-def search_page(markets, academy, catalog, nav_groups, json_script, crosswalk):
+def search_page(markets, academy, catalog, nav_groups, json_script):
     groups = [*nav_groups, ("Quick links", [
         ("ICT Academy video library", "/academy/videos/"),
         ("Public social discovery", "/sources/#social-discovery"),
@@ -173,23 +175,25 @@ def search_page(markets, academy, catalog, nav_groups, json_script, crosswalk):
     rows += [{"title": m["label"], "path": f'/ict-futures/markets/{m["id"]}.html',
               "category": "Contract profile", "keywords": " ".join([m["id"], m["exchange"], *m["drivers"]])}
              for m in markets]
-    shared = {row["academy"][0]: row for row in catalog["concepts"] if crosswalk.shared_steps(row)}
-    for row in academy:
-        slug = row["id"]
-        result = {"title": row["name"], "path": f'/ict-futures/academy/{slug}.html',
-                  "category": "Academy", "keywords": slug}
-        if slug in shared:
-            lesson = shared[slug]
-            result["keywords"] += f' {lesson["id"]} {lesson["title"]} {lesson["aliases"]}'
-            result["practicePath"] = f'/ict-lab/learn/{lesson["id"].lower()}/'
-        rows.append(result)
-    shared_ids = {lesson["id"] for lesson in shared.values()}
-    for section, category, items in (("learn", "Concept", catalog["concepts"]),
-                                     ("playbooks", "Playbook", catalog["playbooks"]),
+    historical_by_slug = {row["id"]: row for row in academy}
+    shared_slugs = set()
+    for row in catalog["concepts"]:
+        keywords = f'{row["id"]} {row.get("aliases", "")}'
+        if row["id"] in SHARED_CONCEPTS:
+            slug = row["academy"][0]
+            historical = historical_by_slug[slug]
+            keywords += f' {slug} {historical["name"]}'
+            shared_slugs.add(slug)
+        rows.append({"title": row["title"], "path": f'/academy/learn/{row["id"].lower()}/',
+                     "category": "Concept", "keywords": keywords})
+    for section, category, items in (("playbooks", "Playbook", catalog["playbooks"]),
                                      ("practice", "Practice", catalog["practice"])):
-        rows += [{"title": row["title"], "path": f'/ict-lab/{section}/{str(row["id"]).lower()}/',
+        rows += [{"title": row["title"], "path": f'/academy/{section}/{str(row["id"]).lower()}/',
                   "category": category, "keywords": f'{row["id"]} {row.get("aliases", "")}'}
-                 for row in items if row["id"] not in shared_ids]
+                 for row in items]
+    rows += [{"title": row["name"], "path": f'/ict-futures/academy/{row["id"]}.html',
+              "category": "Historical Academy lesson", "keywords": row["id"]}
+             for row in academy if row["id"] not in shared_slugs]
     directory = []
     for group, links in groups:
         items = "".join(f'<li><a href="{escape(path)}">{escape(label)}</a></li>' for label, path in links)
