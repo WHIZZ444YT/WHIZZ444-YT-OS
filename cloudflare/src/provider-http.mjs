@@ -6,6 +6,32 @@ export function retryAfterMilliseconds(value, now = Date.now()) {
   return Number.isFinite(date) ? Math.max(0, date - now) : null;
 }
 
+async function readBoundedText(response, maxBytes) {
+  if (Number(response.headers.get('Content-Length')) > maxBytes) {
+    await response.body?.cancel().catch(() => {});
+    throw new RangeError('Provider response exceeds the size limit');
+  }
+  if (!response.body) return '';
+  const reader = response.body.getReader();
+  const decoder = new TextDecoder();
+  let bytes = 0;
+  let text = '';
+  try {
+    for (;;) {
+      const { done, value } = await reader.read();
+      if (done) return text + decoder.decode();
+      bytes += value.byteLength;
+      if (bytes > maxBytes) {
+        await reader.cancel().catch(() => {});
+        throw new RangeError('Provider response exceeds the size limit');
+      }
+      text += decoder.decode(value, { stream: true });
+    }
+  } finally {
+    reader.releaseLock();
+  }
+}
+
 export async function fetchJsonWithRetry(url, provider, options = {}) {
   const timeoutMs = options.timeoutMs ?? 18000;
   const retries = options.retries ?? 1;
@@ -30,7 +56,7 @@ export async function fetchJsonWithRetry(url, provider, options = {}) {
       await sleep(delay);
       continue;
     }
-    const text = await response.text();
+    const text = await readBoundedText(response, options.maxResponseBytes ?? 8 * 1024 * 1024);
     let body;
     try { body = JSON.parse(text); }
     catch {

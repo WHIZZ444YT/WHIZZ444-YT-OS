@@ -17,6 +17,7 @@ as $$ select string_to_array($1, '/') $$;
 \ir ../supabase/migrations/20261108072919_finance_intelligence_os_initial_schema.sql
 \ir ../supabase/migrations/20261108134935_add_economic_observations_and_ingestion_runs.sql
 \ir ../supabase/migrations/20261120110000_add_futures_market_observations.sql
+\ir ../supabase/migrations/20261127120000_require_futures_display_expiry.sql
 \ir ../supabase/migrations/20261126120000_preserve_economic_observation_revisions.sql
 
 create function public.fixture_assert(ok boolean, label text) returns void language plpgsql
@@ -36,8 +37,8 @@ reset role;
 
 insert into public.futures_market_data_entitlements (
   provider_id, venue, instrument_root, delay_class, public_display_status,
-  rights_reference, reviewed_at, reviewed_by, is_active
-) values ('fixture','CME','NQ','end-of-day','public-display-approved','fixture-review',now(),'fixture-owner',true);
+  rights_reference, reviewed_at, reviewed_by, is_active, valid_until
+) values ('fixture','CME','NQ','end-of-day','public-display-approved','fixture-review',now(),'fixture-owner',true,now()+interval '1 hour');
 insert into public.futures_market_observations (
   provider_id, venue, instrument_root, contract_month, exchange_instrument_id,
   observation_type, interval_code, observed_at, data_as_of, volume, volume_unit,
@@ -47,7 +48,15 @@ insert into public.futures_market_observations (
 set local role anon;
 select public.fixture_assert((select count(*)=1 from public.futures_market_observations),'approved observation hidden');
 reset role;
-update public.futures_market_data_entitlements set is_active=false where provider_id='fixture';
+update public.futures_market_data_entitlements set valid_until=null where provider_id='fixture';
+set local role anon;
+select public.fixture_assert((select count(*)=0 from public.futures_market_observations),'undated entitlement exposed data');
+reset role;
+update public.futures_market_data_entitlements set valid_until=now() where provider_id='fixture';
+set local role anon;
+select public.fixture_assert((select count(*)=0 from public.futures_market_observations),'expired entitlement exposed data');
+reset role;
+update public.futures_market_data_entitlements set valid_until=now()+interval '1 hour', is_active=false where provider_id='fixture';
 set local role anon;
 select public.fixture_assert((select count(*)=0 from public.futures_market_observations),'revoked observation visible');
 reset role;

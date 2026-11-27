@@ -73,7 +73,7 @@ test("authorized economic refresh honors upstream backoff and publishes safe dia
     return new Response("upstream diagnostic text", {status:429,headers:{"Retry-After":"60"}});
   });
   const env = { INGEST_TOKEN:secret, SNAPSHOTS:snapshotStore() };
-  const post = (body, token=secret) => send("/api/v1/ingest", env, {method:"POST",headers:{Authorization:"Bearer "+token},body});
+  const post = (body, token=secret) => send("/api/v1/ingest", env, {method:"POST",headers:{Authorization:"Bearer "+token,"Content-Type":"application/json"},body});
   assert.equal((await post('{"provider":"ecb"}',"incorrect")).status, 401);
   assert.equal((await post('null')).status, 400);
   assert.equal((await post(" ".repeat(4097))).status, 413);
@@ -130,7 +130,7 @@ test("registered provider setup distinguishes missing, rejected and working keys
   const status = async () => (await send("/api/v1/economic/providers",env)).json();
   const eia = data => data.providers.find(provider => provider.id==="eia");
   const ingest = () => send("/api/v1/ingest",env,{
-    method:"POST",headers:{Authorization:"Bearer "+secret},body:JSON.stringify({provider:"eia"})
+    method:"POST",headers:{Authorization:"Bearer "+secret,"Content-Type":"application/json"},body:JSON.stringify({provider:"eia"})
   });
   let catalog = await status();
   assert.equal(eia(catalog).state.status,"not-configured");
@@ -184,7 +184,7 @@ test("partial persistence replays a current snapshot without refetching or dupli
     return new Response(null,{status:204});
   });
   const env={SNAPSHOTS:snapshots,INGEST_TOKEN:secret,EIA_API_KEY:"fixture-key",SUPABASE_URL:"https://storage.example",SUPABASE_SECRET_KEY:secret};
-  const first=await send("/api/v1/ingest",env,{method:"POST",headers:{Authorization:"Bearer "+secret},body:'{"provider":"eia"}'});
+  const first=await send("/api/v1/ingest",env,{method:"POST",headers:{Authorization:"Bearer "+secret,"Content-Type":"application/json"},body:'{"provider":"eia"}'});
   const firstRun=(await first.json()).results[0].persistence;
   assert.equal(firstRun.status,"failed");
   assert.equal(firstRun.rowsUpserted,1000);
@@ -216,7 +216,7 @@ test("BEA selects only metadata-verified GDP and PCE and preserves missing index
     return Response.json({BEAAPI:{Results:{Data:[row,{...row,LineNumber:"999"}]}}});
   });
   const env={SNAPSHOTS:snapshotStore(),INGEST_TOKEN:secret,BEA_API_KEY:"fixture-key"};
-  await send("/api/v1/ingest",env,{method:"POST",headers:{Authorization:"Bearer "+secret},body:'{"provider":"bea"}'});
+  await send("/api/v1/ingest",env,{method:"POST",headers:{Authorization:"Bearer "+secret,"Content-Type":"application/json"},body:'{"provider":"bea"}'});
   const {records}=await (await send("/api/v1/economic/bea",env)).json();
   assert.deepEqual(calls.sort(),["T10101","T20804"]);
   assert.equal(records.length,2);
@@ -246,7 +246,7 @@ test("EIA energy series keep native units and withheld data is null", async t =>
     return Response.json({response:{data:[{period:"2026-11-20",value:id.startsWith("NG.")?"W":"42"}]}});
   });
   const env={SNAPSHOTS:snapshotStore(),INGEST_TOKEN:secret,EIA_API_KEY:"fixture-key"};
-  await send("/api/v1/ingest",env,{method:"POST",headers:{Authorization:"Bearer "+secret},body:'{"provider":"eia"}'});
+  await send("/api/v1/ingest",env,{method:"POST",headers:{Authorization:"Bearer "+secret,"Content-Type":"application/json"},body:'{"provider":"eia"}'});
   const {records}=await (await send("/api/v1/economic/eia",env)).json();
   assert.deepEqual(ids.sort(),["NG.NW2_EPG0_SWO_R48_BCF.W","PET.WCESTUS1.W","PET.WCRFPUS2.W"]);
   assert.deepEqual(records.map(row=>[row.unit,row.value]),[
@@ -268,4 +268,22 @@ test("World Bank snapshots enforce per-indicator approval on public reads", asyn
   const response=await send(path,env);
   assert.equal(response.headers.get("Cache-Control"),"no-store");
   assert.deepEqual((await response.json()).records.map(row=>row.series_id),["NY.GDP.MKTP.KD.ZG:IND"]);
+});
+
+test('protected ingest requires JSON and rejects unlisted browser origins without cacheable replies', async () => {
+  const env = { INGEST_TOKEN: secret, ALLOWED_ORIGINS: 'https://app.example' };
+  const request = (origin, contentType, body) => send('/api/v1/ingest', env, {
+    method: 'POST', body, headers: { Origin: origin, 'Content-Type': contentType, Authorization: 'Bearer ' + secret }
+  });
+  const denied = await request('https://app.example.invalid', 'application/json', '{}');
+  assert.equal(denied.status, 403);
+  assert.equal(denied.headers.get('Access-Control-Allow-Origin'), null);
+  assert.equal(denied.headers.get('Cache-Control'), 'no-store');
+  const wrongType = await request('https://app.example', 'text/plain', '{}');
+  assert.equal(wrongType.status, 415);
+  assert.equal(wrongType.headers.get('Access-Control-Allow-Origin'), 'https://app.example');
+  assert.equal(wrongType.headers.get('Vary'), 'Origin');
+  const tooLarge = await request('https://app.example', 'application/json', ' '.repeat(4097));
+  assert.equal(tooLarge.status, 413);
+  assert.equal(tooLarge.headers.get('Cache-Control'), 'no-store');
 });
