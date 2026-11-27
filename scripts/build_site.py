@@ -1070,7 +1070,9 @@ def build():
     body += ('<section class="content-section"><h2>Developer documentation</h2>'
              f'<p><a href="{repo_docs}">Browse architecture, setup and release guides on GitHub</a>.</p>'
              '<p><a href="https://github.com/WHIZZ444YT/WHIZZ444-YT-OS/blob/main/docs/free-api-integration/delivery/26-IMPLEMENTATION-SEQUENCE.md">'
-             'Free-data implementation sequence and release evidence</a></p></section>')
+             'Free-data implementation sequence and release evidence</a></p>'
+             '<p><a href="https://github.com/WHIZZ444YT/WHIZZ444-YT-OS/blob/main/docs/free-api-integration/delivery/27-FINAL-ACCEPTANCE-CHECKLIST.md">'
+             'Free-data final acceptance checklist</a></p></section>')
     write(DIST/'docs/index.html', shell('Help & Documentation | Futures Intelligence OS',
           'Public guides for learning, practice and market data.', body, '/docs/'))
 

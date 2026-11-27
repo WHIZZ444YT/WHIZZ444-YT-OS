@@ -6,7 +6,7 @@
 
 Docs 00–25 have merged implementation evidence on [main at `8c3d272a5f48`](https://github.com/WHIZZ444YT/WHIZZ444-YT-OS/commit/8c3d272a5f48ca568e90b9764866477367cc7353). This records repository prerequisites. Dataset authorization, provider configuration and production activation require their own evidence.
 
-The next repository workstream is [Doc 27 · Final acceptance](27-FINAL-ACCEPTANCE-CHECKLIST.md) once this sequence is merged. Docs 24 and 25 supply its QA and rollout procedures. The owner records live acceptance after checking the intended environment against Doc 25.
+[Doc 27 · Final acceptance](27-FINAL-ACCEPTANCE-CHECKLIST.md) records the repository and production checks. Docs 24 and 25 supply its QA and rollout procedures. The owner records live acceptance after checking the intended environment against Doc 25.
 
 ## Dependency order
 
