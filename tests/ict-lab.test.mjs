@@ -85,6 +85,39 @@ test('global search indexes every public Academy media page once', () => {
   }
 });
 
+test('legacy navigation resolves from Vercel clean trailing-slash URLs', () => {
+  const pages = {
+    '/ict-futures/academy/amd-po3/': '/ict-futures/academy/amd-po3.html',
+    '/ict-futures/academy/tutorials/': '/ict-futures/academy/tutorials/index.html',
+    '/ict-futures/markets/nq/': '/ict-futures/markets/nq.html',
+  };
+  const links = Object.fromEntries(Object.entries(pages).map(([route, file]) => {
+    const markup = published(file.slice(1));
+    return [route, [...markup.matchAll(/<a\b[^>]*\bhref="([^"]+)"/g)].map(match => match[1])];
+  }));
+  const lesson = links['/ict-futures/academy/amd-po3/'];
+  assert.ok(lesson.includes('/ict-futures/academy/judas-swing.html'));
+  assert.ok(lesson.includes('/ict-futures/academy/asian-range.html'));
+  assert.ok(lesson.includes('#study-section-4'));
+  assert.ok(links['/ict-futures/academy/tutorials/'].includes(
+    '/ict-futures/academy/tutorials/supplemental-source-audit.html'
+  ));
+  const profile = links['/ict-futures/markets/nq/'];
+  assert.ok(profile.includes('/ict-futures/academy/silver-bullet.html'));
+  assert.ok(profile.includes('/ict-futures/'));
+  assert.ok(profile.includes('/futures-intelligence/?market=nq#fiSelectedMarket'));
+  for (const [route, hrefs] of Object.entries(links)) {
+    for (const href of hrefs) {
+      assert.match(href, /^(?:[a-z][a-z0-9+.-]*:|\/|#)/i, route + ' ' + href);
+      if (href.startsWith('/ict-futures/')) {
+        const target = new URL(href, origin + route);
+        const file = target.pathname.slice(1);
+        assert.ok(published(file.endsWith('/') ? file + 'index.html' : file));
+      }
+    }
+  }
+});
+
 test('the five Lab views and all 93 detail pages contain public HTML without scripts', () => {
   assert.match(labHome, /data-os-shell/);
   assert.match(labHome, /56 concepts across 10 modules/);

@@ -3,7 +3,8 @@
 from __future__ import annotations
 import json, os, shutil, re
 from pathlib import Path
-from html import escape
+from html import escape, unescape
+from urllib.parse import urljoin, urlsplit, urlunsplit
 from datetime import date, datetime, timezone
 from import_authorized_contract_lifecycle import validate_snapshot
 from build_academy import build_academy, verified_lesson_videos
@@ -491,6 +492,31 @@ def build_agriculture_reference():
           shell('Agriculture Intelligence | Futures Intelligence OS',
                 'Official USDA crop and agricultural supply references.', body, route))
     return f'<p><a href="{route}">Open Agriculture Intelligence</a> for official USDA research.</p>'
+
+
+def normalize_legacy_navigation(markup, page_path):
+    # Resolve file-relative anchors using the source HTML path, before Vercel
+    # exposes that same file as a clean URL with a trailing slash.
+    def normalize(match):
+        href = unescape(match[3])
+        if not href or href.startswith(("#", "//")):
+            return match[0]
+        parsed = urlsplit(href)
+        if parsed.scheme or parsed.netloc:
+            return match[0]
+        target = urlsplit(urljoin(page_path, href))
+        path = target.path.removesuffix("index.html") if target.path.endswith("/index.html") else target.path
+        clean_path = page_path.removesuffix(".html") + "/"
+        if target.fragment and not target.query and path in (page_path, clean_path):
+            normalized = "#" + target.fragment
+        elif parsed.path.startswith("/") and path == target.path:
+            return match[0]
+        else:
+            normalized = urlunsplit(("", "", path, target.query, target.fragment))
+        return match[1] + match[2] + escape(normalized, quote=True) + match[2]
+
+    return re.sub(r"""(<a\b[^<>]*?\s+href\s*=\s*)(["'])(.*?)\2""",
+                  normalize, markup, flags=re.IGNORECASE | re.DOTALL)
 
 
 def build():
@@ -1082,6 +1108,15 @@ def build():
 
     # Source archives stay in Git and are intentionally not published in dist.
     write(DIST/'legacy/index.html',redirect_page('Source archives are maintained in the repository','/docs/'))
+
+    # Normalize both copied market profiles and regenerated Academy pages.
+    for section in ("academy", "markets"):
+        for page in sorted((DIST / "ict-futures" / section).rglob("*.html")):
+            path = "/" + page.relative_to(DIST).as_posix()
+            html = page.read_text(encoding="utf-8")
+            normalized = normalize_legacy_navigation(html, path)
+            if normalized != html:
+                write(page, normalized)
 
     # Sitemap only when canonical base exists, else create relative noindex sitemap not intended for submission.
     if SITE_URL:
