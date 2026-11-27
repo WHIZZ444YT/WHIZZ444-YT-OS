@@ -496,6 +496,11 @@ test('official ICT series, Charter lectures and mentor channel profiles remain d
 
 test('archived evidence keeps all 31 Academy gaps distinct from verified mappings', () => {
   const resources = published('ict-lab/video-evidence/index.html');
+  const main = resources.match(/<main\b[^>]*>[\s\S]*?<\/main>/)[0];
+  const headings = [...main.matchAll(/<h([1-6])\b/g)].map(match => match[1]);
+  assert.deepEqual(headings, ['1', '2', ...Array(31).fill('3')]);
+  assert.match(main, /<h1>Archived Academy video evidence<\/h1>/);
+  assert.match(main, /id="academy-video-gaps"><h2>Academy video evidence<\/h2>/);
   assert.equal([...resources.matchAll(/id="gap-[a-z0-9-]+"/g)].length, 31);
   assert.match(resources, /51 of 82 Academy lessons have recorded mappings/);
   assert.match(resources, /id="gap-cbdr"[\s\S]*?Exact coverage open/);

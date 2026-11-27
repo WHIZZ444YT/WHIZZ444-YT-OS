@@ -677,10 +677,12 @@ def build_ict_lab(root, dist, shell, write, academy, json_script, source, crossw
          + '<h2 id="resource-discovery">Discovery shortcuts</h2><p>Use publisher links and topic searches to find candidates. Playback and chapter coverage need a separate review.</p>'
          + '<details><summary>Browse ICT channels and playlists</summary>' + items(discovery) + '</details></div>',
          "Browse the combined ICT video catalog. Original time offsets and source evidence are preserved.")
+    archive_title = "Archived Academy video evidence"
+    archive_description = "Historical video evidence records."
+    archive_body = (page_intro("ICT Academy", archive_title, archive_description)
+                    + '<div class="ict-public">' + gap_register(root, crosswalk, source, link) + '</div>')
     write(dist / "ict-lab/video-evidence/index.html",
-          shell("Archived Academy video evidence", "Historical video evidence records.",
-                '<div class="ict-public">' + gap_register(root, crosswalk, source, link) + '</div>',
-                "/ict-lab/video-evidence/", assets))
+          shell(archive_title, archive_description, archive_body, "/ict-lab/video-evidence/", assets))
     target = escape(ACADEMY_VIDEOS, quote=True)
     write(dist / "ict-lab/resources/index.html",
           '<!doctype html><html lang="en"><head><meta charset="utf-8">'
