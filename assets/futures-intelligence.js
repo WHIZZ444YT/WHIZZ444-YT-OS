@@ -20,7 +20,43 @@
  async function loadNews(force=false){$("fiNewsList").innerHTML='<div class="fi-loading">Checking GDELT discovery…</div>';try{const d=await api("/api/v1/news"+(force?"?refresh=1":""));state.allNews=d.articles||[];const status=d.status||"unavailable";const refreshStatus=d.refresh?.status||"not-requested";const displayStatus=force&&refreshStatus==="queued"?"REFRESH QUEUED":force&&refreshStatus==="cooldown"?"RECENTLY CHECKED":force&&refreshStatus==="in-progress"?"REFRESH IN PROGRESS":status.toUpperCase();$("fiNewsStatus").textContent=displayStatus;$("fiNewsStatus").className="fi-status-pill "+(status==="fresh"?"fresh":status==="stale"?"stale":"");$("fiNewsStatus").title="Retrieved "+(d.lastCheckedAt||"timestamp not available")+" · refresh "+refreshStatus;renderNews();setProvider("news",status);if(force&&refreshStatus==="queued")setTimeout(()=>loadNews(false),6000);}catch(e){$("fiNewsStatus").textContent="UNAVAILABLE";$("fiNewsList").innerHTML='<div class="fi-empty fi-error">News API unavailable. Use the official publisher links and retry later.</div>';setProvider("news","unavailable");}}
  async function loadMacro(){try{const d=await api("/api/v1/macro");state.macro=d;$("fiMacroGrid").innerHTML=(d.series||[]).map(s=>{const o=(s.observations||[]).slice(0,1)[0];return '<div class="fi-macro-card"><span>'+esc(s.label)+'</span><strong>'+esc(o?fmt(o.value):"—")+'</strong><small>'+esc(o?o.periodName+" "+o.year:"No observations")+' · '+esc(s.unit||"")+'</small></div>';}).join("")||'<div class="fi-empty">No macro observations returned.</div>';setProvider("macro",d.status||"unknown");}catch(e){$("fiMacroGrid").innerHTML='<div class="fi-empty fi-error">BLS API unavailable. See official data at bls.gov.</div>';setProvider("macro","unavailable");}}
  async function loadFunding(){try{const d=await api("/api/v1/macro/funding");const rows=d.rates||[];const labels={SOFR:"Secured Overnight Financing Rate",EFFR:"Effective Federal Funds Rate",OBFR:"Overnight Bank Funding Rate",TGCR:"Tri-Party General Collateral Rate",BGCR:"Broad General Collateral Rate",SOFRAI:"SOFR averages / index"};$("fiRatesGrid").innerHTML=rows.map(r=>{const value=r.percentRate!==null&&r.percentRate!==undefined?r.percentRate:(r.average30day!==null&&r.average30day!==undefined?r.average30day:null);const title=labels[r.type]||r.type;return '<div class="fi-rate-card"><span>'+esc(r.type)+' · '+esc(title)+'</span><strong>'+(value===null?"—":fmt(value)+"%")+'</strong><small>'+esc(r.effectiveDate||d.dataAsOf||"date unavailable")+(r.volumeInBillions!==null&&r.volumeInBillions!==undefined?" · $"+fmt(r.volumeInBillions)+"bn volume":"")+'</small></div>';}).join("")||'<div class="fi-empty">No reference rates returned.</div>';setProvider("nyfed",d.status||"unknown");}catch(e){$("fiRatesGrid").innerHTML='<div class="fi-empty fi-error">New York Fed feed unavailable. Official source remains accessible from the links above.</div>';setProvider("nyfed","unavailable");}}
- async function loadCot(){$("fiCotRows").innerHTML='<tr><td colspan="6">Loading CFTC report…</td></tr>';try{const selectedMarket=state.markets.find(m=>m.id===state.selected);const cotQuery=selectedMarket?selectedMarket.label.split("·")[0].replace(/E-mini|Micro/ig,"").trim():state.selected;const d=await api("/api/v1/cot?report="+state.cot+(cotQuery?"&q="+encodeURIComponent(cotQuery):""));$("fiCotProvider").textContent=d.provider||"CFTC";$("fiCotAsOf").textContent="Report date "+(d.dataAsOf||"not supplied");$("fiCotStatus").textContent=(d.status||"unknown").toUpperCase();$("fiCotStatus").className="fi-status-pill "+(d.status==="fresh"?"fresh":d.status==="stale"?"stale":"");const rows=(d.normalizedRows||[]).slice(0,30);$("fiCotRows").innerHTML=rows.map(r=>'<tr><td>'+esc(r.contractName||"Contract")+'</td><td>'+esc(r.traderCategory||"Category unavailable")+'</td><td>'+fmt(r.long)+'</td><td>'+fmt(r.short)+'</td><td>'+fmt(r.net)+'</td><td>'+fmt(r.openInterest)+'</td></tr>').join("")||'<tr><td colspan="6">No normalized trader-category rows matched this contract/report. Verify the report dataset and source fields.</td></tr>';setProvider("cot",d.status||"unknown");}catch(e){$("fiCotStatus").textContent="UNAVAILABLE";$("fiCotRows").innerHTML='<tr><td colspan="6">CFTC public data temporarily unavailable. Check publicreporting.cftc.gov.</td></tr>';setProvider("cot","unavailable");}}
+ let latestCotRequest = 0;
+ async function loadCot() {
+  const request = ++latestCotRequest;
+  const rowsBody = $("fiCotRows");
+  const status = $("fiCotStatus");
+  const asOf = $("fiCotAsOf");
+  rowsBody.innerHTML = '<tr><td colspan="7">Loading CFTC report…</td></tr>';
+  status.textContent = "LOADING";
+  status.className = "fi-status-pill";
+  asOf.textContent = "Report date —";
+  try {
+   const market = state.markets.find(item => item.id === state.selected);
+   const query = market ? market.label.split("·")[0].replace(/E-mini|Micro/ig, "").trim() : state.selected;
+   const data = await api("/api/v1/cot?report=" + state.cot + (query ? "&q=" + encodeURIComponent(query) : ""));
+   if (request !== latestCotRequest) return;
+   $("fiCotProvider").textContent = data.provider || "CFTC";
+   asOf.textContent = "Latest report date " + (data.position_date || data.dataAsOf || "not supplied");
+   status.textContent = (data.status || "unknown").toUpperCase();
+   status.classList.toggle("fresh", data.status === "fresh");
+   status.classList.toggle("stale", data.status === "stale");
+   const rows = Array.isArray(data.normalizedRows) ? data.normalizedRows.slice(0, 30) : [];
+   rowsBody.innerHTML = rows.map(row => {
+    const label = [row.marketName || row.contractName, row.contractMarketCode].filter(Boolean).join(" · ");
+    return '<tr><td>' + esc(label || "Market not supplied") + '</td><td>' +
+      esc(row.positionDate || row.reportDate || "Date not supplied") + '</td><td>' +
+      esc(row.traderCategory || "Category unavailable") + '</td><td>' +
+      fmt(row.long) + '</td><td>' + fmt(row.short) + '</td><td>' + fmt(row.net) + '</td><td>' +
+      fmt(row.openInterest) + '</td></tr>';
+   }).join("") || '<tr><td colspan="7">No normalized trader-category rows matched this contract/report. Verify the report dataset and source fields.</td></tr>';
+   setProvider("cot", data.status || "unknown");
+  } catch {
+   if (request !== latestCotRequest) return;
+   status.textContent = "UNAVAILABLE";
+   rowsBody.innerHTML = '<tr><td colspan="7">CFTC public data temporarily unavailable. Check the official source below.</td></tr>';
+   setProvider("cot", "unavailable");
+  }
+ }
   $("fiContractSearch").addEventListener("input",renderMarkets);$("fiContractGrid").addEventListener("click",e=>{const b=e.target.closest("[data-market]");if(b)selectMarket(b.dataset.market);});$("fiTierFilters").addEventListener("click",e=>{const b=e.target.closest("[data-tier]");if(!b)return;state.tier=b.dataset.tier;document.querySelectorAll("[data-tier]").forEach(x=>x.classList.toggle("active",x===b));renderMarkets();});$("fiRefreshNews").addEventListener("click",()=>loadNews(true));document.querySelectorAll("[data-cot]").forEach(b=>b.addEventListener("click",()=>{state.cot=b.dataset.cot;document.querySelectorAll("[data-cot]").forEach(x=>x.classList.toggle("active",x===b));loadCot();}));
  clock();setInterval(clock,1000);loadMarkets();loadNews();loadMacro();loadFunding();
 })();
