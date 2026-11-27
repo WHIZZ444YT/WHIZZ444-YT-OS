@@ -25,6 +25,12 @@ function fakeFetch({ version = '2.2.0', storageConfigured = true, origins = true
     let body;
     if (url.pathname === '/health') {
       body = { ok: true, service: 'finance-intelligence-os-edge', version, storageConfigured };
+    } else if (url.pathname === '/api/v1/providers' && url.searchParams.get('view') === 'setup') {
+      headers.set('cache-control', 'no-store');
+      body = {schemaVersion:1,providers:[
+        {id:'bls',status:'anonymous'}, {id:'bea',status:'missing'},
+        {id:'eia',status:'rejected'}, {id:'fred',status:'reference-only'}
+      ]};
     } else if (url.pathname === '/api/v1/providers') {
       body = { providers: [
         { id: 'bls-calendar' }, { id: 'eia-wpsr-schedule' },
@@ -47,7 +53,7 @@ function fakeFetch({ version = '2.2.0', storageConfigured = true, origins = true
       };
     }
     const status = body.status === 'unavailable' ? 502 : body.status === 'not-configured' ? 503 : 200;
-    return Response.json(body, { status: url.pathname.startsWith('/api/v1/events') ? status : 200 });
+    return Response.json(body, { status: url.pathname.startsWith('/api/v1/events') ? status : 200, headers });
   };
   fetchImpl.calls = calls;
   return fetchImpl;
@@ -146,4 +152,13 @@ test('live Worker smoke accepts HTTP only for a local Worker development server'
     fetchImpl: fakeFetch(),
   });
   assert.equal(report.ok, true);
+});
+
+test('deployment status smoke avoids calendar refresh paths and accepts disabled licensed data', async () => {
+  const fetchImpl = fakeFetch();
+  const report = await runWorkerSmoke({ baseUrl: 'https://worker.example', fetchImpl, statusOnly:true });
+  assert.equal(report.ok, true);
+  assert.equal(report.degraded, false);
+  assert.ok(fetchImpl.calls.every(call => ['GET', 'OPTIONS'].includes(call.method) && !call.path.includes('/events')));
+  assert.ok(report.results.some(item => item.name === '/api/v1/providers?view=setup' && item.ok));
 });

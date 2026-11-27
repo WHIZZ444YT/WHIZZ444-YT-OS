@@ -7,6 +7,14 @@ on:
         description: HTTPS base URL of the deployed Finance OS Worker
         required: true
         type: string
+      frontend_url:
+        description: Optional public Vercel origin to verify against the selected Git ref
+        required: false
+        type: string
+      worker_version:
+        description: Optional staged Worker version UUID (requires Cloudflare version overrides)
+        required: false
+        type: string
 
 permissions:
   contents: read
@@ -26,7 +34,33 @@ jobs:
           FINANCE_OS_WORKER_URL: ${{ inputs.worker_url }}
         run: |
           node --input-type=module -e "const u=new URL(process.env.FINANCE_OS_WORKER_URL);if(u.protocol!=='https:'||!u.hostname.endsWith('.workers.dev')||u.username||u.password||u.search||u.hash||u.pathname!=='/')process.exit(1)"
-      - name: Check deployed Worker routes
+      - name: Validate optional frontend target
+        id: targets
+        if: inputs.frontend_url != ''
+        env:
+          FINANCE_OS_FRONTEND_ORIGIN: ${{ inputs.frontend_url }}
+        run: |
+          node --input-type=module -e "const u=new URL(process.env.FINANCE_OS_FRONTEND_ORIGIN);if(u.protocol!=='https:'||!/^finance-intelligence-(?:os|[a-z0-9]+-whizz444yt-7353)(?:-[a-z0-9-]+)?[.]vercel[.]app$/.test(u.hostname)||u.username||u.password||u.port||u.search||u.hash||u.pathname!=='/')process.exit(1)"
+      - name: Check deployed Worker status without refreshing datasets
         env:
           FINANCE_OS_WORKER_URL: ${{ inputs.worker_url }}
+          FINANCE_OS_WORKER_VERSION_ID: ${{ inputs.worker_version }}
+          FINANCE_OS_FRONTEND_ORIGIN: ${{ inputs.frontend_url }}
+          FINANCE_OS_STATUS_ONLY: '1'
+          FINANCE_OS_WORKER_REPORT: ${{ runner.temp }}/worker-smoke.json
         run: npm run smoke:worker -- "$FINANCE_OS_WORKER_URL"
+      - name: Check public frontend routes and deployed Git revision
+        if: ${{ !cancelled() && inputs.frontend_url != '' && steps.targets.outcome == 'success' }}
+        env:
+          FINANCE_OS_FRONTEND_ORIGIN: ${{ inputs.frontend_url }}
+          FINANCE_OS_FRONTEND_REPORT: ${{ runner.temp }}/frontend-smoke.json
+        run: npm run smoke:frontend -- "$FINANCE_OS_FRONTEND_ORIGIN" "$GITHUB_SHA"
+      - name: Archive read-only smoke evidence
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: live-smoke-evidence
+          path: |
+            ${{ runner.temp }}/worker-smoke.json
+            ${{ runner.temp }}/frontend-smoke.json
+          if-no-files-found: warn

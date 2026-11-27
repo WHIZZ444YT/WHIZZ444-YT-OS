@@ -1,4 +1,5 @@
 import { fileURLToPath } from 'node:url';
+import { writeFile } from 'node:fs/promises';
 
 export const EXPECTED_WORKER_VERSION = '2.2.0';
 export const EXPECTED_WORKER_NAME = 'finance-intelligence-os-edge';
@@ -47,6 +48,7 @@ async function requestJson(fetchImpl, baseUrl, path, init = {}) {
   try {
     response = await fetchImpl(`${baseUrl}${path}`, {
       ...init,
+      redirect: 'error',
       headers: { Accept: 'application/json', ...(init.headers || {}) },
       signal: init.signal || AbortSignal.timeout(15000),
     });
@@ -72,7 +74,7 @@ function addResult(results, failures, degraded, { name, ok, note, isDegraded = f
   else if (isDegraded) degraded.push(`${name}: ${note}`);
 }
 
-export async function runWorkerSmoke({ baseUrl, frontendOrigin = DEFAULT_FRONTEND_ORIGIN, fetchImpl = fetch, versionId } = {}) {
+export async function runWorkerSmoke({ baseUrl, frontendOrigin = DEFAULT_FRONTEND_ORIGIN, fetchImpl = fetch, versionId, statusOnly = false } = {}) {
   const base = normalizedBaseUrl(baseUrl);
   if (versionId && !/^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(versionId)) {
     throw new Error('Pass a valid Worker version UUID for a version override.');
@@ -141,13 +143,30 @@ export async function runWorkerSmoke({ baseUrl, frontendOrigin = DEFAULT_FRONTEN
   addResult(results, failures, degraded, {
     name: '/api/v1/market-data/status',
     ok: marketDataOk,
-    isDegraded: marketDataOk && marketData.body.status === 'not-configured',
+    isDegraded: !statusOnly && marketDataOk && marketData.body.status === 'not-configured',
     note: marketData.error || (marketDataOk
       ? `market-data state ${marketData.body.status}; source ${marketData.body.source_provider || 'not configured'}`
       : `expected a source-labelled market-data status; received HTTP ${marketData.response?.status ?? 'no response'}`),
   });
 
-  for (const path of CALENDAR_ROUTES) {
+  if (statusOnly) {
+    const setup = await requestJson(fetchImpl, base, '/api/v1/providers?view=setup', {headers:versionHeaders});
+    const rows = setup.body?.providers;
+    const ids = new Set(['bls', 'bea', 'eia', 'fred']);
+    const states = new Set(['configured', 'anonymous', 'missing', 'rejected', 'reference-only']);
+    const safeSetup = setup.response?.status === 200
+      && setup.response.headers.get('Cache-Control') === 'no-store'
+      && setup.body?.schemaVersion === 1
+      && Object.keys(setup.body).length === 2
+      && Array.isArray(rows) && rows.length === ids.size
+      && rows.every(row => row && Object.keys(row).length === 2 && ids.delete(row.id) && states.has(row.status));
+    addResult(results, failures, degraded, {
+      name: '/api/v1/providers?view=setup', ok: Boolean(safeSetup),
+      note: safeSetup ? 'Allowed setup projection and no-store verified.' : 'Expected sanitized setup projection was unavailable.'
+    });
+  }
+
+  for (const path of statusOnly ? [] : CALENDAR_ROUTES) {
     const result = await requestJson(fetchImpl, base, path, { headers: versionHeaders });
     const body = result.body;
     const eventCountMatches = Number.isInteger(body?.event_count)
@@ -182,7 +201,7 @@ export async function runWorkerSmoke({ baseUrl, frontendOrigin = DEFAULT_FRONTEN
     });
   }
 
-  return { ok: failures.length === 0, degraded: degraded.length > 0, results, failures, degradedReasons: degraded, versionId: versionId || null };
+  return { ok: failures.length === 0, degraded: degraded.length > 0, results, failures, degradedReasons: degraded, observedServiceVersion: healthOk ? health.body.version : null, versionId: versionId || null };
 }
 
 async function main() {
@@ -196,7 +215,18 @@ async function main() {
   }
   let report;
   try {
-    report = await runWorkerSmoke({ baseUrl, versionId });
+    report = await runWorkerSmoke({
+      baseUrl, versionId, statusOnly: process.env.FINANCE_OS_STATUS_ONLY === '1',
+      frontendOrigin: process.env.FINANCE_OS_FRONTEND_ORIGIN || DEFAULT_FRONTEND_ORIGIN
+    });
+    if (process.env.FINANCE_OS_WORKER_REPORT) {
+      await writeFile(process.env.FINANCE_OS_WORKER_REPORT, JSON.stringify({
+        schemaVersion: 1, ok: report.ok, degraded: report.degraded,
+        origin: normalizedBaseUrl(baseUrl), observedServiceVersion: report.observedServiceVersion,
+        requestedVersionOverride: report.versionId,
+        results: report.results.map(({name,ok,degraded}) => ({name,ok,degraded}))
+      }, null, 2) + '\n');
+    }
   } catch (error) {
     console.error(error.message);
     process.exitCode = 2;
