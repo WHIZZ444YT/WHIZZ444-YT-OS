@@ -10,7 +10,7 @@ Out of scope for implementation of this workstream are unrelated product upgrade
 
 ## Repository audit evidence and gaps
 
-**Status** — Existing repository building blocks verified in source. Proposed changes and production verification remain pending.
+**Status** — CI dry-runs the Worker bundle. The manually dispatched live smoke verifies Worker status, exact CORS, the public credential projection and optionally the frontend revision and shell. It archives JSON under `live-smoke-evidence`.
 
 - [`.github/workflows/quality.yml`](https://github.com/WHIZZ444YT/WHIZZ444-YT-OS/blob/e791f37da39209f3ac6c50ebf2f960101f618efb/.github/workflows/quality.yml)
 - [`.github/workflows/release.yml`](https://github.com/WHIZZ444YT/WHIZZ444-YT-OS/blob/e791f37da39209f3ac6c50ebf2f960101f618efb/.github/workflows/release.yml)
@@ -50,6 +50,36 @@ Use the dataset decisions in [01 · Provider registry and licensing](../foundati
 - **Licensing/security** — Follow Docs 01 and 23 per dataset. Use allowlisted destinations and bounded parameters, redact secrets and classify display, cache, persist and export separately. Keep costs within the eligible free-plan scope.
 
 
+
+## Preview, promotion and rollback
+
+1. Pin the candidate Git SHA and capture the deployed Vercel deployment ID and SHA, active Cloudflare deployment and Worker version IDs, current runtime flags, and applied Supabase migration IDs. Keep the evidence in the private release record. Use null for unavailable identifiers and resolve rollback targets before promotion.
+2. Verify plan eligibility, remaining quotas, exact preview CORS origin, provider rights and preview environment bindings. Run Doc 24 QA and `npm run worker:dry-run`. Use the linked preview database migration list and dry-run, review additive changes, then apply approved migrations to preview.
+3. Stage the candidate Worker against isolated preview bindings. Record the uploaded version and test anonymous status from the preview Worker. A requested version override is evidence of the request, so record the actual active version from Cloudflare separately. Avoid scheduled or mutation tests against production. Read-only status smoke runs with `FINANCE_OS_STATUS_ONLY=1` and avoids calendar endpoints that may refresh caches.
+4. Run `npm run smoke:frontend -- <https-origin> <full-git-sha>` on a public preview. For an authenticated preview, use authenticated operator access and capture the route manifest SHA, Charts CSP, and shell paths. In the manual GitHub workflow, select the deployed Git ref and pass the public frontend origin when available.
+5. After owner approval, apply the reviewed production migrations, activate the pinned Worker version and promote the identified Vercel deployment. Retest anonymous Worker status, exact CORS, frontend routes and the expected production SHA. The GitHub tag publishes a GitHub Release. Record Vercel production alias and deployment evidence separately.
+6. If activation fails, restore the previous reviewed Vercel deployment or Worker version on the affected layer and disable affected datasets if rights or validity is uncertain. Use an additive database correction where necessary. Repeat the anonymous smoke and record restored IDs. Never restore expired entitlements.
+
+Record the following per environment. Replace nulls with observed evidence from the intended environment before promotion.
+
+```json
+{
+  "candidateSha": null,
+  "qaRunUrl": null,
+  "vercelDeploymentId": null,
+  "vercelObservedSha": null,
+  "workerDeploymentId": null,
+  "workerVersionId": null,
+  "supabaseAppliedMigrationIds": null,
+  "rollbackVercelDeploymentId": null,
+  "rollbackWorkerVersionId": null,
+  "reviewedFlags": null,
+  "liveSmokeRunUrl": null,
+  "approvedBy": null
+}
+```
+
+[Cloudflare Worker versions](https://developers.cloudflare.com/workers/configuration/versions-and-deployments/) · [Supabase migration list](https://supabase.com/docs/reference/cli/supabase-migration-list) · [Vercel promotion](https://vercel.com/docs/deployments/promoting-a-deployment) · [Vercel rollback](https://vercel.com/docs/instant-rollback)
 
 ## Future file changes and implementation sequence
 
