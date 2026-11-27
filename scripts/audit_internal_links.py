@@ -5,14 +5,33 @@ Uses only Python's standard library so the check works on a clean GitHub runner.
 """
 from __future__ import annotations
 
+import os
+import sys
 from html.parser import HTMLParser
 from pathlib import Path
-from urllib.parse import urljoin, urlparse, unquote
-import sys
+from urllib.parse import unquote, urljoin, urlparse
 
 ROOT = Path(__file__).resolve().parents[1]
 DIST = ROOT / "dist"
-BASE = "https://finance-os.invalid/"
+
+
+def web_origin(parsed):
+    if parsed.scheme not in ("http", "https") or not parsed.hostname:
+        return None
+    default_port = 443 if parsed.scheme == "https" else 80
+    port = parsed.port
+    return parsed.scheme, parsed.hostname, default_port if port is None else port
+
+
+try:
+    site = urlparse(os.getenv("SITE_URL", "").strip() or "https://finance-os.invalid")
+    origin = web_origin(site)
+except ValueError:
+    origin = None
+if origin is None:
+    sys.exit("SITE_URL must be a valid HTTP or HTTPS origin.")
+
+BASE = f"{site.scheme}://{site.netloc}/"
 
 
 class PageLinks(HTMLParser):
@@ -66,9 +85,12 @@ for file in html_files:
     for href in page.hrefs:
         if not href or href.startswith(("mailto:", "tel:", "javascript:", "data:", "blob:")):
             continue
-        target_url = urljoin(page_url, href)
-        parsed = urlparse(target_url)
-        if parsed.scheme not in ("http", "https") or parsed.netloc != "finance-os.invalid":
+        try:
+            parsed = urlparse(urljoin(page_url, href))
+            if web_origin(parsed) != origin:
+                continue
+        except ValueError as exc:
+            issues.append((rel, "invalid-url", f"{href}: {exc}"))
             continue
 
         path = unquote(parsed.path or "/")
