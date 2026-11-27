@@ -248,10 +248,14 @@ try {
   await newsPage.route("**/assets/runtime-config.js", route => route.fulfill({
     contentType:"application/javascript",body:"window.FINANCE_OS_CONFIG={apiBase:location.origin};"
   }));
+  let newsDiscoveryAvailable = false;
   await newsPage.route("**/api/v1/news**", route => {
     const path = new URL(route.request().url()).pathname;
     if (path.endsWith("/official")) return route.fulfill({json:{status:"stale",releases:[{
       title:"<markup> Fixture policy release",url:"https://www.federalreserve.gov/newsevents/pressreleases/monetary20990101a.htm",published_at:null
+    }]}});
+    if (newsDiscoveryAvailable) return route.fulfill({json:{status:"fresh",articles:[{
+      title:"Fixture headline",publisher:"Fixture Publisher",url:"https://example.com/fixture"
     }]}});
     return route.fulfill({status:503,json:{error:{message:"Fixture discovery unavailable"}}});
   });
@@ -261,6 +265,32 @@ try {
   assert.equal(await official.locator("markup").count(),0);
   assert.match(await official.innerText(),/Publication time unavailable/);
   await newsPage.getByText(/Fixture discovery unavailable/).waitFor();
+  newsDiscoveryAvailable = true;
+  await newsPage.reload();
+  await newsPage.getByRole('link', { name: 'Fixture headline' }).waitFor();
+  const newsFilterNames = ['Contract family', 'Event type', 'Publisher', 'GDELT seen within'];
+  for (const name of newsFilterNames) {
+    const filter = newsPage.getByRole('combobox', { name, exact: true });
+    assert.equal(await filter.count(), 1, name);
+    assert.ok(await filter.isVisible(), name);
+    const firstValue = await filter.inputValue();
+    await filter.selectOption({ index: 1 });
+    assert.notEqual(await filter.inputValue(), firstValue, name);
+    assert.equal(await newsPage.getByRole('combobox', { name, exact: true }).count(), 1, name);
+  }
+  for (const width of [320, 360, 390]) {
+    await newsPage.setViewportSize({ width, height: 844 });
+    const fits = await newsPage.locator('.news-filters').evaluate(row => {
+      const bounds = row.getBoundingClientRect();
+      return row.scrollWidth <= row.clientWidth && bounds.left >= 0 &&
+        bounds.right <= document.documentElement.clientWidth &&
+        [...row.querySelectorAll('label, select')].every(element => {
+          const box = element.getBoundingClientRect();
+          return box.width > 0 && box.left >= bounds.left && box.right <= bounds.right + 1;
+        });
+    });
+    assert.ok(fits, 'News filter labels and controls fit at ' + width + 'px');
+  }
   await newsPage.close();
 
   const energy = await fixturePage({ viewport:{width:390,height:844} });
