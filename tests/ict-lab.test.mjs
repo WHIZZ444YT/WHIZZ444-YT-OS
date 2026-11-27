@@ -28,6 +28,38 @@ function route(code, path, query = '', hash = '', data = {}) {
   return visited;
 }
 
+test('the sitemap lists canonical Academy URLs and preserves legacy pages', () => {
+  const site = (process.env.SITE_URL || '').replace(/\/+$/, '');
+  const locations = [...published('sitemap.xml').matchAll(/<loc>([^<]+)<\/loc>/g)].map(match => match[1]);
+  assert.equal(new Set(locations).size, locations.length);
+  assert.ok(locations.every(location => !new URL(location).pathname.startsWith('/ict-lab/')));
+  const sitemap = new Set(locations);
+  const pairs = [
+    ['/ict-lab/', '/academy/'],
+    ['/ict-lab/learn/', '/academy/'],
+    ['/academy/learn/', '/academy/'],
+  ];
+  for (const view of Object.keys(details)) {
+    if (view !== 'learn') pairs.push(['/ict-lab/' + view + '/', '/academy/' + view + '/']);
+    for (const legacyPath of Object.values(details[view])) {
+      pairs.push([legacyPath, legacyPath.replace('/ict-lab/', '/academy/')]);
+    }
+  }
+  for (const [alias, canonical] of pairs) {
+    assert.ok(!sitemap.has(site + alias), alias);
+    for (const path of [alias, canonical]) {
+      const html = published(path.slice(1) + 'index.html');
+      const links = [...html.matchAll(/<link rel="canonical" href="([^"]+)">/g)].map(match => match[1]);
+      assert.deepEqual(links, site ? [site + canonical] : [], path);
+      if (!site) assert.match(html, /<meta name="robots" content="noindex,follow">/, path);
+    }
+    if (site) assert.ok(sitemap.has(site + canonical), canonical);
+  }
+  if (!site) assert.equal(sitemap.size, 0);
+  assert.match(published('ict-lab/practice/16/index.html'), /id="local-journal"/);
+  assert.match(published('ict-lab/learn/index.html'), /<form[^>]+action="\/ict-lab\/learn\/"/);
+});
+
 test('global search indexes every public Academy media page once', () => {
   const search = published('search/index.html').split('id="public-search"')[1];
   const rows = JSON.parse(search.match(/<script type="application\/json">([\s\S]*?)<\/script>/)[1]);

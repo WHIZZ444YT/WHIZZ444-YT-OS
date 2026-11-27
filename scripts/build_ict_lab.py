@@ -305,7 +305,7 @@ def build_ict_lab(root, dist, shell, write, academy, json_script, source, crossw
     if [k["id"] for k in labs] != list(range(11, 17)):
         raise ValueError("ICT Lab practice modules must be exactly 11–16")
 
-    routes = []
+    canonical_routes = []
     media_search_rows = []
     assets = '<link rel="stylesheet" href="/assets/ict-public.css"><script src="/assets/ict-public.js" defer></script>'
 
@@ -327,14 +327,16 @@ def build_ict_lab(root, dist, shell, write, academy, json_script, source, crossw
                 f'{breadcrumbs}<h1>{escape(title)}</h1>'
                 f'<p>{escape(subtitle)}</p></header>{tabs}'
                 f'{body}</section>')
+        academy_path = path if path.startswith(ACADEMY_VIDEOS) else "/academy/" + path.removeprefix(ROOT_URL)
+        canonical_path = "/academy/" if path == url("learn") else academy_path
         if not path.startswith(ACADEMY_VIDEOS):
-            write(dist / path.lstrip("/") / "index.html", shell(f"{title} | ICT Lab", subtitle or title, html,
-                                                                  path, assets + extra))
-        routes.append(path)
+            write(dist / path.lstrip("/") / "index.html",
+                  shell(f"{title} | ICT Lab", subtitle or title, html, path, assets + extra,
+                        canonical_path=canonical_path))
 
         if path == ROOT_URL:
             return
-        academy_path = path if path.startswith(ACADEMY_VIDEOS) else "/academy/" + path.removeprefix(ROOT_URL)
+        canonical_routes.append(canonical_path)
         if search is not None:
             category, keywords = search
             media_search_rows.append({"title": title, "path": academy_path,
@@ -360,7 +362,8 @@ def build_ict_lab(root, dist, shell, write, academy, json_script, source, crossw
         layout = (heading + f'<section class="content-section ict-public ict-academy" data-ict-view="{view}">'
                   + menu + watch_jump + academy_body + '</section>')
         write(dist / academy_path.lstrip("/") / "index.html",
-              shell(f"{title} | ICT Academy", subtitle or title, layout, academy_path, assets + extra))
+              shell(f"{title} | ICT Academy", subtitle or title, layout, academy_path, assets + extra,
+                    canonical_path=canonical_path))
         if path == url("learn"):
             home_menu = menu.replace('href="/academy/learn/" aria-current="page"',
                                      'href="/academy/" aria-current="page"')
@@ -369,8 +372,6 @@ def build_ict_lab(root, dist, shell, write, academy, json_script, source, crossw
                     + home_menu + academy_body + '</section>')
             write(dist / "academy/index.html",
                   shell("ICT Futures Academy | Futures Intelligence OS", subtitle, home, "/academy/", assets))
-        if academy_path not in routes:
-            routes.append(academy_path)
 
     full = sum(p["type"] == "Full episode" for p in podcasts)
     clips = sum(p["type"] == "Clip" for p in podcasts)
@@ -688,4 +689,4 @@ def build_ict_lab(root, dist, shell, write, academy, json_script, source, crossw
           f'<p>The video library is now in ICT Academy. <a href="{target}">Open the video library</a>.</p>'
           f'<script>location.replace({json_script(ACADEMY_VIDEOS)} + location.search + location.hash);</script>'
           '</body></html>')
-    return routes, media_search_rows
+    return canonical_routes, media_search_rows
