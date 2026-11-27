@@ -6,7 +6,7 @@
 
 Combine issuer schedules without losing precision or personal reminders. Reuse events endpoints; cards show publisher, ET/local/IST, release type, revision and market relevance. Preserve BLS ICS all-day and local timestamps, EIA holiday overrides, and tentative date-only meetings. Store forecast, actual and release date as independent nullable fields. Preserve #windows and personal events.
 
-Out of scope for implementation of this workstream are unrelated product upgrades, additional paid services, unapproved exports, AI inference and trade execution. This file is a future implementation handoff.
+Out of scope for implementation of this workstream are unrelated product upgrades, additional paid services, unapproved exports, AI inference and trade execution. Use the linked sequence and acceptance records for merged implementation evidence and current rollout gates.
 
 ## Repository audit evidence and gaps
 

@@ -6,7 +6,7 @@
 
 Pin HEAD and identify generator ownership, canonical routes, data rights gates and verification gaps. Rebuild in a disposable checkout; compare clean standard/cutover manifests, source/compiled artifact differences, and current remote deployment evidence. Compare issue #55–58 against public search and links; none is a confirmed provider outage.
 
-Out of scope for implementation of this workstream are unrelated product upgrades, additional paid services, unapproved exports, AI inference and trade execution. This file is a future implementation handoff.
+Out of scope for implementation of this workstream are unrelated product upgrades, additional paid services, unapproved exports, AI inference and trade execution. Use the linked sequence and acceptance records for merged implementation evidence and current rollout gates.
 
 ## Doc 00 execution record
 
@@ -44,7 +44,7 @@ Doc 01 can use the pinned source and issue inventory to review provider terms. P
 
 ## Repository audit evidence and gaps
 
-**Status** — Execution evidence recorded above. The responsive gate, explicit parity and upstream production checks are outstanding.
+**Status** — The pinned audit remains historical evidence. Later responsive and parity gates and the production rollout gaps are recorded in Docs 24 and 27.
 
 - [`scripts/build_site.py`](https://github.com/WHIZZ444YT/WHIZZ444-YT-OS/blob/e791f37da39209f3ac6c50ebf2f960101f618efb/scripts/build_site.py)
 - [`scripts/build_route_manifest.py`](https://github.com/WHIZZ444YT/WHIZZ444-YT-OS/blob/e791f37da39209f3ac6c50ebf2f960101f618efb/scripts/build_route_manifest.py)

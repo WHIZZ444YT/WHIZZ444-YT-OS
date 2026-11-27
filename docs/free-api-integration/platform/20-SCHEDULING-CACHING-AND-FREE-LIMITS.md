@@ -6,7 +6,7 @@
 
 Fit the existing schedule and platform quotas. Use UTC 30-minute cron to dispatch only due datasets, with jitter, bounded concurrency and per-provider budgets. Keep request path snapshot-first with retry-after and preserve an allowed last-good record. Alert using internal diagnostics, without introducing paid services.
 
-Out of scope for implementation of this workstream are unrelated product upgrades, additional paid services, unapproved exports, AI inference and trade execution. This file is a future implementation handoff.
+Out of scope for implementation of this workstream are unrelated product upgrades, additional paid services, unapproved exports, AI inference and trade execution. Use the linked sequence and acceptance records for merged implementation evidence and current rollout gates.
 
 ## Repository audit evidence and gaps
 

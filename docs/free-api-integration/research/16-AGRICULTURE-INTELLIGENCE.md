@@ -6,11 +6,11 @@
 
 Offer optional official USDA agriculture research. Start with WASDE, Quick Stats and PSD links. Only after owner scope approval and dataset review add selected national production/stocks and PSD history; preserve commodity, marketing year, geographic level and units. Do not add agricultural markets to the trading registry.
 
-Out of scope for implementation of this workstream are unrelated product upgrades, additional paid services, unapproved exports, AI inference and trade execution. This file is a future implementation handoff.
+Out of scope for implementation of this workstream are unrelated product upgrades, additional paid services, unapproved exports, AI inference and trade execution. Use the linked sequence and acceptance records for merged implementation evidence and current rollout gates.
 
 ## Repository audit evidence and gaps
 
-**Status** — Optional scope. Route and USDA configuration are proposed.
+**Status** — Optional USDA reference mode is implemented behind `PUBLIC_AGRICULTURE_REFERENCE=1`. Production data ingestion remains conditional on dataset approval.
 
 - [`scripts/build_site.py`](https://github.com/WHIZZ444YT/WHIZZ444-YT-OS/blob/e791f37da39209f3ac6c50ebf2f960101f618efb/scripts/build_site.py)
 - [`ict-futures/data/source-directory.json`](https://github.com/WHIZZ444YT/WHIZZ444-YT-OS/blob/e791f37da39209f3ac6c50ebf2f960101f618efb/ict-futures/data/source-directory.json)
@@ -21,7 +21,7 @@ The gap to close is defined by this acceptance condition: Keep route/nav hidden 
 
 Set `PUBLIC_AGRICULTURE_REFERENCE=1` in the intended static build environment and rebuild. For review, set it in the Vercel Preview environment of the feature branch and redeploy. The Macro page links to Agriculture Intelligence, and the generated route manifest and canonical sitemap include it when enabled. Select a publisher and use its own commodity, geography and marketing-year controls.
 
-The reference page uses direct HTTPS links to the [WASDE archive](https://esmis.nal.usda.gov/publication/world-agricultural-supply-and-demand-estimates), [NASS Quick Stats](https://www.nass.usda.gov/Quick_Stats/) and [FAS PSD Online](https://fas.usda.gov/psdonline). It needs no API keys. To disable the route, remove the variable or set it to `0` and redeploy. The clean static build removes the page, Macro navigation link and sitemap entry together.
+The reference page uses direct HTTPS links to the [WASDE archive](https://esmis.nal.usda.gov/publication/world-agricultural-supply-and-demand-estimates), [NASS Quick Stats](https://quickstats.nass.usda.gov/) and [FAS PSD Online](https://fas.usda.gov/psdonline). It needs no API keys. To disable the route, remove the variable or set it to `0` and redeploy. The clean static build removes the page, Macro navigation link and sitemap entry together.
 
 Dataset approval is required to add ingestion, numeric results, filters or charts. At that stage, verify real suppression codes against publisher documentation and test separate revisions for the same commodity, geography and marketing year.
 

@@ -6,7 +6,7 @@
 
 Provide measurable evidence across provider fixtures, generated HTML and previews. Run Python and Node suites, structural checks, internal link audit, clean reproduction and standard/cutover parity. Add targeted tests to existing fixture suites for auth, rights, timestamps, limits and UI failures. Keep live network verification isolated from deterministic CI.
 
-Out of scope for implementation of this workstream are unrelated product upgrades, additional paid services, unapproved exports, AI inference and trade execution. This file is a future implementation handoff.
+Out of scope for implementation of this workstream are unrelated product upgrades, additional paid services, unapproved exports, AI inference and trade execution. Use the linked sequence and acceptance records for merged implementation evidence and current rollout gates.
 
 ## Repository audit evidence and gaps
 

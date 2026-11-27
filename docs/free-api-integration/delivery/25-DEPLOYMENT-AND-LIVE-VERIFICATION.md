@@ -6,7 +6,7 @@
 
 Provide a staged release and independently reversible activation. Check platform eligibility, preview environment, permissions and quotas. Dry-run Worker, apply authorized additive DB migrations, stage Worker version and smoke snapshot, then Vercel preview and approved production promotion. Record SHA and runtime revision at every layer.
 
-Out of scope for implementation of this workstream are unrelated product upgrades, additional paid services, unapproved exports, AI inference and trade execution. This file is a future implementation handoff.
+Out of scope for implementation of this workstream are unrelated product upgrades, additional paid services, unapproved exports, AI inference and trade execution. Use the linked sequence and acceptance records for merged implementation evidence and current rollout gates.
 
 ## Repository audit evidence and gaps
 
@@ -79,7 +79,7 @@ Record the following per environment. Replace nulls with observed evidence from 
 }
 ```
 
-[Cloudflare Worker versions](https://developers.cloudflare.com/workers/configuration/versions-and-deployments/) · [Supabase migration list](https://supabase.com/docs/reference/cli/supabase-migration-list) · [Vercel promotion](https://vercel.com/docs/deployments/promoting-a-deployment) · [Vercel rollback](https://vercel.com/docs/instant-rollback)
+[Cloudflare Worker versions](https://developers.cloudflare.com/workers/versions-and-deployments/) · [Supabase migration list](https://supabase.com/docs/reference/cli/supabase-migration-list) · [Vercel promotion](https://vercel.com/docs/deployments/promoting-a-deployment) · [Vercel rollback](https://vercel.com/docs/instant-rollback)
 
 ## Future file changes and implementation sequence
 

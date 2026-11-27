@@ -6,7 +6,7 @@
 
 Support approved display widgets with source links and responsive behavior. Retain chart market/comparison/interval query state and consent-like Load previews action. Load one chart per selected slot, clean it up on selection/theme changes, and label continuous series and delay. Use vendor-generated snippets only after per-widget preview checks.
 
-Out of scope for implementation of this workstream are unrelated product upgrades, additional paid services, unapproved exports, AI inference and trade execution. This file is a future implementation handoff.
+Out of scope for implementation of this workstream are unrelated product upgrades, additional paid services, unapproved exports, AI inference and trade execution. Use the linked sequence and acceptance records for merged implementation evidence and current rollout gates.
 
 ## Repository audit evidence and gaps
 

@@ -18,8 +18,8 @@ const catalog = [
   ["usda-fas","USDA FAS","Production, Supply and Distribution (PSD); WASDE remains separate publication","https://apps.fas.usda.gov/opendata/","registered-api","review-required"],
   ["tradingview","TradingView","Hosted market widgets","https://www.tradingview.com/widget-docs/faq/data/","hosted-widget","hosted-display-only"],
   ["cme","CME Group","Contract specs, holidays, Daily Bulletin, Volume & OI, licensed prices/history","https://www.cmegroup.com/market-data/license-data.html","official-reference","reference-only"],
-  ["ice","ICE","DX specs, expiry, market reports and market data","https://www.ice.com/market-data","official-reference","reference-only"],
-  ["cboe","Cboe","VIX historical context","https://www.cboe.com/tradable_products/vix/vix_historical_data/","official-reference","reference-only"],
+  ["ice","ICE","DX specs, expiry, market reports and market data","https://www.ice.com/fixed-income-data-services/data-and-analytics/exchange-data","official-reference","reference-only"],
+  ["cboe","Cboe","VIX historical context","https://www.cboe.com/tradable-products/vix/vix-historical-data","official-reference","reference-only"],
   ["databento","Databento","Live/historical futures, venue/schema-specific","https://databento.com/futures","licensed","excluded"],
   ["fed-board","Federal Reserve Board","FOMC meeting calendar, policy statements, official RSS, H.4.1","https://www.federalreserve.gov/feeds/feeds.htm","public-source","review-required"],
   ["boe","Bank of England","MPC schedule and decisions","https://www.bankofengland.co.uk/monetary-policy/upcoming-mpc-dates","public-source","review-required"],
@@ -30,7 +30,7 @@ const catalog = [
 
 const terms = {
   "cme": "https://www.cmegroup.com/market-data/license-data/information-policies.html",
-  "ice": "https://www.ice.com/market-data",
+  "ice": "https://www.ice.com/fixed-income-data-services/data-and-analytics/exchange-data",
   "tradingview": "https://www.tradingview.com/policies/",
   "fred": "https://fred.stlouisfed.org/legal/terms/",
   "bls": "https://www.bls.gov/developers/termsOfService.htm",

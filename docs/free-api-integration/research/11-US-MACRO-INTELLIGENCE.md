@@ -6,11 +6,11 @@
 
 Consolidate inflation, labour, growth and PCE with release context. Keep BLS access anonymous by default and prefer v2 only when configured. Extend BEA NIPA via allowlisted metadata-verified series; distinguish levels, MoM, YoY and annualized QoQ and use the right seasonal variant. FRED remains reference until series approval.
 
-Out of scope for implementation of this workstream are unrelated product upgrades, additional paid services, unapproved exports, AI inference and trade execution. This file is a future implementation handoff.
+Out of scope for implementation of this workstream are unrelated product upgrades, additional paid services, unapproved exports, AI inference and trade execution. Use the linked sequence and acceptance records for merged implementation evidence and current rollout gates.
 
 ## Repository audit evidence and gaps
 
-**Status** — Existing repository building blocks verified in source. Proposed changes and production verification remain pending.
+**Status** — US Macro includes BLS and registered-provider status. FRED observations are gated by series-specific approval and production setup.
 
 - [`assets/macro-page.js`](https://github.com/WHIZZ444YT/WHIZZ444-YT-OS/blob/e791f37da39209f3ac6c50ebf2f960101f618efb/assets/macro-page.js)
 - [`assets/economic-data.js`](https://github.com/WHIZZ444YT/WHIZZ444-YT-OS/blob/e791f37da39209f3ac6c50ebf2f960101f618efb/assets/economic-data.js)

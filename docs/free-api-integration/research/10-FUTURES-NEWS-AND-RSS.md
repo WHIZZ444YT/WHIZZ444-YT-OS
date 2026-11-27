@@ -6,11 +6,11 @@
 
 Combine official announcement links with GDELT discovery. Allowlist Fed, ECB and verified agency feeds by exact host/path and approved fields. Normalize canonical URL, publisher, title and publication timestamp, store GDELT seen time separately, cap result size, dedup same article without collapsing multiple publishers. Preserve filters.
 
-Out of scope for implementation of this workstream are unrelated product upgrades, additional paid services, unapproved exports, AI inference and trade execution. This file is a future implementation handoff.
+Out of scope for implementation of this workstream are unrelated product upgrades, additional paid services, unapproved exports, AI inference and trade execution. Use the linked sequence and acceptance records for merged implementation evidence and current rollout gates.
 
 ## Repository audit evidence and gaps
 
-**Status** — Existing repository building blocks verified in source. Proposed changes and production verification remain pending.
+**Status** — Official releases, bounded Fed RSS and GDELT discovery are implemented. Current GDELT production acceptance remains blocked per Doc 27.
 
 - [`assets/news-page.js`](https://github.com/WHIZZ444YT/WHIZZ444-YT-OS/blob/e791f37da39209f3ac6c50ebf2f960101f618efb/assets/news-page.js)
 - [`cloudflare/src/news-contracts.mjs`](https://github.com/WHIZZ444YT/WHIZZ444-YT-OS/blob/e791f37da39209f3ac6c50ebf2f960101f618efb/cloudflare/src/news-contracts.mjs)
@@ -36,7 +36,7 @@ Preserve direct source links and readable empty states. Show a precise status be
 |---|---|---|---|---|---|
 | `gdelt` · GDELT | DOC 2.0 ArticleList headline discovery | [Official documentation](https://blog.gdeltproject.org/gdelt-doc-2-0-api-debuts/) · [Endpoint or reference](https://api.gdeltproject.org/api/v2/doc/doc) | Anonymous GET | Conditional metadata-only discovery; publisher links; article text/images/export rights require separate approval | query, mode=artlist, format=json, maxrecords, timespan; articles[].title/url/domain/seendate. Seen time is crawl time. 429/backoff; no SLA assumed. |
 | `sec` · SEC EDGAR | Filings/submissions context, issuer watchlist CIK only | [Official documentation](https://www.sec.gov/search-filings/edgar-application-programming-interfaces) · [Endpoint or reference](https://data.sec.gov/submissions/CIK0000320193.json) | Anonymous GET with compliant contact User-Agent | Reference-first; optional metadata only after fair-access, filing rights and use review | filings.recent.form/accessionNumber/filingDate; SEC fair access cap 10 requests/sec overall, use far less; filings have issuer-specific timing. |
-| `cboe` · Cboe | VIX historical context | [Official documentation](https://www.cboe.com/tradable_products/vix/vix_historical_data/) · [Endpoint or reference](https://www.cboe.com/tradable_products/vix/vix_historical_data/) | Reference link | Reference-only; raw CSV storage, display/export require rights review | Label as index context. Never substitute for active futures market data. |
+| `cboe` · Cboe | VIX historical context | [Official documentation](https://www.cboe.com/tradable-products/vix/vix-historical-data) · [Endpoint or reference](https://www.cboe.com/tradable-products/vix/vix-historical-data) | Reference link | Reference-only; raw CSV storage, display/export require rights review | Label as index context. Never substitute for active futures market data. |
 | `fed-board` · Federal Reserve Board | FOMC meeting calendar, policy statements, official RSS, H.4.1 | [Official documentation](https://www.federalreserve.gov/feeds/feeds.htm) · [Endpoint or reference](https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm) | Anonymous publisher schedule; approved RSS/Atom metadata | Baseline schedule/reference candidate; RSS extract limited to approved fields | Meeting ranges date-only unless official time supplied; RSS dedup by canonical URL/GUID; original releases remain authoritative. |
 | `boe` · Bank of England | MPC schedule and decisions | [Official documentation](https://www.bankofengland.co.uk/monetary-policy/upcoming-mpc-dates) · [Endpoint or reference](https://www.bankofengland.co.uk/monetary-policy/upcoming-mpc-dates) | Anonymous supported schedule | Conditional on reuse terms; reference fallback | Date-only unless issuer supplies time; Europe/London; refresh daily when approved. |
 | `boc` · Bank of Canada | Policy interest rate schedule | [Official documentation](https://www.bankofcanada.ca/core-functions/monetary-policy/key-interest-rate/) · [Endpoint or reference](https://www.bankofcanada.ca/core-functions/monetary-policy/key-interest-rate/) | Anonymous source | Conditional on reuse terms; reference fallback | Validate schedule year and source time America/Toronto; refresh daily. |
@@ -61,7 +61,7 @@ Preserve direct source links and readable empty states. Show a precise status be
 | Source | Connection | Placement and fallback |
 |---|---|---|
 | [Federal Reserve RSS directory](https://www.federalreserve.gov/feeds/feeds.htm) | Allowlist exact chosen monetary-policy feed after fixture/terms check | Official releases, original statement as fallback. |
-| [ECB RSS](https://www.ecb.europa.eu/rss/html/index.en.html) | Selected English policy/press feeds | Official releases with publisher timestamps. |
+| [ECB RSS](https://www.ecb.europa.eu/home/html/rss.en.html) | Selected English policy/press feeds | Official releases with publisher timestamps. |
 | [BLS feeds](https://www.bls.gov/feed/) | Select indicator release feed through official directory | US inflation/jobs links. |
 | [BEA news](https://www.bea.gov/news), [CFTC press room](https://www.cftc.gov/PressRoom/index.htm), [EIA](https://www.eia.gov/), [OPEC](https://www.opec.org/) | Reference first; verify stable RSS and terms before polling. | Reports and filtered issuer cards. |
 | [GDELT DOC](https://blog.gdeltproject.org/gdelt-doc-2-0-api-debuts/) | Existing Worker discovery | Preserve seen timestamp and label news discovery. |

@@ -6,7 +6,7 @@
 
 Identify credentials, ownership, provisioning and missing-key states. Owner registers provider accounts and stores Worker secrets. Browser gets only safe origin/project identifiers and status. Keep preview and production scopes independent. Use short-lived CI credentials where existing tooling supports them.
 
-Out of scope for implementation of this workstream are unrelated product upgrades, additional paid services, unapproved exports, AI inference and trade execution. This file is a future implementation handoff.
+Out of scope for implementation of this workstream are unrelated product upgrades, additional paid services, unapproved exports, AI inference and trade execution. Use the linked sequence and acceptance records for merged implementation evidence and current rollout gates.
 
 ## Repository audit evidence and gaps
 

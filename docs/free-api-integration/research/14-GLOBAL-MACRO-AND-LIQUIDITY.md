@@ -6,11 +6,11 @@
 
 Compare official global growth, inflation, rates and liquidity. Use ECB reference rate; add approved World Bank indicators with paging and country tags. BIS stays reference-first until selected flow and legal permissions are recorded. IMF stays reference-only until flow authentication and rights verified.
 
-Out of scope for implementation of this workstream are unrelated product upgrades, additional paid services, unapproved exports, AI inference and trade execution. This file is a future implementation handoff.
+Out of scope for implementation of this workstream are unrelated product upgrades, additional paid services, unapproved exports, AI inference and trade execution. Use the linked sequence and acceptance records for merged implementation evidence and current rollout gates.
 
 ## Repository audit evidence and gaps
 
-**Status** — Proposed route. Related source registry/adapters already exist where shown below.
+**Status** — Global Macro & Liquidity is implemented at `/macro/global/` with labelled official reference and snapshot fallbacks. World Bank series require explicit approval.
 
 - [`cloudflare/src/economic-providers.js`](https://github.com/WHIZZ444YT/WHIZZ444-YT-OS/blob/e791f37da39209f3ac6c50ebf2f960101f618efb/cloudflare/src/economic-providers.js)
 - [`assets/economic-data.js`](https://github.com/WHIZZ444YT/WHIZZ444-YT-OS/blob/e791f37da39209f3ac6c50ebf2f960101f618efb/assets/economic-data.js)

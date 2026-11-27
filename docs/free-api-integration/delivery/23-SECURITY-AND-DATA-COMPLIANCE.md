@@ -6,7 +6,7 @@
 
 Enforce data and credential boundaries through normal entry points. Static allowlist host/path and bounded payload parsing; reject redirects to other hosts. Apply narrow CSP for the selected embed. Keep CORS exact and grants server-side. Redact provider keys and raw errors; enforce expiration in DB, gateway and static publication.
 
-Out of scope for implementation of this workstream are unrelated product upgrades, additional paid services, unapproved exports, AI inference and trade execution. This file is a future implementation handoff.
+Out of scope for implementation of this workstream are unrelated product upgrades, additional paid services, unapproved exports, AI inference and trade execution. Use the linked sequence and acceptance records for merged implementation evidence and current rollout gates.
 
 ## Repository audit evidence and gaps
 

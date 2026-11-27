@@ -2,6 +2,8 @@
 
 This is the build handoff for [WHIZZ444YT/WHIZZ444-YT-OS](https://github.com/WHIZZ444YT/WHIZZ444-YT-OS), sourced from [main at e791f37da392](https://github.com/WHIZZ444YT/WHIZZ444-YT-OS/commit/e791f37da39209f3ac6c50ebf2f960101f618efb). Start with [the master roadmap](MASTER-IMPLEMENTATION-ROADMAP.md), then use each document's coding-agent prompt after its prerequisites pass. See [the implementation sequence](delivery/26-IMPLEMENTATION-SEQUENCE.md) for merged evidence, optional dependencies and remaining acceptance steps.
 
+Repository workstreams 00–27 are merged. See [the final acceptance checklist](delivery/27-FINAL-ACCEPTANCE-CHECKLIST.md) for live production evidence and blockers. The delivery checklists describe what to verify for each future rollout or change.
+
 | Document | Priority | Dependencies |
 |---|---|---|
 | [00 · Repository audit](foundation/00-REPOSITORY-AUDIT.md) | Foundation | — |

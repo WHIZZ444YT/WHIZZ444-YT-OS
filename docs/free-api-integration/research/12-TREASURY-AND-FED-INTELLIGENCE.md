@@ -6,11 +6,11 @@
 
 Display public yields and funding context as dated observations. Reuse funding and Fiscal Data adapters; add bounded daily XML curve parser under existing economic-provider dispatch. Compute 10Y–2Y and 30Y–5Y only with matching curve/date, in bps. Gate NY Fed operations/dealer series separately; link H.4.1.
 
-Out of scope for implementation of this workstream are unrelated product upgrades, additional paid services, unapproved exports, AI inference and trade execution. This file is a future implementation handoff.
+Out of scope for implementation of this workstream are unrelated product upgrades, additional paid services, unapproved exports, AI inference and trade execution. Use the linked sequence and acceptance records for merged implementation evidence and current rollout gates.
 
 ## Repository audit evidence and gaps
 
-**Status** — Existing repository building blocks verified in source. Proposed changes and production verification remain pending.
+**Status** — Treasury par yields and Fed funding context are implemented. Verify publication dates and live retrieval in the selected Worker.
 
 - [`cloudflare/src/index.js`](https://github.com/WHIZZ444YT/WHIZZ444-YT-OS/blob/e791f37da39209f3ac6c50ebf2f960101f618efb/cloudflare/src/index.js)
 - [`cloudflare/src/economic-providers.js`](https://github.com/WHIZZ444YT/WHIZZ444-YT-OS/blob/e791f37da39209f3ac6c50ebf2f960101f618efb/cloudflare/src/economic-providers.js)

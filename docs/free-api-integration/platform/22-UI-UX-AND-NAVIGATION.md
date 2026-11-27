@@ -6,7 +6,7 @@
 
 Fit new destinations into existing shell and mobile navigation. Group new Energy/Global under Macro, Reports under Research, Setup under Data Health. Keep Agriculture optional. Generate search, sitemap, canonical and route manifest only for enabled public routes. Preserve bookmarks, Academy and account routes.
 
-Out of scope for implementation of this workstream are unrelated product upgrades, additional paid services, unapproved exports, AI inference and trade execution. This file is a future implementation handoff.
+Out of scope for implementation of this workstream are unrelated product upgrades, additional paid services, unapproved exports, AI inference and trade execution. Use the linked sequence and acceptance records for merged implementation evidence and current rollout gates.
 
 ## Repository audit evidence and gaps
 
