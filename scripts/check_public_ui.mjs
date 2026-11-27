@@ -46,10 +46,13 @@ try {
 
   const tutorial = await fixturePage({ colorScheme: 'dark', viewport: { width: 320, height: 880 } });
   const tutorialPath = '/ict-futures/academy/tutorials/supplemental-source-audit.html';
+  const lesson = tutorial.getByRole('link', {
+    name: 'New York Lunch Algorithmic Reversal (community label) →',
+    exact: true,
+  });
   for (const width of [320, 360, 390]) {
     await tutorial.setViewportSize({ width, height: 880 });
     assert.equal((await tutorial.goto(site + tutorialPath)).status(), 200);
-    const lesson = tutorial.getByRole('link', { name: 'New York Lunch Algorithmic Reversal →', exact: true });
     await lesson.scrollIntoViewIfNeeded();
     assert.ok(await lesson.isVisible());
     const bounds = await lesson.evaluate(link => {
@@ -70,9 +73,8 @@ try {
     assert.equal(bounds.content, width, 'Tutorial must fit at ' + width + 'px');
     assert.ok(bounds.linkFitsParent && bounds.textFitsLink, JSON.stringify({ width, ...bounds }));
   }
-  const lesson = tutorial.getByRole('link', { name: 'New York Lunch Algorithmic Reversal →', exact: true });
-  const destination = await lesson.getAttribute('href');
-  assert.match(destination, /^\/ict-futures\/academy\/[^/]+\.html$/);
+  const destination = '/ict-futures/academy/ny-lunch-reversal.html';
+  assert.equal(await lesson.getAttribute('href'), destination);
   await lesson.click();
   await tutorial.waitForURL(site + destination);
   await tutorial.close();
