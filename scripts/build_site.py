@@ -148,9 +148,12 @@ def nav_markup(current='/'):
                 child_links = []
                 for child_label, child_path in children:
                     child_current = ' aria-current="page"' if current == child_path else ''
+                    child_symbol = ''.join(word[0] for word in child_label.split()[:2]).upper()
+                    label_text = escape(child_label)
                     child_links.append(
-                        f'<li><a class="os-nav-link os-nav-child" href="{child_path}"{child_current}>'
-                        f'{escape(child_label)}</a></li>'
+                        f'<li><a class="os-nav-link os-nav-child" href="{child_path}"{child_current} aria-label="{label_text}" title="{label_text}">'
+                        f'<span class="os-nav-symbol os-nav-child-symbol" aria-hidden="true">{child_symbol}</span>'
+                        f'<span class="os-nav-label">{label_text}</span></a></li>'
                     )
                 items.append('<ul class="os-nav-children">' + ''.join(child_links) + '</ul>')
         groups.append(f'<div class="os-nav-group"><span class="os-nav-group-label">{group}</span>{"".join(items)}</div>')

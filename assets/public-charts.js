@@ -4,6 +4,7 @@
   const [market, comparison, interval] = ['market', 'comparison', 'interval'].map(name => form.elements[name]);
   const slots = [...document.querySelectorAll('[data-chart-slot]')];
   const status = document.querySelector('#public-chart-status');
+  const previewButton = form.querySelector('button[type="submit"]');
   const params = new URLSearchParams(location.search);
   const widgets = window.FinanceTradingViewWidgets;
   const dispose = [];
@@ -24,9 +25,11 @@
   }
 
   function update(mount = false) {
-    previewsRequested = mount;
-    let mounted = 0;
     const selected = [market, comparison];
+    const hasHostedPreview = selected.some(field => field.selectedOptions[0]?.dataset.preview === 'pilot');
+    previewButton.disabled = !hasHostedPreview;
+    previewsRequested = mount && hasHostedPreview;
+    let mounted = 0;
     slots.forEach((slot, i) => {
       const option = selected[i].selectedOptions[0];
       const symbol = option?.dataset.symbol;
@@ -58,8 +61,13 @@
         calendar:false, details:false, hotlist:false
       }, option.textContent + " chart", external.href);
     });
-    status.textContent = mount ? (mounted ? 'Provider previews requested. TradingView controls coverage and delay.' : 'No hosted preview for these selections. Direct chart links are ready.')
-      : 'Direct chart links are ready. Load previews to connect to TradingView.';
+    if (!hasHostedPreview) {
+      status.textContent = 'No hosted preview for these selections. Direct chart links are ready.';
+    } else if (mounted) {
+      status.textContent = 'Provider previews requested. TradingView controls coverage and delay.';
+    } else {
+      status.textContent = 'Direct chart links are ready. Load previews to connect to TradingView.';
+    }
   }
   form.addEventListener('change', () => {
     syncComparison();

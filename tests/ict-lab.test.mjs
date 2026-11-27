@@ -198,12 +198,14 @@ test('chart controls restore Back and Forward selections without automatically l
   assert.match(chart, /Open chart on TradingView/);
   const state = { index: 0, urls: [origin + '/charts/?market=es&comparison=nq'] };
   const field = (name, entries) => {
-    const options = entries.map(([value, symbol]) => ({ value, dataset: { symbol, preview: "pilot" }, textContent: value }));
+    const options = entries.map(([value, symbol, preview = symbol ? 'pilot' : '']) => ({ value, dataset: { symbol, preview }, textContent: value }));
     return { name, options, get selectedOptions() { return options.filter(option => option.value === this.value); } };
   };
+  const previewButton = { disabled: false };
   const form = {
+    querySelector: selector => selector === 'button[type="submit"]' ? previewButton : null,
     elements: {
-      market: field('market', [['nq', 'CME_MINI:NQ1!'], ['es', 'CME_MINI:ES1!']]),
+      market: field('market', [['nq', 'CME_MINI:NQ1!'], ['es', 'CME_MINI:ES1!'], ['6e', 'CME:6E1!', '']]),
       comparison: field('comparison', [['', ''], ['nq', 'CME_MINI:NQ1!'], ['es', 'CME_MINI:ES1!']]),
       interval: field('interval', [['15'], ['60']]),
     },
@@ -258,6 +260,21 @@ test('chart controls restore Back and Forward selections without automatically l
   state.index++;
   emit.popstate();
   assert.equal(form.elements.interval.value, '60');
+  assert.equal(frames().length, 0);
+
+  form.elements.market.value = '6e';
+  form.elements.comparison.value = '';
+  form.listeners.change();
+  assert.equal(previewButton.disabled, true);
+  assert.match(status.textContent, /No hosted preview/);
+  assert.match(slots[0].querySelector('a').href, /CME%3A6E1%21/);
+
+  form.elements.comparison.value = 'nq';
+  form.listeners.change();
+  assert.equal(previewButton.disabled, false);
+  state.index--;
+  emit.popstate();
+  assert.equal(previewButton.disabled, true);
   assert.equal(frames().length, 0);
 });
 
