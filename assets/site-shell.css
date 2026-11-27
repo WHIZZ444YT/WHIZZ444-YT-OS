@@ -577,7 +577,11 @@ body {font-size: var(--os-body-size)}
 .os-nav-children {list-style: none; padding: 0 0 0 1.25rem; margin: 0 0 .25rem}
 .os-nav-child {padding-inline-start: .65rem; border-inline-start: 1px solid var(--os-line-strong)}
 .os-nav-child[aria-current="page"] {color: #fff; background: #23445a}
-.os-app-shell.sidebar-collapsed .os-nav-children {display: none}
+.os-nav-child-symbol {display: none}
+.os-app-shell.sidebar-collapsed .os-nav-children {padding: 0; margin: 0}
+.os-app-shell.sidebar-collapsed .os-nav-child {border: 1px solid transparent}
+.os-app-shell.sidebar-collapsed .os-nav-child[aria-current="page"] {border-color: var(--os-teal)}
+.os-app-shell.sidebar-collapsed .os-nav-child-symbol {display: grid}
 .os-static-navigation {display: none}
 .os-app-shell:not(.nav-enhanced) :is(.os-sidebar-toggle, .os-theme-toggle) {display: none}
 @media (max-width: 850px) {
