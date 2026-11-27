@@ -375,6 +375,23 @@ try {
     assert.equal(await page.locator('[data-results] a[href="' + path + '"]').count(), 1, query);
     assert.equal(await page.locator('[data-results] a[href^="/ict-lab/"]').count(), 0, query);
   }
+  for (const [query, path, category] of [
+    ['Videos', '/academy/videos/', 'Academy videos'],
+    ['Podcasts', '/academy/podcasts/', 'Academy podcasts'],
+    ['Mentors', '/academy/mentors/', 'Academy mentors'],
+    ['g3oDYq4P9ZE', '/academy/videos/g3oDYq4P9ZE/', 'Academy video'],
+    ['Liquidity and futures execution', '/academy/podcasts/8OX-mcSHWhg/', 'Academy podcast'],
+    ['TTrades', '/academy/mentors/m01/', 'Academy mentor'],
+  ]) {
+    await page.goto(site + '/search/?q=' + encodeURIComponent(query));
+    const hit = page.locator('[data-results] a[href="' + path + '"]');
+    await hit.waitFor({ state: 'visible' });
+    assert.equal(await hit.count(), 1, query);
+    assert.ok((await hit.locator('..').textContent()).endsWith(' · ' + category), query);
+    await hit.click();
+    await page.waitForURL(site + path);
+    assert.ok(await page.locator('main h1').isVisible(), query);
+  }
   await page.goto(site + '/search/?q=BSL');
   assert.equal(await page.locator('[data-results] a[href="/academy/learn/c01/"]').count(), 1);
   assert.equal(await page.locator('[data-results] a[href="/ict-futures/academy/bsl.html"]').count(), 0);

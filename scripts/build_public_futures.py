@@ -153,15 +153,22 @@ def social_discovery(markets, social, json_script):
 <script type="application/json">{json_script(social)}</script></section>"""
 
 
-def search_page(markets, academy, catalog, nav_groups, json_script):
+def search_page(markets, academy, catalog, nav_groups, json_script, media_search_rows):
+    media_sections = {
+        "/academy/videos/": ("ICT Academy video library", "Academy videos"),
+        "/academy/podcasts/": ("ICT Academy podcasts", "Academy podcasts"),
+        "/academy/mentors/": ("ICT Academy mentors", "Academy mentors"),
+    }
     groups = [*nav_groups, ("Quick links", [
-        ("ICT Academy video library", "/academy/videos/"),
+        *((label, path) for path, (label, _) in media_sections.items()),
         ("Public social discovery", "/sources/#social-discovery"),
         ("Daily futures brief", "/futures-intelligence/#daily-brief"),
         ("Academy and Lab crosswalk", "/academy/crosswalk/"),
     ])]
     public = [row for _, links in groups for row in links]
     def area(path):
+        if path in media_sections:
+            return media_sections[path][1]
         if path.startswith(("/academy", "/ict-lab", "/entry-models")):
             return "Lessons"
         if path.startswith(("/markets", "/futures-intelligence", "/charts", "/contract-specs")):
@@ -194,12 +201,13 @@ def search_page(markets, academy, catalog, nav_groups, json_script):
     rows += [{"title": row["name"], "path": f'/ict-futures/academy/{row["id"]}.html',
               "category": "Historical Academy lesson", "keywords": row["id"]}
              for row in academy if row["id"] not in shared_slugs]
+    rows.extend(media_search_rows)
     directory = []
     for group, links in groups:
         items = "".join(f'<li><a href="{escape(path)}">{escape(label)}</a></li>' for label, path in links)
         directory.append(f'<section class="ict-card"><h3>{escape(group)}</h3><ul>{items}</ul></section>')
     return f"""<section class="ict-public" id="public-search"><header class="ict-hero"><h1>Search Futures Intelligence OS</h1>
-<p>Find a contract profile, lesson, playbook or public tool.</p></header>
+<p>Find a contract profile, lesson, Academy video, podcast, mentor or public tool.</p></header>
 <form class="ict-search" action="/search/" role="search" aria-label="Site search" hidden><label for="public-query">Search the site</label>
 <div><input type="search" name="q" id="public-query" maxlength="100" placeholder="Try NQ, FVG or COT"><button type="submit">Search</button><button type="button" class="ict-clear-search" data-clear-search>Clear</button></div></form>
 <p role="status"></p><div data-results></div><nav aria-labelledby="search-directory-title"><h2 id="search-directory-title">Browse public pages</h2><div class="ict-grid">{"".join(directory)}</div></nav>

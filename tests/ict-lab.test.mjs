@@ -28,6 +28,31 @@ function route(code, path, query = '', hash = '', data = {}) {
   return visited;
 }
 
+test('global search indexes every public Academy media page once', () => {
+  const search = published('search/index.html').split('id="public-search"')[1];
+  const rows = JSON.parse(search.match(/<script type="application\/json">([\s\S]*?)<\/script>/)[1]);
+  const expected = new Map([
+    ['/academy/videos/', 'Academy videos'],
+    ['/academy/podcasts/', 'Academy podcasts'],
+    ['/academy/mentors/', 'Academy mentors'],
+  ]);
+  for (const [view, category] of [['podcasts', 'Academy podcast'], ['mentors', 'Academy mentor']]) {
+    for (const path of Object.values(details[view])) {
+      expected.set(path.replace('/ict-lab/', '/academy/'), category);
+    }
+  }
+  for (const id of readdirSync(new URL('../dist/academy/videos/', import.meta.url), { withFileTypes: true })
+    .filter(entry => entry.isDirectory()).map(entry => entry.name)) {
+    expected.set('/academy/videos/' + id + '/', 'Academy video');
+  }
+  const mediaRows = rows.filter(row => /^\/academy\/(videos|podcasts|mentors)\//.test(row.path));
+  assert.equal(mediaRows.length, expected.size);
+  assert.deepEqual(new Map(mediaRows.map(row => [row.path, row.category])), expected);
+  for (const path of expected.keys()) {
+    assert.match(published(path.slice(1) + 'index.html'), /<h1>[^<]+<\/h1>/, path);
+  }
+});
+
 test('the five Lab views and all 93 detail pages contain public HTML without scripts', () => {
   assert.match(labHome, /data-os-shell/);
   assert.match(labHome, /56 concepts across 10 modules/);
