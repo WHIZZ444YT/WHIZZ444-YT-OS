@@ -586,7 +586,7 @@ def build():
     playbook_data=load(ROOT/'ict-futures/data/ict-playbook.json',{})
     crosswalk = IctCrosswalk(academy_data, catalog, playbook_data)
     build_academy(DIST, academy_data, SITE_URL, crosswalk)
-    lab_routes = build_ict_lab(ROOT, DIST, shell, write, academy, json_script, catalog, crosswalk, mdata, page_intro)
+    lab_routes, media_search_rows = build_ict_lab(ROOT, DIST, shell, write, academy, json_script, catalog, crosswalk, mdata, page_intro)
     write(DIST/'academy/crosswalk/index.html', shell(
         'Academy and Lab Crosswalk | Futures Intelligence OS',
         'Find shared definitions, distinct models and Academy media gaps.',
@@ -595,7 +595,7 @@ def build():
         '<section class="content-section">' + crosswalk.page() + '</section>', '/academy/crosswalk/'))
     write(DIST/'search/index.html', shell('Search | Futures Intelligence OS',
           'Find public futures routes, Academy lessons and ICT Lab content.',
-          search_page(mdata, academy, catalog, public_navigation_groups(), json_script), '/search/',
+          search_page(mdata, academy, catalog, public_navigation_groups(), json_script, media_search_rows), '/search/',
           '<link rel="stylesheet" href="/assets/ict-public.css"><script defer src="/assets/public-search.js"></script>'))
     write(DIST/'charts/index.html', shell('Futures Charts | Futures Intelligence OS',
           'Compare futures charts in TradingView.', chart_page(mdata), '/charts/',

@@ -306,9 +306,10 @@ def build_ict_lab(root, dist, shell, write, academy, json_script, source, crossw
         raise ValueError("ICT Lab practice modules must be exactly 11–16")
 
     routes = []
+    media_search_rows = []
     assets = '<link rel="stylesheet" href="/assets/ict-public.css"><script src="/assets/ict-public.js" defer></script>'
 
-    def emit(path, view, title, body, subtitle="", extra="", *, academy_content=None):
+    def emit(path, view, title, body, subtitle="", extra="", *, academy_content=None, search=None):
         tabs = ""
         breadcrumbs = ""
         if path != ROOT_URL:
@@ -334,6 +335,10 @@ def build_ict_lab(root, dist, shell, write, academy, json_script, source, crossw
         if path == ROOT_URL:
             return
         academy_path = path if path.startswith(ACADEMY_VIDEOS) else "/academy/" + path.removeprefix(ROOT_URL)
+        if search is not None:
+            category, keywords = search
+            media_search_rows.append({"title": title, "path": academy_path,
+                                      "category": category, "keywords": keywords})
         sections = [("/academy/" + key + "/", label) for key, label in VIEWS.items()]
         sections.append((ACADEMY_VIDEOS, "Video library"))
         links = []
@@ -563,7 +568,10 @@ def build_ict_lab(root, dist, shell, write, academy, json_script, source, crossw
                         '<p>See Source details for duration and chapter evidence. Unconfirmed fields remain open.</p>' 
                         f'<h2>Related lessons</h2>{items([lesson_link(k) for k in item["related"]])}'
                         f'<p class="ict-muted">{escape(show)} · {escape(item["program"])} · {escape(item["guest"])}</p>')
-            emit(detail(view, key), view, title, f'<div class="ict-reading">{body}</div>', summary)
+            category = "Academy mentor" if view == "mentors" else "Academy podcast"
+            keywords = " ".join(filter(None, (key, section, show, item.get("guest"))))
+            emit(detail(view, key), view, title, f'<div class="ict-reading">{body}</div>', summary,
+                 search=(category, keywords))
         subtitle = f"{len(mentors)} creator profiles." if view == "mentors" else f"{full} full episodes and {clips} clips."
         filters = ""
         if view == "podcasts":
@@ -653,7 +661,8 @@ def build_ict_lab(root, dist, shell, write, academy, json_script, source, crossw
                  + '<details><summary>Chapter links and source details</summary>' + resource_list(refs, source)
                  + '</details></div>')
         emit(video_path, "", title, '<article class="ict-reading"><p>' + escape(summary) + '</p>'
-             + context + watch + '</article>', metadata)
+             + context + watch + '</article>', metadata,
+             search=("Academy video", " ".join(filter(None, (video_id, video["title"], video.get("uploader"), role)))))
 
     emit(ACADEMY_VIDEOS, "", "ICT Academy video library",
          '<div class="ict-reading">' + resource_nav + original_sources
@@ -679,4 +688,4 @@ def build_ict_lab(root, dist, shell, write, academy, json_script, source, crossw
           f'<p>The video library is now in ICT Academy. <a href="{target}">Open the video library</a>.</p>'
           f'<script>location.replace({json_script(ACADEMY_VIDEOS)} + location.search + location.hash);</script>'
           '</body></html>')
-    return routes
+    return routes, media_search_rows
