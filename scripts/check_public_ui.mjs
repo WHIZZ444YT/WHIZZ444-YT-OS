@@ -829,9 +829,20 @@ try {
   assert.ok(await offline.locator('main h1').first().isVisible());
   await offlineContext.close();
 
-  const contextForAccount = await browser.newContext({ serviceWorkers: 'block' });
+  const contextForAccount = await browser.newContext({
+    serviceWorkers: 'block', timezoneId: 'Asia/Kolkata', locale: 'en-US',
+  });
   await contextForAccount.route('**/*', blockExternal);
   const workspace = await contextForAccount.newPage();
+  await workspace.addInitScript(() => {
+    const labels = [];
+    window.accountChartLabels = labels;
+    const original = CanvasRenderingContext2D.prototype.fillText;
+    CanvasRenderingContext2D.prototype.fillText = function (text, ...args) {
+      if (this.canvas.id === 'accountPnlChart') labels.push(text);
+      return original.call(this, text, ...args);
+    };
+  });
   await workspace.route('**/assets/runtime-config.js', route => route.fulfill({
     contentType: 'application/javascript',
     body: `window.FINANCE_OS_CONFIG = { supabaseUrl: '${site}/__workspace-fixture', supabaseAnonKey: 'public-fixture' };`,
@@ -847,6 +858,12 @@ try {
       'access-control-allow-methods': 'GET, POST, OPTIONS',
     };
     if (request.method() === 'OPTIONS') return route.fulfill({ status: 204, headers });
+    if (pathname.endsWith('/rest/v1/journal_trades')) {
+      return route.fulfill({ headers, json: [
+        { id: 'fixture-loss', market_id: 'ESH6', side: 'short', closed_at: '2026-11-27T04:30:00Z', net_pnl: -40 },
+        { id: 'fixture-win', market_id: 'ESH6', side: 'long', closed_at: '2026-11-27T02:00:00+05:30', net_pnl: 100 },
+      ] });
+    }
     return route.fulfill({ headers, json: pathname.endsWith('/auth/v1/user')
       ? { id: 'ef3cedd4-3377-4539-af29-2d39a716c759', email: 'fixture@example.invalid' } : [] });
   });
@@ -860,6 +877,16 @@ try {
   assert.equal(await workspace.locator('#accountMessage.error').count(), 0,
     await workspace.locator('#accountMessage').first().textContent());
   await workspace.getByRole('heading', { name: 'Performance overview' }).waitFor();
+  await workspace.getByRole('heading', { name: 'Daily realised P&L (UTC)', exact: true }).waitFor();
+  assert.ok(await workspace.getByRole('img', { name: 'Daily realised P and L grouped by UTC date' }).isVisible());
+  assert.ok(await workspace.getByText(/Recent trade timestamps use your device timezone/).isVisible());
+  const chartLabels = await workspace.evaluate(() => window.accountChartLabels);
+  assert.deepEqual(chartLabels.slice(-7), ['100', '65', '30', '-5', '-40', '2026-11-26', '2026-11-27']);
+  const recentCloses = await workspace.locator('#tab-overview .compact-row small').allTextContents();
+  assert.equal(recentCloses.length, 2);
+  assert.ok(recentCloses.every(value => value.includes('Nov 27, 2026')));
+  const total = workspace.getByText('Net realised P&L', { exact: true }).locator('..').locator('strong');
+  assert.equal(await total.innerText(), '$60.00');
   await workspace.getByRole('button', { name: 'Trade journal', exact: true }).click();
   await workspace.locator('#tradeMarket').fill('NQH27');
   await workspace.getByRole('button', { name: 'Sync now' }).click();
