@@ -238,6 +238,37 @@ try {
   assert.ok(await esCard.evaluate(button => button === document.activeElement));
   await desk.keyboard.press('Shift+Tab');
   assert.ok(await nqCard.evaluate(button => button === document.activeElement));
+  await desk.goto(site + '/futures-intelligence/');
+  const tiers = desk.locator('#fiTierFilters');
+  const allMarkets = tiers.getByRole('button', { name: 'All markets', exact: true });
+  const contextTier = tiers.getByRole('button', { name: 'Tier 2 · Context', exact: true });
+  const pressedCards = contractGrid.getByRole('button', { pressed: true });
+  const pressedTiers = tiers.getByRole('button', { pressed: true });
+  await contractGrid.getByRole('button', { name: /Nasdaq-100 E-mini/, pressed: true }).waitFor();
+  assert.equal(await pressedCards.count(), 1);
+  assert.equal(await pressedTiers.count(), 1);
+  assert.match(await allMarkets.ariaSnapshot(), /\[pressed\]/);
+  assert.equal(await contractGrid.getByRole('button', { name: /S&P 500 E-mini/, pressed: false }).count(), 1);
+
+  await contextTier.press('Space');
+  assert.equal(await pressedTiers.count(), 1);
+  assert.match(await contextTier.ariaSnapshot(), /\[pressed\]/);
+  assert.equal(await pressedCards.count(), 0);
+  assert.equal(await allMarkets.getAttribute('aria-pressed'), 'false');
+
+  const dowCard = contractGrid.getByRole('button', { name: /Dow E-mini/, pressed: false });
+  await dowCard.press('Enter');
+  assert.equal(await pressedCards.count(), 1);
+  assert.match(await pressedCards.ariaSnapshot(), /Dow E-mini.*\[pressed\]/);
+  assert.match(await desk.locator('#fiSelectedTitle').innerText(), /Dow E-mini/);
+
+  await allMarkets.press('Enter');
+  assert.equal(await pressedTiers.count(), 1);
+  assert.match(await allMarkets.ariaSnapshot(), /\[pressed\]/);
+  assert.equal(await contextTier.getAttribute('aria-pressed'), 'false');
+  assert.equal(await contractGrid.getByRole('button').count(), 15);
+  assert.equal(await pressedCards.count(), 1);
+  assert.match(await pressedCards.ariaSnapshot(), /Dow E-mini.*\[pressed\]/);
   await desk.close();
 
   await page.setViewportSize({ width: 768, height: 900 });
