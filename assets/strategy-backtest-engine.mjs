@@ -328,9 +328,11 @@ export function runBacktest(bars, inputConfig, periodName = "full-sample") {
       const estimatedExitCost = (c.commissionPerSide + c.slippageTicks * c.tickValue) * position.quantity;
       equity += unrealized - estimatedExitCost;
     }
-    if (equity > peakEquity) {
-      peakEquity = equity;
-      peakIndex = index;
+    if (equity >= peakEquity - 1e-9) {
+      if (equity > peakEquity) {
+        peakEquity = equity;
+        peakIndex = index;
+      }
       if (currentDrawdownStart !== null) {
         const durationBars = index - currentDrawdownStart;
         const durationMs = bar.epoch - Date.parse(currentDrawdownPeakAt);
@@ -341,8 +343,10 @@ export function runBacktest(bars, inputConfig, periodName = "full-sample") {
         }
         currentDrawdownStart = null;
         currentDrawdownPeakAt = null;
+        // A later drawdown starts from this recovery, even without a new high.
+        peakIndex = index;
       }
-    } else if (equity < peakEquity - 1e-9) {
+    } else {
       if (currentDrawdownStart === null) {
         currentDrawdownStart = peakIndex;
         currentDrawdownPeakAt = bars[peakIndex]?.timestamp || bar.timestamp;

@@ -328,3 +328,62 @@ test("split boundaries prevent a late training signal from entering validation a
   const loss = runBacktest([makeBar(0,{signal:1}),makeBar(1,{low:97}),makeBar(2)],config());
   assert.ok(loss.metrics.maxDrawdownUsd > 0);
 });
+
+const recoveryConfig = config({
+  startingCapital: 10000, timeframe: "1m", maxContracts: 1,
+  tickSize: 1, tickValue: 1, stopTicks: 5, targetRR: 1,
+  commissionPerSide: 0, slippageTicks: 0
+});
+
+function recoveryBars(target = 105) {
+  return [
+    { signal: 1 },
+    { low: 95, close: 95, signal: 1 },
+    { high: target, close: target },
+    {}
+  ].map((values, index) => {
+    const epoch = Date.parse("2026-01-01T00:00:00Z") + index * 60000;
+    return makeBar(index, { high: 100, low: 100, epoch, timestamp: new Date(epoch).toISOString(), ...values });
+  });
+}
+
+test("maximum drawdown recovers at the prior peak or above it and stays open below it", () => {
+  for (const [target, targetRR, recovered] of [[105, 1, true], [110, 2, true], [100, 1, false]]) {
+    const bars = recoveryBars(target);
+    const { metrics, equityCurve, trades } = runBacktest(bars, { ...recoveryConfig, targetRR });
+    assert.deepEqual(trades.map(trade => trade.netPnlUsd), [-5, target - 100]);
+    assert.equal(metrics.maxDrawdownUsd, 5);
+    assert.equal(metrics.maxDrawdownRecoveryAt, recovered ? bars[2].timestamp : null);
+    assert.equal(metrics.maxDrawdownDurationBars, recovered ? 2 : 3);
+    assert.equal(metrics.maxDrawdownDurationMs, recovered ? 120000 : 180000);
+    assert.equal(equityCurve[2].drawdownUsd, recovered ? 0 : 5);
+  }
+});
+
+test("a smaller drawdown after exact recovery does not reopen the maximum episode", () => {
+  const bars = recoveryBars();
+  bars[2].signal = 1;
+  bars[3].low = 99;
+  bars[3].close = 99;
+  const { metrics, equityCurve } = runBacktest(bars, recoveryConfig);
+  assert.equal(equityCurve.at(-1).drawdownUsd, 1);
+  assert.equal(metrics.maxDrawdownRecoveryAt, bars[2].timestamp);
+  assert.equal(metrics.maxDrawdownDurationBars, 2);
+  assert.equal(metrics.maxDrawdownDurationMs, 120000);
+});
+
+test("experiment reports corrected recovery metrics used by the JSON export", async () => {
+  const [header] = sampleCsv().split("\n");
+  const bars = recoveryBars();
+  const rows = Array.from({ length: 30 }, (_, index) => {
+    const bar = bars[index] ?? { open: 100, high: 100, low: 100, close: 100, signal: 0 };
+    const timestamp = new Date(bars[0].epoch + index * 60000).toISOString();
+    return [timestamp, bar.open, bar.high, bar.low, bar.close, bar.signal, "ESH6", "2026-03-20", "", 100].join(",");
+  });
+  const experiment = await runExperiment([header, ...rows].join("\n"), recoveryConfig);
+  for (const { metrics } of [experiment.fullSample, experiment.splits[0]]) {
+    assert.equal(metrics.maxDrawdownRecoveryAt, bars[2].timestamp);
+    assert.equal(metrics.maxDrawdownDurationBars, 2);
+    assert.equal(metrics.maxDrawdownDurationMs, 120000);
+  }
+});
