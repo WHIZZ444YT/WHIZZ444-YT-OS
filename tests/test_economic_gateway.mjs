@@ -180,6 +180,7 @@ test("partial persistence replays a current snapshot without refetching or dupli
       assert.equal(url.searchParams.get("on_conflict"),"provider,dataset_id,series_id,frequency,observation_date");
       if(fail&&batch.length===1)return new Response("database diagnostic",{status:503});
       for(const row of batch)observations.set(row.observation_date,row);
+      return Response.json(batch.map(row=>({id:row.observation_date})));
     }
     return new Response(null,{status:204});
   });
