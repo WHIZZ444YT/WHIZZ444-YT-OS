@@ -808,6 +808,46 @@ try {
   assert.equal(await workspace.locator('#tradeMarket').count(), 0);
   await contextForAccount.close();
 
+  const strategy = await fixturePage();
+  await strategy.goto(site + '/strategy-lab/');
+  const resultsShortcut = strategy.getByRole('link', { name: '3. Results', exact: true });
+  const resultSection = strategy.getByRole('region', { name: 'Strategy results', exact: true });
+  await resultsShortcut.press('Enter');
+  await strategy.waitForURL(site + '/strategy-lab/#strategyResults');
+  assert.ok(await resultSection.getByRole('heading', { name: 'Strategy results', level: 2 }).isVisible());
+  assert.ok(await resultSection.getByRole('link', { name: /upload a valid signal CSV/ }).isVisible());
+  assert.equal(await strategy.locator('#strategyResultsContent').isVisible(), false);
+  assert.ok(await resultSection.evaluate(element => element === document.activeElement));
+
+  const csv = ['timestamp,open,high,low,close,signal,contract,expiry'];
+  for (let index = 0; index < 30; index++) {
+    const time = new Date(Date.UTC(2026, 0, 1, 0, index)).toISOString();
+    csv.push([time, 100, 101, 99, 100, index === 0 ? 'LONG' : 'FLAT', 'ESH6', '2026-03-20'].join(','));
+  }
+  await strategy.locator('#strategyCsv').setInputFiles({
+    name: 'results-shortcut.csv', mimeType: 'text/csv', buffer: Buffer.from(csv.join('\n')),
+  });
+  for (const [id, value] of Object.entries({
+    strategyName: 'Results fixture', marketSymbol: 'ESH6', timeframe: '1m',
+    dataSource: 'Synthetic UI fixture', strategyCalendar: 'Synthetic UTC grid',
+    datasetId: 'results-shortcut', downloadDate: '2026-01-01',
+    signalSourceNotes: 'Synthetic signal known at bar close', strategyRightsReference: 'fixture',
+    costSource: 'Synthetic costs', costAsOf: '2026-01-01', tickSize: '0.25',
+    tickValue: '12.50', commissionPerSide: '0',
+  })) {
+    await strategy.locator('#' + id).fill(value);
+  }
+  await strategy.locator('#strategyResearchRights').check();
+  await strategy.getByRole('button', { name: 'Run reproducible backtest' }).click();
+  await resultSection.getByRole('heading', { name: 'Results fixture · ESH6' }).waitFor();
+  assert.equal(await strategy.locator('#strategyResultsEmpty').isVisible(), false);
+  await strategy.getByRole('link', { name: '4. History', exact: true }).click();
+  await resultsShortcut.press('Enter');
+  await strategy.waitForURL(site + '/strategy-lab/#strategyResults');
+  assert.ok(await resultSection.getByRole('heading', { name: 'Out-of-sample holdout metrics' }).isVisible());
+  assert.ok(await resultSection.evaluate(element => element === document.activeElement));
+  await strategy.close();
+
   await page.goto(site + '/strategy-lab/');
   const advanced = page.getByText('Advanced settings and chronological holdout', { exact: true });
   await advanced.click();

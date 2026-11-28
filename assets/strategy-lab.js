@@ -185,7 +185,8 @@ import {
     const full=result.fullSample.metrics;
     const oos=result.splits[2].metrics;
     const oosNote=oos.trades<30?"Low OOS trade count; exploratory only.":"OOS is still a holdout only if strategy rules were frozen before inspection.";
-    $("strategyResults").classList.remove("strategy-hidden");
+    $("strategyResultsContent").classList.remove("strategy-hidden");
+    $("strategyResultsEmpty").hidden = true;
     $("strategyResultTitle").textContent=result.config.strategyName+" · "+result.config.marketSymbol;
     $("strategyResultFingerprint").textContent="Run fingerprint: "+result.manifest.runFingerprint+" · Dataset SHA-256: "+result.manifest.dataset.sha256;
     $("strategyOosMetrics").innerHTML=[
