@@ -413,7 +413,7 @@ export function runBacktest(bars, inputConfig, periodName = "full-sample") {
     const stopAtOpen = long ? bar.open <= p.stopPrice : bar.open >= p.stopPrice;
     const targetAtOpen = long ? bar.open >= p.targetPrice : bar.open <= p.targetPrice;
     if (stopAtOpen) {
-      closePosition(bar, barIndex, "stop-gap", p.stopPrice, bar.open - p.direction * slip, c.slippageTicks);
+      closePosition(bar, barIndex, "stop-gap", bar.open, bar.open - p.direction * slip, c.slippageTicks);
       return true;
     }
     if (targetAtOpen) {
