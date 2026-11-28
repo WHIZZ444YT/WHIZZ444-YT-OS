@@ -483,6 +483,19 @@ try {
   assert.ok(await globalMacro.evaluate(()=>document.documentElement.scrollWidth<=document.documentElement.clientWidth+1));
   await globalMacro.close();
 
+  async function checkTableContrast(tab, selector) {
+    for (const theme of ['dark', 'light']) {
+      const active = await tab.locator('body').evaluate(body => body.classList.contains('os-' + theme));
+      if (!active) await tab.locator('#osThemeToggle').click();
+      await tab.waitForFunction(value => document.body.classList.contains('os-' + value), theme);
+      const samples = await tab.locator(selector).evaluateAll(sampleTextContrast);
+      assert.ok(samples.length, theme + ' ' + selector);
+      for (const sample of samples) {
+        assert.ok(sample.ratio >= 4.5, `${theme} ${selector}: ${sample.label} has contrast ${sample.ratio.toFixed(2)}:1`);
+      }
+    }
+  }
+
   const voi = await fixturePage();
   await voi.route("**/assets/runtime-config.js", route => route.fulfill({
     contentType: "application/javascript", body: "window.FINANCE_OS_CONFIG={apiBase:location.origin};",
@@ -511,12 +524,14 @@ try {
   await voi.goto(site + '/volume-open-interest/');
   await voi.locator('#voiLatest').getByText('145', { exact: true }).waitFor();
   assert.equal(await voi.locator('#voiChange').innerText(), '+45');
+  await checkTableContrast(voi, '.cot-table th, #voiTable td, #exchangeObservationFilters button');
   assert.deepEqual(await voi.locator('#voiTable tr td:nth-child(3)').allTextContents(), ['+45', '—']);
   await voi.locator('#voiMarket').selectOption('es');
   assert.equal(await voi.locator('#voiStatus').innerText(), 'LOADING');
   assert.equal(await voi.locator('#voiRetrieved').innerText(), 'Retrieval pending');
   assert.doesNotMatch(await voi.locator('#voiSource').getAttribute('href'), /cftc-fixture/);
   assert.equal(await voi.locator('#voiLatest').innerText(), '—');
+  await checkTableContrast(voi, '#voiTable td');
   finishEmpty();
   await voi.locator('#voiTable').getByText('No weekly open-interest observations for this selection.').waitFor();
   assert.equal(await voi.locator('#voiLatest').innerText(), '—');
@@ -524,6 +539,7 @@ try {
   assert.equal(await voi.locator('#voiChange').getAttribute('class'), 'metric-value');
   assert.equal(await voi.locator('#voiAsOf').innerText(), 'No report date available');
   assert.equal(await voi.locator('#voiRange').innerText(), '0 weekly observations');
+  await checkTableContrast(voi, '#voiTable td, #exchangeObservationRows td');
   await voi.locator('#voiMarket').selectOption('gc');
   await voi.locator('#voiLatest').getByText('175', { exact: true }).waitFor();
   assert.equal(await voi.locator('#voiChange').innerText(), '+75');
@@ -562,6 +578,7 @@ try {
     }]}});
   });
   await positioning.goto(site + "/research/positioning/");
+  await checkTableContrast(positioning, '.cot-table th, #cotRows td');
   await positioning.locator("#cotSearchMode").selectOption("code");
   await positioning.locator("#cotSearch").fill("A123");
   await positioning.getByRole("button",{name:"Search CFTC market"}).click();
@@ -569,6 +586,7 @@ try {
   await positioning.locator("#cotMarket").selectOption("A123");
   await positioning.locator("#cotCategory").selectOption("Leveraged Funds");
   await positioning.locator("#cotChart svg").waitFor();
+  await checkTableContrast(positioning, '#cotRows td');
   assert.ok(await positioning.evaluate(()=>document.documentElement.scrollWidth<=document.documentElement.clientWidth+1));
   await positioning.close();
 
