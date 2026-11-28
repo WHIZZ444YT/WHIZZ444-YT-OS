@@ -60,3 +60,26 @@ Supabase still reports the migration gaps below. Cloudflare's active Worker vers
 - [ ] After promotion, check the deployed Vercel SHA, Worker version and migration history, rerun exact-origin and anonymous smoke, and record owner sign-off. If acceptance fails, disable the affected integration and follow the pinned rollback procedure in Doc 25.
 
 No production migration, Worker deployment or rollback was executed during this read-only audit.
+
+### Economic observation revision archive ([#103](https://github.com/WHIZZ444YT/WHIZZ444-YT-OS/issues/103))
+
+- Disposable PostgreSQL 17 verifies the existing revision migration under the ingest role. Its synthetic fixture updates a value, checks that one prior version was archived, and confirms that an older retry preserves the latest value. See [database contracts](../../../tests/database_contracts.sql).
+- Production catalog read on 28 November 2026 (IST) — `migration_applied=false`, `archive_exists=false`, `trigger_active=false`. The linked project reported no Supabase development branches. Hosted staging validation and the approved production rollout remain pending.
+- After the approved rollout, record the execution date and release reference here. Run the following catalog-only check on production and require all three results to be true before completing the gate.
+
+```sql
+select
+  exists (
+    select from supabase_migrations.schema_migrations
+    where version = '20261126120000'
+  ) as migration_applied,
+  to_regclass('public.economic_observation_revisions') is not null as archive_exists,
+  exists (
+    select from pg_trigger
+    where tgrelid = to_regclass('public.economic_observations')
+      and tgname = 'economic_observations_archive_revision'
+      and tgenabled in ('O', 'A')
+      and not tgisinternal
+  ) as trigger_active;
+```
+
