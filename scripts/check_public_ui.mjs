@@ -771,6 +771,36 @@ try {
   assert.ok(await page.getByLabel('In-sample allocation (%)').isVisible());
   await page.goto(site + '/risk/');
   assert.equal(await page.locator('#riskResult').getAttribute('aria-live'), 'polite');
+  await page.locator('#contract').selectOption('nq');
+  for (const [id, value] of Object.entries({
+    balance: '10000', riskPct: '1', maxContracts: '20', dailyLossRemaining: '75',
+    drawdownRemaining: '40', commission: '0', spreadTicks: '0', slippageTicks: '0',
+    expiryDate: '2026-12-18', costSource: 'Synthetic UI fixture', costAsOf: '2026-11-27',
+  })) {
+    await page.locator('#' + id).fill(value);
+  }
+  const risk = page.locator('#riskResult');
+  for (const [mode, contract, stop, target, tick] of [
+    ['micro', 'MNQZ26', '20', '40', '$0.50'],
+    ['standard', 'NQZ26', '2', '4', '$5.00'],
+  ]) {
+    await page.locator('#contractMode').selectOption(mode);
+    await page.locator('#exactContract').fill(contract);
+    await page.locator('#stopTicks').fill(stop);
+    await page.locator('#targetTicks').fill(target);
+    await page.locator('#calculateRisk').click();
+    assert.equal(await risk.locator('.risk-error').count(), 0, mode);
+    for (const [label, expected] of [
+      ['Tick size / tick value', '0.25 / ' + tick],
+      ['Gross stop risk / contract', '$10.00'],
+      ['Contracts', '4'],
+      ['Total modeled stop risk', '$40.00'],
+      ['Estimated net target', '$80.00'],
+    ]) {
+      const metric = risk.getByText(label, { exact: true }).locator('..').locator('b');
+      assert.equal(await metric.innerText(), expected, mode + ' ' + label);
+    }
+  }
   await staticPage.close();
   console.log('Public UI passed at six widths in both themes, including keyboard drawer and homepage search.');
 } finally {
