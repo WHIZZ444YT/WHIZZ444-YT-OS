@@ -130,7 +130,7 @@ try {
     await page.waitForFunction(() => document.body.classList.contains('os-dark'));
     assert.equal(await page.locator('.market-profile .hero').evaluate(el => getComputedStyle(el).backgroundColor), 'rgb(21, 34, 51)');
     assert.equal(await page.locator('.market-profile .links a').first().evaluate(el => getComputedStyle(el).color), 'rgb(99, 220, 201)');
-    assert.equal(await page.locator('#appSidebar [aria-current="page"]').getAttribute('href'), '/markets/');
+    assert.equal(await page.locator('#appSidebar [aria-current="location"]').getAttribute('href'), '/markets/');
     assert.ok(await page.evaluate(() => document.documentElement.scrollWidth <= document.documentElement.clientWidth));
     const toggle = page.getByRole('button', { name: 'Switch to light theme' });
     await toggle.click();
