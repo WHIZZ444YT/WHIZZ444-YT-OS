@@ -54,10 +54,15 @@ import { calculateFuturesPosition, formatMicros, parseMoneyMicros } from "./futu
    const expiryText=new Date(expiry+'T00:00:00Z').toISOString().slice(0,10);
    const checkedAt=String(spec?.specEvidence?.checkedAt||market.specEvidence?.checkedAt||spec?.specVerifiedAt||market.specVerifiedAt||'not recorded');
    const resultStatus=verified?'CONDITIONAL · SPEC RECORD MARKED VERIFIED':state==='partial'?'CONDITIONAL ESTIMATE · PARTIAL CORE-SPEC REVIEW · NOT TRADE-READY':'CONDITIONAL ESTIMATE · SPEC UNVERIFIED';
-   const remainingBy=result.quantity===result.maxContracts?'Maximum contract cap':(result.constrainedByDailyLoss?'Daily loss allowance':(result.constrainedByDrawdown?'Maximum drawdown remaining':'Per-trade risk percentage'));
+   const bindingLimits=result.constrainedByMaxContracts?['Maximum contract cap']:[
+    result.riskBudgetMicros===result.effectiveBudgetMicros?'Per-trade risk percentage':null,
+    result.constrainedByDailyLoss?'Daily loss allowance':null,
+    result.constrainedByDrawdown?'Maximum drawdown remaining':null
+   ].filter(Boolean);
+   const limitLabel=bindingLimits.length===1?'Binding limit: ':'Tied binding limits: ';
    const warning=result.quantity===0
     ?'<p><b>Zero contracts:</b> One contract exceeds the effective risk allowance or the selected allowance is exhausted. Reduce the stop distance or select a smaller supported contract; do not raise limits solely to force a position.</p>'
-    :'<p>Quantity is rounded down to whole contracts and capped at the entered maximum. It uses '+escapeHtml(remainingBy)+' as the binding budget limit.</p>';
+    :'<p>Quantity is rounded down to whole contracts and capped at the entered maximum. '+limitLabel+escapeHtml(bindingLimits.join(', '))+'.</p>';
    out.innerHTML='<div class="result-grid">'+
     '<div><span class="muted">Contracts</span><b>'+result.quantity+'</b></div>'+
     '<div><span class="muted">Requested per-trade budget</span><b>'+formatMicros(result.riskBudgetMicros)+'</b></div>'+

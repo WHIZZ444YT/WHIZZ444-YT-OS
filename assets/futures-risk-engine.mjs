@@ -72,8 +72,9 @@ export function calculateFuturesPosition(input) {
     estimatedNetTargetMicros: netTarget.toString(),
     netRewardRisk: Number(netTargetPerContract) / Number(allInPerContract),
     riskUtilizationPct: effectiveBudget > 0n ? Number(totalRisk * 10000n / effectiveBudget) / 100 : null,
-    constrainedByDailyLoss: dailyRemaining !== null && dailyRemaining <= riskBudget,
-    constrainedByDrawdown: drawdownRemaining !== null && drawdownRemaining <= riskBudget && drawdownRemaining <= (dailyRemaining ?? riskBudget)
+    constrainedByDailyLoss: dailyRemaining === effectiveBudget,
+    constrainedByDrawdown: drawdownRemaining === effectiveBudget,
+    constrainedByMaxContracts: affordableContracts > BigInt(maxContracts)
   };
 }
 
