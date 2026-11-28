@@ -44,6 +44,54 @@ try {
     }
   }
 
+  await page.setViewportSize({ width: 1265, height: 900 });
+  for (const theme of ['light', 'dark']) {
+    for (const [path, heading] of [
+      ['/macro/', 'Federal Reserve and funding rates'],
+      ['/news/', 'Official releases'],
+      ['/research/reports/', 'Publisher directory'],
+      ['/data-health/integrations/', 'Platform credentials'],
+    ]) {
+      await page.goto(site + path);
+      await page.evaluate(value => localStorage.setItem('fios.theme.preference.v1', value), theme);
+      await page.reload();
+      await page.waitForFunction(value => document.body.classList.contains('os-' + value), theme);
+      const section = page.locator('.content-section').filter({
+        has: page.getByRole('heading', { name: heading, exact: true }),
+      });
+      const samples = await section.locator('h2, h3, p').evaluateAll(elements => {
+        const channels = value => value.match(/[\d.]+/g).map(Number);
+        const luminance = rgb => rgb.slice(0, 3).reduce((sum, value, index) => {
+          const srgb = value / 255;
+          const linear = srgb <= 0.04045 ? srgb / 12.92 : ((srgb + 0.055) / 1.055) ** 2.4;
+          return sum + linear * [0.2126, 0.7152, 0.0722][index];
+        }, 0);
+        return elements.filter(element => element.textContent.trim() && element.getClientRects().length).map(element => {
+          const layers = [];
+          for (let node = element; node; node = node.parentElement) {
+            const color = channels(getComputedStyle(node).backgroundColor);
+            layers.push(color);
+            if ((color[3] ?? 1) === 1) break;
+          }
+          const background = layers.reverse().reduce((base, color) => {
+            const alpha = color[3] ?? 1;
+            return base.map((value, index) => color[index] * alpha + value * (1 - alpha));
+          }, [255, 255, 255]);
+          const foreground = luminance(channels(getComputedStyle(element).color));
+          const surface = luminance(background);
+          return {
+            tag: element.tagName, label: element.textContent.trim().slice(0, 100),
+            ratio: (Math.max(foreground, surface) + 0.05) / (Math.min(foreground, surface) + 0.05),
+          };
+        });
+      });
+      assert.ok(samples.some(sample => sample.tag === 'H2') && samples.some(sample => sample.tag === 'P'), path);
+      for (const sample of samples) {
+        assert.ok(sample.ratio >= 4.5, `${theme} ${path}: ${sample.label} has contrast ${sample.ratio.toFixed(2)}:1`);
+      }
+    }
+  }
+
   const tutorial = await fixturePage({ colorScheme: 'dark', viewport: { width: 320, height: 880 } });
   const tutorialPath = '/ict-futures/academy/tutorials/supplemental-source-audit.html';
   const lesson = tutorial.getByRole('link', {

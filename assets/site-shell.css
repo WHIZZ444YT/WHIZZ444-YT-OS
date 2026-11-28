@@ -207,13 +207,9 @@ body.os-dark{min-height:100vh;margin:0;background:var(--os-bg);color:var(--os-te
 .os-main-column .stats-row b{font-size:18px;color:#dce9ef}
 .os-main-column .stats-row span{font-size:9px;color:#91a8ba}
 .os-main-column .content-section{margin:12px 0;padding:19px 20px;border:1px solid var(--os-line);border-radius:var(--os-radius-md);background:var(--os-card);box-shadow:none}
-.os-main-column .content-section h2{font-size:16px;letter-spacing:-.02em;font-weight:820;color:#e0eaf2}
-.os-main-column .content-section h3{color:#d7e5ee}
-.os-main-column .content-section p{color:#9baebf;font-size:11px;line-height:1.7}
-.os-light .os-main-column .content-section > :is(h2,h3),
-.os-light .os-main-column .content-section .section-top :is(h2,h3){color:var(--os-ink)}
-.os-light .os-main-column .content-section > p,
-.os-light .os-main-column .content-section .section-top p{color:var(--os-muted)}
+.os-main-column .content-section h2{font-size:16px;letter-spacing:-.02em;font-weight:820;color:var(--os-ink)}
+.os-main-column .content-section h3{color:var(--os-ink)}
+.os-main-column .content-section p{color:var(--os-muted);font-size:11px;line-height:1.7}
 .os-main-column .section-top{margin-bottom:13px}
 .os-main-column .module-card{min-height:142px;padding:15px;border-color:#2b4054;border-radius:10px;background:#142437;color:#dce8f0;box-shadow:none}
 .os-main-column .module-card h3{font-size:13px;color:#e4edf4}
