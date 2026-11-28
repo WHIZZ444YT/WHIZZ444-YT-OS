@@ -115,6 +115,29 @@ try {
   assert.deepEqual(Object.keys(payload).sort(),["end","generatedAt","horizonDays","market","schemaVersion","start"]);
   assert.equal(payload.market,"gc");
   assert.equal(payload.horizonDays,1);
+  const contractGrid = desk.locator('#fiContractGrid');
+  const esCard = contractGrid.locator('button[data-market="es"]');
+  await esCard.focus();
+  await desk.keyboard.press('Enter');
+  assert.equal(await esCard.getAttribute('aria-pressed'), 'true');
+  assert.match(await desk.locator('#fiSelectedTitle').innerText(), /S&P 500/);
+  assert.ok(await esCard.evaluate(button => button === document.activeElement));
+
+  await desk.locator('#fiTierFilters [data-tier="T1"]').click();
+  assert.equal(await contractGrid.locator('button[data-market="cl"]').count(), 0);
+  const nqCard = contractGrid.locator('button[data-market="nq"]');
+  await esCard.focus();
+  await desk.keyboard.press('Shift+Tab');
+  assert.ok(await nqCard.evaluate(button => button === document.activeElement));
+  await desk.keyboard.press('Space');
+  assert.equal(await nqCard.getAttribute('aria-pressed'), 'true');
+  assert.equal(await esCard.getAttribute('aria-pressed'), 'false');
+  assert.match(await desk.locator('#fiSelectedTitle').innerText(), /Nasdaq-100/);
+  assert.ok(await nqCard.evaluate(button => button === document.activeElement));
+  await desk.keyboard.press('Tab');
+  assert.ok(await esCard.evaluate(button => button === document.activeElement));
+  await desk.keyboard.press('Shift+Tab');
+  assert.ok(await nqCard.evaluate(button => button === document.activeElement));
   await desk.close();
 
   await page.setViewportSize({ width: 768, height: 900 });
