@@ -20,6 +20,33 @@ async function fixturePage(options = {}) {
   await page.route('**/*', blockExternal);
   return page;
 }
+function sampleTextContrast(elements) {
+
+  const channels = value => value.match(/[\d.]+/g).map(Number);
+  const luminance = rgb => rgb.slice(0, 3).reduce((sum, value, index) => {
+    const srgb = value / 255;
+    const linear = srgb <= 0.04045 ? srgb / 12.92 : ((srgb + 0.055) / 1.055) ** 2.4;
+    return sum + linear * [0.2126, 0.7152, 0.0722][index];
+  }, 0);
+  return elements.filter(element => element.textContent.trim() && element.getClientRects().length).map(element => {
+    const layers = [];
+    for (let node = element; node; node = node.parentElement) {
+      const color = channels(getComputedStyle(node).backgroundColor);
+      layers.push(color);
+      if ((color[3] ?? 1) === 1) break;
+    }
+    const background = layers.reverse().reduce((base, color) => {
+      const alpha = color[3] ?? 1;
+      return base.map((value, index) => color[index] * alpha + value * (1 - alpha));
+    }, [255, 255, 255]);
+    const foreground = luminance(channels(getComputedStyle(element).color));
+    const surface = luminance(background);
+    return {
+      tag: element.tagName, label: element.textContent.trim().slice(0, 100),
+      ratio: (Math.max(foreground, surface) + 0.05) / (Math.min(foreground, surface) + 0.05),
+    };
+  });
+}
 try {
   const page = await fixturePage({ reducedMotion: 'reduce' });
   for (const theme of ['dark', 'light']) {
@@ -59,35 +86,33 @@ try {
       const section = page.locator('.content-section').filter({
         has: page.getByRole('heading', { name: heading, exact: true }),
       });
-      const samples = await section.locator('h2, h3, p').evaluateAll(elements => {
-        const channels = value => value.match(/[\d.]+/g).map(Number);
-        const luminance = rgb => rgb.slice(0, 3).reduce((sum, value, index) => {
-          const srgb = value / 255;
-          const linear = srgb <= 0.04045 ? srgb / 12.92 : ((srgb + 0.055) / 1.055) ** 2.4;
-          return sum + linear * [0.2126, 0.7152, 0.0722][index];
-        }, 0);
-        return elements.filter(element => element.textContent.trim() && element.getClientRects().length).map(element => {
-          const layers = [];
-          for (let node = element; node; node = node.parentElement) {
-            const color = channels(getComputedStyle(node).backgroundColor);
-            layers.push(color);
-            if ((color[3] ?? 1) === 1) break;
-          }
-          const background = layers.reverse().reduce((base, color) => {
-            const alpha = color[3] ?? 1;
-            return base.map((value, index) => color[index] * alpha + value * (1 - alpha));
-          }, [255, 255, 255]);
-          const foreground = luminance(channels(getComputedStyle(element).color));
-          const surface = luminance(background);
-          return {
-            tag: element.tagName, label: element.textContent.trim().slice(0, 100),
-            ratio: (Math.max(foreground, surface) + 0.05) / (Math.min(foreground, surface) + 0.05),
-          };
-        });
-      });
+      const samples = await section.locator('h2, h3, p').evaluateAll(sampleTextContrast);
       assert.ok(samples.some(sample => sample.tag === 'H2') && samples.some(sample => sample.tag === 'P'), path);
       for (const sample of samples) {
         assert.ok(sample.ratio >= 4.5, `${theme} ${path}: ${sample.label} has contrast ${sample.ratio.toFixed(2)}:1`);
+      }
+    }
+  }
+
+  for (const theme of ['light', 'dark']) {
+    await page.goto(site + '/');
+    await page.evaluate(value => localStorage.setItem('fios.theme.preference.v1', value), theme);
+    await page.reload();
+    await page.waitForFunction(value => document.body.classList.contains('os-' + value), theme);
+    const selectors = [
+      '.os-overview-header h1', '.os-overview-header p', '.os-overview-updated',
+      '#overviewPrimaryMarkets', '.os-primary-markets article a', '.os-overview-rail h2',
+      '.os-overview-rail .os-widget-head p', '.os-overview-rail .os-context-links a',
+      '#overviewContractName', '#overviewContractMeta', '#overviewQuoteDetail',
+      '#overviewContractProfile', '#overviewClockET', '.os-field-compact',
+      '.os-overview-grid .os-state-chip', '#overviewHealthDetail',
+    ];
+    for (const selector of selectors) {
+      const samples = await page.locator(selector).evaluateAll(sampleTextContrast);
+      assert.ok(samples.length, theme + ' ' + selector + ' must have visible text');
+      for (const sample of samples) {
+        const minimum = sample.tag === 'H1' ? 3 : 4.5;
+        assert.ok(sample.ratio >= minimum, `${theme} Overview: ${sample.label} has contrast ${sample.ratio.toFixed(2)}:1`);
       }
     }
   }

@@ -278,6 +278,27 @@ body.os-dark{min-height:100vh;margin:0;background:var(--os-bg);color:var(--os-te
 .os-overview-header h1{margin:0;font-size:clamp(25px,3vw,36px);line-height:1.15;letter-spacing:-.04em;color:var(--os-ink)}
 .os-overview-header p{margin:5px 0 0;color:#92a8ba;font-size:10px;line-height:1.6}
 .os-overview-updated{color:#7f97aa;font-size:8px;white-space:nowrap}
+.os-light .os-overview-header :is(p,.os-overview-updated),
+.os-light .os-overview-grid :is(.os-widget-head p,.os-contract-focus label,.os-contract-focus p,
+  .os-quote-placeholder small,.os-status-row small,.os-clock-tile span,.os-clock-tile small,
+  .os-calendar-note p,.os-news-item span,.os-cot-summary span,.os-private-summary span,
+  .os-empty-state,.os-loading-state,.os-source-attribution,.os-field-compact){color:var(--os-muted)}
+.os-light .os-overview-header .os-eyebrow{color:var(--os-action)}
+.os-light .os-overview-grid :is(.os-contract-focus strong,.os-status-row b,.os-clock-tile strong,
+  .os-cot-summary b,.os-private-summary b){color:var(--os-ink)}
+.os-light .os-overview-grid :is(.os-widget-actions a,.os-widget-actions button,
+  .os-source-attribution a,.os-context-links a,.os-news-item b){color:var(--os-blue)}
+.os-light .os-overview-grid :is(.os-quote-placeholder,.os-clock-tile,.os-calendar-note,
+  .os-cot-summary>div,.os-private-summary>div,.os-empty-state,.os-loading-state,
+  .os-error-state,.os-contract-focus select,.os-timezone-select,.os-state-chip){
+  background:var(--os-bg);border-color:var(--os-line-strong)
+}
+.os-light .os-overview-grid :is(.os-contract-focus select,.os-timezone-select){color:var(--os-ink)}
+.os-light .os-overview-grid :is(.os-quote-placeholder strong,.os-calendar-note b,.os-state-chip.warn){color:var(--os-warning)}
+.os-light .os-overview-grid :is(.os-error-state,.os-state-chip.bad){color:var(--os-negative)}
+.os-light .os-overview-grid .os-state-chip.good{color:var(--os-positive)}
+.os-light .os-overview-grid .os-state-chip.neutral{color:var(--os-muted)}
+
 .os-overview-grid{display:grid;grid-template-columns:minmax(0,1.65fr) minmax(265px,.75fr);gap:13px;align-items:start}
 .os-overview-main,.os-overview-rail{display:grid;gap:12px;min-width:0}
 .os-overview-rail > :only-child {grid-column: 1 / -1}
