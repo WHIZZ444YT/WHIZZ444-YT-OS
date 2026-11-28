@@ -988,8 +988,11 @@ def build():
       </ul>
     </section>
   </div>
-  <section id="strategyResults" tabindex="-1" class="strategy-results strategy-hidden">
-    <div class="strategy-result-header"><div><p class="eyebrow">REPRODUCIBLE RUN RESULT</p><h2 id="strategyResultTitle">Strategy results</h2><p id="strategyResultFingerprint" class="strategy-code"></p></div><div class="strategy-actions"><button id="downloadManifest" type="button" class="strategy-secondary-button" disabled>Download manifest</button><button id="downloadTrades" type="button" class="strategy-secondary-button" disabled>Download trade ledger</button></div></div>
+  <section id="strategyResults" tabindex="-1" class="strategy-results" aria-labelledby="strategyResultsHeading">
+    <h2 id="strategyResultsHeading">Strategy results</h2>
+    <p id="strategyResultsEmpty">To generate results, <a href="#strategy-input">upload a valid signal CSV and enter your assumptions</a>, then run the backtest.</p>
+    <div id="strategyResultsContent" class="strategy-results strategy-hidden">
+    <div class="strategy-result-header"><div><p class="eyebrow">REPRODUCIBLE RUN RESULT</p><h3 id="strategyResultTitle"></h3><p id="strategyResultFingerprint" class="strategy-code"></p></div><div class="strategy-actions"><button id="downloadManifest" type="button" class="strategy-secondary-button" disabled>Download manifest</button><button id="downloadTrades" type="button" class="strategy-secondary-button" disabled>Download trade ledger</button></div></div>
     <section class="strategy-panel"><div class="section-top"><div><h3>Out-of-sample holdout metrics</h3><p id="strategyOosNote" class="strategy-help">Final chronological segment.</p></div></div><div id="strategyOosMetrics" class="strategy-metric-grid"></div></section>
     <div id="strategySplitCards" class="strategy-split-grid"></div>
     <section class="strategy-panel"><h3>Full-sample context (descriptive only)</h3><div id="strategyOverallMetrics" class="strategy-metric-grid"></div><p class="strategy-help">Full sample includes all segments and must not replace the holdout result when judging generalisation.</p></section>
@@ -999,6 +1002,7 @@ def build():
     </div>
     <section class="strategy-panel"><h3>Split comparison</h3><div id="strategySplitTable"></div></section>
     <section class="strategy-panel"><h3>Data, sample and execution warnings</h3><div id="strategyWarnings"></div></section>
+    </div>
   </section>
   <section id="strategy-history" class="strategy-panel"><h3>Recent runs on this device</h3><p>Local history stores fingerprints and summary metrics only. The original CSV remains with you; re-upload the identical file and match its SHA-256 to reproduce a run.</p><div id="strategyHistory" class="strategy-help">No local runs saved on this device yet.</div></section>
   <section class="strategy-panel"><h3>Evidence rules</h3><p>Win rate alone is not a decision metric. Review trade count, net expectancy, average R, net profit factor, drawdown size/duration, costs and out-of-sample stability together. Small samples, externally generated signals with look-ahead, unadjusted contract rolls, inaccurate tick values and omitted costs can invalidate results. A backtest is not a forecast or a guarantee of future performance.</p></section>
