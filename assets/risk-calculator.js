@@ -1,4 +1,4 @@
-import { calculateFuturesPosition, formatMicros } from "./futures-risk-engine.mjs";
+import { calculateFuturesPosition, formatMicros, parseMoneyMicros } from "./futures-risk-engine.mjs";
 
 (async()=>{
  const sel=document.getElementById('contract'),out=document.getElementById('riskResult');
@@ -72,7 +72,7 @@ import { calculateFuturesPosition, formatMicros } from "./futures-risk-engine.mj
     '<div><span class="muted">Gross target before costs</span><b>'+formatMicros(result.grossTargetMicros)+'</b></div>'+
     '<div><span class="muted">Estimated net target</span><b>'+formatMicros(result.estimatedNetTargetMicros)+'</b></div>'+
     '<div><span class="muted">Net reward / risk</span><b>'+result.netRewardRisk.toFixed(2)+'R</b></div>'+
-    '<div><span class="muted">Tick size / tick value</span><b>'+escapeHtml(tickSize)+' / '+formatMicros(tickValue)+'</b></div></div>'+
+    '<div><span class="muted">Tick size / tick value</span><b>'+escapeHtml(tickSize)+' / '+formatMicros(parseMoneyMicros(tickValue))+'</b></div></div>'+
     '<p class="fine-print"><b>'+resultStatus+'</b> · '+escapeHtml(exactContract)+' · expiry '+escapeHtml(expiryText)+' · '+escapeHtml(mode.value==='micro'?'micro':'standard')+' profile · reference set '+escapeHtml(spec?.specVersionId||market.specVersionId||'version-not-recorded')+' · core facts checked '+escapeHtml(checkedAt)+' · effective '+escapeHtml(spec?.specEffectiveFrom||market.specEffectiveFrom||'not established')+sourceLink+'. Cost source: '+escapeHtml(costSource)+' · as of '+escapeHtml(costAsOf)+'. The expiry and contract code are user-entered and are not reconciled against an exchange calendar.</p>'+warning+
     '<p class="fine-print">USD arithmetic uses integer micro-dollar amounts and whole ticks. FX conversion, margin, liquidation, correlated exposure, session limits and event risk are not included.</p>';
   }catch(error){renderError(error.message);}
