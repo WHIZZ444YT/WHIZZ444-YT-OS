@@ -85,6 +85,20 @@ test('global search indexes every public Academy media page once', () => {
   }
 });
 
+test('all generated market profiles use the shared shell and preserve their family routes', () => {
+  const { markets } = json('ict-futures/data/market-universe.json');
+  assert.equal(markets.length, 15);
+  for (const { id } of markets) {
+    const html = published('ict-futures/markets/' + id + '.html');
+    assert.match(html, /data-os-shell/);
+    assert.equal([...html.matchAll(/<h1\b/g)].length, 1);
+    assert.match(html, /id="osThemeToggle"/);
+    assert.match(html, /class="market-profile"/);
+    assert.ok(html.includes('/charts/?market=' + id));
+    assert.ok(html.includes('/contract-specs/#' + id));
+  }
+});
+
 test('legacy navigation resolves from Vercel clean trailing-slash URLs', () => {
   const pages = {
     '/ict-futures/academy/amd-po3/': '/ict-futures/academy/amd-po3.html',

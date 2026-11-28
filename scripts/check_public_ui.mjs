@@ -117,6 +117,33 @@ try {
     }
   }
 
+  await page.evaluate(() => localStorage.setItem('fios.theme.preference.v1', 'dark'));
+  for (const [width, market, heading] of [
+    [1280, 'nq', /Nasdaq-100 E-mini/],
+    [320, 'es', /S&P 500 E-mini/],
+  ]) {
+    await page.setViewportSize({ width, height: 900 });
+    await page.goto(site + '/markets/');
+    await page.waitForFunction(() => document.body.classList.contains('os-dark'));
+    await page.locator('main a[href="/ict-futures/markets/' + market + '.html"]').first().click();
+    await page.getByRole('heading', { name: heading, level: 1 }).waitFor();
+    await page.waitForFunction(() => document.body.classList.contains('os-dark'));
+    assert.equal(await page.locator('.market-profile .hero').evaluate(el => getComputedStyle(el).backgroundColor), 'rgb(21, 34, 51)');
+    assert.equal(await page.locator('.market-profile .links a').first().evaluate(el => getComputedStyle(el).color), 'rgb(99, 220, 201)');
+    assert.equal(await page.locator('#appSidebar [aria-current="page"]').getAttribute('href'), '/markets/');
+    assert.ok(await page.evaluate(() => document.documentElement.scrollWidth <= document.documentElement.clientWidth));
+    const toggle = page.getByRole('button', { name: 'Switch to light theme' });
+    await toggle.click();
+    await page.waitForFunction(() => document.body.classList.contains('os-light'));
+    await page.reload();
+    await page.waitForFunction(() => document.body.classList.contains('os-light'));
+    assert.equal(await page.locator('.market-profile .hero').evaluate(el => getComputedStyle(el).backgroundColor), 'rgb(255, 255, 255)');
+    const profileContrast = await page.locator('.market-profile h1, .market-profile .hero p, .market-profile .links a').evaluateAll(sampleTextContrast);
+    assert.ok(profileContrast.length > 3 && profileContrast.every(sample => sample.ratio >= 4.5), market);
+    await page.getByRole('button', { name: 'Switch to dark theme' }).click();
+    await page.waitForFunction(() => document.body.classList.contains('os-dark'));
+  }
+
   const tutorial = await fixturePage({ colorScheme: 'dark', viewport: { width: 320, height: 880 } });
   const tutorialPath = '/ict-futures/academy/tutorials/supplemental-source-audit.html';
   const lesson = tutorial.getByRole('link', {
