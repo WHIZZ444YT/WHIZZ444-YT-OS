@@ -8,7 +8,7 @@ const source = readFileSync(new URL('../sw.js', import.meta.url), 'utf8');
 
 function worker() {
   const listeners = new Map();
-  const oldName = 'fios-shell-v1.1.0-futures-only-p1';
+  const oldName = 'fios-shell-v1.1.0-public-shell';
   const stores = new Map([[oldName, new Map([['/account/', new Response('old private response')]])]]);
   let offline = false;
   runInNewContext(source, {
@@ -60,7 +60,8 @@ test('public shell replaces stale caches and leaves private routes and terminal 
     'https://provider.test/']) assert.equal(sw.request(path), undefined, path);
   assert.equal(sw.request('/', 'navigate', 'POST'), undefined);
   sw.disconnect();
-  assert.equal(await (await sw.request('/')).text(), '/index.html');
+  assert.equal(await (await sw.request('/')).text(), '/');
+  assert.equal(await (await sw.request('/index.html')).text(), '/');
   assert.equal(await (await sw.request('/icon.svg', 'no-cors')).text(), '/icon.svg');
   assert.equal(sw.request('/account/'), undefined);
 });
