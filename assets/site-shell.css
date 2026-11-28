@@ -234,6 +234,12 @@ body.os-dark{min-height:100vh;margin:0;background:var(--os-bg);color:var(--os-te
 .os-main-column .table-wrap{max-width:100%;overflow-x:auto}
 .os-main-column table{min-width:620px}
 .os-main-column th{color:#9bb0c1}
+.os-main-column .cot-table{background:var(--os-card)}
+.os-main-column .cot-table th{color:var(--os-ink);background:var(--os-bg)}
+.os-main-column .cot-table td{color:var(--os-ink)}
+.os-main-column .cot-table td:first-child{color:var(--os-blue)}
+.os-main-column .cot-table td[colspan]{color:var(--os-muted)}
+.os-main-column .cot-table :is(th,td){border-color:var(--os-line-strong)}
 .os-main-column td{color:#d3e0e8}
 .os-state-chip{display:inline-flex;align-items:center;gap:6px;padding:4px 7px;border:1px solid #3a4c60;border-radius:5px;background:#182a3c;color:#b2c3d0;font-size:8px;font-weight:900;letter-spacing:.055em;line-height:1.35}
 .os-state-chip.good{border-color:#315c55;background:#15352f;color:#94d0bf}
@@ -574,7 +580,7 @@ body {font-size: var(--os-body-size)}
   .sessions-live-state, .account-benefit-grid span, .academy-progress-summary span) {
   color: var(--os-muted);
 }
-.os-main-column :is(.cot-controls, .cot-actions, .ict-chart-controls) .secondary-button {
+.os-main-column :is(.cot-controls, .cot-actions, .ict-chart-controls, .voi-controls) .secondary-button {
   background: var(--os-surface);
   color: var(--os-blue);
   border-color: var(--os-line-strong);
