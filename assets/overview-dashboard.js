@@ -85,8 +85,6 @@
     setText("overviewContractRole", market.role || "No additional profile summary is supplied.");
     const specs = $("overviewContractSpecs");
     if (specs) specs.href = "/contract-specs/#" + encodeURIComponent(market.id);
-    const profile = $("overviewContractProfile");
-    if (profile) profile.href = "/ict-futures/markets/" + encodeURIComponent(market.id) + ".html";
   }
 
   async function loadMarketRegistry() {
