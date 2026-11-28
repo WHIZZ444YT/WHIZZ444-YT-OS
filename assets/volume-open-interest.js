@@ -46,6 +46,11 @@
   $("voiChange").className="metric-value";
   $("voiRange").textContent=coverage;
  }
+ function weeklyChange(latest,previous){
+  if(!previous)return null;
+  const elapsed=Date.parse(latest.date+"T00:00:00Z")-Date.parse(previous.date+"T00:00:00Z");
+  return elapsed===7*24*60*60*1000?latest.oi-previous.oi:null;
+ }
  function renderChart(){
   history=toRows().slice(-26);
   const chart=$("voiChart");
@@ -60,14 +65,14 @@
    const height=Math.max(6,((x.oi-min)/range)*88+12);
    return '<div class="oi-bar-col" title="'+esc(x.date)+' · '+fmt(x.oi)+' contracts"><span>'+fmt(x.oi)+'</span><i style="height:'+height+'%"></i><small>'+esc(x.date.slice(5))+'</small></div>';
   }).join("");
-  const latest=history.at(-1),previous=history.at(-2),delta=previous?latest.oi-previous.oi:null;
+  const latest=history.at(-1),previous=history.at(-2),delta=weeklyChange(latest,previous);
   $("voiLatest").textContent=fmt(latest.oi);
   $("voiAsOf").textContent="Report date "+latest.date;
   $("voiChange").textContent=delta===null?"—":(delta>0?"+":"")+fmt(delta);
   $("voiChange").className=delta===null?"metric-value":delta>0?"metric-value positive":delta<0?"metric-value negative":"metric-value";
   $("voiRange").textContent=history.length+" weekly observations";
   $("voiTable").innerHTML=history.slice().reverse().map((x,i,arr)=>{
-   const prior=arr[i+1],change=prior?x.oi-prior.oi:null;
+   const prior=arr[i+1],change=weeklyChange(x,prior);
    return '<tr><td>'+esc(x.date)+'</td><td>'+fmt(x.oi)+'</td><td>'+(change===null?"—":(change>0?"+":"")+fmt(change))+'</td><td>'+esc(selectedName)+'</td></tr>';
   }).join("");
  }

@@ -415,25 +415,30 @@ try {
     contentType: "application/javascript", body: "window.FINANCE_OS_CONFIG={apiBase:location.origin};",
   }));
   await voi.route("**/api/v1/futures-observations?**", route => route.fulfill({ json: { observations: [] } }));
-  const populated = (marketName, openInterest) => ({
+  const populated = (marketName, openInterest, dates = ['2026-11-17', '2026-11-24']) => ({
     status: 'fresh', source_url: 'https://example.com/cftc-fixture', retrievedAt: '2026-11-25T00:00:00Z',
-    observations: [100, openInterest].map((value, index) => ({
-      reportDate: index ? '2026-11-24' : '2026-11-17', marketName, openInterest: value,
+    observations: dates.map((reportDate, index) => ({
+      reportDate, marketName, openInterest: index === dates.length - 1 ? openInterest : 100,
     })),
   });
   let finishEmpty;
   const emptyResponse = new Promise(resolve => { finishEmpty = resolve; });
   await voi.route("**/api/v1/volume-open-interest?**", async route => {
-    const query = new URL(route.request().url()).searchParams.get('q');
+    const params = new URL(route.request().url()).searchParams;
+    const query = params.get('q');
     if (query === 'S&P 500') {
       await emptyResponse;
       return route.fulfill({ json: { status: 'fresh', observations: [] } });
     }
-    return route.fulfill({ json: query === 'GOLD' ? populated('Gold fixture', 175) : populated('Nasdaq fixture', 145) });
+    if (query === 'GOLD') return route.fulfill({ json: populated('Gold fixture', 175) });
+    if (query === 'CRUDE OIL') return route.fulfill({ json: populated('Crude fixture', 200, ['2026-11-24']) });
+    const dates = params.get('variant') === 'combined' ? ['2026-11-10', '2026-11-24'] : undefined;
+    return route.fulfill({ json: populated('Nasdaq fixture', 145, dates) });
   });
   await voi.goto(site + '/volume-open-interest/');
   await voi.locator('#voiLatest').getByText('145', { exact: true }).waitFor();
   assert.equal(await voi.locator('#voiChange').innerText(), '+45');
+  assert.deepEqual(await voi.locator('#voiTable tr td:nth-child(3)').allTextContents(), ['+45', '—']);
   await voi.locator('#voiMarket').selectOption('es');
   assert.equal(await voi.locator('#voiStatus').innerText(), 'LOADING');
   assert.equal(await voi.locator('#voiRetrieved').innerText(), 'Retrieval pending');
@@ -452,6 +457,21 @@ try {
   assert.equal(await voi.locator('#voiAsOf').innerText(), 'Report date 2026-11-24');
   assert.equal(await voi.locator('#voiRange').innerText(), '2 weekly observations');
   assert.match(await voi.locator('#voiTable').innerText(), /Gold fixture/);
+  await voi.locator('#voiVariant').selectOption('combined');
+  await voi.locator('#voiMarket').selectOption('nq');
+  await voi.locator('#voiTable').getByText('2026-11-10', { exact: true }).waitFor();
+  assert.equal(await voi.locator('#voiLatest').innerText(), '145');
+  assert.equal(await voi.locator('#voiChange').innerText(), '—');
+  assert.deepEqual(await voi.locator('#voiTable tr td:first-child').allTextContents(), ['2026-11-24', '2026-11-10']);
+  assert.deepEqual(await voi.locator('#voiTable tr td:nth-child(3)').allTextContents(), ['—', '—']);
+  assert.equal(await voi.locator('#voiChart .oi-bar-col').count(), 2);
+
+  await voi.locator('#voiMarket').selectOption('cl');
+  await voi.locator('#voiTable').getByText('Crude fixture', { exact: true }).waitFor();
+  assert.equal(await voi.locator('#voiLatest').innerText(), '200');
+  assert.equal(await voi.locator('#voiChange').innerText(), '—');
+  assert.deepEqual(await voi.locator('#voiTable tr td:nth-child(3)').allTextContents(), ['—']);
+  assert.equal(await voi.locator('#voiChart .oi-bar-col').count(), 1);
   await voi.close();
 
   const positioning = await fixturePage({ viewport:{width:390,height:844} });
