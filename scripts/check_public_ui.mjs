@@ -801,6 +801,22 @@ try {
       assert.equal(await metric.innerText(), expected, mode + ' ' + label);
     }
   }
+  for (const [daily, drawdown, max, allowance, quantity, reason] of [
+    ['75', '40', '20', '$40.00', '4', 'Binding limit: Maximum drawdown remaining.'],
+    ['40', '75', '20', '$40.00', '4', 'Binding limit: Daily loss allowance.'],
+    ['75', '40', '2', '$40.00', '2', 'Binding limit: Maximum contract cap.'],
+    ['40', '40', '4', '$40.00', '4', 'Tied binding limits: Daily loss allowance, Maximum drawdown remaining.'],
+    ['100', '100', '20', '$100.00', '10', 'Tied binding limits: Per-trade risk percentage, Daily loss allowance, Maximum drawdown remaining.'],
+  ]) {
+    await page.locator('#dailyLossRemaining').fill(daily);
+    await page.locator('#drawdownRemaining').fill(drawdown);
+    await page.locator('#maxContracts').fill(max);
+    await page.locator('#calculateRisk').click();
+    assert.ok(await risk.getByText(reason, { exact: false }).isVisible(), reason);
+    for (const [label, expected] of [['Effective remaining allowance', allowance], ['Contracts', quantity]]) {
+      assert.equal(await risk.getByText(label, { exact: true }).locator('..').locator('b').innerText(), expected);
+    }
+  }
   await staticPage.close();
   console.log('Public UI passed at six widths in both themes, including keyboard drawer and homepage search.');
 } finally {

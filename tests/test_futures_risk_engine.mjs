@@ -31,8 +31,23 @@ test("daily-loss and drawdown remaining amounts cap the risk budget", () => {
   const result = calculateFuturesPosition(base({ dailyLossRemaining: "50", drawdownRemaining: "40" }));
   assert.equal(formatMicros(result.effectiveBudgetMicros), "$40.00");
   assert.equal(result.quantity, 2);
-  assert.equal(result.constrainedByDailyLoss, true);
+  assert.equal(result.constrainedByDailyLoss, false);
   assert.equal(result.constrainedByDrawdown, true);
+  assert.equal(result.constrainedByMaxContracts, false);
+
+  const daily = calculateFuturesPosition(base({ dailyLossRemaining: "40", drawdownRemaining: "50" }));
+  assert.equal(daily.constrainedByDailyLoss, true);
+  assert.equal(daily.constrainedByDrawdown, false);
+
+  const tied = calculateFuturesPosition(base({ dailyLossRemaining: "40", drawdownRemaining: "40", maxContracts: 2 }));
+  assert.equal(tied.constrainedByDailyLoss, true);
+  assert.equal(tied.constrainedByDrawdown, true);
+  assert.equal(tied.constrainedByMaxContracts, false);
+
+  const capped = calculateFuturesPosition(base({ dailyLossRemaining: "50", drawdownRemaining: "40", maxContracts: 1 }));
+  assert.equal(capped.quantity, 1);
+  assert.equal(capped.effectiveBudgetMicros, result.effectiveBudgetMicros);
+  assert.equal(capped.constrainedByMaxContracts, true);
 });
 
 test("zero-contract result is explicit when a single contract exceeds the budget", () => {
