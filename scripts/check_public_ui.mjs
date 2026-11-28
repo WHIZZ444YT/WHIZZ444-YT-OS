@@ -485,7 +485,7 @@ try {
 
   async function checkTableContrast(tab, selector) {
     for (const theme of ['dark', 'light']) {
-      const active = await tab.locator('body').evaluate(body => body.classList.contains('os-' + theme));
+      const active = await tab.locator('body').evaluate((body, value) => body.classList.contains('os-' + value), theme);
       if (!active) await tab.locator('#osThemeToggle').click();
       await tab.waitForFunction(value => document.body.classList.contains('os-' + value), theme);
       const samples = await tab.locator(selector).evaluateAll(sampleTextContrast);
