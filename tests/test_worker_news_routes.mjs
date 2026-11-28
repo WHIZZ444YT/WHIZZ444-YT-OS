@@ -526,3 +526,46 @@ test('discovery cache ages from last success rather than the last failed check',
     assert.equal((await response.json()).status, expected);
   }
 });
+
+test('open interest returns structured 502 without a snapshot for either CFTC filter', async t => {
+  const upstream = t.mock.method(globalThis, 'fetch', async () => { throw new Error('CFTC offline'); });
+  for (const [filter, query, code] of [
+    ['q=NASDAQ', 'NASDAQ', null],
+    ['contract_market_code=123456', null, '123456'],
+  ]) {
+    const request = new Request('https://edge.example/api/v1/volume-open-interest?report=tff&variant=combined&' + filter, {
+      headers: { Origin: 'https://app.example' }
+    });
+    const response = await worker.fetch(request, makeEnv(), context());
+    assert.equal(response.status, 502);
+    assert.equal(response.headers.get('Access-Control-Allow-Origin'), 'https://app.example');
+    const payload = await response.json();
+    assert.equal(payload.data_type, 'cftc_weekly_open_interest');
+    assert.equal(payload.status, 'unavailable');
+    assert.equal(payload.report_family, 'tff');
+    assert.equal(payload.report_variant, 'combined');
+    assert.equal(payload.query, query);
+    assert.equal(payload.contractMarketCode, code);
+    assert.deepEqual(payload.observations, []);
+    assert.equal(payload.error, 'CFTC open-interest request failed');
+  }
+  assert.equal(upstream.mock.callCount(), 2);
+});
+
+test('open interest preserves stale observations when the CFTC refresh fails', async t => {
+  const upstream = t.mock.method(globalThis, 'fetch', async () => { throw new Error('CFTC offline'); });
+  const observations = [{ reportDate: '2026-11-17', openInterest: 1000, contractMarketCode: '123456' }];
+  const snapshot = {
+    status: 'fresh', report: 'tff', variant: 'futures-only', contractMarketCode: '123456',
+    retrievedAt: new Date(Date.now() - 7 * 60 * 60 * 1000).toISOString(), observations
+  };
+  const env = makeEnv({ 'voi:tff:futures-only:v2:123456': JSON.stringify(snapshot) });
+  const request = new Request('https://edge.example/api/v1/volume-open-interest?contract_market_code=123456');
+  const response = await worker.fetch(request, env, context());
+  assert.equal(upstream.mock.callCount(), 1);
+  assert.equal(response.status, 200);
+  const payload = await response.json();
+  assert.equal(payload.status, 'stale');
+  assert.deepEqual(payload.observations, observations);
+  assert.match(payload.lastError, /showing last successful open-interest snapshot/);
+});

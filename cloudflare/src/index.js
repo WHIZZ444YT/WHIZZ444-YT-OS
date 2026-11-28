@@ -362,7 +362,12 @@ export default {
      snapshot={schemaVersion:1,dataType:"cftc_weekly_open_interest",status:cot.status,provider:cot.provider,report,reportName:cot.reportName,variant:cot.variant,query:q||null,contractMarketCode:contractMarketCode||null,positionDate:cot.dataAsOf,publishedAt:null,publicationTimestampStatus:cot.publicationTimestampStatus,retrievedAt:cot.retrievedAt,sourceUrl:cot.sourceUrl,scheduleUrl:cot.scheduleUrl,cadence:"weekly",metric:"open_interest",unit:"contracts",observations,volume:{status:"not-connected",metric:"exchange_traded_volume",reason:"CFTC COT does not provide the daily/intraday exchange volume series required by this module."}};
      if(env.SNAPSHOTS)await env.SNAPSHOTS.put(cacheKey,JSON.stringify(snapshot),{expirationTtl:60*60*8});
     }catch(error){
-     if(!snapshot)return json({status:"unavailable",provider:"CFTC Public Reporting Environment",report,query:market,observations:[],volume:{status:"not-connected"},error:"CFTC open-interest request failed"},502,cors);
+     if(!snapshot)return json({
+      schema_version:1,data_type:"cftc_weekly_open_interest",status:"unavailable",
+      provider:"CFTC Public Reporting Environment",report,report_family:report,report_variant:variant,
+      query:q||null,contractMarketCode:contractMarketCode||null,
+      observations:[],volume:{status:"not-connected"},error:"CFTC open-interest request failed"
+     },502,cors);
      snapshot={...snapshot,status:"stale",lastError:"CFTC refresh failed; showing last successful open-interest snapshot."};
     }
    }
