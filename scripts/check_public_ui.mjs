@@ -119,6 +119,20 @@ try {
 
   await page.setViewportSize({ width: 768, height: 900 });
   await page.goto(site + '/');
+  const family = page.getByRole('combobox', { name: 'FUTURES FAMILY', exact: true });
+  await family.locator('option[value="es"]').waitFor({ state: 'attached' });
+  assert.equal(await family.inputValue(), 'nq');
+  const profilesDirectory = page.getByRole('link', { name: 'All family profiles ↗', exact: true });
+  assert.equal(await profilesDirectory.getAttribute('href'), '/markets/');
+  await family.selectOption('es');
+  assert.equal(await page.locator('#overviewContractSpecs').getAttribute('href'), '/contract-specs/#es');
+  assert.equal(await profilesDirectory.getAttribute('href'), '/markets/');
+  await profilesDirectory.click();
+  await page.waitForURL(site + '/markets/');
+  assert.ok(await page.locator('main a[href="/ict-futures/markets/nq.html"]').first().isVisible());
+  assert.ok(await page.locator('main a[href="/ict-futures/markets/es.html"]').first().isVisible());
+  await page.goto(site + '/');
+
   const sourcesRail = page.getByRole('complementary', { name: 'Data sources' });
   const railWidth = (await sourcesRail.boundingBox()).width;
   assert.ok(Math.abs((await sourcesRail.locator('section').boundingBox()).width - railWidth) <= 1);
