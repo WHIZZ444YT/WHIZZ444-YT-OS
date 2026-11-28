@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import { createRequire } from 'node:module';
 
 const require = createRequire(import.meta.url);
-const { default: worker } = await import('../cloudflare/src/index.js');
+const { default: worker, persistEconomicSnapshot } = await import('../cloudflare/src/index.js');
 
 function makeEnv(values = {}) {
   const store = new Map(Object.entries(values));
@@ -568,4 +568,41 @@ test('open interest preserves stale observations when the CFTC refresh fails', a
   assert.equal(payload.status, 'stale');
   assert.deepEqual(payload.observations, observations);
   assert.match(payload.lastError, /showing last successful open-interest snapshot/);
+});
+
+test('economic persistence counts only returned upserts and records skipped rows', async t => {
+  let accepted;
+  const patches = [];
+  t.mock.method(globalThis, 'fetch', async (input, init) => {
+    const url = new URL(input);
+    if (url.pathname.endsWith('/economic_observations')) {
+      assert.equal(url.searchParams.get('select'), 'id');
+      assert.equal(init.headers.Prefer, 'resolution=merge-duplicates,return=representation');
+      return Response.json(accepted);
+    }
+    if (url.pathname.endsWith('/ingestion_runs') && init.method === 'POST') {
+      return Response.json([{ id: 'fixture-run' }]);
+    }
+    if (url.pathname.endsWith('/ingestion_runs') && init.method === 'PATCH') {
+      patches.push(JSON.parse(init.body));
+      return new Response(null, { status: 204 });
+    }
+    assert.ok(url.pathname.endsWith('/provider_status'));
+    return new Response(null, { status: 204 });
+  });
+  const env = { SUPABASE_URL: 'https://db.example', SUPABASE_SECRET_KEY: 'sb_secret_test_only' };
+  const row = { provider: 'fixture', dataset_id: 'macro', series_id: 'series', frequency: 'daily' };
+  for (const count of [1, 2]) {
+    accepted = count === 1 ? [] : [{ id: 'accepted' }];
+    const result = await persistEconomicSnapshot(env, {
+      providerId: 'fixture', datasetId: 'macro', status: 'fresh', retrievedAt: '2026-11-03T00:00:00Z',
+      records: Array.from({ length: count }, (_, i) => ({ ...row, observation_date: '2026-11-0' + (i + 1) })),
+    });
+    const run = patches.at(-1);
+    assert.equal(run.rows_received, count);
+    assert.equal(run.rows_upserted, count - 1);
+    assert.equal(run.details.rowsSkipped, 1);
+    assert.equal(result.rowsUpserted, count - 1);
+    assert.equal(result.status, count === 1 ? 'skipped' : 'stored');
+  }
 });
