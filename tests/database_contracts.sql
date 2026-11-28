@@ -29,7 +29,27 @@ insert into public.economic_observations
 values ('fixture','macro','series','Fixture','daily','2026-11-01',10,'2026-11-02T00:00:00Z','https://provider.example','{"private":true}');
 update public.economic_observations set retrieved_at='2026-11-03T00:00:00Z' where provider='fixture';
 update public.economic_observations set retrieved_at='2026-11-04T00:00:00Z',value=12 where provider='fixture';
-update public.economic_observations set retrieved_at='2026-11-03T00:00:00Z',value=10 where provider='fixture';
+with affected as (
+  insert into public.economic_observations
+    (provider,dataset_id,series_id,series_name,frequency,observation_date,value,retrieved_at,source_url)
+  values ('fixture','macro','series','Fixture','daily','2026-11-01',10,'2026-11-03T00:00:00Z','https://provider.example')
+  on conflict (provider,dataset_id,series_id,frequency,observation_date) do update
+    set value=excluded.value,retrieved_at=excluded.retrieved_at
+  returning id
+)
+select public.fixture_assert((select count(*)=0 from affected),'stale upsert returned affected rows');
+
+with affected as (
+  insert into public.economic_observations
+    (provider,dataset_id,series_id,series_name,frequency,observation_date,value,retrieved_at,source_url)
+  values
+    ('fixture','macro','series','Fixture','daily','2026-11-01',10,'2026-11-03T00:00:00Z','https://provider.example'),
+    ('fixture-mixed','macro','series','Fixture','daily','2026-11-02',20,'2026-11-03T00:00:00Z','https://provider.example')
+  on conflict (provider,dataset_id,series_id,frequency,observation_date) do update
+    set value=excluded.value,retrieved_at=excluded.retrieved_at
+  returning id
+)
+select public.fixture_assert((select count(*)=1 from affected),'mixed upsert did not return exactly one affected row');
 update public.economic_observations set retrieved_at='2026-11-04T00:00:00Z',value=12 where provider='fixture';
 select public.fixture_assert((select count(*)=1 and min(value)=10 from public.economic_observation_revisions),'revision history');
 select public.fixture_assert((select value=12 from public.economic_observations where provider='fixture'),'late retry overwrote latest');

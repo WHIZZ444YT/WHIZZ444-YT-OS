@@ -625,7 +625,7 @@ async function recordIngestionRun(env,provider,status,datasetId,requestCount,err
   return{status:"stored"};
  }catch{return{status:"failed"};}
 }
-async function persistEconomicSnapshot(env,snapshot){
+export async function persistEconomicSnapshot(env,snapshot){
  if(!env.SUPABASE_URL||!supabaseAdminKey(env))return{status:"not-configured",rowsUpserted:0};
  const started=Date.now(),provider=snapshot.providerId||"unknown";
  const rows=Array.isArray(snapshot.records)?snapshot.records:[];
@@ -642,25 +642,29 @@ async function persistEconomicSnapshot(env,snapshot){
   runId=Array.isArray(runRows)?runRows[0]?.id:null;
   for(let i=0;i<records.length;i+=1000){
    const chunk=records.slice(i,i+1000);
-   await supabaseRequest(env,"economic_observations","POST",
-    "on_conflict=provider,dataset_id,series_id,frequency,observation_date",chunk,
-    "resolution=merge-duplicates,return=minimal");
-   rowsUpserted+=chunk.length;
+   const affected=await supabaseRequest(env,"economic_observations","POST",
+    "on_conflict=provider,dataset_id,series_id,frequency,observation_date&select=id",chunk,
+    "resolution=merge-duplicates,return=representation");
+   if(!Array.isArray(affected)||affected.length>chunk.length)throw new Error("Invalid affected-row response");
+   rowsUpserted+=affected.length;
   }
   const completedAt=new Date().toISOString();
+  const rowsSkipped=records.length-rowsUpserted;
+  const skipped=rowsSkipped>0&&rowsUpserted===0;
+  const persistenceStatus=skipped?"skipped":snapshot.status==="partial"?"partial":"stored";
   if(runId)await supabaseRequest(env,"ingestion_runs","PATCH","id=eq."+encodeURIComponent(runId),{
-   status:snapshot.status==="partial"?"partial":"success",completed_at:completedAt,
-   rows_received:records.length,rows_upserted:rowsUpserted,request_count:snapshot.requestCount||1,
-   details:{dataAsOf:snapshot.dataAsOf||null,series:snapshot.series||[],elapsedMs:Date.now()-started}
+   status:skipped?"skipped":snapshot.status==="partial"?"partial":"success",completed_at:completedAt,
+   rows_received:rows.length,rows_upserted:rowsUpserted,request_count:snapshot.requestCount||1,
+   details:{dataAsOf:snapshot.dataAsOf||null,series:snapshot.series||[],rowsSkipped,elapsedMs:Date.now()-started}
   },"return=minimal");
   await upsertProviderStatus(env,provider,snapshot.status==="partial"?"partial":"fresh",{
-   datasetId:snapshot.datasetId,dataAsOf:snapshot.dataAsOf,rows:rowsUpserted,sourceUrl:snapshot.sourceUrl,persistence:"stored"
+   datasetId:snapshot.datasetId,dataAsOf:snapshot.dataAsOf,rows:rowsUpserted,sourceUrl:snapshot.sourceUrl,persistence:persistenceStatus
   });
-  return{status:snapshot.status==="partial"?"partial":"stored",rowsUpserted,runId};
+  return{status:persistenceStatus,rowsUpserted,rowsSkipped,runId};
  }catch{
   const failure="Economic persistence did not complete.";
   if(runId)try{await supabaseRequest(env,"ingestion_runs","PATCH","id=eq."+encodeURIComponent(runId),{
-   status:rowsUpserted?"partial":"failed",completed_at:new Date().toISOString(),rows_received:records.length,
+   status:rowsUpserted?"partial":"failed",completed_at:new Date().toISOString(),rows_received:rows.length,
    rows_upserted:rowsUpserted,error_code:"economic_persistence_failed",error_message:failure,
    details:{dataAsOf:snapshot.dataAsOf||null,elapsedMs:Date.now()-started}
   },"return=minimal");}catch{}
