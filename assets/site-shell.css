@@ -622,3 +622,30 @@ body {font-size: var(--os-body-size)}
 @media (prefers-reduced-motion: reduce) {
   html {scroll-behavior: auto}
 }
+
+/* Contract profiles share the application shell while retaining their research layout. */
+.market-profile > :is(.hero,section){
+  padding:clamp(14px,3vw,24px);
+  margin:0 0 14px;
+  border:1px solid var(--os-line-strong);
+  border-radius:var(--os-radius-md);
+  background:var(--os-card);
+  color:var(--os-ink);
+}
+.market-profile h1{font-size:clamp(24px,4vw,38px);line-height:1.2;margin:8px 0}
+.market-profile h2{font-size:18px;margin:0 0 10px}
+.market-profile :is(p,li,footer,.kv b){color:var(--os-muted)}
+.market-profile .links{display:flex;flex-wrap:wrap;gap:8px}
+.market-profile .links a{
+  padding:7px 10px;
+  border:1px solid var(--os-line-strong);
+  border-radius:var(--os-radius-sm);
+  background:var(--os-bg);
+  font-weight:700;
+}
+.market-profile :is(a,.tag){color:var(--os-action)}
+.market-profile .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,15rem),1fr));gap:10px}
+.market-profile .kv{min-width:0;padding:10px;border-radius:var(--os-radius-sm);background:var(--os-bg)}
+.market-profile .kv b{display:block}
+.market-profile > footer{padding:8px 0}
+.market-profile{overflow-wrap:anywhere}

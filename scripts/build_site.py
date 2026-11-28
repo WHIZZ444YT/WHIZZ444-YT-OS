@@ -106,7 +106,7 @@ def current_area(path):
         return 'ICT Academy'
     if path == '/charts/':
         return 'Futures Charts'
-    active = AREA_ALIASES.get(path, path)
+    active = '/markets/' if path.startswith('/ict-futures/markets/') else AREA_ALIASES.get(path, path)
     for label, href in NAV_ITEMS:
         if href == active:
             return label
@@ -116,7 +116,7 @@ def current_area(path):
     return AREA_LABELS.get(path, 'Futures Research')
 
 def nav_markup(current='/'):
-    active = AREA_ALIASES.get(current, current)
+    active = '/markets/' if current.startswith('/ict-futures/markets/') else AREA_ALIASES.get(current, current)
     if current.startswith(('/academy/', '/ict-futures/academy/')) or (
         current.startswith('/ict-lab/') and current != '/ict-lab/practice/16/'
     ):
@@ -583,6 +583,15 @@ def build():
                     '</div></section>'
                 )
                 s=s.replace('</main>', profile_links + '</main>', 1)
+            title = re.search(r'<title>(.*?)</title>', s, re.S)
+            description = re.search(r'<meta name="description" content="([^"]*)">', s)
+            profile = re.search(r'<main>(.*?)</main>', s, re.S)
+            if not (title and description and profile):
+                raise ValueError(f"Market profile is missing required markup: {html.name}")
+            structured_data = ''.join(re.findall(r'<script type="application/ld\+json">.*?</script>', s, re.S))
+            body = '<div class="market-profile">' + profile[1] + '</div>'
+            s = shell(unescape(title[1]), unescape(description[1]), body,
+                      '/ict-futures/markets/' + html.name, structured_data)
         html.write_text(s,encoding='utf-8')
     # The legacy child sitemap used the previous GitHub Pages domain; the root sitemap below owns all canonical URLs.
     for stale in [DIST/'ict-futures/sitemap.xml', DIST/'ict-futures/robots.txt']:
