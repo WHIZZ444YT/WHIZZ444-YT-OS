@@ -188,6 +188,32 @@ test("stop gaps fill at the worse opening price plus slippage", () => {
   assert.equal(trade.netPnlUsd,-279);
 });
 
+test("long and short stop gaps count only modeled entry and exit slippage", () => {
+  for (const direction of [1, -1]) {
+    for (const slippageTicks of [0, 1]) {
+      const gapOpen = 100 - direction * 10;
+      const bars = [
+        makeBar(0, { signal: direction }),
+        makeBar(1, { high: 101, low: 99 }),
+        makeBar(2, { open: gapOpen, high: gapOpen + 1, low: gapOpen - 1, close: gapOpen })
+      ];
+      const result = runBacktest(bars, config({
+        maxContracts: 1, tickSize: 1, tickValue: 1, stopTicks: 5, targetRR: 1,
+        commissionPerSide: 0, slippageTicks
+      }));
+      const [trade] = result.trades;
+      assert.equal(result.trades.length, 1);
+      assert.equal(trade.side, direction === 1 ? "long" : "short");
+      assert.equal(trade.exitReason, "stop-gap");
+      assert.equal(trade.entryPrice, 100 + direction * slippageTicks);
+      assert.equal(trade.exitPrice, gapOpen - direction * slippageTicks);
+      assert.equal(trade.netPnlUsd, -10 - 2 * slippageTicks);
+      assert.equal(trade.slippageCostUsd, 2 * slippageTicks);
+      assert.equal(result.metrics.estimatedSlippageUsd, 2 * slippageTicks);
+    }
+  }
+});
+
 test("whole-contract risk sizing skips trades that exceed the budget", () => {
   const bars=[makeBar(0,{signal:1}),makeBar(1),makeBar(2)];
   const result=runBacktest(bars,config({startingCapital:100}),"train");
