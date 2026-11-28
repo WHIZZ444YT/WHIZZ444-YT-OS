@@ -410,6 +410,50 @@ try {
   assert.ok(await globalMacro.evaluate(()=>document.documentElement.scrollWidth<=document.documentElement.clientWidth+1));
   await globalMacro.close();
 
+  const voi = await fixturePage();
+  await voi.route("**/assets/runtime-config.js", route => route.fulfill({
+    contentType: "application/javascript", body: "window.FINANCE_OS_CONFIG={apiBase:location.origin};",
+  }));
+  await voi.route("**/api/v1/futures-observations?**", route => route.fulfill({ json: { observations: [] } }));
+  const populated = (marketName, openInterest) => ({
+    status: 'fresh', source_url: 'https://example.com/cftc-fixture', retrievedAt: '2026-11-25T00:00:00Z',
+    observations: [100, openInterest].map((value, index) => ({
+      reportDate: index ? '2026-11-24' : '2026-11-17', marketName, openInterest: value,
+    })),
+  });
+  let finishEmpty;
+  const emptyResponse = new Promise(resolve => { finishEmpty = resolve; });
+  await voi.route("**/api/v1/volume-open-interest?**", async route => {
+    const query = new URL(route.request().url()).searchParams.get('q');
+    if (query === 'S&P 500') {
+      await emptyResponse;
+      return route.fulfill({ json: { status: 'fresh', observations: [] } });
+    }
+    return route.fulfill({ json: query === 'GOLD' ? populated('Gold fixture', 175) : populated('Nasdaq fixture', 145) });
+  });
+  await voi.goto(site + '/volume-open-interest/');
+  await voi.locator('#voiLatest').getByText('145', { exact: true }).waitFor();
+  assert.equal(await voi.locator('#voiChange').innerText(), '+45');
+  await voi.locator('#voiMarket').selectOption('es');
+  assert.equal(await voi.locator('#voiStatus').innerText(), 'LOADING');
+  assert.equal(await voi.locator('#voiRetrieved').innerText(), 'Retrieval pending');
+  assert.doesNotMatch(await voi.locator('#voiSource').getAttribute('href'), /cftc-fixture/);
+  assert.equal(await voi.locator('#voiLatest').innerText(), '—');
+  finishEmpty();
+  await voi.locator('#voiTable').getByText('No weekly open-interest observations for this selection.').waitFor();
+  assert.equal(await voi.locator('#voiLatest').innerText(), '—');
+  assert.equal(await voi.locator('#voiChange').innerText(), '—');
+  assert.equal(await voi.locator('#voiChange').getAttribute('class'), 'metric-value');
+  assert.equal(await voi.locator('#voiAsOf').innerText(), 'No report date available');
+  assert.equal(await voi.locator('#voiRange').innerText(), '0 weekly observations');
+  await voi.locator('#voiMarket').selectOption('gc');
+  await voi.locator('#voiLatest').getByText('175', { exact: true }).waitFor();
+  assert.equal(await voi.locator('#voiChange').innerText(), '+75');
+  assert.equal(await voi.locator('#voiAsOf').innerText(), 'Report date 2026-11-24');
+  assert.equal(await voi.locator('#voiRange').innerText(), '2 weekly observations');
+  assert.match(await voi.locator('#voiTable').innerText(), /Gold fixture/);
+  await voi.close();
+
   const positioning = await fixturePage({ viewport:{width:390,height:844} });
   await positioning.route("**/assets/runtime-config.js", route => route.fulfill({
     contentType:"application/javascript",body:"window.FINANCE_OS_CONFIG={apiBase:location.origin};"

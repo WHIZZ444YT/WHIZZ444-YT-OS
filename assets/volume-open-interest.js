@@ -38,10 +38,23 @@
   const seen=new Set();
   return observations.filter(r=>selectedCode?r.contractMarketCode===selectedCode:r.marketName===name).map(r=>({date:r.reportDate,oi:number(r.openInterest)})).filter(r=>r.date&&r.oi!==null).filter(r=>{if(seen.has(r.date))return false;seen.add(r.date);return true;}).sort((a,b)=>a.date.localeCompare(b.date));
  }
+ const defaultSource="https://www.cftc.gov/MarketReports/CommitmentsofTraders/index.htm";
+ function clearMetrics(dateMessage, coverage="—"){
+  $("voiLatest").textContent="—";
+  $("voiAsOf").textContent=dateMessage;
+  $("voiChange").textContent="—";
+  $("voiChange").className="metric-value";
+  $("voiRange").textContent=coverage;
+ }
  function renderChart(){
   history=toRows().slice(-26);
   const chart=$("voiChart");
-  if(!history.length){chart.innerHTML='<div class="empty-state">No historical open-interest observations were returned for this specific CFTC market label. Try another report type or contract.</div>';return;}
+  if(!history.length){
+   clearMetrics("No report date available","0 weekly observations");
+   chart.innerHTML='<div class="empty-state">No historical open-interest observations were returned for this specific CFTC market label. Try another report type or contract.</div>';
+   $("voiTable").innerHTML='<tr><td colspan="4">No weekly open-interest observations for this selection.</td></tr>';
+   return;
+  }
   const max=Math.max(...history.map(x=>x.oi)),min=Math.min(...history.map(x=>x.oi)),range=Math.max(1,max-min);
   chart.innerHTML=history.map((x,i)=>{
    const height=Math.max(6,((x.oi-min)/range)*88+12);
@@ -61,6 +74,14 @@
  async function load(){
   const requestId=++cotRequest;
   observations=[];
+  history=[];
+  clearMetrics("Waiting for report date");
+  $("voiSource").href=defaultSource;
+  $("voiRetrieved").textContent="Retrieval pending";
+  $("voiCount").textContent="— rows";
+  $("voiStatus").textContent="LOADING";
+  $("voiStatus").className="status-pill warn";
+  $("voiInstrument").innerHTML='<option>Loading contract rows…</option>';
   $("voiInstrument").disabled=true;
   $("voiTable").innerHTML='<tr><td colspan="4">Loading CFTC observations…</td></tr>';
   selectedContract=contracts.find(x=>x.id===$("voiMarket").value)||contracts[0];
@@ -74,7 +95,7 @@
    const d=await api("/api/v1/volume-open-interest?report="+selectedContract.report+"&variant="+variant+"&q="+encodeURIComponent(selectedContract.query));
    if(requestId!==cotRequest)return;
    observations=Array.isArray(d.observations)?d.observations:[];
-   $("voiSource").href=d.source_url||"https://www.cftc.gov/MarketReports/CommitmentsofTraders/index.htm";
+   $("voiSource").href=d.source_url||defaultSource;
    contractRows();
    $("voiInstrument").disabled=!observations.length;
    $("voiStatus").textContent=(d.status||"unknown").toUpperCase();
@@ -90,7 +111,9 @@
    $("voiCount").textContent="— rows";
    observations=[];$("voiInstrument").innerHTML='<option>No data</option>';$("voiStatus").textContent="UNAVAILABLE";$("voiStatus").className="status-pill bad";
    $("voiChart").innerHTML='<div class="empty-state">CFTC data could not be retrieved. Use the official report link to inspect the dataset.</div>';
-   $("voiLatest").textContent="—";$("voiChange").textContent="—";$("voiRange").textContent="—";
+   clearMetrics("No report date available");
+   $("voiRetrieved").textContent="Retrieval unavailable";
+   $("voiMarketName").textContent="CFTC market label unavailable";
    message(e.message,"bad");
   }
  }
