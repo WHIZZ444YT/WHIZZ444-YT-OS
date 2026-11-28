@@ -744,7 +744,11 @@ try {
   const offlineContext = await browser.newContext();
   await offlineContext.route('**/*', blockExternal);
   const offline = await offlineContext.newPage();
+  const indexAlias = await offlineContext.request.get(site + '/index.html', { maxRedirects: 0 });
+  assert.equal(indexAlias.status(), 308);
+  assert.equal(indexAlias.headers().location, '/');
   await offline.goto(site + '/');
+  const onlineHomeTitle = await offline.title();
   await offline.evaluate(() => navigator.serviceWorker.register('/sw.js'));
   await offline.waitForFunction(() => Boolean(navigator.serviceWorker.controller));
   const cachedPaths = await offline.evaluate(async () => {
@@ -752,11 +756,13 @@ try {
     const cache = await caches.open(keys.find(key => key.startsWith('fios-shell-')));
     return (await cache.keys()).map(request => new URL(request.url).pathname).sort();
   });
-  assert.deepEqual(cachedPaths, ['/icon.svg', '/index.html', '/manifest.webmanifest', '/resources.json']);
+  assert.deepEqual(cachedPaths, ['/', '/icon.svg', '/manifest.webmanifest', '/resources.json']);
   await offlineContext.setOffline(true);
   const offlineHome = await offline.reload();
   assert.equal(offlineHome.status(), 200);
   assert.equal(offlineHome.fromServiceWorker(), true);
+  assert.equal(await offline.title(), onlineHomeTitle);
+  assert.ok(await offline.locator('main h1').first().isVisible());
   await offlineContext.close();
 
   const contextForAccount = await browser.newContext({ serviceWorkers: 'block' });
